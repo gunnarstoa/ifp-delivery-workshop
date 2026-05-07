@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anaplan Way for IFP — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+  <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">Getting Started</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">Workshop Overview</a></li>
+      <li><a class="nav-link" href="./02-case-study.html">Case Study</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">IFP Overview</a></li>
+      <li><a class="nav-link active" href="./04-anaplan-way.html">Anaplan Way for IFP</a></li>
+    </ul>
+    <li class="nav-section-title">Day 1 — Configuration</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">App Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-lab-configurator.html">Lab A: Configurator Exercise</a></li>
+      <li><a class="nav-link" href="./07-generation.html">Model Generation</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">Post-Generation Steps</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Error Log Review</a></li>
+    </ul>
+    <li class="nav-section-title">Day 2 — Extensions</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">Extensions Overview</a></li>
+      <li><a class="nav-link" href="./11-lab-direct-input.html">Lab B: Direct Input + Adjustments</a></li>
+      <li><a class="nav-link" href="./12-lab-headcount-method.html">Lab C: Headcount × Rate Method</a></li>
+    </ul>
+    <li class="nav-section-title">Reference</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">What's Coming</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">Q&A from Sessions</a></li>
+      <li><a class="nav-link" href="./15-facilitator.html">Facilitator Guide</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 Language</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>Anaplan Way for IFP</h1>
+      <p class="subtitle">The six-phase delivery methodology and what happens in each phase</p>
+      <div class="badge-row"><span class="content-badge">Getting Started</span><span class="content-badge">15 min</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="tsd-banner">
+        <div class="tsd-step tsd-step-tell">
+          <span class="tsd-step-label">📖 Tell</span>
+          <span class="tsd-step-heading">The 6-Phase Delivery Methodology</span>
+          <span class="tsd-step-desc">The six phases of IFP delivery and what belongs in each phase.</span>
+        </div>
+        <div class="tsd-step tsd-step-show">
+          <span class="tsd-step-label">👁 Show</span>
+          <span class="tsd-step-heading">Phase Walkthrough</span>
+          <span class="tsd-step-desc">Facilitator walks through each phase with examples from real IFP engagements.</span>
+        </div>
+        <div class="tsd-step tsd-step-do">
+          <span class="tsd-step-label">✅ Do</span>
+          <span class="tsd-step-heading">Phase Mapping</span>
+          <span class="tsd-step-desc">Map FintechCo's engagement to the correct delivery phase.</span>
+        </div>
+      </div>
+
+      <h2>The Six-Phase IFP Delivery Methodology</h2>
+      <p>IFP delivery follows Anaplan's standard App delivery phases, adapted for the configurator-generation workflow. Understanding the phases helps you set correct expectations with customers and know which activities belong where.</p>
+<div class="step"><div class="step-badge">1</div><div class="step-content"><h3>Pre-Project</h3><p>The engagement prep phase. Deliverables include:
+        <ul>
+          <li>Session Zero — configuration discovery with the customer</li>
+          <li>Configuration worksheet completed (all 43 questions answered)</li>
+          <li>Hierarchy decisions locked: entity levels, geography structure, functional areas</li>
+          <li>Data availability confirmed: actuals source, headcount feed, currency setup</li>
+          <li>Workspace provisioned, workspace admin access confirmed for the delivery team</li>
+        </ul></p></div></div><div class="step"><div class="step-badge">2</div><div class="step-content"><h3>Config</h3><p>The configurator phase. The delivery consultant:
+        <ul>
+          <li>Enters all configuration answers in the App Framework configurator</li>
+          <li>Reviews top-level questions and financial planning configurations</li>
+          <li>Triggers model generation</li>
+          <li>Reviews error logs and resolves formula errors</li>
+        </ul></p></div></div><div class="step"><div class="step-badge">3</div><div class="step-content"><h3>Test &amp; Deploy</h3><p>Validation phase after a clean generation:
+        <ul>
+          <li>Load sample actuals data via ADO pipelines</li>
+          <li>Spot-check calculated line items in CALC modules</li>
+          <li>Validate planning methods in UX pages</li>
+          <li>UAT with key users from the customer team</li>
+        </ul></p></div></div><div class="step"><div class="step-badge">4</div><div class="step-content"><h3>Extension Foundation</h3><p>Design and scope customer-specific extensions:
+        <ul>
+          <li>Identify gaps between IFP base model and customer requirements</li>
+          <li>Classify each gap: Configure vs. Extend vs. Modify</li>
+          <li>Size each extension (S/M/L/XL)</li>
+          <li>Create extension tags in the model (Extension + Formula Override)</li>
+        </ul></p></div></div><div class="step"><div class="step-badge">5</div><div class="step-content"><h3>Iterative Extension</h3><p>Build extensions in priority order:
+        <ul>
+          <li>Each extension: design → build → test → document</li>
+          <li>Tag every line item you add or modify</li>
+          <li>Document in external design spec (not just in-model notes)</li>
+          <li>Regression test base model functionality after each extension</li>
+        </ul></p></div></div><div class="step"><div class="step-badge">6</div><div class="step-content"><h3>Extension Test &amp; Deploy</h3><p>Final validation and handover:
+        <ul>
+          <li>Full UAT with all extensions in place</li>
+          <li>Performance test with production data volumes</li>
+          <li>Handover documentation: extension log, formula override map, upgrade checklist</li>
+          <li>Training for customer admins</li>
+        </ul></p></div></div><div class="callout-note"><span class="callout-label">ℹ IFP-Specific Phase Notes</span><p>Session Zero is critical. Unlike custom model builds, IFP configuration decisions made at Session Zero are difficult or impossible to change after generation. Hierarchy levels, geography structure, and entity configuration must be locked before anyone touches the configurator. A missed dimension at Session Zero = a complete regeneration during Test &amp; Deploy.</p></div>
+
+      <h2>Two Customer Types</h2>
+<div class="two-col"><div class="card"><h3>🌱 Greenfield</h3>
+    <ul>
+      <li>New workspace, no existing Anaplan models</li>
+      <li>IFP is the first application</li>
+      <li>No integration complexity with existing models</li>
+      <li>Full ADO setup from scratch</li>
+      <li><strong>Risk:</strong> Session Zero discovery is the only constraint — get it right</li>
+    </ul></div><div class="card"><h3>🔗 Existing Workspace</h3>
+    <ul>
+      <li>IFP deployed alongside existing live models</li>
+      <li>Workspace admin must manage list conflicts</li>
+      <li>ADO may need to coexist with existing import actions</li>
+      <li>List naming must not collide with existing lists</li>
+      <li><strong>Risk:</strong> Generation may affect existing workspace settings</li>
+    </ul></div></div>
+
+      <h2>Map FintechCo to the Right Phase</h2>
+<div class="callout-do"><span class="callout-label">✅ Phase Mapping Exercise</span><p>Based on the FintechCo case study: which phase are we in today? What should have been completed before this session? What's the next phase after we complete the lab configuration? Discuss with your neighbor.</p></div>
+<div class="prevnext-nav"><a class="prevnext-btn" href="./03-ifp-overview.html">← Previous</a><a class="prevnext-btn" href="./05-configurator-walkthrough.html">Next →</a></div>
+    </div>
+  </main>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

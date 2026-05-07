@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Extensions Overview — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+  <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">Getting Started</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">Workshop Overview</a></li>
+      <li><a class="nav-link" href="./02-case-study.html">Case Study</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">IFP Overview</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for IFP</a></li>
+    </ul>
+    <li class="nav-section-title">Day 1 — Configuration</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">App Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-lab-configurator.html">Lab A: Configurator Exercise</a></li>
+      <li><a class="nav-link" href="./07-generation.html">Model Generation</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">Post-Generation Steps</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Error Log Review</a></li>
+    </ul>
+    <li class="nav-section-title">Day 2 — Extensions</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link active" href="./10-extensions-overview.html">Extensions Overview</a></li>
+      <li><a class="nav-link" href="./11-lab-direct-input.html">Lab B: Direct Input + Adjustments</a></li>
+      <li><a class="nav-link" href="./12-lab-headcount-method.html">Lab C: Headcount × Rate Method</a></li>
+    </ul>
+    <li class="nav-section-title">Reference</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">What's Coming</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">Q&A from Sessions</a></li>
+      <li><a class="nav-link" href="./15-facilitator.html">Facilitator Guide</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 Language</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>Extensions Overview</h1>
+      <p class="subtitle">The three extension types, 7 best practices, and the two Day 2 labs</p>
+      <div class="badge-row"><span class="content-badge">Day 2</span><span class="content-badge">30 min</span><span class="content-badge">Walkthrough</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="tsd-banner">
+        <div class="tsd-step tsd-step-tell">
+          <span class="tsd-step-label">📖 Tell</span>
+          <span class="tsd-step-heading">What Extensions Are</span>
+          <span class="tsd-step-desc">The three extension types and the 7 best practices for implementing them safely.</span>
+        </div>
+        <div class="tsd-step tsd-step-show">
+          <span class="tsd-step-label">👁 Show</span>
+          <span class="tsd-step-heading">Extension Decision Framework</span>
+          <span class="tsd-step-desc">Facilitator shows the extension decision framework and real examples.</span>
+        </div>
+        <div class="tsd-step tsd-step-do">
+          <span class="tsd-step-label">✅ Do</span>
+          <span class="tsd-step-heading">Map to Extension Type</span>
+          <span class="tsd-step-desc">Participants map the Day 2 lab scenarios to the correct extension type.</span>
+        </div>
+      </div>
+
+      <h2>What Extensions Are</h2>
+      <p>Extensions are customer-specific additions or modifications to the IFP base model that the configurator cannot produce. They fall into three categories — and the category determines the risk and the approach.</p>
+<div class="table-wrap"><table><thead><tr><th>Extension Type</th><th>What It Is</th><th>Upgrade Risk</th><th>When to Use</th></tr></thead><tbody><tr><td>Configure</td><td>Use the configurator to enable a built-in capability</td><td>None — this is supported</td><td>Always try this first. If the configurator has a setting for it, use the configurator.</td></tr><tr><td>Extend / Connect</td><td>Add new line items, modules, or lists without touching base model formulas</td><td>Low — new items are not overwritten by upgrades</td><td>When the customer needs something the configurator doesn't cover, but you can add it without changing base model logic.</td></tr><tr><td>Amend / Modify / Delete</td><td>Change an existing base model formula, list, or module</td><td>High — changes may be lost or broken on upgrade</td><td>Last resort. Document every override with a data tag. Maintain external documentation.</td></tr></tbody></table></div>
+
+      <h2>7 Best Practices for IFP Extensions</h2>
+<div class="step"><div class="step-badge">1</div><div class="step-content"><h3>Configure First</h3><p>Before touching the model, check the configurator. IFP 2.0 has 43 configuration questions. The answer to a customer requirement may already be a configurator setting.</p></div></div><div class="step"><div class="step-badge">2</div><div class="step-content"><h3>Extend or Connect Next</h3><p>If configuration doesn't cover it, add to the model without modifying base model components. New modules, new line items, new lists — these are safe to add.</p></div></div><div class="step"><div class="step-badge">3</div><div class="step-content"><h3>Modify With Care</h3><p>When you must change base model formulas or structures, treat it as the highest-risk action. Document it. Tag it. Test it. And plan for what happens at the next IFP upgrade.</p></div></div><div class="step"><div class="step-badge">4</div><div class="step-content"><h3>Document Everything</h3><p>Create two data tags in every IFP model before your first extension: <strong>Extension</strong> and <strong>Formula Override</strong>. Tag every line item you add or modify. This is how you track what needs re-validation after upgrades.</p></div></div><div class="step"><div class="step-badge">5</div><div class="step-content"><h3>Test Before Finalizing</h3><p>Every extension must be tested end-to-end: model formula → UX display → downstream aggregation. Do not sign off on an extension until you have verified it produces the correct output in the UX.</p></div></div><div class="step"><div class="step-badge">6</div><div class="step-content"><h3>Preserve the Upgrade Path</h3><p>Tag formula overrides so you know exactly what to re-check when Anaplan releases an IFP update. When an upgrade arrives, run your formula override tag filter — that's your review list.</p></div></div><div class="step"><div class="step-badge">7</div><div class="step-content"><h3>External Documentation Is Critical</h3><p>In-model notes and data tags are not sufficient. Maintain an external design spec that lists every extension, what it does, which line items it touches, and what the upgrade impact is.</p></div></div>
+
+      <h2>Data Tags — Create These First</h2>
+<div class="callout-warning"><span class="callout-label">⚠ Tag Before You Build</span><p>Before making any extension changes to an IFP model, create two data tags: <strong>Extension</strong> (for all new line items you add) and <strong>Formula Override</strong> (for any base model formula you change). These tags are the only in-model record of what you've changed. Without them, a future consultant has no way to know.</p></div>
+
+      <h2>Extensions This Workshop Covers</h2>
+<div class="table-wrap"><table><thead><tr><th>Lab</th><th>Extension Type</th><th>Business Requirement</th><th>Classification</th></tr></thead><tbody><tr><td>Lab B</td><td>Direct Input + Adjustments</td><td>Customer wants direct input + two adjustment layers for OpEx accounts</td><td>Extend — adds new line items, modifies final amount formula (Formula Override tagged)</td></tr><tr><td>Lab C</td><td>Headcount × Rate Method</td><td>Plan Training expenses as headcount × average rate + adjustment</td><td>Extend — adds new planning method, new line items, modifies final amount formula</td></tr><tr><td>Day 2 Mention</td><td>Revenue Module Extension</td><td>More detailed revenue model as a new module hooked into P&amp;L</td><td>Extend — new module connected to existing OUT modules</td></tr></tbody></table></div>
+
+      <h2>OpEx Planning UX — Extensions in Context</h2>
+<figure class="screenshot"><img src="../img/extensions/opex-02-15-00.jpg" alt="OpEx planning board — Direct Input Method showing adjustments and final amount calculation" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">OpEx planning board — Direct Input Method showing adjustments and final amount calculation</figcaption></figure>
+
+<div class="callout-warning"><span class="callout-label">⚠ Formula Overrides and Upgrades</span><p>Formula overrides on base model line items are the highest-risk extension action. When Anaplan releases an IFP update, formula overrides may be lost or broken. Always tag them with the Formula Override data tag and document them externally. After any IFP upgrade, filter by the Formula Override tag and re-validate each one.</p></div>
+<div class="prevnext-nav"><a class="prevnext-btn" href="./09-error-logs.html">← Previous</a><a class="prevnext-btn" href="./11-lab-direct-input.html">Next →</a></div>
+    </div>
+  </main>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

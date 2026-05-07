@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Model Generation — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+  <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">Getting Started</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">Workshop Overview</a></li>
+      <li><a class="nav-link" href="./02-case-study.html">Case Study</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">IFP Overview</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for IFP</a></li>
+    </ul>
+    <li class="nav-section-title">Day 1 — Configuration</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">App Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-lab-configurator.html">Lab A: Configurator Exercise</a></li>
+      <li><a class="nav-link active" href="./07-generation.html">Model Generation</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">Post-Generation Steps</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Error Log Review</a></li>
+    </ul>
+    <li class="nav-section-title">Day 2 — Extensions</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">Extensions Overview</a></li>
+      <li><a class="nav-link" href="./11-lab-direct-input.html">Lab B: Direct Input + Adjustments</a></li>
+      <li><a class="nav-link" href="./12-lab-headcount-method.html">Lab C: Headcount × Rate Method</a></li>
+    </ul>
+    <li class="nav-section-title">Reference</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">What's Coming</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">Q&A from Sessions</a></li>
+      <li><a class="nav-link" href="./15-facilitator.html">Facilitator Guide</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 Language</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>Model Generation</h1>
+      <p class="subtitle">What happens during generation, how long it takes, and what to expect</p>
+      <div class="badge-row"><span class="content-badge">Day 1</span><span class="content-badge">30 min</span><span class="content-badge">Walkthrough</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="tsd-banner">
+        <div class="tsd-step tsd-step-tell">
+          <span class="tsd-step-label">📖 Tell</span>
+          <span class="tsd-step-heading">What Generation Produces</span>
+          <span class="tsd-step-desc">What the App Framework generates and what status states mean.</span>
+        </div>
+        <div class="tsd-step tsd-step-show">
+          <span class="tsd-step-label">👁 Show</span>
+          <span class="tsd-step-heading">Live Generation</span>
+          <span class="tsd-step-desc">Facilitator triggers generation live and monitors status in real time.</span>
+        </div>
+        <div class="tsd-step tsd-step-do">
+          <span class="tsd-step-label">✅ Do</span>
+          <span class="tsd-step-heading">Trigger Your Generation</span>
+          <span class="tsd-step-desc">Participants trigger their own generation and monitor progress.</span>
+        </div>
+      </div>
+
+      <h2>What Generation Does</h2>
+      <p>When you trigger generation, the App Framework reads all 43 of your configuration answers and provisions the complete IFP model structure. This is not a template copy — it is a dynamic generation process that applies your configuration decisions to produce a model specific to your answers.</p>
+      <p>Generation provisions four models:</p>
+      <ul>
+        <li><strong>Financial Planning</strong> — the main planning model (INP, CALC, OUT modules)</li>
+        <li><strong>Headcount Planning</strong> — the HC model with department-level planning (only if enabled)</li>
+        <li><strong>Admin</strong> — administration and configuration module (ADMIN modules)</li>
+        <li><strong>Data Orchestrator</strong> — ADO workspace model for data pipelines</li>
+      </ul>
+
+      <h2>What Gets Created</h2>
+<div class="table-wrap"><table><thead><tr><th>Object Type</th><th>Count (Typical)</th><th>What It Contains</th></tr></thead><tbody><tr><td>Models</td><td>4</td><td>Financial Planning, Headcount, Admin, Data Orchestrator</td></tr><tr><td>UX Apps</td><td>1+</td><td>The IFP planning application end users will access</td></tr><tr><td>Assets</td><td>~17</td><td>Import definitions, saved views, dashboard configurations</td></tr><tr><td>Configurations</td><td>43</td><td>The answer record for all configuration questions (read-only post-generation)</td></tr></tbody></table></div>
+
+      <h2>Generation Status States</h2>
+<div class="table-wrap"><table><thead><tr><th>Status</th><th>What It Means</th><th>What to Do</th></tr></thead><tbody><tr><td>Generating...</td><td>Generation is in progress. Models are being provisioned.</td><td>Wait. Do not trigger another generation. Expected: 10–20 min.</td></tr><tr><td>Generated with Errors</td><td>Generation completed. Some formulas have errors due to configuration differences from base model.</td><td>Normal and expected. Review error logs — most errors are resolvable.</td></tr><tr><td>Generated Successfully</td><td>Generation completed with no formula errors detected.</td><td>Proceed to post-generation steps.</td></tr><tr><td>Generation Failed</td><td>Generation did not complete due to a platform error.</td><td>Contact Anaplan support. Do not attempt another generation without diagnosis.</td></tr></tbody></table></div><div class="callout-important"><span class="callout-label">🚨 'Generated with Errors' Does Not Mean Broken</span><p>'Generated with Errors' is normal and expected, especially in training and early implementations. It means some formulas reference items that differ from the base model template — usually caused by hierarchy renaming, geography removal, or configuration choices that differ from the template assumptions. The model is functional. You will work through the error list systematically in the Error Log Review section.</p></div>
+
+      <h2>Modules After Generation</h2>
+<figure class="screenshot"><img src="../img/generation/modules-04-14-00.jpg" alt="IFP model modules list after generation — ADMIN, SYS, DAT, INP, CALC, OUT modules visible" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">IFP model modules list after generation — ADMIN, SYS, DAT, INP, CALC, OUT modules visible</figcaption></figure>
+
+      <h2>Generation Steps</h2>
+<div class="step"><div class="step-badge">1</div><div class="step-content"><h3>Trigger Generation</h3><p>From the App Framework configurator, after completing all sections, click Generate. Confirm any prompts. Note the start time.</p></div></div><div class="step"><div class="step-badge">2</div><div class="step-content"><h3>Monitor Status</h3><p>The App Framework overview page shows generation status. Refresh periodically. Do not close the browser or trigger another generation while in progress.</p></div></div><div class="step"><div class="step-badge">3</div><div class="step-content"><h3>First Look at Generated Model</h3><p>Once complete, navigate to your workspace. You should see the four IFP models listed. Open the Financial Planning model. Verify modules are listed under ADMIN, SYS, DAT, INP, CALC, OUT prefixes.</p></div></div><div class="step"><div class="step-badge">4</div><div class="step-content"><h3>Check Error Logs</h3><p>Return to the App Framework. In the bottom-right of the overview page, find the error log count. Click to expand the log. Note: more than 0 errors is normal. Proceed to Error Log Review.</p></div></div>
+<div class="prevnext-nav"><a class="prevnext-btn" href="./06-lab-configurator.html">← Previous</a><a class="prevnext-btn" href="./08-post-gen.html">Next →</a></div>
+    </div>
+  </main>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

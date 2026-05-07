@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post-Generation Steps — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+  <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">Getting Started</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">Workshop Overview</a></li>
+      <li><a class="nav-link" href="./02-case-study.html">Case Study</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">IFP Overview</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for IFP</a></li>
+    </ul>
+    <li class="nav-section-title">Day 1 — Configuration</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">App Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-lab-configurator.html">Lab A: Configurator Exercise</a></li>
+      <li><a class="nav-link" href="./07-generation.html">Model Generation</a></li>
+      <li><a class="nav-link active" href="./08-post-gen.html">Post-Generation Steps</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Error Log Review</a></li>
+    </ul>
+    <li class="nav-section-title">Day 2 — Extensions</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">Extensions Overview</a></li>
+      <li><a class="nav-link" href="./11-lab-direct-input.html">Lab B: Direct Input + Adjustments</a></li>
+      <li><a class="nav-link" href="./12-lab-headcount-method.html">Lab C: Headcount × Rate Method</a></li>
+    </ul>
+    <li class="nav-section-title">Reference</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">What's Coming</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">Q&A from Sessions</a></li>
+      <li><a class="nav-link" href="./15-facilitator.html">Facilitator Guide</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 Language</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>Post-Generation Steps</h1>
+      <p class="subtitle">The verification checklist to run after every generation before any other work</p>
+      <div class="badge-row"><span class="content-badge">Day 1</span><span class="content-badge">20 min</span><span class="content-badge">Walkthrough</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="tsd-banner">
+        <div class="tsd-step tsd-step-tell">
+          <span class="tsd-step-label">📖 Tell</span>
+          <span class="tsd-step-heading">Required Post-Gen Steps</span>
+          <span class="tsd-step-desc">The checklist you must complete after every generation.</span>
+        </div>
+        <div class="tsd-step tsd-step-show">
+          <span class="tsd-step-label">👁 Show</span>
+          <span class="tsd-step-heading">Facilitator Walkthrough</span>
+          <span class="tsd-step-desc">Facilitator runs through each post-gen step on the live generated model.</span>
+        </div>
+        <div class="tsd-step tsd-step-do">
+          <span class="tsd-step-label">✅ Do</span>
+          <span class="tsd-step-heading">Complete the Checklist</span>
+          <span class="tsd-step-desc">Participants complete the post-gen checklist on their own FintechCo model.</span>
+        </div>
+      </div>
+
+      <h2>Required After Every Generation</h2>
+      <p>After generation completes, run through the following checklist before doing any other work. This ensures you have a complete, stable baseline before adding data or extensions.</p>
+
+      <ul class="checklist">
+        <li>Verify all 4 models exist in the workspace (Financial Planning, Headcount, Admin, Data Orchestrator)</li>
+        <li>Check application objects count — App Framework overview shows: models, UX apps, assets</li>
+        <li>Open error logs and note total error count — record this as your baseline</li>
+        <li>Open the Financial Planning model and verify module list shows ADMIN, SYS, DAT, INP, CALC, OUT prefixes</li>
+        <li>Verify key SYS module line items are populated: planning methods list, functional area list, entity hierarchy</li>
+        <li>Confirm hierarchy lists loaded with expected members (check the entity list for FintechCo's 3 entities)</li>
+        <li>Check that enabled planning methods are visible in ADMIN configuration module</li>
+        <li>Run a spot-check on a calculated line item in a CALC module — confirm formula is not blank</li>
+      </ul>
+
+<div class="callout-tip"><span class="callout-label">💡 Export Error Logs to Excel</span><p>If you have more than 10 errors, export the error log to Excel before reviewing in-app. Filtering and categorizing errors is much faster in Excel than in the App Framework log view. Sort by Error Type first, then by Model to group related errors.</p></div>
+
+      <h2>Post-Generation Mini-Lab</h2>
+
+<div class="mini-lab">
+  <div class="mini-lab-header">
+    <div class="mini-lab-number">1</div>
+    <div class="mini-lab-title">Verify Your Generated Model</div>
+    <div class="mini-lab-duration">⏱ 20 min</div>
+  </div>
+  <div class="mini-lab-body">
+    <div class="mini-lab-objective"><strong>Objective</strong> Work through the post-generation checklist on your FintechCo model. Identify the baseline error count and confirm the model structure is complete.</div>
+    <ol class="mini-lab-steps">
+      <li><span class="mini-lab-step-num">1</span>From your workspace, confirm <strong>4 models</strong> are listed. Name them in your notes.</li>
+      <li><span class="mini-lab-step-num">2</span>Open the <strong>App Framework</strong> overview page. Record: model count, UX app count, asset count, error count.</li>
+      <li><span class="mini-lab-step-num">3</span>Click on <strong>Error Logs</strong> (bottom-right). Record the total error count — this is your baseline.</li>
+      <li><span class="mini-lab-step-num">4</span>Open the <strong>Financial Planning</strong> model. Navigate to <strong>Modules</strong>. Verify at least one module exists for each prefix: ADMIN, SYS, DAT, INP, CALC, OUT.</li>
+      <li><span class="mini-lab-step-num">5</span>Open a <strong>SYS module</strong>. Find the Planning Methods list. Verify the methods you enabled in the configurator are present.</li>
+      <li><span class="mini-lab-step-num">6</span>Open the <strong>Entity list</strong> in the model. Verify FintechCo's 3 entities are present (or will be loaded via ADO).</li>
+      <li><span class="mini-lab-step-num">7</span>Open a <strong>CALC module</strong> (e.g., CALC OPX IS Itemized or similar). Open a line item in blueprint. Verify the formula field is not blank.</li>
+      <li><span class="mini-lab-step-num">8</span>Mark your checklist complete. You are ready to review error logs.</li>
+    </ol>
+
+  </div>
+  <div class="mini-lab-completion">
+    <div class="mini-lab-completion-label">✅ What it should look like when complete</div>
+    <div class="screenshot-placeholder"><div class="ss-icon">📸</div><div class="ss-label">Post-generation checklist — all items verified, error log baseline recorded</div><div class="ss-desc">App Framework overview showing model count, asset count, and error log baseline</div></div>
+  </div>
+</div>
+<div class="prevnext-nav"><a class="prevnext-btn" href="./07-generation.html">← Previous</a><a class="prevnext-btn" href="./09-error-logs.html">Next →</a></div>
+    </div>
+  </main>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

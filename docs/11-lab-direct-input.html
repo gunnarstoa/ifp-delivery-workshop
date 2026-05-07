@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lab B: Direct Input + Adjustments — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+  <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">Getting Started</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">Workshop Overview</a></li>
+      <li><a class="nav-link" href="./02-case-study.html">Case Study</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">IFP Overview</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for IFP</a></li>
+    </ul>
+    <li class="nav-section-title">Day 1 — Configuration</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">App Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-lab-configurator.html">Lab A: Configurator Exercise</a></li>
+      <li><a class="nav-link" href="./07-generation.html">Model Generation</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">Post-Generation Steps</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Error Log Review</a></li>
+    </ul>
+    <li class="nav-section-title">Day 2 — Extensions</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">Extensions Overview</a></li>
+      <li><a class="nav-link active" href="./11-lab-direct-input.html">Lab B: Direct Input + Adjustments</a></li>
+      <li><a class="nav-link" href="./12-lab-headcount-method.html">Lab C: Headcount × Rate Method</a></li>
+    </ul>
+    <li class="nav-section-title">Reference</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">What's Coming</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">Q&A from Sessions</a></li>
+      <li><a class="nav-link" href="./15-facilitator.html">Facilitator Guide</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 Language</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>Lab B: Direct Input + Adjustments</h1>
+      <p class="subtitle">Build a two-layer adjustment extension on the Direct Input planning method</p>
+      <div class="badge-row"><span class="content-badge">Lab B</span><span class="content-badge">45 min</span><span class="content-badge">Hands-On</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="tsd-banner">
+        <div class="tsd-step tsd-step-tell">
+          <span class="tsd-step-label">📖 Tell</span>
+          <span class="tsd-step-heading">The Business Requirement</span>
+          <span class="tsd-step-desc">The customer requirement: direct input + two adjustment layers for OpEx accounts.</span>
+        </div>
+        <div class="tsd-step tsd-step-show">
+          <span class="tsd-step-label">👁 Show</span>
+          <span class="tsd-step-heading">Facilitator Builds Live</span>
+          <span class="tsd-step-desc">Facilitator builds the extension live before participants replicate it.</span>
+        </div>
+        <div class="tsd-step tsd-step-do">
+          <span class="tsd-step-label">✅ Do</span>
+          <span class="tsd-step-heading">Build the Extension</span>
+          <span class="tsd-step-desc">Participants replicate the Direct Input + Adjustments extension in their FintechCo model.</span>
+        </div>
+      </div>
+
+      <h2>Business Requirement</h2>
+      <p>FintechCo's budget holders want to plan certain OpEx accounts using direct input — but with two adjustment layers on top: a management override and a regional adjustment. The formula is:</p>
+      <div style="background:#f0f7ff;border-left:4px solid #0066cc;padding:1rem 1.25rem;margin:1rem 0;border-radius:0 6px 6px 0;font-size:1.05rem;">
+        <strong>Direct Input + Adjustment 1 + Adjustment 2 = Total</strong>
+      </div>
+      <p>The IFP base model supports Direct Input as a single-value method. Adding two adjustment layers requires extending the model. This is Lab B.</p>
+<div class="callout-note"><span class="callout-label">ℹ Model to Use</span><p>Work in the model your facilitator specifies — the IFPv2.0.0 train-base-financial-planning model (or similar). Do not work in your newly generated FintechCo model for this lab.</p></div>
+
+      <h2>What You'll Build</h2>
+      <p>Five changes to the IFP base model, in this exact order:</p>
+      <ol>
+        <li>Create data tags (Extension + Formula Override)</li>
+        <li>Add Adjustment 1 and Adjustment 2 line items</li>
+        <li>Modify the Final Amount formula to include the adjustments</li>
+        <li>Update the OPEX filter line item subset</li>
+        <li>Update the Admin line item subset</li>
+      </ol>
+
+
+<div class="mini-lab">
+  <div class="mini-lab-header">
+    <div class="mini-lab-number">B1</div>
+    <div class="mini-lab-title">Create Data Tags</div>
+    <div class="mini-lab-duration">⏱ 5 min</div>
+  </div>
+  <div class="mini-lab-body">
+    <div class="mini-lab-objective"><strong>Objective</strong> Create the Extension and Formula Override data tags before making any model changes. These tags are your in-model record of every change you make.</div>
+    <ol class="mini-lab-steps">
+      <li><span class="mini-lab-step-num">1</span>From the <strong>Financial Planning</strong> model, navigate to <strong>Settings → Data Tags</strong> (or Model Settings → Manage Tags).</li>
+      <li><span class="mini-lab-step-num">2</span>Create a new tag: name = <strong>Extension</strong>. Save.</li>
+      <li><span class="mini-lab-step-num">3</span>Create a second tag: name = <strong>Formula Override</strong>. Save.</li>
+      <li><span class="mini-lab-step-num">4</span>These tags are now available on all line items in this model.</li>
+    </ol>
+<div class="callout-tip"><span class="callout-label">💡 Why Tags First</span><p>If you build extensions first and add tags later, you'll have to hunt down every line item you touched. Creating tags first takes 5 minutes and saves you from hours of archaeology later — especially after an upgrade.</p></div>
+  </div>
+  <div class="mini-lab-completion">
+    <div class="mini-lab-completion-label">✅ What it should look like when complete</div>
+    <div class="screenshot-placeholder"><div class="ss-icon">📸</div><div class="ss-label">Model Settings — Extension and Formula Override tags created</div><div class="ss-desc">Data Tags list showing Extension and Formula Override tags</div></div>
+  </div>
+</div>
+<div class="mini-lab">
+  <div class="mini-lab-header">
+    <div class="mini-lab-number">B2</div>
+    <div class="mini-lab-title">Add Adjustment Line Items</div>
+    <div class="mini-lab-duration">⏱ 12 min</div>
+  </div>
+  <div class="mini-lab-body">
+    <div class="mini-lab-objective"><strong>Objective</strong> Add Adjustment 1 and Adjustment 2 line items to the target OpEx input module. Configure each with the correct access driver so they only appear when the Direct Input method is active.</div>
+    <ol class="mini-lab-steps">
+      <li><span class="mini-lab-step-num">1</span>Open the <strong>INP OPX Expense Planning</strong> module (or equivalent input module for OpEx) in blueprint mode.</li>
+      <li><span class="mini-lab-step-num">2</span>Find the <strong>Direct Input Forecast</strong> line item. This is the base line item you are extending.</li>
+      <li><span class="mini-lab-step-num">3</span>Add a new line item below it: name = <strong>Adjustment 1</strong>. Format = Number. Applies To = same as Direct Input Forecast.</li>
+      <li><span class="mini-lab-step-num">4</span>Copy the <strong>Access Driver (DCA)</strong> from Direct Input Forecast to Adjustment 1. This ensures Adjustment 1 only shows when the Direct Input method is active for the account.</li>
+      <li><span class="mini-lab-step-num">5</span>Set <strong>Write Rule</strong> on Adjustment 1: writable by users.</li>
+      <li><span class="mini-lab-step-num">6</span>Repeat steps 3–5 for <strong>Adjustment 2</strong>.</li>
+      <li><span class="mini-lab-step-num">7</span>Tag both new line items with the <strong>Extension</strong> data tag.</li>
+      <li><span class="mini-lab-step-num">8</span>Save and publish.</li>
+    </ol>
+<div class="callout-tip"><span class="callout-label">💡 Copy, Don't Recreate</span><p>Copy the line item settings from Direct Input Forecast rather than creating from scratch. Applies-To configuration, dimension settings, and time scope must match exactly.</p></div>
+  </div>
+  <div class="mini-lab-completion">
+    <div class="mini-lab-completion-label">✅ What it should look like when complete</div>
+    <div class="screenshot-placeholder"><div class="ss-icon">📸</div><div class="ss-label">INP OPX module — Adjustment 1 and Adjustment 2 added with correct Access Driver</div><div class="ss-desc">Blueprint view showing Adjustment 1 and 2 with DCA and write rules set</div></div>
+  </div>
+</div>
+<div class="mini-lab">
+  <div class="mini-lab-header">
+    <div class="mini-lab-number">B3</div>
+    <div class="mini-lab-title">Modify the Final Amount Formula</div>
+    <div class="mini-lab-duration">⏱ 8 min</div>
+  </div>
+  <div class="mini-lab-body">
+    <div class="mini-lab-objective"><strong>Objective</strong> Update the Final Amount formula to add Adjustment 1 + Adjustment 2 to the Direct Input value. Tag the modified line item as Formula Override.</div>
+    <ol class="mini-lab-steps">
+      <li><span class="mini-lab-step-num">1</span>In blueprint mode, find the <strong>Final Amount</strong> line item in the same module.</li>
+      <li><span class="mini-lab-step-num">2</span>Open the formula. It currently calculates the total based on the active planning method.</li>
+      <li><span class="mini-lab-step-num">3</span>Find the section of the formula that handles the Direct Input method (look for an IF or CASE statement).</li>
+      <li><span class="mini-lab-step-num">4</span>Modify the Direct Input branch to add: <code>+ 'Adjustment 1'[ITEM: ITEM] + 'Adjustment 2'[ITEM: ITEM]</code> (exact syntax may vary based on your model's line item names).</li>
+      <li><span class="mini-lab-step-num">5</span>Validate the formula — confirm it has no errors.</li>
+      <li><span class="mini-lab-step-num">6</span>Tag the <strong>Final Amount</strong> line item with <strong>Formula Override</strong> data tag.</li>
+      <li><span class="mini-lab-step-num">7</span>Also tag it with <strong>Extension</strong> data tag.</li>
+      <li><span class="mini-lab-step-num">8</span>Save.</li>
+    </ol>
+<div class="callout-warning"><span class="callout-label">⚠ Formula Override Risk</span><p>You have just modified a base model formula. If Anaplan releases an IFP update that changes this module, your formula override may be lost. The Formula Override tag is your marker for post-upgrade review. Document the formula change externally as well.</p></div>
+  </div>
+  <div class="mini-lab-completion">
+    <div class="mini-lab-completion-label">✅ What it should look like when complete</div>
+    <div class="screenshot-placeholder"><div class="ss-icon">📸</div><div class="ss-label">Final Amount formula — updated to include Adjustment 1 + Adjustment 2</div><div class="ss-desc">Blueprint showing Final Amount formula with adjustment additions</div></div>
+  </div>
+</div>
+<div class="mini-lab">
+  <div class="mini-lab-header">
+    <div class="mini-lab-number">B4</div>
+    <div class="mini-lab-title">Update the OPEX Filter Line Item Subset</div>
+    <div class="mini-lab-duration">⏱ 8 min</div>
+  </div>
+  <div class="mini-lab-body">
+    <div class="mini-lab-objective"><strong>Objective</strong> Add the three relevant line items to the OPEX filter subset so they appear in the UX when the Direct Input method is active.</div>
+    <ol class="mini-lab-steps">
+      <li><span class="mini-lab-step-num">1</span>Navigate to the <strong>OPEX filter line item subset</strong> (typically in a SYS or ADMIN module — ask facilitator if you can't find it).</li>
+      <li><span class="mini-lab-step-num">2</span>Open the subset in edit mode.</li>
+      <li><span class="mini-lab-step-num">3</span>Add the following line items to the subset: <strong>Direct Input Forecast</strong>, <strong>Adjustment 1</strong>, <strong>Adjustment 2</strong>.</li>
+      <li><span class="mini-lab-step-num">4</span>The subset controls which line items surface to users in the UX. All three must be included.</li>
+      <li><span class="mini-lab-step-num">5</span>Save the subset.</li>
+    </ol>
+<div class="callout-note"><span class="callout-label">ℹ Filter Subset vs. Admin Subset</span><p>The filter subset controls UX visibility (what users see). The admin subset (next step) controls the top-level admin configuration page. Both need to be updated — they serve different purposes.</p></div>
+  </div>
+  <div class="mini-lab-completion">
+    <div class="mini-lab-completion-label">✅ What it should look like when complete</div>
+    <div class="screenshot-placeholder"><div class="ss-icon">📸</div><div class="ss-label">OPEX filter subset — Direct Input Forecast, Adjustment 1, Adjustment 2 added</div><div class="ss-desc">Line item subset showing all three items included</div></div>
+  </div>
+</div>
+<div class="mini-lab">
+  <div class="mini-lab-header">
+    <div class="mini-lab-number">B5</div>
+    <div class="mini-lab-title">Update the Admin Line Item Subset</div>
+    <div class="mini-lab-duration">⏱ 8 min</div>
+  </div>
+  <div class="mini-lab-body">
+    <div class="mini-lab-objective"><strong>Objective</strong> Copy the planning method association from Final Amount to the three new line items so they display correctly in the admin configuration grid.</div>
+    <ol class="mini-lab-steps">
+      <li><span class="mini-lab-step-num">1</span>Navigate to the <strong>Admin line item subset</strong> (in the ADMIN module — typically ADMIN OPX or similar).</li>
+      <li><span class="mini-lab-step-num">2</span>Find the <strong>Final Amount</strong> row in the admin grid.</li>
+      <li><span class="mini-lab-step-num">3</span>Note which planning method(s) Final Amount is associated with (specifically the Direct Input method entry).</li>
+      <li><span class="mini-lab-step-num">4</span>Copy that method association to <strong>Direct Input Forecast</strong>, <strong>Adjustment 1</strong>, and <strong>Adjustment 2</strong>.</li>
+      <li><span class="mini-lab-step-num">5</span>Save.</li>
+      <li><span class="mini-lab-step-num">6</span>Now test: navigate to the UX, open the Operating Expenses planning page, select a Direct Input account, refresh.</li>
+      <li><span class="mini-lab-step-num">7</span>Verify: Direct Input Forecast, Adjustment 1, and Adjustment 2 are all visible. Enter test numbers. Confirm Total = Direct Input + Adj1 + Adj2.</li>
+    </ol>
+<div class="callout-tip"><span class="callout-label">💡 Test Before Declaring Done</span><p>Enter actual numbers in all three fields and verify the math. A formula error could produce a result that looks correct but is actually ignoring one of the adjustments. Always put numbers in and verify the sum.</p></div>
+  </div>
+  <div class="mini-lab-completion">
+    <div class="mini-lab-completion-label">✅ What it should look like when complete</div>
+    <div class="screenshot-placeholder"><div class="ss-icon">📸</div><div class="ss-label">UX — Direct Input method showing Direct Input + Adjustment 1 + Adjustment 2 fields</div><div class="ss-desc">Planning UX showing three input fields summing to Final Amount</div></div>
+  </div>
+</div>
+
+      <h2>Debrief Questions</h2>
+      <ol>
+        <li>What is the risk of modifying the Final Amount formula? How would you mitigate it for a production delivery?</li>
+        <li>How would you document this extension for the next consultant on the project?</li>
+        <li>If FintechCo asked for a third adjustment layer six months after go-live, how would you add it? What's the simplest change?</li>
+        <li>Why do we use an access driver (DCA) on the adjustment line items instead of just hiding them in the UX?</li>
+        <li>What happens to your formula override if Anaplan releases an IFP 2.1 upgrade?</li>
+      </ol>
+<div class="callout-tip"><span class="callout-label">💡 ✅ Lab B Complete</span><p>When the group reconvenes, the facilitator will walk through the reference solution and discuss the key risk decisions.</p></div>
+<div class="prevnext-nav"><a class="prevnext-btn" href="./10-extensions-overview.html">← Previous</a><a class="prevnext-btn" href="./12-lab-headcount-method.html">Next →</a></div>
+    </div>
+  </main>
+  <script src="../js/nav.js"></script>
+</body>
+</html>
