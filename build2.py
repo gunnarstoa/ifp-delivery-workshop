@@ -66,8 +66,8 @@ body_06 = """
         "Set <strong>Product Hierarchy</strong> → <em>Not in scope</em> (FintechCo does not plan at product level).",
         "Click <strong>Save</strong> on the Hierarchies section.",
     ],
-    completion_content=ss("Configurator — Hierarchies section completed for FintechCo",
-                          "Hierarchies page showing Entity 3 levels, Geography 2 levels, 4 functional areas enabled"),
+    completion_content=ss_real("configurator/cfg-0175.jpg",
+                               "App Framework Configurator — dimensionality configuration in progress"),
     extra_body=warn("Hierarchy Lock Point",
                     "These hierarchy decisions cannot be changed after generation without a full regeneration. Confirm entity and geography levels with your facilitator before proceeding.")
 ) + mini_lab(
@@ -204,6 +204,18 @@ body_07 = """
         "geography removal, or configuration choices that differ from the template assumptions. "
         "The model is functional. You will work through the error list systematically in the Error Log Review section.") + """
 
+      <h2>Model Version Selector</h2>
+""" + ss_real("generation/gen-0255.jpg",
+              "IFP model selector — showing IFP v2.0.0 TRAIN versions in workspace") + """
+
+      <h2>IFP Model Pages After Generation</h2>
+""" + ss_real("generation/gen-0265.jpg",
+              "IFP model pages list — 43 pages across ADMIN, SYS, DAT, INP, CALC, OUT modules") + """
+
+      <h2>Generation With Errors — Activity Panel</h2>
+""" + ss_real("generation/gen-d2-0235.jpg",
+              "App Framework generation with errors — Activity panel showing model data sources and error count") + """
+
       <h2>Modules After Generation</h2>
 """ + ss_real("generation/modules-04-14-00.jpg",
               "IFP model modules list after generation — ADMIN, SYS, DAT, INP, CALC, OUT modules visible") + """
@@ -273,8 +285,8 @@ body_08 = """
         "Open a <strong>CALC module</strong> (e.g., CALC OPX IS Itemized or similar). Open a line item in blueprint. Verify the formula field is not blank.",
         "Mark your checklist complete. You are ready to review error logs.",
     ],
-    completion_content=ss("Post-generation checklist — all items verified, error log baseline recorded",
-                          "App Framework overview showing model count, asset count, and error log baseline"),
+    completion_content=ss_real("post-gen/postgen-0215.jpg",
+                               "IFP Configuration Guide — Appendix A1 Post-Generation Tasks checklist"),
 )
 
 
@@ -368,8 +380,12 @@ step("7", "Escalate if Stuck",
         "Fix the formula in your model OR copy-adjust from the base model. Confirm it resolves.",
         "Return to the error log. How many errors remain? Which errors are safe to leave for now?",
     ],
-    completion_content=ss("Error log — categorized and at least one LINE_ITEM_FORMULA resolved",
-                          "Error log showing categorized errors with at least one resolved"),
+    completion_content=ss_real("error-logs/err-0200.jpg",
+                               "App Framework activity panel — LINE_ITEM_FORMULA error highlighted in generation log") +
+                    ss_real("error-logs/err-0205.jpg",
+                            "CALC OPX IS Itemized Expense Totals — formula error detail view") +
+                    ss_real("error-logs/err-d2-0165.jpg",
+                            "IFP Release error log — Activity panel with error type breakdown"),
 ) + """
 
       <h2>Debrief Questions</h2>
@@ -451,6 +467,18 @@ step("7", "External Documentation Is Critical",
       <h2>OpEx Planning UX — Extensions in Context</h2>
 """ + ss_real("extensions/opex-02-15-00.jpg",
               "OpEx planning board — Direct Input Method showing adjustments and final amount calculation") + """
+
+      <h2>INP OPX Expense Planning Module</h2>
+""" + ss_real("extensions/ext-0285.jpg",
+              "INP Gross Profit Planning module — showing planning methods") + """
+
+      <h2>EXT INP Channel Sales Extension</h2>
+""" + ss_real("extensions/ext-0275.jpg",
+              "EXT INP Channel Sales extension — Amount, Price, Total line items") + """
+
+      <h2>OpEx Planning Board With Extensions</h2>
+""" + ss_real("extensions/ext-0270.jpg",
+              "OpEx planning board — extensions adding adjustment inputs alongside generated line items") + """
 
 """ + warn("Formula Overrides and Upgrades",
            "Formula overrides on base model line items are the highest-risk extension action. "

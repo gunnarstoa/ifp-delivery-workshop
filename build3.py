@@ -63,8 +63,8 @@ body_11 = """
         "Tag both new line items with the <strong>Extension</strong> data tag.",
         "Save and publish.",
     ],
-    completion_content=ss("INP OPX module — Adjustment 1 and Adjustment 2 added with correct Access Driver",
-                          "Blueprint view showing Adjustment 1 and 2 with DCA and write rules set"),
+    completion_content=ss_real("extensions/ext-0235.jpg",
+                               "INP OPX Expense Planning module — line items list showing Functional Area and Applies To columns"),
     extra_body=tip("Copy, Don't Recreate",
                    "Copy the line item settings from Direct Input Forecast rather than creating from scratch. "
                    "Applies-To configuration, dimension settings, and time scope must match exactly.")
@@ -121,8 +121,10 @@ body_11 = """
         "Now test: navigate to the UX, open the Operating Expenses planning page, select a Direct Input account, refresh.",
         "Verify: Direct Input Forecast, Adjustment 1, and Adjustment 2 are all visible. Enter test numbers. Confirm Total = Direct Input + Adj1 + Adj2.",
     ],
-    completion_content=ss("UX — Direct Input method showing Direct Input + Adjustment 1 + Adjustment 2 fields",
-                          "Planning UX showing three input fields summing to Final Amount"),
+    completion_content=ss_real("lab-b/labb-0180.jpg",
+                               "OpEx planning module — input grid showing direct input line items") +
+                    ss_real("lab-b/labb-d2-0210.jpg",
+                            "OpEx planning board — completed extension showing Direct Input + adjustments + Final Amount"),
     extra_body=tip("Test Before Declaring Done",
                    "Enter actual numbers in all three fields and verify the math. "
                    "A formula error could produce a result that looks correct but is actually ignoring one of the adjustments. "
@@ -179,8 +181,8 @@ body_12 = """
         "As best practice, assign a <strong>code</strong> to this method (e.g., <code>HC_RATE</code>). Codes make lookup formulas more stable than names.",
         "Save the list.",
     ],
-    completion_content=ss("Planning Methods list — Headcount x Rate method added",
-                          "Planning Methods list showing new Headcount x Rate entry with code"),
+    completion_content=ss_real("lab-c/labc-0310.jpg",
+                               "Planning Methods module — Final Amount formula breakdown with Headcount×Rate calculation"),
     extra_body=tip("Use Codes, Not Names",
                    "Formulas that reference the planning method should point to the code, not the display name. "
                    "Display names can be changed by admins; codes stay stable.")
@@ -263,8 +265,8 @@ body_12 = """
         "Change the <strong>Planning Method</strong> from the current method (e.g., Units × Rate) to <strong>Headcount x Rate</strong>.",
         "Save.",
     ],
-    completion_content=ss("Planning Methods mapping — Training account assigned to Headcount x Rate",
-                          "Mapping module showing Training account → Headcount x Rate"),
+    completion_content=ss_real("lab-c/labc-d2-0225.jpg",
+                               "FIN-IS Manage Planning Methods — product and expense account to planning method mapping"),
 ) + mini_lab(
     number="C7",
     title="Test End to End",

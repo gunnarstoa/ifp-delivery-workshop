@@ -421,6 +421,14 @@ imp("'Generated with Errors' is Normal",
     "These are formula errors caused by configuration choices, hierarchy renaming, or geography differences from the base model template. "
     "The model is functional. You will learn to read and resolve these errors in the Error Log Review section.") + """
 
+      <h2>IFP Hierarchy Lists</h2>
+""" + ss_real("overview/lists-0170.jpg",
+              "IFP hierarchy lists — Geography, Functional Area, Entity, Product with levels") + """
+
+      <h2>SYS Modules After Generation</h2>
+""" + ss_real("overview/modules-d2-0130.jpg",
+              "IFP model SYS modules list after generation") + """
+
       <h2>App Framework Overview</h2>
 """ + ss_real("overview/app-framework-04-30-00.jpg",
               "IFP Application Framework overview — 43 configurations, 4 models, 17 assets, generated with errors status")
@@ -486,6 +494,10 @@ step("6", "Extension Test &amp; Deploy", """Final validation and handover:
           <li>Handover documentation: extension log, formula override map, upgrade checklist</li>
           <li>Training for customer admins</li>
         </ul>""") + \
+ss_real("anaplan-way/aw-0125.jpg",
+        "Anaplan Way for Applications — high-level methodology diagram") + \
+ss_real("anaplan-way/aw-0135.jpg",
+        "Anaplan Way IFP-specific phases and control gates") + \
 note("IFP-Specific Phase Notes",
      "Session Zero is critical. Unlike custom model builds, IFP configuration decisions made at Session Zero are difficult or impossible to change after generation. "
      "Hierarchy levels, geography structure, and entity configuration must be locked before anyone touches the configurator. "
@@ -550,8 +562,8 @@ body_05 = """
         <li><strong>Entity:</strong> How many entity levels? What is the top-level consolidation entity?</li>
         <li><strong>Product:</strong> Is product-level planning required? Product hierarchy levels?</li>
       </ul>
-""" + ss("App Framework Configurator — Overview panel showing Hierarchies, Data Structure, Configurations",
-         "Navigate to the App Framework and open the configurator to follow along") + """
+""" + ss_real("configurator/cfg-0105.jpg",
+        "App Framework Configurator — top-level questions: Department, Geography, Functional Area, Vendor") + """
 
       <h2>Top-Level Questions (22 Questions)</h2>
       <p>The top-level questions are the most impactful. They define the structural skeleton of the IFP model.</p>
@@ -569,7 +581,8 @@ body_05 = """
         ["Balance Sheet", "Is balance sheet planning in scope?", "Yes"],
         ["Revenue Planning", "Driver-based or direct input revenue planning?", "Driver-based"],
     ]
-) + ss("Configurations page — Top-level questions 1-10", "The first 10 top-level configuration questions") + """
+) + ss_real("configurator/cfg-0110.jpg",
+        "App Framework Configurator — Financial Planning questions with margin planning dropdown") + """
 
       <h2>Financial Planning Configurations (17 Questions)</h2>
       <p>Financial planning configurations control the planning methods available, headcount settings, and OpEx behavior. These are less structural than top-level questions but still affect formula generation.</p>
@@ -582,8 +595,8 @@ body_05 = """
         ["Revenue Configuration", "Driver selection, product hierarchy levels, volume × price method"],
         ["Actuals Integration", "How actuals data loads into DAT modules — ADO pipeline configuration"],
     ]
-) + ss("Configurations page — Financial Planning configurations",
-       "Financial planning configurations section — OpEx, Headcount, Balance Sheet settings") + """
+) + ss_real("configurator/cfg-0115.jpg",
+        "App Framework Configurator — Financial Planning dimensionality checkboxes for expense planning") + """
 
       <h2>Before the Lab</h2>
 """ + note("Preparation",
