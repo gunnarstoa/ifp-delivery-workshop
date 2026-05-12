@@ -63,13 +63,155 @@
   <main class="main-content">
     <div class="content-header">
       <h1>Q&amp;A from Sessions</h1>
-      <p class="subtitle">Real questions from the April 2026 workshop delivery — with full answers</p>
+      <p class="subtitle">Real questions from the April and May 2026 workshop deliveries — with full answers</p>
       <div class="badge-row"><span class="content-badge">Reference</span></div>
     </div>
     <div class="content-body">
 
       <div class="callout-note">
-        <p>These questions were asked during the April 28–29, 2026 IFP Delivery Partner Workshop sessions. Questions are grouped by topic. Answers reflect the facilitator responses and discussion from those sessions.</p>
+        <p>These questions were asked during the April 28–29, 2026 and May 7, 2026 IFP Delivery Partner Workshop sessions. Questions are grouped by topic. Answers reflect the facilitator responses and discussion from those sessions. The May 7 session was delivered to a larger multi-national group (Amsterdam) and covered the full workshop from start to finish.</p>
+      </div>
+
+      <h2>IFP v2 Overview &amp; What's New</h2>
+
+      <div class="qa-item">
+        <div class="question">Q: What are the most important differences between IFP v1.x and IFP v2?</div>
+        <div class="answer">A: The headline change is the Application Framework — a configurator-driven generation engine that replaces manual model setup. You answer configuration questions, and the framework generates all four models (Financial Planning, Headcount, Admin, Data Orchestrator) automatically — about 500 background actions, taking 20–40 minutes. IFP v2 is also Polaris-based (removing sparsity, improving performance), includes native ADO integration with pre-configured pipelines, changed headcount planning from employee-level to role/job-level, and supports upgradeability — future versions can be applied without starting from scratch. The application overview document in the SharePoint site covers the full differences.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">Q: Why did headcount planning change from employee-level to role-based in IFP v2?</div>
+        <div class="answer">A: Two main reasons. First, feedback that employee-level planning exposed sensitive personal data within the model. Second, the shift to role/job-level planning aligns with a broader application strategy — if a customer wants employee-level planning, they can use Workforce Budgeting (now a standalone app, a subset of OWP) which integrates directly with IFP v2. That way, you get both role-level planning in IFP and person-level detail in Workforce Budgeting, feeding data into IFP seamlessly.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">Q: Can we upgrade a customer from IFP v1.3 to v2?</div>
+        <div class="answer">A: There is no direct upgrade path from IFP v1.x to v2. It is a completely different application architecture. Partners who have moved customers from v1 to v2 have done a re-implementation — starting fresh on v2. If a customer wants to move, engage the Customer Success Business Partner to plan the approach. Customers who had v1 implementations that weren't 100% successful have used this as an opportunity to start clean on v2. Not all v1 customizations translate — for example, if a customer was doing employee-level headcount planning in v1, they'll need Workforce Budgeting or OWP to replicate that.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">Q: What documentation is available for IFP v2 implementations?</div>
+        <div class="answer">A: The SharePoint site (sent separately by the Anaplan team) contains: Application Overview (what's changed from v1, full IFP v2 description), Configuration Guide (step-by-step configuration instructions plus post-generation tasks), Error Log Guide (common errors and resolution), Process Definition Documents, Product Glossary, ADO data templates (for every hierarchy — geography, entity, account, etc.), Functional Walkthrough Videos (micro lessons on core functionality), and an FAQ document covering extensions and upgrade guidance. Documentation is also migrating to Seismic as IFP reaches general release. Always check for updated versions — documentation improves as new versions release.</div>
+      </div>
+
+      <h2>Dimensionality &amp; Architecture</h2>
+
+      <div class="qa-item">
+        <div class="question">Q: What dimensions are required vs optional in IFP v2?</div>
+        <div class="answer">A: Two dimensions are required and cannot be removed: Entity and Account. They can be renamed and repurposed (e.g., Account renamed to Project), but must be present. All other dimensions — Geography, Functional Area/Department, Product, Vendor, etc. — are optional and can be enabled, disabled, or renamed via the configurator. The default configuration includes 3 dimension levels for each hierarchy. You can increase to 8 levels or decrease to 2. Version 2.1 is expected to increase the maximum to 12 levels.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">Q: Is there a performance impact from using many hierarchy levels (e.g., 12)?</div>
+        <div class="answer">A: Yes, potentially. IFP v2 is Polaris-based, which removes sparsity and generally improves performance. However, customers with very dense hierarchies where data is not sparse have seen model size increases. The Income Statement module uses a 'ratio' summary method which causes high calculation effort, especially as you roll up the hierarchy — this becomes more pronounced with many dimensions. One customer with 9–10 dimensions caused performance issues. Anaplan's recommendation: understand Polaris architecture before implementing, use dimension stacking where there is a one-to-one mapping between hierarchies, keep dev environments small (minimal data) while test and prod have full hierarchies. The dev team is also actively improving calculation patterns in the model.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">Q: Can we use custom versions instead of native versions in IFP v2?</div>
+        <div class="answer">A: No — native versions is a requirement for IFP v2. This is a frequently asked question covered in the FAQ document. The reasoning is that the application framework and upgrade mechanism rely on native versions. The concern partners raise is that custom versions offer more flexibility (easy creation via UX, lookups without SELECT, easier to archive), but this limitation is known. The dev team is working on supporting native versions with custom-style scenarios. Expect this to be addressed later in 2026 — sit tight on that front.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">Q: Our previous IFP v1.x customer had performance issues with model slowness — will IFP v2 fix that?</div>
+        <div class="answer">A: Possibly. The extensive re-architecting done for v2 specifically targeted performance improvements and the learnings from v1 feedback. However, there is no guarantee without diagnosing the specific bottleneck. As an architect, look at which modules have one-to-many relationships or large fan-outs — those are typically the performance bottlenecks. The dev team can advise if a specific pattern that caused issues in v1 has been resolved in v2. That said, the customer on v1 has probably not moved yet and would require a re-implementation to benefit from v2 improvements.</div>
+      </div>
+
+      <h2>Provisioning &amp; Tenant Requirements</h2>
+
+      <div class="qa-item">
+        <div class="question">Q: What does the customer need to set up before we can start using the App Framework?</div>
+        <div class="answer">A: The Customer Success Business Partner must open a provisioning ticket with Anaplan support to create a workspace in the customer tenant (minimum 100GB). For ALM environments (dev/QA/prod), multiple workspaces need to be provisioned. The Anaplan team deploys the application to the customer tenant after the ticket is processed — this takes approximately 10 minutes. Partners are then notified and can begin working.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">Q: What roles do we need in the customer tenant to generate the application?</div>
+        <div class="answer">A: To generate the application, you need the following roles: Application Owner, Workspace Admin, Page Builder, and Integration Admin. Critically, the App Framework can only generate from your default tenant. This means if you log in using your partner firm's email address (e.g., john@partnerfirm.com), you will NOT be able to generate — the customer tenant is not your default. To work around this: either get an email address in the customer's domain so the customer tenant becomes your default tenant, or have the customer's own tenant admin generate the application while you guide them. Once the app is generated, you can work on it using your normal partner login.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">Q: Can the application be deployed to multiple workspaces (dev, QA, prod) simultaneously?</div>
+        <div class="answer">A: Currently no — the App Framework can only deploy a generated application to one workspace at a time. To get dev/QA/prod, you use the normal ALM functionality to transfer models across workspaces after the initial generation to dev. Upgrades are deployed to the last-generated version (dev), and you push them through QA/prod using ALM. This limitation is on the roadmap to be resolved.</div>
+      </div>
+
+      <h2>Application Framework &amp; Generation</h2>
+
+      <div class="qa-item">
+        <div class="question">Q: We've been generating the app multiple times as we refine configuration — is there a problem with this?</div>
+        <div class="answer">A: Be careful: the LAST generated version is the one that will receive future upgrades. If you generated yesterday's version and today's version, and you're actually working on yesterday's, that version will NOT receive upgrades — the upgrade will apply to the most recent generation. Always work on the most recently generated version as your final copy. Best practice: first generate a base copy with no configuration changes (before renaming anything). This gives you a reference with all formulas intact. Then configure and generate your working version. If you get formula errors, you can look up the correct formula in the base copy.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">Q: Is there a way to change the number of hierarchy levels without regenerating the entire app?</div>
+        <div class="answer">A: No — changing hierarchy levels requires regeneration. When you add a new level, the system adds it at the bottom of the list. You must then drag the original 'leaf' level to remain at the bottom (the leaf level is important for technical reasons and must stay at the bottom). The new added levels cannot have the same name as the original leaf. There is no 'partial regeneration' of just the hierarchy — it is a full generation. This is a known limitation and partners have raised it. The advice is to invest heavily in Session Zero to lock hierarchy decisions before the first real generation.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">Q: Should we configure CapEx even if the customer says they don't need it right now?</div>
+        <div class="answer">A: Yes — Anaplan recommends generating the CapEx modules even if the customer doesn't plan to use them immediately. In Polaris models, modules don't consume significant memory/space until they contain actual data. Generating CapEx now avoids the need for a future regeneration to add it. The customer can leave it unused and implement it as a future phase without any impact on the current model.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">Q: What happens if a generation fails — all red errors? What should we do?</div>
+        <div class="answer">A: If everything failed, it usually means a permission issue — the user generating didn't have Page Builder or another required role. Fix the tenant admin permissions and regenerate. If some items fail: first check whether it's a known issue (import action errors and saved view errors in v2.04 are expected and can be ignored — they're resolved in v2.1). For formula errors: look up the underscore code from the error log (e.g., _492_...), go into Modules → Line Items, search for that code, and the missing formula will be empty. Copy the correct formula from your base copy model. If there are many unexpected errors, contact the Anaplan implementation team before spending time on resolution — export the error log and send it over.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">Q: Is there a guide for deciding whether to fix errors manually or regenerate?</div>
+        <div class="answer">A: General rule: if the first generation activity failed (which cascades), it likely means a configuration naming issue — all subsequent activities fail too. In this case, fix the configurator and regenerate. If it's just one or two isolated formula errors (the formula is empty, not a cascade failure), fix them manually by copying from the base model. If you're still in early development and haven't done extensions yet, regeneration is low-risk. If you've already done extensions, fixing manually preserves your work. As of v2.1, the volume of expected errors is very low — the London group (20 people) had just one formula error and some saved view errors.</div>
+      </div>
+
+      <h2>Upgrades &amp; Extensions</h2>
+
+      <div class="qa-item">
+        <div class="question">Q: When an IFP upgrade is applied, what exactly gets overwritten vs preserved?</div>
+        <div class="answer">A: The rule is based on whether something has a GUID tracked by the application framework. NET NEW items (line items you added, new modules, new dashboards, new processes, new lists) are NOT touched by upgrades — they have GUIDs unknown to the framework, so the upgrade ignores them. MODIFIED existing items (line items that existed in the base model but whose formula you changed, or whose formula override you added) WILL be reverted to the framework's version — the upgrade overwrites the formula. Line item subsets may also be reset (no 'production data' notion). Data tags are expected to survive upgrades (confirm with Anaplan team). Notes on line items may be overwritten. This is why the extension pattern is 'add net new, don't modify existing' — the only existing items you must modify are the 'connection points' (like the Final Amount formula) where your extension needs to plug in.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">Q: What if a customer has heavy customization — 85% custom, 15% standard IFP? Is upgrade even viable?</div>
+        <div class="answer">A: This is a real tension that multiple partners have raised. The practical answer: if the upgrade doesn't add functionality the customer needs, they can decline it. Upgrades can be declined up to 3 times before the app falls out of the support contract — and Anaplan expects customers will often decline if the upgrade doesn't solve a problem they have. For heavily customized models, the upgrade decision should be framed as: 'Does the new functionality justify the re-application work for our custom formulas?' If not, skip it. The advice from Anaplan is to build as much as possible using net new modules and extensions rather than modifying existing items, which minimizes the re-work on any upgrade.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">Q: If we delete a base model line item we don't want, does it come back in an upgrade?</div>
+        <div class="answer">A: Yes — the upgrade will add it back. The recommendation is NOT to delete base model line items. Instead: move them to the bottom of the list, exclude them from line item subsets so they don't appear on dashboards, and zero out or neutralize any formula that references them. This way, the upgrade can add them back cleanly without breaking anything. If you delete and the upgrade adds back, you'll need to delete again — and the formula it brings back may interfere with your customizations.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">Q: Will an upgrade affect historical data or actuals already in the model?</div>
+        <div class="answer">A: No — application upgrades will not change the dimensionality of existing modules. Historical data and actuals are safe. The risk area is formulas: if a formula on a module line item is reverted by an upgrade and you had extended it (e.g., adding your new extension line items to the Final Amount formula), the formula goes back to the base and no longer includes your extension calculation. The data in your extension modules is still there, but the formula no longer pulls it in. You'd need to re-add your formula overrides after the upgrade. This is why documenting every formula override with a data tag is critical — it becomes your post-upgrade checklist.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">Q: Does the IFP upgrade cost money?</div>
+        <div class="answer">A: The upgrade itself is included in the IFP application subscription fee. What costs money is the professional services work to re-apply formula overrides and customizations after an upgrade. If a customer has a COE lead who can do this themselves, no additional cost. If they need the partner to do it, that would be a professional services engagement. Partners should set expectations with customers upfront: accepting an upgrade may require a few days of partner time to validate and re-apply customizations.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">Q: If we add a new action to an existing generated process, does it survive upgrades?</div>
+        <div class="answer">A: Risky — existing processes are tracked by the framework and could be reset. Best practice: copy the process, add your new actions to the copy, then link the copy to the UX page instead. Or create a separate process entirely and run it as a supplemental action. This way, the original generated process can be reverted by an upgrade without losing your additions. Your copied process and its actions have new GUIDs the upgrade doesn't know about.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">Q: How should we document extensions to prepare for future upgrades?</div>
+        <div class="answer">A: Use data tags in Anaplan — create a tag called 'Extension' and apply it to every line item you've added net new. Create a second tag called 'Formula Override' and apply it to every existing base model line item whose formula you've changed. You can then export the line items list and filter by these tags to get your complete modification list. Also maintain external documentation (a section per extension area, e.g., 'Channel Planning', listing every object modified and what was changed). When an upgrade is applied, filter by 'Formula Override' tag to get your post-upgrade re-application checklist. Notes on line items are not yet confirmed as upgrade-safe — use data tags as the primary tracking mechanism.</div>
+      </div>
+
+      <h2>Implementation Approach &amp; Estimation</h2>
+
+      <div class="qa-item">
+        <div class="question">Q: What is a realistic implementation timeline for IFP v2?</div>
+        <div class="answer">A: The fastest seen for the base model (no customization, just configuration + data load) is approximately 6 weeks. QROS in the US has a day-by-day work plan for getting from zero to MVP. With customization (extensions), add another 6–10 weeks depending on scope. A phased approach: 6 weeks for base model + data loads, then scope and build extensions. For the first implementation, factor in extra time for Anaplan support cycles and any generation issues.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">Q: How should we structure the design phase for IFP — do we run a full process design before touching the configurator?</div>
+        <div class="answer">A: Do enough design to answer the configurator questions before generating — but you don't need the full traditional user story level of detail up front. The recommended approach: start with process design to understand the data model (what dimensions exist, what planning process the customer follows). Use this to answer configurator questions. Critically, also identify planned extensions during this phase — even if you won't build the extension modules yet, you need their dimensionality captured in the configurator so the plumbing is in place from the start. After generation, then do detailed design for individual extensions. Think of it as: process design → configurator questions → generate → detailed extension design.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">Q: What industries / customer types are a good fit for IFP?</div>
+        <div class="answer">A: Almost any company that does monthly financial planning with a traditional P&L structure is a good fit. Strong fits: manufacturing, financial services (OpEx and headcount), technology companies, professional services. Challenging fits: retail with seasonal planning or very granular SKU-level planning, banks needing banking-style balance sheets (IFP does standard corporate P&L, not banking balance sheet), and any customer where data density is extremely high and hierarchies are massive (potential Polaris performance concerns). Anaplan is actively bundling applications — IFP is the keystone and can be paired with Workforce Budgeting, OWP, and revenue applications to build a broader FP&A platform.</div>
       </div>
 
       <h2>Model Generation</h2>

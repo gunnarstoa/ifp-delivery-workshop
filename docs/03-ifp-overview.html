@@ -91,7 +91,41 @@
       <p>Version 2.0 is a significant re-architecture from prior versions. The headline change is the introduction of the <strong>Application Framework</strong> — a configurator-driven model generation system that replaces manual model setup. IFP 2.0 also introduced Anaplan Data Orchestrator (ADO) integration and Headcount Planning 2.0.</p>
 
       <h2>What's New in IFP 2.0</h2>
-<div class="table-wrap"><table><thead><tr><th>Capability</th><th>What It Is</th><th>Why It Matters</th></tr></thead><tbody><tr><td>App Framework</td><td>Configurator-driven generation — answer questions, generate a model</td><td>Eliminates weeks of manual module setup; standardizes delivery</td></tr><tr><td>ADO Integration</td><td>Anaplan Data Orchestrator built-in for data loading</td><td>Replaces manual import actions with orchestrated data pipelines</td></tr><tr><td>Headcount Planning 2.0</td><td>Rebuilt HC module with IFP integration</td><td>HC data flows directly into expense planning without manual mapping</td></tr><tr><td>Extensive Re-Architecting</td><td>Module naming, list structures, formula patterns all standardized</td><td>Easier to maintain, extend, and hand off between consultants</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>Capability</th><th>What It Is</th><th>Why It Matters</th></tr></thead><tbody><tr><td>App Framework</td><td>Configurator-driven generation — answer questions, generate a model (~500 background actions)</td><td>Eliminates weeks of manual module setup; standardizes delivery; takes 20–40 minutes to generate</td></tr><tr><td>ADO Integration</td><td>Anaplan Data Orchestrator built-in with pre-configured data templates for every hierarchy</td><td>Replaces manual import actions with orchestrated pipelines; v2.04 required post-configuration ADO setup; v2.1 configures ADO automatically</td></tr><tr><td>Headcount Planning 2.0</td><td>Role/job-level HC planning instead of employee-level; integrates with Workforce Budgeting and OWP</td><td>Addresses privacy concerns of employee-level data; enables pairing with Workforce Budgeting for deeper HC detail</td></tr><tr><td>Polaris Architecture</td><td>All IFP models run on Polaris (sparsity-aware engine)</td><td>Improved performance for sparse data; requires Polaris training as prerequisite; dense hierarchies need dimensionality planning</td></tr><tr><td>Upgradeability</td><td>Future IFP versions can be applied as upgrades without starting from scratch</td><td>First-ever upgrade path for IFP; upgrades apply to dev, then pushed through QA/prod via ALM; up to 2 upgrades per year expected</td></tr><tr><td>Extensive Re-Architecting</td><td>Module naming, list structures, formula patterns all standardized with unique GUIDs on every object</td><td>Enables upgrade tracking; easier to maintain, extend, and hand off</td></tr></tbody></table></div>
+
+      <h2>Dimensionality in IFP v2</h2>
+      <p>Understanding which dimensions are required vs optional is critical before the first configuration session with a customer.</p>
+<div class="table-wrap"><table><thead><tr><th>Dimension</th><th>Required?</th><th>Default Levels</th><th>Notes</th></tr></thead><tbody><tr><td>Entity</td><td>✅ Required</td><td>3</td><td>Cannot be removed; can be renamed/repurposed</td></tr><tr><td>Account</td><td>✅ Required</td><td>3</td><td>Cannot be removed; can be renamed (e.g., to ‘Project’)</td></tr><tr><td>Geography</td><td>Optional</td><td>3</td><td>Enable/disable via configurator question</td></tr><tr><td>Functional Area / Dept</td><td>Optional</td><td>3</td><td>Can be renamed (e.g., to ‘Cost Center’)</td></tr><tr><td>Product</td><td>Optional</td><td>3</td><td>Enable for product-level revenue or expense planning</td></tr><tr><td>Vendor</td><td>Optional</td><td>3</td><td>Enable for vendor-level expense planning</td></tr></tbody></table></div>
+      <div class="callout-note">
+        <span class="callout-label">ℹ Level Ranges</span>
+        <p>The default is 3 levels per dimension. Each hierarchy can be reduced to a minimum of 2 levels, or increased up to 8 levels (v2.04). Version 2.1 increases the maximum to <strong>12 levels</strong> per dimension. When removing levels, the original leaf level must always remain at the bottom. When adding levels, the new level is added at the bottom and must be dragged above the original leaf.</p>
+      </div>
+
+      <h2>Provisioning Requirements</h2>
+      <p>Before any implementation can begin, the following provisioning steps must be completed by the Anaplan team:</p>
+      <ol>
+        <li>Customer purchases the IFP application (includes subscription fee covering upgrades)</li>
+        <li>Customer Success Business Partner opens a provisioning ticket requesting workspace creation (minimum 100GB)</li>
+        <li>For ALM environments (dev/QA/prod), separate workspace provisioning tickets are needed for each environment</li>
+        <li>Anaplan team deploys the App Framework to the customer tenant (∼10 minutes)</li>
+        <li>Partner and Customer Success Business Partner are notified when deployment is complete</li>
+      </ol>
+      <div class="callout-warning">
+        <span class="callout-label">⚠ Tenant Admin Requirement for Generation</span>
+        <p>The App Framework can only generate from your <strong>default tenant</strong>. A partner using their firm email (e.g., john@partnerfirm.com) cannot generate if the customer tenant is not their default. Solution: get an email address in the customer's domain, or have the customer's tenant admin generate while you guide them. Roles required for generation: Application Owner, Workspace Admin, Page Builder, Integration Admin.</p>
+      </div>
+
+      <h2>Available Documentation</h2>
+      <p>All documentation is available in the Anaplan SharePoint site (link sent separately) and migrating to Seismic as IFP reaches general availability. Key resources:</p>
+      <ul>
+        <li><strong>Application Overview</strong> — Full IFP v2 description; detailed comparison with v1.x; architecture overview</li>
+        <li><strong>Configuration Guide</strong> — Step-by-step walkthrough of all 43 configuration questions; post-generation task checklist; print this for every implementation</li>
+        <li><strong>Error Log Guide</strong> — Common errors, resolution steps, and what errors to ignore vs fix</li>
+        <li><strong>Process Definition Documents</strong> — How IFP processes work end to end</li>
+        <li><strong>ADO Data Templates</strong> — Excel templates for every hierarchy (geography, entity, account, etc.) for customer data preparation</li>
+        <li><strong>Functional Walkthrough Videos</strong> — 10–15 minute videos covering core functionality; micro lessons on specific features</li>
+        <li><strong>Extension &amp; Upgrade FAQ</strong> — Best practices for documenting extensions; what survives upgrades; how to prepare for upgrade cycles</li>
+      </ul>
 
       <h2>Module Architecture</h2>
       <p>IFP 2.0 generates a consistent module naming convention across all four models. Understanding this architecture is essential for error log troubleshooting and extension work.</p>
@@ -100,6 +134,9 @@
       <h2>The App Framework Concept</h2>
       <p>The App Framework is the configuration and generation engine. The workflow is:</p>
 <div class="step"><div class="step-badge">1</div><div class="step-content"><h3>Configure</h3><p>Answer all configuration questions in the App Framework configurator. These define hierarchy levels, dimensions, planning methods, and scope.</p></div></div><div class="step"><div class="step-badge">2</div><div class="step-content"><h3>Generate</h3><p>Trigger generation. The App Framework reads your answers and provisions all four IFP models (Financial Planning, Headcount, Admin, Data Orchestrator). This takes 10–20 minutes.</p></div></div><div class="step"><div class="step-badge">3</div><div class="step-content"><h3>Review</h3><p>Inspect the generated model and error logs. 'Generated with errors' is normal and expected — it does not mean the model is broken.</p></div></div><div class="step"><div class="step-badge">4</div><div class="step-content"><h3>Extend</h3><p>Add customer-specific extensions on top of the generated base model. Document everything you change.</p></div></div><div class="callout-important"><span class="callout-label">🚨 'Generated with Errors' is Normal</span><p>Every IFP 2.0 generation in a training or early-stage environment produces errors. These are formula errors caused by configuration choices, hierarchy renaming, or geography differences from the base model template. The model is functional. You will learn to read and resolve these errors in the Error Log Review section.</p></div>
+
+      <h2>App Framework — Configuration View (May 7 Session)</h2>
+<figure class="screenshot"><img src="../img/may7-configurator-overview.jpg" alt="App Framework configurator showing hierarchy configuration in May 7 session" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">App Framework configurator — hierarchy configuration view, May 7 2026 workshop session</figcaption></figure>
 
       <h2>IFP Hierarchy Lists</h2>
 <figure class="screenshot"><img src="../img/overview/lists-0170.jpg" alt="IFP hierarchy lists — Geography, Functional Area, Entity, Product with levels" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">IFP hierarchy lists — Geography, Functional Area, Entity, Product with levels</figcaption></figure>

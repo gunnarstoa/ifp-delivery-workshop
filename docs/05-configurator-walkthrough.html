@@ -87,7 +87,13 @@
       </div>
 
       <h2>What the Configurator Is</h2>
-      <p>The App Framework configurator is the single interface for all IFP configuration decisions. It presents 43 configuration questions across three categories: top-level questions (22), financial planning configurations (17), and headcount configurations (3), plus additional settings. The answers to these questions determine what gets generated — module structure, list hierarchies, formula logic, and planning method availability.</p>
+      <p>The App Framework configurator is the single interface for all IFP configuration decisions. It presents <strong>43 configuration questions</strong> across three categories: top-level questions (22), financial planning configurations (17), and headcount configurations (3), plus additional settings. The answers to these questions determine what gets generated — module structure, list hierarchies, formula logic, and planning method availability.</p>
+      <p>The configurator is accessed via a specific URL: navigate to <code>anaplan.com/applications</code> (not through the normal workspace navigation, which doesn't yet show the Applications link in v2.04). As the app reaches general availability, this link will appear in the standard navigation.</p>
+
+      <div class="callout-note">
+        <span class="callout-label">ℹ Best Practice: Generate a Base Copy First</span>
+        <p>Before making any configuration changes, generate the application with all default settings first. This gives you a <strong>base copy</strong> — a model where all formulas generated correctly, with default hierarchy names and default dimensions intact. If you later get a formula error in your configured generation, you can look up the correct formula in the base copy and copy it over. Label this generation clearly (e.g., “Base — no changes”).</p>
+      </div>
 
       <div class="callout-warning">
         <span class="callout-label">⚠ Configuration Is Final at Generation</span>
@@ -113,6 +119,29 @@
       <h2>Financial Planning Configurations (17 Questions)</h2>
       <p>Financial planning configurations control the planning methods available, headcount settings, and OpEx behavior. These are less structural than top-level questions but still affect formula generation.</p>
 <div class="table-wrap"><table><thead><tr><th>Configuration Area</th><th>Key Decisions</th></tr></thead><tbody><tr><td>OpEx Planning Methods</td><td>Which methods are available: Direct Input, Units × Rate, Rolling Moving Average, Custom methods</td></tr><tr><td>Headcount Planning</td><td>Headcount dimensions, planning method defaults, integration with HC model</td></tr><tr><td>Balance Sheet Configuration</td><td>Which balance sheet accounts are in scope, roll-up hierarchy</td></tr><tr><td>Revenue Configuration</td><td>Driver selection, product hierarchy levels, volume × price method</td></tr><tr><td>Actuals Integration</td><td>How actuals data loads into DAT modules — ADO pipeline configuration</td></tr></tbody></table></div><figure class="screenshot"><img src="../img/configurator/cfg-0115.jpg" alt="App Framework Configurator — Financial Planning dimensionality checkboxes for expense planning" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">App Framework Configurator — Financial Planning dimensionality checkboxes for expense planning</figcaption></figure>
+
+      <h2>Key Configurator Nuances (Learned from Delivery)</h2>
+      <ul>
+        <li><strong>Hierarchy name + configurator question must match:</strong> In v2.04, the hierarchy name in the Hierarchies section and the rename in the Configuration Questions are NOT linked. You must update both. This is expected to be fixed in v2.1.</li>
+        <li><strong>No trailing spaces in names:</strong> Trailing spaces in renamed hierarchies have caused generation errors. Double-check names don't have spaces before or after.</li>
+        <li><strong>Leaf level must stay at the bottom:</strong> When removing a level, remove the middle level and keep the leaf at the bottom. When adding a level, the system adds it at the bottom — drag it above the original leaf level. The original leaf cannot be renamed to the same name as the new level.</li>
+        <li><strong>Hierarchies and Configuration Questions are separate:</strong> There are two questions per renamed dimension — one creates the list, one creates the modules. The second is lowercase. You must update both.</li>
+        <li><strong>Restore Default per hierarchy:</strong> Each hierarchy has its own “Restore Default” button. A master reset of all configuration is not yet available (coming in v2.1).</li>
+        <li><strong>Order of configurator vs hierarchies:</strong> You can complete hierarchies first or configuration questions first — there is no required order.</li>
+        <li><strong>Generate CapEx even if not needed now:</strong> Polaris modules don’t use significant memory until they contain data. Generate CapEx now to avoid a future regeneration if the customer adds it later.</li>
+        <li><strong>Custom dimensions (flat lists) are extensions, not hierarchies:</strong> Flat list dimensions (e.g., Channel) are not configured in the Hierarchies section — they are built as extensions post-generation.</li>
+      </ul>
+
+      <h2>Generation Process</h2>
+      <p>After completing all configuration questions and hierarchy settings:</p>
+      <ol>
+        <li>Click <strong>Generate</strong> from the App Framework overview</li>
+        <li>Enter a description for this generation (e.g., “Base — no changes” or “FintechCo — 3 entity levels, no geography”)</li>
+        <li>Select the target workspace</li>
+        <li>Generation runs in the cloud — approximately 20–40 minutes. Monitor progress on the main /applications page rather than inside the App Framework (the status indicator inside the framework may lag)</li>
+        <li>When complete, all items show green. Items in red are errors. Items in amber are warnings.</li>
+        <li>Export the error log for review</li>
+      </ol>
 
       <h2>Before the Lab</h2>
 <div class="callout-note"><span class="callout-label">ℹ Preparation</span><p>During Lab A, you will configure the App Framework for FintechCo. Review the FintechCo case study profile now and note any configuration decisions that feel ambiguous. The facilitator will answer questions before you begin configuring.</p></div>
