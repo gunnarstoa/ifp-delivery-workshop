@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Extension Exercise 1 — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+  <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">Getting Started</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">Workshop Overview</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">IFP Overview</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for IFP</a></li>
+    </ul>
+    <li class="nav-section-title">Day 1 — Configuration</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">App Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-configuration-exercises.html">Configuration Exercises 1-3</a></li>
+      <li><a class="nav-link" href="./07-generation.html">Model Generation</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">Post-Generation Steps</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Error Log Review</a></li>
+    </ul>
+    <li class="nav-section-title">Day 2 — Extensions</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">Extensions Overview</a></li>
+      <li><a class="nav-link active" href="./11-extension-exercise-1.html">Extension Exercise 1</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">Extension Exercise 2</a></li>
+    </ul>
+    <li class="nav-section-title">Reference</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">What's Coming</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">Q&A from Sessions</a></li>
+      <li><a class="nav-link" href="./15-facilitator.html">Facilitator Guide</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 Language</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>Extension Exercise 1: Manual Adjustments</h1>
+      <p class="subtitle">Add custom expense adjustment line items to a generated model</p>
+      <div class="badge-row"><span class="content-badge">Day 2</span><span class="content-badge">45 min</span><span class="content-badge">Guided Lab</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="tsd-banner">
+        <div class="tsd-step tsd-step-tell">
+          <span class="tsd-step-label">📖 Tell</span>
+          <span class="tsd-step-heading">Business Requirement</span>
+          <span class="tsd-step-desc">Why partners need to add manual adjustment line items post-generation.</span>
+        </div>
+        <div class="tsd-step tsd-step-show">
+          <span class="tsd-step-label">👁 Show</span>
+          <span class="tsd-step-heading">Step-by-Step Walk-Through</span>
+          <span class="tsd-step-desc">Facilitator demonstrates the exact configuration and formula changes required.</span>
+        </div>
+        <div class="tsd-step tsd-step-do">
+          <span class="tsd-step-label">✅ Do</span>
+          <span class="tsd-step-heading">Configure Your Own</span>
+          <span class="tsd-step-desc">Participants replicate the changes in their own model and validate the logic.</span>
+        </div>
+      </div>
+
+      <div class="callout-note">
+        <span class="callout-label">💡 Key Principle: Extensions Require Pre-Work</span>
+        <p>Complete all work in the Configuration Guide <strong>prior to starting any extensions and/or overrides</strong>. Model structure must be locked before adding custom elements.</p>
+      </div>
+
+      <h2>Business Scenario</h2>
+      <p><strong>Business Requirement:</strong> The finance team needs to track two additional types of manual adjustments for expense inputs beyond the default structure. Examples might include:</p>
+      <ul>
+        <li>Mid-year budget adjustments</li>
+        <li>Special project cost allocations</li>
+        <li>One-time extraordinary items</li>
+      </ul>
+
+      <p><strong>Solution Approach:</strong> Add new line-items to the OpEx Expense Planning module, modify the aggregation formula to include them, and configure write access and UX visibility.</p>
+
+      <h2>Step-by-Step Implementation</h2>
+
+      <h3>Step 1: Add New Line-Items to the Module</h3>
+      <ol>
+        <li>Open module <code>INP OPX Expense Planning</code> in the "Financial Planning" model</li>
+        <li>Navigate to the <strong>"Direct Input Method"</strong> section of the blueprint</li>
+        <li>Add 2 new line-items:
+          <ul>
+            <li><strong>Manual Adjustment #1</strong></li>
+            <li><strong>Manual Adjustment #2</strong></li>
+          </ul>
+        </li>
+        <li>Set the Format of the new line-items to match the existing "Amount" line-item format</li>
+        <li>Set the Write Access Driver for each new line-item (e.g., allow users to write directly or via a specific planning method)</li>
+        <li><strong>Document what the line-items are for</strong> in the module blueprint "Notes" field</li>
+      </ol>
+
+      <div class="callout-warning">
+        <span class="callout-label">⚠ Documentation Is Critical</span>
+        <p>Every extension you make must be documented. Include:</p>
+        <ul>
+          <li>What the new line-item is for (business use case)</li>
+          <li>Which teams will have write access</li>
+          <li>Any formula dependencies</li>
+          <li>Dates when the extension was added</li>
+        </ul>
+        <p>This becomes essential during upgrades and troubleshooting.</p>
+      </div>
+
+      <h3>Step 2: Modify the Aggregation Formula</h3>
+      <p>The existing formula for <code>Direct Input Fcst</code> currently sums only the pre-generated line-items. You need to update it to include your new adjustments.</p>
+
+      <ol>
+        <li>Open the formula for line-item <strong>"Direct Input Fcst"</strong> in the blueprint</li>
+        <li>Modify the formula to include the 2 new manual adjustment line-items:
+          <ul>
+            <li>Add <code>+ Manual Adjustment #1 + Manual Adjustment #2</code> to the SUM statement</li>
+            <li>Keep the formula syntax consistent with existing patterns</li>
+          </ul>
+        </li>
+        <li><strong>Document what you changed</strong> in the "Notes" field of the module blueprint</li>
+        <li><strong>Maintain a master list of overrides</strong> in an offline document (Excel, Notion, etc.) with:
+          <ul>
+            <li>Original formula syntax</li>
+            <li>Updated formula syntax</li>
+            <li>Date of change</li>
+            <li>Reason for change</li>
+          </ul>
+        </li>
+      </ol>
+
+      <h3>Step 3: Update the Line-Item Subset (LISS)</h3>
+      <p>The LISS (Line Item Subset) controls which line-items appear in specific UX modules. You need to register your new line-items.</p>
+
+      <ol>
+        <li>Open line-item subset <strong>"LISS: OpEx Filter"</strong></li>
+        <li>Check the Boolean checkbox for both new manual adjustment line-items</li>
+        <li>Save the changes</li>
+      </ol>
+
+      <h3>Step 4: Configure Planning Method Access</h3>
+      <p>Determine how users will interact with these adjustments in the UX:</p>
+
+      <ol>
+        <li>Open module <strong>"ADMIN LISS OpEx Filter"</strong></li>
+        <li>For each of the 2 new line-items, set the "Forecast Method" to <strong>"Direct Input"</strong></li>
+        <li>This allows users to manually enter adjustment values in the planning interface</li>
+        <li>Save and verify the settings</li>
+      </ol>
+
+      <h3>Step 5: Validate the Logic in the UX</h3>
+      <p>Test your changes end-to-end:</p>
+
+      <ol>
+        <li>In the UX App, open page <strong>"OpEx – Planning"</strong></li>
+        <li>Select account <strong>"6005 Office Equipment"</strong> (or any account to test)</li>
+        <li>Verify the new adjustment line-items appear and are editable</li>
+        <li>Enter a test value in "Manual Adjustment #1"</li>
+        <li>Confirm that:
+          <ul>
+            <li>The value is captured</li>
+            <li>The formula includes the adjustment in the "Direct Input Fcst" total</li>
+            <li>The logic cascades correctly to upper-level summaries</li>
+          </ul>
+        </li>
+        <li><strong>If something doesn't work:</strong> Compare your formula to the reference (base copy) and correct any syntax errors</li>
+      </ol>
+
+      <div class="callout-note">
+        <span class="callout-label">ℹ Troubleshooting Tip</span>
+        <p>If your new adjustment line-items don't appear in the UX or the formula doesn't calculate, check:</p>
+        <ul>
+          <li>Did you add the line-items to the LISS?</li>
+          <li>Did you update the aggregation formula correctly?</li>
+          <li>Did you set the Planning Method to "Direct Input"?</li>
+          <li>Compare your formula syntax character-by-character against a working example</li>
+        </ul>
+      </div>
+
+      <h2>Key Takeaways</h2>
+      <ul>
+        <li>Extensions follow a consistent pattern: <strong>Add → Configure → Update Formula → Validate</strong></li>
+        <li><strong>Documentation is not optional</strong> — it's a prerequisite for upgrades and collaboration</li>
+        <li>Always test in the UX before declaring the extension complete</li>
+        <li>Keep a master change log so you know exactly what you modified and why</li>
+        <li>Reference implementations (base copy) are your best debugging tool</li>
+      </ul>
+
+    </div>
+  </main>
+
+  <script src="../js/script.js"></script>
+</body>
+</html>
