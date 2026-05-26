@@ -97,7 +97,7 @@
 
       <div class="qa-item">
         <div class="question">Q: What dimensions are required vs optional in IFP v2?</div>
-        <div class="answer">A: Two dimensions are required and cannot be removed: Entity and Account. They can be renamed and repurposed (e.g., Account renamed to Project), but must be present. All other dimensions — Geography, Functional Area/Department, Product, Vendor, etc. — are optional and can be enabled, disabled, or renamed via the configurator. The default configuration includes 3 dimension levels for each hierarchy. You can increase to 8 levels or decrease to 2. Version 2.1 is expected to increase the maximum to 12 levels.</div>
+        <div class="answer">A: Two dimensions are required and cannot be removed: Entity and Account. They can be renamed and repurposed (e.g., Account renamed to Project), but must be present. All other dimensions — Location, Functional Area/Department, Product, Vendor, etc. — are optional and can be enabled, disabled, or renamed via the configurator. The default configuration includes 3 dimension levels for each hierarchy. You can increase to 8 levels or decrease to 2. Version 2.1 is expected to increase the maximum to 12 levels.</div>
       </div>
 
       <div class="qa-item">
@@ -151,7 +151,7 @@
 
       <div class="qa-item">
         <div class="question">Q: What happens if a generation fails — all red errors? What should we do?</div>
-        <div class="answer">A: If everything failed, it usually means a permission issue — the user generating didn't have Page Builder or another required role. Fix the tenant admin permissions and regenerate. If some items fail: first check whether it's a known issue (import action errors and saved view errors in v2.04 are expected and can be ignored — they're resolved in v2.1). For formula errors: look up the underscore code from the error log (e.g., _492_...), go into Modules → Line Items, search for that code, and the missing formula will be empty. Copy the correct formula from your base copy model. If there are many unexpected errors, contact the Anaplan implementation team before spending time on resolution — export the error log and send it over.</div>
+        <div class="answer">A: If everything failed, it usually means a permission issue — the user generating didn't have Page Builder or another required role. Fix the tenant admin permissions and regenerate. If some items fail: first check whether it's a known issue (import action errors and saved view errors in v2.1.0 are expected and can be ignored — they're resolved in v2.1). For formula errors: look up the underscore code from the error log (e.g., _492_...), go into Modules → Line Items, search for that code, and the missing formula will be empty. Copy the correct formula from your base copy model. If there are many unexpected errors, contact the Anaplan implementation team before spending time on resolution — export the error log and send it over.</div>
       </div>
 
       <div class="qa-item">
