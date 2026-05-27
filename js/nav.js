@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const href = link.getAttribute('href').split('/').pop();
     if (href === currentPage) {
       link.classList.add('active');
+    } else {
+      link.classList.remove('active');
     }
   });
 
