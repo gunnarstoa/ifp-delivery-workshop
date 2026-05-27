@@ -195,7 +195,7 @@
         <li>App Framework available to all participants — not just the facilitator</li>
         <li>Dataset files distributed for customer context</li>
         <li>Known generation error confirmed: at least one LINE_ITEM_FORMULA error expected in training model</li>
-        <li>Extensions sandbox model ready (for Lab B and Lab C — a clean base model all participants can work in)</li>
+        <li>Extension examples prepared — reference implementations ready to review</li>
         <li>Micro-lesson video accessible (Headcount × Rate method — SharePoint link confirmed working)</li>
         <li>Participant list → assign breakout pairs for lab exercises</li>
         <li>Screen share tested — participants can see your screen clearly (resolution, font size)</li>
@@ -323,7 +323,7 @@
         <p>Good morning. Quick recap of yesterday: we configured the Application Framework Configurator, generated the model, verified it, and worked through the error logs. Today is extensions — adding customer-specific capabilities on top of the generated base model.</p>
         <p>We are going to cover the extension framework, then build two extensions hands-on: direct input with adjustment layers, and a headcount-driven rate planning method. Both of these come up in almost every IFP engagement.</p>
       </div>
-      <div class="facilitator-note">Confirm: everyone can access the training base model (IFPv2.0.0-train-base-financial-planning). If anyone cannot access it, resolve before proceeding to Lab B.</div>
+      <div class="facilitator-note">Confirm: everyone can access the training base model (IFPv2.0.0-train-base-financial-planning). If anyone cannot access it, resolve before proceeding to Extensions.</div>
 
       <hr class="section-divider">
 
@@ -332,89 +332,8 @@
         <p>Three types of extensions: Configure, Extend, Modify. Configure is always first — use The Application Framework Configurator if it has a setting. Extend adds new things without touching base model formulas — low upgrade risk. Modify changes existing base model formulas — highest upgrade risk.</p>
         <p>Before I touch any extension in an IFP model, I create two data tags: Extension and Formula Override. These are the only in-model records of what I changed. Without them, the next consultant on the project — or you, six months later — has no way to know what is base model and what is custom.</p>
       </div>
-      <div class="click-instruction"><strong>Click:</strong> Show the OpEx planning UX — demonstrate what Direct Input looks like now (single value, no adjustments). This is what you are extending in Lab B.</div>
+      <div class="click-instruction"><strong>Click:</strong> Show the OpEx planning UX — demonstrate what Direct Input looks like now (single value, no adjustments). This is what you are extending in Extensions.</div>
 
       <hr class="section-divider">
 
-      <h3>Lab B: Direct Input + Adjustments <span class="timing-badge">9:45 — 45 min</span></h3>
-      <div class="script-block">
-        <p>Customer requirement: direct input plus two adjustment layers — management override and regional adjustment. Total = Direct Input + Adjustment 1 + Adjustment 2. Five changes to the model, in order. Let me show you the completed version first, then you build it.</p>
-      </div>
-      <div class="click-instruction"><strong>Click:</strong> Demo model → show completed extension — two adjustment line items visible, formula override tagged, filter and admin subsets updated. Verify numbers add up correctly in UX.</div>
-      <div class="script-block">
-        <p>Now your turn. Work in the training base model. Five steps: create data tags, add adjustment line items, modify the Final Amount formula, update the filter subset, update the admin subset. Go.</p>
-      </div>
-      <div class="facilitator-note">Watch for: participants modifying the formula without tagging it as Formula Override, participants updating only the filter subset and not the admin subset (most common error), anyone who cannot find the DCA on the base line item to copy.</div>
-
-      <hr class="section-divider">
-
-      <h3>Break <span class="timing-badge">10:30 — 15 min</span></h3>
-
-      <hr class="section-divider">
-
-      <h3>Lab C: Headcount × Rate Method <span class="timing-badge">10:45 — 60 min</span></h3>
-      <div class="script-block">
-        <p>This is the most involved lab. We are adding a brand new planning method to IFP — not just adding line items, but registering a method in the system list, associating it with a business area, building the calculation logic, and wiring it all the way through to the UX.</p>
-        <p>Before you build it yourself, watch the micro-lesson video. It covers the exact steps. After the video, you replicate it in your model.</p>
-      </div>
-      <div class="click-instruction"><strong>Click:</strong> Play the Headcount × Rate micro-lesson video from the SharePoint micro-lessons folder. (~8 minutes)</div>
-      <div class="facilitator-note">After the video: give participants 60 minutes to build the method. Seven mini-labs in the guide. Circulate and focus on: Applies-To configuration on the HC Boolean (must not be time-variant), formula scope on Rate (actuals version only), and the admin subset mapping (most commonly missed step).</div>
-
-      <hr class="section-divider">
-
-      <h3>Lunch <span class="timing-badge">11:45 — 75 min</span></h3>
-
-      <hr class="section-divider">
-
-      <h3>Knowledge Check <span class="timing-badge">13:00 — 30 min</span></h3>
-      <div class="script-block">
-        <p>Let me run through a knowledge check — these are the questions I expect you to be able to answer after this workshop. Some are multiple choice, some are scenario-based. Raise your hand when you have an answer.</p>
-      </div>
-      <div class="facilitator-note">Use the debrief questions from each lab page as the knowledge check. Recommended order: Lab A Q3 (regeneration scenario), Lab B Q4 (access driver rationale), Lab C Q4 (upgrade risk). These three questions together cover configuration, extension risk, and planning method design.</div>
-
-      <hr class="section-divider">
-
-      <h3>Debrief &amp; Close <span class="timing-badge">14:00 — 30 min</span></h3>
-      <div class="script-block">
-        <p>Let me close with the most important things to take into your next IFP engagement.</p>
-        <p>One: Session Zero decisions are irreversible. Lock hierarchy before anyone touches The Application Framework Configurator. Regeneration is expensive.</p>
-        <p>Two: Generated with errors is normal. Do not let it panic the customer. Categorize, fix, log, and move on.</p>
-        <p>Three: Tag everything. Extension tag. Formula Override tag. External doc. Before you close the model.</p>
-        <p>Four: When in doubt, configure first. If The Application Framework Configurator has a setting, use it. Extensions are for things The Application Framework Configurator genuinely cannot do.</p>
-        <p>Thank you for the two days. Safe travels.</p>
-      </div>
-
-      <hr class="section-divider">
-
-      <h2>Lab Debrief Answer Keys</h2>
-
-      <h3>Lab A — Configurator Exercise</h3>
-      <p><strong>Q1: What was the hardest configuration decision?</strong><br>
-      Expected answer: Hierarchy levels (entity structure) and functional area scope. These are structurally final decisions. Consultants often struggle with how many entity levels a customer truly needs — the tendency is to over-engineer. A 3-level entity structure is common but should match the actual business hierarchy. Unnecessary levels add model complexity without benefit.</p>
-
-      <p><strong>Q2: Which decisions cannot be changed post-generation?</strong><br>
-      Expected answer: Entity level count, geography level count, functional areas in scope, fiscal year structure. These drive module generation and list structure. Anything that changes the dimension count of the model requires regeneration.</p>
-
-      <p><strong>Q3: Mid-session, a customer asks for product-level planning for a specific region.</strong><br>
-      This changes the Hierarchy configuration (Product Levels must be set) and the Financial Planning configuration (product-level planning methods). If this is discovered mid-configuration, add Product Hierarchy to The Application Framework Configurator before generating. If discovered after generation, it requires regeneration. This is why product scope must be confirmed at Session Zero — it is a structural decision.</p>
-
-      <h3>Lab B — Direct Input + Adjustments</h3>
-      <p><strong>Q1: What is the risk of modifying the Final Amount formula?</strong><br>
-      The Final Amount line item is part of the base model. Modifying its formula creates an override that may be lost or broken when Anaplan releases an IFP update that touches the same module. Mitigation: tag the line item with Formula Override, document the exact formula change externally (design spec), and after any IFP upgrade, review all Formula Override-tagged items to confirm they are still intact.</p>
-
-      <p><strong>Q4: Why use access driver (DCA) instead of hiding in UX?</strong><br>
-      Access driver enforces at the model level. Without it: (1) the formula still runs for all accounts even when the method is not active, wasting calculation resources; (2) data can still be entered via import actions regardless of UX visibility, causing data integrity problems. The access driver prevents both — it makes the line item genuinely unavailable when the method does not apply, not just visually hidden.</p>
-
-      <h3>Lab C — Headcount × Rate Method</h3>
-      <p><strong>Q1: Why access driver instead of UX hiding?</strong><br>
-      Same rationale as Lab B: access driver controls at the model level. Without the access driver on HC Amount, Rate, and Adjustment, those line items would calculate (or accept input) for every GL account regardless of the planning method assignment. This would cause incorrect amounts to flow into Final Amount for accounts that should use a different method.</p>
-
-      <p><strong>Q4: What is the upgrade risk of this extension?</strong><br>
-      The highest-risk item is the Final Amount formula modification — a formula override on a base model line item. The new planning method list entry and the new INP line items are extensions (additions) and carry lower risk. The Final Amount modification is what must be reviewed after every IFP upgrade. The Formula Override tag and external documentation make this review tractable rather than a hunt-through-the-model exercise.</p>
-
-<div class="prevnext-nav"><a class="prevnext-btn" href="./14-qanda.html">← Previous</a><span></span></div>
-    </div>
-  </main>
-  <script src="../js/nav.js"></script>
-</body>
-</html>
+      
