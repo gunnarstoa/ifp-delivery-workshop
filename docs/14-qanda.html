@@ -25,7 +25,7 @@
     </ul>
     <li class="nav-section-title">Configuration</li>
     <ul class="nav-submenu">
-      <li><a class="nav-link" href="./05-configurator-walkthrough.html">App Framework Configurator</a></li>
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
       <li><a class="nav-link" href="./06-exercise-1.html">Configuration Exercise 1</a></li>
       <li><a class="nav-link" href="./06-exercise-2.html">Configuration Exercise 2</a></li>
       <li><a class="nav-link" href="./06-exercise-3.html">Configuration Exercise 3</a></li>
@@ -80,7 +80,7 @@
 
       <div class="qa-item">
         <div class="question">Q: What are the most important differences between IFP v1.x and IFP v2?</div>
-        <div class="answer">A: The headline change is the Application Framework — a configurator-driven generation engine that replaces manual model setup. You answer configuration questions, and the framework generates all four models (Financial Planning, Headcount, Admin, Data Orchestrator) automatically — about 500 background actions, taking 20–40 minutes. IFP v2 is also Polaris-based (removing sparsity, improving performance), includes native ADO integration with pre-configured pipelines, changed headcount planning from employee-level to role/job-level, and supports upgradeability — future versions can be applied without starting from scratch. The application overview document in the SharePoint site covers the full differences.</div>
+        <div class="answer">A: The headline change is the Application Framework — a Application Framework Configurator-driven generation engine that replaces manual model setup. You answer configuration questions, and the framework generates all four models (Financial Planning, Headcount, Admin, Data Orchestrator) automatically — about 500 background actions, taking 20–40 minutes. IFP v2 is also Polaris-based (removing sparsity, improving performance), includes native ADO integration with pre-configured pipelines, changed headcount planning from employee-level to role/job-level, and supports upgradeability — future versions can be applied without starting from scratch. The application overview document in the SharePoint site covers the full differences.</div>
       </div>
 
       <div class="qa-item">
@@ -102,7 +102,7 @@
 
       <div class="qa-item">
         <div class="question">Q: What dimensions are required vs optional in IFP v2?</div>
-        <div class="answer">A: Two dimensions are required and cannot be removed: Entity and Account. They can be renamed and repurposed (e.g., Account renamed to Project), but must be present. All other dimensions — Location, Functional Area/Department, Product, Vendor, etc. — are optional and can be enabled, disabled, or renamed via the configurator. The default configuration includes 3 dimension levels for each hierarchy. You can increase to 8 levels or decrease to 2. Version 2.1 is expected to increase the maximum to 12 levels.</div>
+        <div class="answer">A: Two dimensions are required and cannot be removed: Entity and Account. They can be renamed and repurposed (e.g., Account renamed to Project), but must be present. All other dimensions — Location, Functional Area/Department, Product, Vendor, etc. — are optional and can be enabled, disabled, or renamed via The Application Framework Configurator. The default configuration includes 3 dimension levels for each hierarchy. You can increase to 8 levels or decrease to 2. Version 2.1 is expected to increase the maximum to 12 levels.</div>
       </div>
 
       <div class="qa-item">
@@ -161,7 +161,7 @@
 
       <div class="qa-item">
         <div class="question">Q: Is there a guide for deciding whether to fix errors manually or regenerate?</div>
-        <div class="answer">A: General rule: if the first generation activity failed (which cascades), it likely means a configuration naming issue — all subsequent activities fail too. In this case, fix the configurator and regenerate. If it's just one or two isolated formula errors (the formula is empty, not a cascade failure), fix them manually by copying from the base model. If you're still in early development and haven't done extensions yet, regeneration is low-risk. If you've already done extensions, fixing manually preserves your work. As of v2.1, the volume of expected errors is very low — the London group (20 people) had just one formula error and some saved view errors.</div>
+        <div class="answer">A: General rule: if the first generation activity failed (which cascades), it likely means a configuration naming issue — all subsequent activities fail too. In this case, fix The Application Framework Configurator and regenerate. If it's just one or two isolated formula errors (the formula is empty, not a cascade failure), fix them manually by copying from the base model. If you're still in early development and haven't done extensions yet, regeneration is low-risk. If you've already done extensions, fixing manually preserves your work. As of v2.1, the volume of expected errors is very low — the London group (20 people) had just one formula error and some saved view errors.</div>
       </div>
 
       <h2>Upgrades &amp; Extensions</h2>
@@ -209,8 +209,8 @@
       </div>
 
       <div class="qa-item">
-        <div class="question">Q: How should we structure the design phase for IFP — do we run a full process design before touching the configurator?</div>
-        <div class="answer">A: Do enough design to answer the configurator questions before generating — but you don't need the full traditional user story level of detail up front. The recommended approach: start with process design to understand the data model (what dimensions exist, what planning process the customer follows). Use this to answer configurator questions. Critically, also identify planned extensions during this phase — even if you won't build the extension modules yet, you need their dimensionality captured in the configurator so the plumbing is in place from the start. After generation, then do detailed design for individual extensions. Think of it as: process design → configurator questions → generate → detailed extension design.</div>
+        <div class="question">Q: How should we structure the design phase for IFP — do we run a full process design before touching The Application Framework Configurator?</div>
+        <div class="answer">A: Do enough design to answer The Application Framework Application Framework Configurator questions before generating — but you don't need the full traditional user story level of detail up front. The recommended approach: start with process design to understand the data model (what dimensions exist, what planning process the customer follows). Use this to answer Application Framework Configurator questions. Critically, also identify planned extensions during this phase — even if you won't build the extension modules yet, you need their dimensionality captured in The Application Framework Configurator so the plumbing is in place from the start. After generation, then do detailed design for individual extensions. Think of it as: process design → Application Framework Configurator questions → generate → detailed extension design.</div>
       </div>
 
       <div class="qa-item">
@@ -270,7 +270,7 @@
 
       <div class="callout-note">
   <p><strong>Q: How do I know if a change is a configure, extend, or modify?</strong></p>
-  <p><strong>A:</strong> Configure = check the configurator first. If there is a setting for the customer's requirement, use it — do not build an extension when configuration handles it. Extend = add new line items, modules, or lists without touching existing base model formulas. This is low upgrade risk. Modify = change an existing base model formula or structure. This carries the highest upgrade risk. When in doubt, ask: 'Am I changing something that was generated, or adding something new?' If changing, it is a Modify.</p>
+  <p><strong>A:</strong> Configure = check The Application Framework Configurator first. If there is a setting for the customer's requirement, use it — do not build an extension when configuration handles it. Extend = add new line items, modules, or lists without touching existing base model formulas. This is low upgrade risk. Modify = change an existing base model formula or structure. This carries the highest upgrade risk. When in doubt, ask: 'Am I changing something that was generated, or adding something new?' If changing, it is a Modify.</p>
 </div>
 
       <div class="callout-note">
@@ -309,7 +309,7 @@
 
       <div class="callout-note">
   <p><strong>Q: Does a planning method need to be re-configured if we regenerate the model?</strong></p>
-  <p><strong>A:</strong> If the planning method was added as an extension (not a configurator setting), yes — it will need to be rebuilt after regeneration. This is another reason why regeneration should be treated as exceptional. Extensions added post-generation are not captured by the configurator and will not survive a regeneration.</p>
+  <p><strong>A:</strong> If the planning method was added as an extension (not a configurator setting), yes — it will need to be rebuilt after regeneration. This is another reason why regeneration should be treated as exceptional. Extensions added post-generation are not captured by The Application Framework Configurator and will not survive a regeneration.</p>
 </div>
 
       <hr>

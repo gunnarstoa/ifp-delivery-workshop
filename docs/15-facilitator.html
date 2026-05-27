@@ -137,7 +137,7 @@
     </ul>
     <li class="nav-section-title">Configuration</li>
     <ul class="nav-submenu">
-      <li><a class="nav-link" href="./05-configurator-walkthrough.html">App Framework Configurator</a></li>
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
       <li><a class="nav-link" href="./06-exercise-1.html">Configuration Exercise 1</a></li>
       <li><a class="nav-link" href="./06-exercise-2.html">Configuration Exercise 2</a></li>
       <li><a class="nav-link" href="./06-exercise-3.html">Configuration Exercise 3</a></li>
@@ -211,7 +211,7 @@
       <h3>Opening <span class="timing-badge">9:00 — 15 min</span></h3>
       <div class="script-block">
         <p>Welcome everyone. Today and tomorrow we are going to go deep on IFP 2.0 delivery — not the overview, but the hands-on practitioner workflow you need to actually deliver this for a customer.</p>
-        <p>Day 1 is all about configuration and generation. We will walk through the App Framework configurator together, then you will configure it yourselves for our fictional company FintechCo. After that, we will generate a model, deal with errors, and review the error logs systematically.</p>
+        <p>Day 1 is all about configuration and generation. We will walk through the Application Framework Configurator together, then you will configure it yourselves for our fictional company FintechCo. After that, we will generate a model, deal with errors, and review the error logs systematically.</p>
         <p>Day 2 is extensions. We will build two real extensions from scratch — the kind of things customers ask for in almost every IFP engagement.</p>
         <p>Quick logistics: please confirm you can log into the training tenant. Raise your hand if you are having trouble accessing the workspace.</p>
       </div>
@@ -231,8 +231,8 @@
 
       <h3>Configurator Walkthrough <span class="timing-badge">9:35 — 45 min</span></h3>
       <div class="script-block">
-        <p>Let me take you through the configurator section by section. Follow along in your own workspace — you are not configuring yet, just watching.</p>
-        <p>The configurator has three main sections: Hierarchies, Data Structure, and Configurations. Hierarchies is the most critical — these decisions are irreversible after generation.</p>
+        <p>Let me take you through The Application Framework Configurator section by section. Follow along in your own workspace — you are not configuring yet, just watching.</p>
+        <p>The Application Framework Configurator has three main sections: Hierarchies, Data Structure, and Configurations. Hierarchies is the most critical — these decisions are irreversible after generation.</p>
       </div>
       <div class="click-instruction"><strong>Click:</strong> App Framework → Configurator → Hierarchies. Show entity levels, geography levels, functional area checkboxes.</div>
       <div class="script-block">
@@ -250,7 +250,7 @@
         <p>This is a decision exercise. There is no step-by-step answer guide. You are making real configuration choices — the same ones you would make with an actual customer. Document your decisions and your reasoning.</p>
         <p>You have 60 minutes. When everyone has triggered generation, we will take a break and then I will walk through the reference configuration during debrief.</p>
       </div>
-      <div class="facilitator-note">Circulate during the lab. Watch for: participants setting geography to 3 levels (FintechCo needs 2), anyone trying to configure Headcount × Rate in the configurator (it is an extension — correct that immediately), anyone hitting Save without confirming all required fields.</div>
+      <div class="facilitator-note">Circulate during the lab. Watch for: participants setting geography to 3 levels (FintechCo needs 2), anyone trying to configure Headcount × Rate in The Application Framework Configurator (it is an extension — correct that immediately), anyone hitting Save without confirming all required fields.</div>
       <div class="facilitator-note">Managing generation wait (~10-15 min): use this time to take questions about configurator decisions, review what participants chose, discuss the debrief questions. Do not let it become dead time.</div>
 
       <hr class="section-divider">
@@ -332,7 +332,7 @@
 
       <h3>Extensions Overview <span class="timing-badge">9:15 — 30 min</span></h3>
       <div class="script-block">
-        <p>Three types of extensions: Configure, Extend, Modify. Configure is always first — use the configurator if it has a setting. Extend adds new things without touching base model formulas — low upgrade risk. Modify changes existing base model formulas — highest upgrade risk.</p>
+        <p>Three types of extensions: Configure, Extend, Modify. Configure is always first — use The Application Framework Configurator if it has a setting. Extend adds new things without touching base model formulas — low upgrade risk. Modify changes existing base model formulas — highest upgrade risk.</p>
         <p>Before I touch any extension in an IFP model, I create two data tags: Extension and Formula Override. These are the only in-model records of what I changed. Without them, the next consultant on the project — or you, six months later — has no way to know what is base model and what is custom.</p>
       </div>
       <div class="click-instruction"><strong>Click:</strong> Show the OpEx planning UX — demonstrate what Direct Input looks like now (single value, no adjustments). This is what you are extending in Lab B.</div>
@@ -380,10 +380,10 @@
       <h3>Debrief &amp; Close <span class="timing-badge">14:00 — 30 min</span></h3>
       <div class="script-block">
         <p>Let me close with the most important things to take into your next IFP engagement.</p>
-        <p>One: Session Zero decisions are irreversible. Lock hierarchy before anyone touches the configurator. Regeneration is expensive.</p>
+        <p>One: Session Zero decisions are irreversible. Lock hierarchy before anyone touches The Application Framework Configurator. Regeneration is expensive.</p>
         <p>Two: Generated with errors is normal. Do not let it panic the customer. Categorize, fix, log, and move on.</p>
         <p>Three: Tag everything. Extension tag. Formula Override tag. External doc. Before you close the model.</p>
-        <p>Four: When in doubt, configure first. If the configurator has a setting, use it. Extensions are for things the configurator genuinely cannot do.</p>
+        <p>Four: When in doubt, configure first. If The Application Framework Configurator has a setting, use it. Extensions are for things The Application Framework Configurator genuinely cannot do.</p>
         <p>Thank you for the two days. Safe travels.</p>
       </div>
 
@@ -399,7 +399,7 @@
       Expected answer: Entity level count, geography level count, functional areas in scope, fiscal year structure. These drive module generation and list structure. Anything that changes the dimension count of the model requires regeneration.</p>
 
       <p><strong>Q3: Mid-session, FintechCo asks for product-level planning for their UK entity.</strong><br>
-      This changes the Hierarchy configuration (Product Levels must be set) and the Financial Planning configuration (product-level planning methods). If this is discovered mid-configuration, add Product Hierarchy to the configurator before generating. If discovered after generation, it requires regeneration. This is why product scope must be confirmed at Session Zero — it is a structural decision.</p>
+      This changes the Hierarchy configuration (Product Levels must be set) and the Financial Planning configuration (product-level planning methods). If this is discovered mid-configuration, add Product Hierarchy to The Application Framework Configurator before generating. If discovered after generation, it requires regeneration. This is why product scope must be confirmed at Session Zero — it is a structural decision.</p>
 
       <h3>Lab B — Direct Input + Adjustments</h3>
       <p><strong>Q1: What is the risk of modifying the Final Amount formula?</strong><br>
