@@ -22,14 +22,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // Check if the active page lives in this section
     const hasActive = submenu.querySelector('.nav-link.active');
 
-    // Start expanded if active page is inside, collapsed otherwise
-    if (hasActive) {
-      title.classList.add('open');
-      submenu.style.display = 'block';
-    } else {
-      title.classList.remove('open');
-      submenu.style.display = 'none';
-    }
+    // All sections start expanded. Only highlight the section with active page.
+    title.classList.add('open');
+    submenu.style.display = 'block';
 
     title.style.cursor = 'pointer';
     title.addEventListener('click', () => {
