@@ -193,7 +193,7 @@
         <li>Workspace admin access confirmed for each participant in the training workspace</li>
         <li>Training models pre-staged: IFPv2.0.0-train-base-financial-planning available to all participants</li>
         <li>App Framework available to all participants — not just the facilitator</li>
-        <li>Dataset files distributed (FintechCo CSV files or equivalent)</li>
+        <li>Dataset files distributed for customer context</li>
         <li>Known generation error confirmed: at least one LINE_ITEM_FORMULA error expected in training model</li>
         <li>Extensions sandbox model ready (for Lab B and Lab C — a clean base model all participants can work in)</li>
         <li>Micro-lesson video accessible (Headcount × Rate method — SharePoint link confirmed working)</li>
@@ -208,7 +208,7 @@
       <h3>Opening <span class="timing-badge">9:00 — 15 min</span></h3>
       <div class="script-block">
         <p>Welcome everyone. Today and tomorrow we are going to go deep on IFP 2.0 delivery — not the overview, but the hands-on practitioner workflow you need to actually deliver this for a customer.</p>
-        <p>Day 1 is all about configuration and generation. We will walk through the Application Framework Configurator together, then you will configure it yourselves for our fictional company FintechCo. After that, we will generate a model, deal with errors, and review the error logs systematically.</p>
+        <p>Day 1 is all about configuration and generation. We will walk through the Application Framework Configurator together, then participants will configure it for their own customer scenario. After that, we will generate a model, deal with errors, and review the error logs systematically.</p>
         <p>Day 2 is extensions. We will build two real extensions from scratch — the kind of things customers ask for in almost every IFP engagement.</p>
         <p>Quick logistics: please confirm you can log into the training tenant. Raise your hand if you are having trouble accessing the workspace.</p>
       </div>
@@ -243,11 +243,11 @@
 
       <h3>Lab A: Configurator Exercise <span class="timing-badge">10:20 — 60 min</span></h3>
       <div class="script-block">
-        <p>Now it is your turn. Open the FintechCo case study page in the lab guide. You have the company profile — 3 entities, 5 departments, 2 geography levels, 4 functional areas. Your job is to configure the App Framework for this customer and trigger generation.</p>
+        <p>Now it is your turn. Configure the App Framework for a customer scenario. Consider: how many entity levels, geography structure, functional areas in scope, and any special configurations. Configure and trigger generation.</p>
         <p>This is a decision exercise. There is no step-by-step answer guide. You are making real configuration choices — the same ones you would make with an actual customer. Document your decisions and your reasoning.</p>
         <p>You have 60 minutes. When everyone has triggered generation, we will take a break and then I will walk through the reference configuration during debrief.</p>
       </div>
-      <div class="facilitator-note">Circulate during the lab. Watch for: participants setting geography to 3 levels (FintechCo needs 2), anyone trying to configure Headcount × Rate in The Application Framework Configurator (it is an extension — correct that immediately), anyone hitting Save without confirming all required fields.</div>
+      <div class="facilitator-note">Circulate during configuration. Watch for: participants over-engineering hierarchy levels, anyone trying to configure Headcount × Rate in The Application Framework Configurator (it is an extension — correct that immediately), anyone hitting Save without confirming all required fields.</div>
       <div class="facilitator-note">Managing generation wait (~10-15 min): use this time to take questions about configurator decisions, review what participants chose, discuss the debrief questions. Do not let it become dead time.</div>
 
       <hr class="section-divider">
@@ -302,7 +302,7 @@
 
       <h3>Error Log Lab <span class="timing-badge">13:45 — 30 min</span></h3>
       <div class="script-block">
-        <p>Now you do it. Open your FintechCo model error log, export to Excel if you have more than 10 errors, and categorize every error by type. Find at least one LINE_ITEM_FORMULA error, track it to the line item, compare to the base model, and either fix it or document why you cannot.</p>
+        <p>Now you do it. Open the error log, export to Excel if you have more than 10 errors, and categorize every error by type. Find at least one LINE_ITEM_FORMULA error, track it to the line item, compare to the base model, and either fix it or document why you cannot.</p>
       </div>
       <div class="facilitator-note">Circulate during the error lab. Common issues: participants searching by display name instead of code, participants trying to fix IMPORT_ACTION errors (tell them to log those and move on for now), participants who cannot find the base model (provide the workspace link).</div>
 
@@ -320,7 +320,7 @@
 
       <h3>Day 2 Opening &amp; Recap <span class="timing-badge">9:00 — 15 min</span></h3>
       <div class="script-block">
-        <p>Good morning. Quick recap of yesterday: we configured the App Framework for FintechCo, generated the model, verified it, and worked through the error logs. Today is extensions — adding customer-specific capabilities on top of the generated base model.</p>
+        <p>Good morning. Quick recap of yesterday: we configured the Application Framework Configurator, generated the model, verified it, and worked through the error logs. Today is extensions — adding customer-specific capabilities on top of the generated base model.</p>
         <p>We are going to cover the extension framework, then build two extensions hands-on: direct input with adjustment layers, and a headcount-driven rate planning method. Both of these come up in almost every IFP engagement.</p>
       </div>
       <div class="facilitator-note">Confirm: everyone can access the training base model (IFPv2.0.0-train-base-financial-planning). If anyone cannot access it, resolve before proceeding to Lab B.</div>
@@ -338,7 +338,7 @@
 
       <h3>Lab B: Direct Input + Adjustments <span class="timing-badge">9:45 — 45 min</span></h3>
       <div class="script-block">
-        <p>FintechCo's requirement: direct input plus two adjustment layers — management override and regional adjustment. Total = Direct Input + Adjustment 1 + Adjustment 2. Five changes to the model, in order. Let me show you the completed version first, then you build it.</p>
+        <p>Customer requirement: direct input plus two adjustment layers — management override and regional adjustment. Total = Direct Input + Adjustment 1 + Adjustment 2. Five changes to the model, in order. Let me show you the completed version first, then you build it.</p>
       </div>
       <div class="click-instruction"><strong>Click:</strong> Demo model → show completed extension — two adjustment line items visible, formula override tagged, filter and admin subsets updated. Verify numbers add up correctly in UX.</div>
       <div class="script-block">
@@ -390,12 +390,12 @@
 
       <h3>Lab A — Configurator Exercise</h3>
       <p><strong>Q1: What was the hardest configuration decision?</strong><br>
-      Expected answer: Hierarchy levels (entity structure) and functional area scope. These are structurally final decisions. Consultants often struggle with how many entity levels a customer truly needs — the tendency is to over-engineer. FintechCo's 3-level entity (Group → Region → Entity) is the minimum that supports their 3 legal entities. A fourth level would have been unnecessary and would have added model complexity.</p>
+      Expected answer: Hierarchy levels (entity structure) and functional area scope. These are structurally final decisions. Consultants often struggle with how many entity levels a customer truly needs — the tendency is to over-engineer. A 3-level entity structure is common but should match the actual business hierarchy. Unnecessary levels add model complexity without benefit.</p>
 
       <p><strong>Q2: Which decisions cannot be changed post-generation?</strong><br>
       Expected answer: Entity level count, geography level count, functional areas in scope, fiscal year structure. These drive module generation and list structure. Anything that changes the dimension count of the model requires regeneration.</p>
 
-      <p><strong>Q3: Mid-session, FintechCo asks for product-level planning for their UK entity.</strong><br>
+      <p><strong>Q3: Mid-session, a customer asks for product-level planning for a specific region.</strong><br>
       This changes the Hierarchy configuration (Product Levels must be set) and the Financial Planning configuration (product-level planning methods). If this is discovered mid-configuration, add Product Hierarchy to The Application Framework Configurator before generating. If discovered after generation, it requires regeneration. This is why product scope must be confirmed at Session Zero — it is a structural decision.</p>
 
       <h3>Lab B — Direct Input + Adjustments</h3>
