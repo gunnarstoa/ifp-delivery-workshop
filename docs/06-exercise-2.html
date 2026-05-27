@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configuration Exercise 2 — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+  <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">Getting Started</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">Workshop Overview</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">IFP Overview</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for Applications</a></li>
+    </ul>
+    <li class="nav-section-title">Configuration</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">App Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">Configuration Exercise 1</a></li>
+      <li><a class="nav-link active" href="./06-exercise-2.html">Configuration Exercise 2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">Configuration Exercise 3</a></li>
+      <li><a class="nav-link" href="./06-lab-configurator.html">Lab A: Configurator Exercise</a></li>
+      <li><a class="nav-link" href="./07-generation.html">Model Generation</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">Post-Generation Steps</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Error Log Review</a></li>
+    </ul>
+    <li class="nav-section-title">Extensions</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">Extensions Overview</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">Exercise 1</a></li>
+      <li><a class="nav-link" href="./11-lab-direct-input.html">Lab B: Direct Input + Adjustments</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">Exercise 2</a></li>
+      <li><a class="nav-link" href="./12-lab-headcount-method.html">Lab C: Headcount × Rate Method</a></li>
+    </ul>
+    <li class="nav-section-title">Reference</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">What's Coming</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">Q&A from Sessions</a></li>
+      <li><a class="nav-link" href="./15-facilitator.html">Facilitator Guide</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 Language</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>Configuration Exercise 2: Insurance – 3 Statement Planning</h1>
+      <p class="subtitle">Hands-on exercise to configure IFP for an insurance company</p>
+      <div class="badge-row"><span class="content-badge">Configuration</span><span class="content-badge">30 min</span><span class="content-badge">Guided Practice</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="tsd-banner">
+        <div class="tsd-step tsd-step-tell">
+          <span class="tsd-step-label">📖 Tell</span>
+          <span class="tsd-step-heading">Exercise Overview</span>
+          <span class="tsd-step-desc">This exercise presents a real business scenario with configuration requirements.</span>
+        </div>
+        <div class="tsd-step tsd-step-show">
+          <span class="tsd-step-label">👁 Show</span>
+          <span class="tsd-step-heading">Facilitated Walk-Through</span>
+          <span class="tsd-step-desc">Facilitator guides you through configuration decisions step-by-step.</span>
+        </div>
+        <div class="tsd-step tsd-step-do">
+          <span class="tsd-step-label">✅ Do</span>
+          <span class="tsd-step-heading">Configure It Yourself</span>
+          <span class="tsd-step-desc">Configure your own version, comparing results to the example.</span>
+        </div>
+      </div>
+
+      <h2>Scenario</h2>
+      <p><strong>An insurance company requires comprehensive financial planning across income statement, balance sheet, and cash flow.</strong> Multiple products with detailed cost center and vendor tracking.</p>
+
+      <h3>Model Setup</h3>
+      <ul>
+        <li>Insurance company with multi-product portfolio</li>
+        <li>All use cases in-scope (P&L, Balance Sheet, Cashflow)</li>
+        <li>Will not use top-down targets</li>
+        <li>Time strata: Monthly</li>
+        <li><strong>Generation time: TBD</strong></li>
+      </ul>
+
+      <h3>Dimension Configuration</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Standard Dimension</th>
+            <th>Required?</th>
+            <th>Rename To</th>
+            <th># of Levels</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Entity</strong></td>
+            <td>Yes</td>
+            <td>—</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td><strong>Department</strong></td>
+            <td>Yes</td>
+            <td>—</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td><strong>Product</strong></td>
+            <td>Yes</td>
+            <td>Produit</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td><strong>Job</strong></td>
+            <td>Yes</td>
+            <td>—</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td><strong>Vendor</strong></td>
+            <td>Yes</td>
+            <td>—</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td><strong>Functional Area</strong></td>
+            <td>Yes</td>
+            <td>—</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td><strong>Customer</strong></td>
+            <td>No</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>Location</strong></td>
+            <td>No</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Custom Dimensions</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Custom List</th>
+            <th>Type</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>CapEx List</strong></td>
+            <td>Flat</td>
+            <td>For capital project tracking</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Key Configuration Decisions</h3>
+      <ul>
+        <li>Balance Sheet: <strong>Yes</strong> (3-statement planning required)</li>
+        <li>Cashflow Reporting: <strong>Yes</strong></li>
+        <li>Product dimension deeply configured (5 levels) for detailed product profitability</li>
+        <li>Will require extension for CapEx project tracking</li>
+      </ul>
+
+      <div class="prevnext-nav"><a class="prevnext-btn" href="./06-exercise-1.html">← Previous</a><a class="prevnext-btn" href="./06-exercise-3.html">Next →</a></div>
+    </div>
+  </main>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configuration Exercise 3 — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+  <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">Getting Started</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">Workshop Overview</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">IFP Overview</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for Applications</a></li>
+    </ul>
+    <li class="nav-section-title">Configuration</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">App Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">Configuration Exercise 1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">Configuration Exercise 2</a></li>
+      <li><a class="nav-link active" href="./06-exercise-3.html">Configuration Exercise 3</a></li>
+      <li><a class="nav-link" href="./06-lab-configurator.html">Lab A: Configurator Exercise</a></li>
+      <li><a class="nav-link" href="./07-generation.html">Model Generation</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">Post-Generation Steps</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Error Log Review</a></li>
+    </ul>
+    <li class="nav-section-title">Extensions</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">Extensions Overview</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">Exercise 1</a></li>
+      <li><a class="nav-link" href="./11-lab-direct-input.html">Lab B: Direct Input + Adjustments</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">Exercise 2</a></li>
+      <li><a class="nav-link" href="./12-lab-headcount-method.html">Lab C: Headcount × Rate Method</a></li>
+    </ul>
+    <li class="nav-section-title">Reference</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">What's Coming</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">Q&A from Sessions</a></li>
+      <li><a class="nav-link" href="./15-facilitator.html">Facilitator Guide</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 Language</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>Configuration Exercise 3: Nuclear Plant – OpEx and Headcount</h1>
+      <p class="subtitle">Hands-on exercise to configure IFP for a utilities company</p>
+      <div class="badge-row"><span class="content-badge">Configuration</span><span class="content-badge">30 min</span><span class="content-badge">Guided Practice</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="tsd-banner">
+        <div class="tsd-step tsd-step-tell">
+          <span class="tsd-step-label">📖 Tell</span>
+          <span class="tsd-step-heading">Exercise Overview</span>
+          <span class="tsd-step-desc">This exercise presents a real business scenario with configuration requirements.</span>
+        </div>
+        <div class="tsd-step tsd-step-show">
+          <span class="tsd-step-label">👁 Show</span>
+          <span class="tsd-step-heading">Facilitated Walk-Through</span>
+          <span class="tsd-step-desc">Facilitator guides you through configuration decisions step-by-step.</span>
+        </div>
+        <div class="tsd-step tsd-step-do">
+          <span class="tsd-step-label">✅ Do</span>
+          <span class="tsd-step-heading">Configure It Yourself</span>
+          <span class="tsd-step-desc">Configure your own version, comparing results to the example.</span>
+        </div>
+      </div>
+
+      <h2>Scenario</h2>
+      <p><strong>A utilities company operating a nuclear facility needs operating expense and headcount planning</strong> with a detailed work breakdown structure (WBS) for capital project tracking. No balance sheet, cashflow, or margin planning required.</p>
+
+      <h3>Model Setup</h3>
+      <ul>
+        <li>Operating Expense and Headcount only</li>
+        <li>Will NOT use: top-down targets, margin planning, CapEx, balance sheet, cashflow, or allocations</li>
+        <li>Will configure extension for CapEx projects &amp; PO tracking</li>
+        <li>Time strata: Monthly</li>
+        <li><strong>Generation time: TBD</strong></li>
+      </ul>
+
+      <h3>Dimension Configuration</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Standard Dimension</th>
+            <th>Required?</th>
+            <th>Rename To</th>
+            <th>OpEx?</th>
+            <th># of Levels</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Accounts</strong></td>
+            <td>Yes</td>
+            <td>GL Accounts</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>Entity</strong></td>
+            <td>Yes</td>
+            <td>—</td>
+            <td>Yes</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td><strong>Department</strong></td>
+            <td>Yes</td>
+            <td>CostCenter</td>
+            <td>Yes</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td><strong>Job</strong></td>
+            <td>Yes</td>
+            <td>—</td>
+            <td>—</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td><strong>Vendor</strong></td>
+            <td>Yes</td>
+            <td>Supplier</td>
+            <td>—</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td><strong>Functional Area</strong></td>
+            <td>Yes</td>
+            <td>WBS</td>
+            <td>—</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td><strong>Customer</strong></td>
+            <td>No</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>Location</strong></td>
+            <td>No</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Custom Dimensions</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Custom List</th>
+            <th>Type</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Country</strong></td>
+            <td>Flat</td>
+            <td>Supporting attribute</td>
+          </tr>
+          <tr>
+            <td><strong>PO Headers</strong></td>
+            <td>Flat</td>
+            <td>For purchase order tracking (extension)</td>
+          </tr>
+          <tr>
+            <td><strong>PO Items</strong></td>
+            <td>Flat</td>
+            <td>For line-item detail (extension)</td>
+          </tr>
+          <tr>
+            <td><strong>Managers</strong></td>
+            <td>Flat</td>
+            <td>For management hierarchy</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Dimension Attributes</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Parent Dimension</th>
+            <th>Attribute</th>
+            <th>Type</th>
+            <th>Attribute List</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Cost Center</strong></td>
+            <td>Cost Ctr Manager</td>
+            <td>List</td>
+            <td>Managers</td>
+          </tr>
+          <tr>
+            <td><strong>Cost Center</strong></td>
+            <td>Entity</td>
+            <td>List</td>
+            <td>E2 Entity</td>
+          </tr>
+          <tr>
+            <td><strong>Cost Center</strong></td>
+            <td>Profit Center</td>
+            <td>List</td>
+            <td>C3 Cost Ctr</td>
+          </tr>
+          <tr>
+            <td><strong>Cost Center</strong></td>
+            <td>Country</td>
+            <td>List</td>
+            <td>Country</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Key Configuration Decisions</h3>
+      <ul>
+        <li>Functional Area repurposed as <strong>WBS (Work Breakdown Structure)</strong> with 5 levels for detailed project hierarchy</li>
+        <li>Multiple custom dimensions for project and procurement tracking (handled in extension)</li>
+        <li>Rich attribute structure on Cost Center for multi-dimensional analysis</li>
+        <li>Minimal scope: OpEx + Headcount only, keeping configuration simple</li>
+      </ul>
+
+      <div class="callout-warning">
+        <span class="callout-label">⚠ Custom Dimensions Are Extensions</span>
+        <p>PO Headers, PO Items, and other custom lists for this use case are NOT part of the base generation. They will be added as part of the extension phase, after the model is generated with the core dimensions configured.</p>
+      </div>
+
+      <div class="prevnext-nav"><a class="prevnext-btn" href="./06-exercise-2.html">← Previous</a><a class="prevnext-btn" href="./06-lab-configurator.html">Next →</a></div>
+    </div>
+  </main>
+  <script src="../js/nav.js"></script>
+</body>
+</html>
