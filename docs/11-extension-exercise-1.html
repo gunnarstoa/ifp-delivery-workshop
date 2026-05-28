@@ -63,196 +63,50 @@
 
   <main class="main-content">
     <div class="content-header">
-      <h1>Extension Exercise 1: Manual Adjustments – Add custom expense adjustment line items</h1>
-      <p class="subtitle">Hands-on exercise to configure IFP for a utilities company</p>
-      <div class="badge-row"><span class="content-badge">Configuration</span><span class="content-badge">30 min</span><span class="content-badge">Guided Practice</span></div>
+      <h1>Extension Exercise 1: Manual Adjustments</h1>
+      <p class="subtitle">Add 2 new manual adjustment line-items to the OpEx module and modify the aggregation formula</p>
+      <div class="badge-row"><span class="content-badge">Extensions</span><span class="content-badge">30 min</span><span class="content-badge">Guided Practice</span></div>
     </div>
     <div class="content-body">
 
       <div class="tsd-banner">
         <div class="tsd-step tsd-step-tell">
           <span class="tsd-step-label">📖 Tell</span>
-          <span class="tsd-step-heading">Exercise Overview</span>
-          <span class="tsd-step-desc">This exercise presents a real business scenario with configuration requirements.</span>
+          <span class="tsd-step-heading">Business Requirement</span>
+          <span class="tsd-step-desc">Customer needs 2 additional manual adjustment line-items for expense planning.</span>
         </div>
         <div class="tsd-step tsd-step-show">
           <span class="tsd-step-label">👁 Show</span>
           <span class="tsd-step-heading">Facilitated Walk-Through</span>
-          <span class="tsd-step-desc">Facilitator guides you through configuration decisions step-by-step.</span>
+          <span class="tsd-step-desc">Facilitator walks through each step: adding line-items, modifying formulas, and testing in the UX.</span>
         </div>
         <div class="tsd-step tsd-step-do">
           <span class="tsd-step-label">✅ Do</span>
-          <span class="tsd-step-heading">Configure It Yourself</span>
-          <span class="tsd-step-desc">Configure your own version, comparing results to the example.</span>
+          <span class="tsd-step-heading">Execute the Extension</span>
+          <span class="tsd-step-desc">Build the extension yourself, following the 5-step workflow.</span>
         </div>
       </div>
 
-      <h2>Scenario</h2>
-      <p><strong>A utilities company operating a nuclear facility needs operating expense and headcount planning</strong> with a detailed work breakdown structure (WBS) for capital project tracking. No balance sheet, cashflow, or margin planning required.</p>
+      <h2>Business Requirement</h2>
+      <p>Need 2 additional types of manual adjustments for expense inputs.</p>
 
-      <h3>Model Setup</h3>
+      <h2>Solution</h2>
       <ul>
-        <li>Operating Expense and Headcount only</li>
-        <li>Will NOT use: top-down targets, margin planning, CapEx, balance sheet, cashflow, or allocations</li>
-        <li>Will configure extension for CapEx projects &amp; PO tracking</li>
-        <li>Time strata: Monthly</li>
-        <li><strong>Generation time: TBD</strong></li>
+        <li>Add new line-items to the affected module</li>
+        <li>Modify the aggregation formula to include the new line-items</li>
       </ul>
 
-      <h3>Dimension Configuration</h3>
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Standard Dimension</th>
-            <th>Required?</th>
-            <th>Rename To</th>
-            <th>OpEx?</th>
-            <th># of Levels</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Accounts</strong></td>
-            <td>Yes</td>
-            <td>GL Accounts</td>
-            <td>—</td>
-            <td>—</td>
-          </tr>
-          <tr>
-            <td><strong>Entity</strong></td>
-            <td>Yes</td>
-            <td>—</td>
-            <td>Yes</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td><strong>Department</strong></td>
-            <td>Yes</td>
-            <td>CostCenter</td>
-            <td>Yes</td>
-            <td>3</td>
-          </tr>
-          <tr>
-            <td><strong>Job</strong></td>
-            <td>Yes</td>
-            <td>—</td>
-            <td>—</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td><strong>Vendor</strong></td>
-            <td>Yes</td>
-            <td>Supplier</td>
-            <td>—</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td><strong>Functional Area</strong></td>
-            <td>Yes</td>
-            <td>WBS</td>
-            <td>—</td>
-            <td>5</td>
-          </tr>
-          <tr>
-            <td><strong>Customer</strong></td>
-            <td>No</td>
-            <td>—</td>
-            <td>—</td>
-            <td>—</td>
-          </tr>
-          <tr>
-            <td><strong>Location</strong></td>
-            <td>No</td>
-            <td>—</td>
-            <td>—</td>
-            <td>—</td>
-          </tr>
-        </tbody>
-      </table>
+      <h2>Steps</h2>
 
-      <h3>Custom Dimensions</h3>
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Custom List</th>
-            <th>Type</th>
-            <th>Notes</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Country</strong></td>
-            <td>Flat</td>
-            <td>Supporting attribute</td>
-          </tr>
-          <tr>
-            <td><strong>PO Headers</strong></td>
-            <td>Flat</td>
-            <td>For purchase order tracking (extension)</td>
-          </tr>
-          <tr>
-            <td><strong>PO Items</strong></td>
-            <td>Flat</td>
-            <td>For line-item detail (extension)</td>
-          </tr>
-          <tr>
-            <td><strong>Managers</strong></td>
-            <td>Flat</td>
-            <td>For management hierarchy</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="step"><div class="step-badge">1</div><div class="step-content"><h3>Open the Expense Planning Module</h3><p>Open module <strong>INP OPX Expense Planning</strong> in the "Financial Planning" model.</p></div></div>
 
-      <h3>Dimension Attributes</h3>
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Parent Dimension</th>
-            <th>Attribute</th>
-            <th>Type</th>
-            <th>Attribute List</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Cost Center</strong></td>
-            <td>Cost Ctr Manager</td>
-            <td>List</td>
-            <td>Managers</td>
-          </tr>
-          <tr>
-            <td><strong>Cost Center</strong></td>
-            <td>Entity</td>
-            <td>List</td>
-            <td>E2 Entity</td>
-          </tr>
-          <tr>
-            <td><strong>Cost Center</strong></td>
-            <td>Profit Center</td>
-            <td>List</td>
-            <td>C3 Cost Ctr</td>
-          </tr>
-          <tr>
-            <td><strong>Cost Center</strong></td>
-            <td>Country</td>
-            <td>List</td>
-            <td>Country</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="step"><div class="step-badge">2</div><div class="step-content"><h3>Add 2 New Line-Items</h3><p>Add 2 new line-items in the "Direct Input Method" section of the blueprint:</p><ul><li><strong>Manual Adjustment #1</strong></li><li><strong>Manual Adjustment #2</strong></li><li>Set the Format of the new line-items (same as "Amount")</li><li>Set the Write Access Driver for each new line-item</li><li>Document what the line-items are for in the "Notes" field</li></ul></div></div>
 
-      <h3>Key Configuration Decisions</h3>
-      <ul>
-        <li>Functional Area repurposed as <strong>WBS (Work Breakdown Structure)</strong> with 5 levels for detailed project hierarchy</li>
-        <li>Multiple custom dimensions for project and procurement tracking (handled in extension)</li>
-        <li>Rich attribute structure on Cost Center for multi-dimensional analysis</li>
-        <li>Minimal scope: OpEx + Headcount only, keeping configuration simple</li>
-      </ul>
+      <div class="step"><div class="step-badge">3</div><div class="step-content"><h3>Modify the Aggregation Formula</h3><p>We need to modify the formula for line-item <strong>Direct Input Fcst</strong> to include the 2 new line-items:</p><ul><li>Modify the formula</li><li>Document what you've done:<ul><li>Use the "Notes" field of the module blueprint</li><li>Keep a master list of overrides in an offline document, including the original and updated formula syntax</li></ul></li></ul></div></div>
 
-      <div class="callout-warning">
-        <span class="callout-label">⚠ Custom Dimensions Are Extensions</span>
-        <p>PO Headers, PO Items, and other custom lists for this use case are NOT part of the base generation. They will be added as part of the extension phase, after the model is generated with the core dimensions configured.</p>
-      </div>
+      <div class="step"><div class="step-badge">4</div><div class="step-content"><h3>Update Line-Item Subset and Admin Settings</h3><p>Add the 2 new line-items to the LISS (Line-Item Subset for Show/Hide):</p><ul><li>Open line-item subset <strong>"LISS: OpEx Filter"</strong></li><li>Check the Boolean for the 2 new adjustments</li><li>Open module <strong>"ADMIN LISS OpEx Filter"</strong> and set the "Forecast Method" to "Direct Input" for each of the 2 new line-items</li></ul></div></div>
+
+      <div class="step"><div class="step-badge">5</div><div class="step-content"><h3>Verify in the UX App</h3><p>Open page <strong>"OpEx – planning"</strong> in the UX App:</p><ul><li>Select account <strong>"6005 Office Equipment"</strong></li><li>Check that the logic is working properly</li></ul></div></div>
 
       <div class="prevnext-nav"><a class="prevnext-btn" href="./10-extensions-overview.html">← Previous</a><a class="prevnext-btn" href="./12-extension-exercise-2.html">Next →</a></div>
     </div>
