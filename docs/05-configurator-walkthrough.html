@@ -132,11 +132,11 @@
 
       <h2>Key Configurator Nuances (Learned from Delivery)</h2>
       <ul>
-        <li><strong>Hierarchy name + Application Framework Configurator question must match:</strong> In v2.1.0, the hierarchy name in the Hierarchies section and the rename in the Configuration Questions are NOT linked. You must update both. This is expected to be fixed in v2.1.</li>
+        <li><strong>Hierarchy name + Application Framework Configurator question must match:</strong> In v2.1.0, the hierarchy name in the Hierarchies section and the rename in the Configuration Questions are NOT linked. You must update both. This is expected to be fixed in a future release.</li>
         <li><strong>No trailing spaces in names:</strong> Trailing spaces in renamed hierarchies have caused generation errors. Double-check names don't have spaces before or after.</li>
         <li><strong>Leaf level must stay at the bottom:</strong> When removing a level, remove the middle level and keep the leaf at the bottom. When adding a level, the system adds it at the bottom - drag it above the original leaf level. The original leaf cannot be renamed to the same name as the new level.</li>
         <li><strong>Hierarchies and Configuration Questions are separate:</strong> There are two questions per renamed dimension - one creates the list, one creates the modules. The second is lowercase. You must update both.</li>
-        <li><strong>Restore Default per hierarchy:</strong> Each hierarchy has its own "Restore Default" button. A master reset of all configuration is not yet available (coming in v2.1).</li>
+        <li><strong>Restore Default per hierarchy:</strong> Each hierarchy has its own "Restore Default" button.</li>
         <li><strong>Order of configurator vs hierarchies:</strong> You can complete hierarchies first or configuration questions first - there is no required order.</li>
         <li><strong>Generate CapEx even if not needed now:</strong> Polaris modules don't use significant memory until they contain data. Generate CapEx now to avoid a future regeneration if the customer adds it later.</li>
         <li><strong>Custom dimensions (flat lists) are extensions, not hierarchies:</strong> Flat list dimensions (e.g., Channel) are not configured in the Hierarchies section - they are built as extensions post-generation.</li>
