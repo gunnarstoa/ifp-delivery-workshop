@@ -64,8 +64,8 @@
   <main class="main-content">
     <div class="content-header">
       <h1>Extension Exercise 2: Channel Revenue Planning</h1>
-      <p class="subtitle">Add a new revenue planning dimension (Channel) and its corresponding module</p>
-      <div class="badge-row"><span class="content-badge">Day 2</span><span class="content-badge">60 min</span><span class="content-badge">Guided Lab</span></div>
+      <p class="subtitle">Add a new flat list (Channel) and revenue planning module integrated into Gross Profit Planning</p>
+      <div class="badge-row"><span class="content-badge">Extensions</span><span class="content-badge">60 min</span><span class="content-badge">Guided Lab</span></div>
     </div>
     <div class="content-body">
 
@@ -73,31 +73,32 @@
         <div class="tsd-step tsd-step-tell">
           <span class="tsd-step-label">📖 Tell</span>
           <span class="tsd-step-heading">Business Requirement</span>
-          <span class="tsd-step-desc">Why companies need to add new revenue planning dimensions for channel-specific tracking.</span>
+          <span class="tsd-step-desc">Customer needs 1 type of revenue planning by a new dimension (e.g., Channel).</span>
         </div>
         <div class="tsd-step tsd-step-show">
           <span class="tsd-step-label">👁 Show</span>
           <span class="tsd-step-heading">Step-by-Step Walk-Through</span>
-          <span class="tsd-step-desc">Facilitator demonstrates creating a new flat list, module, and integration into existing planning methods.</span>
+          <span class="tsd-step-desc">Facilitator walks through creating lists, modules, planning methods, and integration into existing revenue flows.</span>
         </div>
         <div class="tsd-step tsd-step-do">
           <span class="tsd-step-label">✅ Do</span>
-          <span class="tsd-step-heading">Build Your Own Channel Extension</span>
-          <span class="tsd-step-desc">Participants create the Channel list and module in their own model and integrate it into the planning flow.</span>
+          <span class="tsd-step-heading">Build the Extension</span>
+          <span class="tsd-step-desc">Execute the 7-step workflow to add channel revenue planning end-to-end.</span>
         </div>
       </div>
 
-      <div class="callout-note">
-        <span class="callout-label">💡 Key Principle: Extensibility Over Re-Configuration</span>
-        <p>Rather than regenerating the model to add new dimensions, IFP's extension approach allows you to build new modules and lists post-generation. This preserves all your existing configurations while adding exactly what you need.</p>
-      </div>
+      <h2>Business Requirement</h2>
+      <p>Need 1 type of revenue planning, for example by Channel.</p>
 
-      <h2>Business Scenario</h2>
-      <p><strong>Business Requirement:</strong> The company sells through three distinct channels (e.g., Direct, Partner, Marketplace) and needs to plan gross profit and revenue by channel. This allows leadership to see which channels are most profitable and make resource allocation decisions accordingly.</p>
+      <h2>Solution</h2>
+      <ul>
+        <li>Add new flat list of Channel with top level – All Channels</li>
+        <li>Create a new module with the existing revenue planning dimensions plus additional dimension of Channel</li>
+        <li>Add new line-items to the affected module</li>
+        <li>Modify the aggregation formula to include the new line-items</li>
+      </ul>
 
-      <p><strong>Solution Approach:</strong> Create a new "Channel" flat list, add a new module for channel-based revenue planning, integrate it into the existing Gross Profit Planning module, and make it a selectable planning method for users.</p>
-
-      <h2>Step-by-Step Implementation</h2>
+      <h2>Steps</h2>
 
       <h3>Step 1: Create the Channel List</h3>
       <ol>
@@ -290,9 +291,23 @@
         <li><strong>Test end-to-end</strong> — from data entry through final summary calculations</li>
       </ul>
 
+      <div class="step"><div class="step-badge">1</div><div class="step-content"><h3>Create a List – EXT Channel</h3><ul><li>Add Top Level – All Channels</li><li>Add 3 items to the list – Channel 1, Channel 2, Channel 3</li></ul></div></div>
+
+      <div class="step"><div class="step-badge">2</div><div class="step-content"><h3>Create a New Module EXT INP Channel Revenue Planning</h3><ul><li>Dimensions = time plus all the dimensions from INP Gross Profit Planning</li><li>Add dimension Channel</li><li>Add Line Items – Price, Volume, Total</li><li>Add Formula to Total – price * volume</li></ul></div></div>
+
+      <div class="step"><div class="step-badge">3</div><div class="step-content"><h3>Add Planning Method</h3><p>In List Planning Methods, add a new planning method <strong>Channel Planning</strong></p></div></div>
+
+      <div class="step"><div class="step-badge">4</div><div class="step-content"><h3>Mark Planning Method in SYS Module</h3><p>In module <strong>SYS by Planning Methods</strong> mark <strong>Gross Profit Planning?</strong> Boolean</p></div></div>
+
+      <div class="step"><div class="step-badge">5</div><div class="step-content"><h3>Map Planning Method to Product</h3><p>In module <strong>ADMIN Define Product to Planning Method</strong> add <strong>Channel Planning</strong> to Planning method for Service Offering 1</p></div></div>
+
+      <div class="step"><div class="step-badge">6</div><div class="step-content"><h3>Add Line Items to INP Gross Profit Planning</h3><p>Open the module <strong>INP Gross Profit Planning</strong> and add 3 new line items before Final Amount:</p><ul><li><strong>Channel Planning –</strong> Set to no data, heading 1</li><li><strong>Use Channel Planning Method?</strong> Set to Boolean; update Formula, Applies To, Time Scale, Time Range, Versions (similar to line-item Use COGS Pct of Revenue Method?)</li><li><strong>Channel Planning Revenue</strong><ul><li>Format same as line-item Final Amount</li><li>Summary 3</li><li>Add formula similar to line item Direct Input Fcst but adjust and link to module EXT INP Channel Revenue Planning, line item Total</li></ul></li></ul></div></div>
+
+      <div class="step"><div class="step-badge">7</div><div class="step-content"><h3>Update Aggregations and Documentation</h3><ul><li>Document what the line-items are for in the "Notes" field</li><li>Update LISS: Margin Filter</li><li>Update formula in Line Item Final Amount</li><li>Update formula in Line Item SUM: Revenue</li></ul></div></div>
+
       <div class="callout-warning">
         <span class="callout-label">⚠ Upgrade Consideration</span>
-        <p>When Anaplan releases IFP v2.1 or later, all extensions you've built must be re-applied to the newly generated model. Keeping detailed documentation (what you changed, why, original vs. new formulas) makes this process much faster and less error-prone.</p>
+        <p>When Anaplan releases a new IFP version, all extensions you've built must be re-applied to the newly generated model. Keeping detailed documentation (what you changed, why, original vs. new formulas) makes this process much faster and less error-prone.</p>
       </div>
 
       <div class="prevnext-nav"><a class="prevnext-btn" href="./11-extension-exercise-1.html">← Previous</a><a class="prevnext-btn" href="./13-whats-coming.html">Next →</a></div>
