@@ -144,6 +144,14 @@
       <h2>Dimensionality Settings</h2>
 <figure class="screenshot"><img src="../img/v2.1-screenshots/dimensionality-questions.png" alt="Application Framework Configurator - Dimensionality questions for optional dimensions" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Application Framework Configurator - Dimensionality settings for optional dimensions</figcaption></figure>
 
+<figure class="screenshot"><img src="../img/v2.1-screenshots/dimensionality-settings-v2.png" alt="Configurations - Questions 13-17 showing Dimensionality questions with checkboxes for Account, Entity, Department, Functional Area, Location, Vendor, and Month" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Configurations - Financial Planning Dimensionality Questions (v2.1) showing optional dimension checkboxes</figcaption></figure>
+
+      <div class="callout-note">
+        <span class="callout-label">ℹ Dimensionality Questions Impact on "Applies To"</span>
+        <p>These questions (13-17) impact the <strong>"Applies To"</strong> when generating modules. The default has all optional dimensions selected because it was assumed all dimensions will be used. If any dimensions were determined not needed, then uncheck them.</p>
+        <p>Unchecking dimensions reduces the complexity of generated modules and improves performance by excluding unnecessary dimension combinations from calculations.</p>
+      </div>
+
       <h2>Key Configurator Nuances (Learned from Delivery)</h2>
       <ul>
         <li><strong>Hierarchy name + Application Framework Configurator question must match:</strong> In v2.1.0, the hierarchy name in the Hierarchies section and the rename in the Configuration Questions are NOT linked. You must update both. This is expected to be fixed in a future release.</li>
