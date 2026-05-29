@@ -113,7 +113,7 @@
         <li>Review the Error Log to verify all modules were generated correctly — any missing modules will surface here as errors. See the <a href="./09-error-logs.html">Error Log Review</a> section for details.</li>
         <li>Verify key SYS module line items are populated: Planning Methods list will come pre-populated. All production data lists (entity, department, accounts) will come unpopulated and are populated by pushing data from Data Orchestrator.</li>
         <li>Confirm hierarchy lists loaded with expected members. All hierarchy list members are populated via ADO — some via CSV or connected external source. Hierarchies like entity, department, IS Accounts, and BS Accounts require an additional mapping step in the Admin Model to map source list members to their planning equivalents before pushing to other spoke models.</li>
-        <li>Check that enabled planning methods are visible in ADMIN configuration module</li>
+        <li>Check that Planning Method list members are populated — this is the only item verifiable at this stage. The SYS and ADMIN modules tied to Planning Methods are populated afterwards; refer to Appendix A3 of the Configuration Guide to complete this step.</li>
         <li>Run a spot-check on a calculated line item in a CALC module — confirm formula is not blank</li>
       </ul>
 
