@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ejercicio de extensión 2 — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+      <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">Primeros pasos</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">Resumen del taller</a></li>
+      <li><a class="nav-link" href="./02-tenant-access.html">Acceso al tenant</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">Resumen de IFP</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for Applications</a></li>
+    </ul>
+    <li class="nav-section-title">Configuración</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">Ejercicio de configuración 1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">Ejercicio de configuración 2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">Ejercicio de configuración 3</a></li>
+      <li><a class="nav-link" href="./07-generation.html">Generación del modelo</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">Pasos posteriores a la generación</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Revisión del Error Log</a></li>
+    </ul>
+    <li class="nav-section-title">Extensiones</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">Resumen de extensiones</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">Ejercicio 1</a></li>
+      <li><a class="nav-link active" href="./12-extension-exercise-2.html">Ejercicio 2</a></li>
+    </ul>
+    <li class="nav-section-title">Referencia</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">Próximas novedades</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">Preguntas y respuestas de sesiones</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 Idioma</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="es" selected>🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>Ejercicio de extensión 2: Channel Revenue Planning</h1>
+      <p class="subtitle">Añada una nueva lista plana (Channel) y un módulo de planeación de ingresos integrado en Gross Profit Planning</p>
+      <div class="badge-row"><span class="content-badge">Extensiones</span><span class="content-badge">60 min</span><span class="content-badge">Práctica guiada</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-info" style="background:#eff6ff;border-left:4px solid #3b82f6;">
+        <span class="callout-label">🌐 Aviso de traducción</span>
+        <p>Esta es una traducción automática de la versión original en inglés. Para la versión autoritativa y más actualizada, consulte <a href="../12-extension-exercise-2.html">la versión en inglés</a>. Reporte cualquier problema de traducción a su contacto Anaplan.</p>
+      </div>
+
+      <div class="tsd-banner">
+        <div class="tsd-step tsd-step-tell">
+          <span class="tsd-step-label">📖 Contar</span>
+          <span class="tsd-step-heading">Requisito de negocio</span>
+          <span class="tsd-step-desc">El cliente necesita 1 tipo de planeación de ingresos por una nueva dimensión (por ejemplo, Channel).</span>
+        </div>
+        <div class="tsd-step tsd-step-show">
+          <span class="tsd-step-label">👁 Mostrar</span>
+          <span class="tsd-step-heading">Recorrido paso a paso</span>
+          <span class="tsd-step-desc">El facilitador recorre la creación de listas, módulos, métodos de planeación y la integración en los flujos existentes de ingresos.</span>
+        </div>
+        <div class="tsd-step tsd-step-do">
+          <span class="tsd-step-label">✅ Hacer</span>
+          <span class="tsd-step-heading">Construya la extensión</span>
+          <span class="tsd-step-desc">Ejecute el flujo de trabajo de 7 pasos para añadir la planeación de ingresos por canal de extremo a extremo.</span>
+        </div>
+      </div>
+
+      <h2>Requisito de negocio</h2>
+      <p>Se necesita 1 tipo de planeación de ingresos, por ejemplo por Channel.</p>
+
+      <h2>Solución</h2>
+      <ul>
+        <li>Añadir una nueva lista plana de Channel con nivel superior – All Channels</li>
+        <li>Crear un nuevo módulo con las dimensiones existentes de planeación de ingresos más la dimensión adicional Channel</li>
+        <li>Añadir nuevos Line Items al módulo afectado</li>
+        <li>Modificar la fórmula de agregación para incluir los nuevos Line Items</li>
+      </ul>
+
+      <h2>Pasos</h2>
+
+      <h3>Paso 1: Crear la lista Channel</h3>
+      <ol>
+        <li>En el editor del Data Model, cree una nueva <strong>Lista: EXT Channel</strong>
+          <ul>
+            <li>Convención de nombres: el prefijo "EXT" indica que esto es una extensión (no autogenerada)</li>
+            <li>Lista plana (sin jerarquía) — solo nombres discretos de canales</li>
+          </ul>
+        </li>
+        <li>Añada el elemento <strong>Top Level</strong>: <strong>"All Channels"</strong>
+          <ul>
+            <li>Esto agrega todos los valores individuales de canal</li>
+          </ul>
+        </li>
+        <li>Añada 3 elementos de canal de muestra:
+          <ul>
+            <li><strong>Channel 1</strong></li>
+            <li><strong>Channel 2</strong></li>
+            <li><strong>Channel 3</strong></li>
+          </ul>
+        </li>
+        <li>Guarde la lista</li>
+      </ol>
+
+      <div class="callout-note">
+        <span class="callout-label">ℹ Convención de nombres: prefijo EXT</span>
+        <p>Las listas y módulos creados como extensiones llevan el prefijo "EXT" para distinguirlos del contenido autogenerado. Esto facilita rastrear lo que se añadió después de la generación durante las actualizaciones.</p>
+      </div>
+
+      <h3>Paso 2: Crear el módulo Channel Revenue Planning</h3>
+      <ol>
+        <li>Cree un nuevo módulo: <strong>EXT INP Channel Revenue Planning</strong></li>
+        <li>Defina las dimensiones del módulo:
+          <ul>
+            <li><strong>Time</strong> (dimensión estándar)</li>
+            <li><strong>Todas las dimensiones de INP Gross Profit Planning</strong> (Product, Job, Entity, etc.)</li>
+            <li><strong>Channel</strong> (su nueva dimensión — lista EXT Channel)</li>
+          </ul>
+        </li>
+        <li>Añada Line Items al módulo:
+          <ul>
+            <li><strong>Price</strong> — precio unitario por canal</li>
+            <li><strong>Volume</strong> — unidades vendidas por canal</li>
+            <li><strong>Total</strong> — ingreso calculado (Price × Volume)</li>
+          </ul>
+        </li>
+        <li>Configure el Line Item "Total" con la fórmula: <strong>Price × Volume</strong></li>
+        <li>Guarde el módulo</li>
+      </ol>
+
+      <h3>Paso 3: Añadir un nuevo método de planeación</h3>
+      <ol>
+        <li>Abra el módulo <strong>"SYS by Planning Methods"</strong></li>
+        <li>En la <strong>"List Planning Methods"</strong>, añada un nuevo elemento: <strong>"Channel Planning"</strong></li>
+        <li>Guarde el cambio</li>
+      </ol>
+
+      <div class="callout-warning">
+        <span class="callout-label">⚠ Los métodos de planeación deben estar registrados</span>
+        <p>Cada nuevo enfoque de planeación (Channel Planning, Direct Input, etc.) debe estar registrado en la lista Planning Methods. Sin este registro, la UX no lo reconocerá como una opción válida para los usuarios.</p>
+      </div>
+
+      <h3>Paso 4: Configurar la disponibilidad del método de planeación</h3>
+      <ol>
+        <li>Abra el módulo <strong>"ADMIN Define Product to Planning Method"</strong></li>
+        <li>Para <strong>"Service Offering 1"</strong> (o su producto objetivo), añada <strong>"Channel Planning"</strong> a la lista de métodos de planeación disponibles</li>
+        <li>Esto le indica al sistema: "Service Offering 1 puede planificarse usando Channel Planning"</li>
+        <li>Guarde los cambios</li>
+      </ol>
+
+      <h3>Paso 5: Actualizar el módulo Gross Profit Planning</h3>
+      <p>Ahora integre Channel Planning en el flujo principal de planeación añadiendo Line Items de referencia a INP Gross Profit Planning:</p>
+
+      <ol>
+        <li>Abra el módulo <strong>"INP Gross Profit Planning"</strong></li>
+        <li>Añada 3 nuevos Line Items <strong>antes del Line Item "Final Amount"</strong>:
+          <ul>
+            <li><strong>Channel Planning</strong> — indicador de encabezado/sección
+              <ul>
+                <li>Establecer como <strong>Heading 1</strong> (solo estilo/organización, sin datos)</li>
+              </ul>
+            </li>
+            <li><strong>Use Channel Planning Method?</strong> — bandera booleana
+              <ul>
+                <li>Format: Boolean</li>
+                <li>Propósito: el usuario selecciona "Yes" para habilitar la planeación a nivel de canal</li>
+                <li>Copie la configuración de un Line Item similar (por ejemplo, "Use COGS Pct of Revenue Method?")</li>
+              </ul>
+            </li>
+            <li><strong>Channel Planning Revenue</strong> — el resultado agregado
+              <ul>
+                <li>Format: igual que "Final Amount"</li>
+                <li>Esto toma datos de EXT INP Channel Revenue Planning y suma por canal</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ol>
+
+      <h3>Paso 6: Crear la fórmula de Channel Planning Revenue</h3>
+      <ol>
+        <li>Para el Line Item <strong>"Channel Planning Revenue"</strong>, cree una fórmula que:
+          <ul>
+            <li>Enlace a <strong>EXT INP Channel Revenue Planning, Line Item "Total"</strong></li>
+            <li>Sume a través de la dimensión Channel (agrega todos los canales)</li>
+            <li>Solo calcule cuando <strong>"Use Channel Planning Method?" = True</strong></li>
+            <li>Devuelva 0 o vacío cuando el método no esté seleccionado</li>
+          </ul>
+        </li>
+        <li><strong>Patrón de fórmula (ejemplo):</strong>
+          <ul>
+            <li><code>IF(Use Channel Planning Method?, SUM(EXT INP Channel Revenue Planning.Total), 0)</code></li>
+          </ul>
+        </li>
+        <li>Ajuste la fórmula exacta según los nombres y la estructura de su modelo</li>
+        <li><strong>Documente la fórmula</strong> en el campo Notes del blueprint del módulo</li>
+      </ol>
+
+      <h3>Paso 7: Actualizar los Line-Item Subsets (LISS)</h3>
+      <p>Registre sus nuevos Line Items en los subsets apropiados para que aparezcan en las páginas UX correctas:</p>
+
+      <ol>
+        <li>Abra <strong>"LISS: Margin Filter"</strong></li>
+        <li>Marque el booleano para sus 3 nuevos Line Items:
+          <ul>
+            <li>Channel Planning (encabezado)</li>
+            <li>Use Channel Planning Method?</li>
+            <li>Channel Planning Revenue</li>
+          </ul>
+        </li>
+        <li>Guarde los cambios</li>
+      </ol>
+
+      <h3>Paso 8: Actualizar las fórmulas de agregación</h3>
+      <p>Actualice las fórmulas en los Line Items existentes para incluir Channel Planning Revenue:</p>
+
+      <ol>
+        <li>En el módulo <strong>"INP Gross Profit Planning"</strong>, abra la fórmula de <strong>"Final Amount"</strong></li>
+        <li>Actualice la fórmula para incluir:
+          <ul>
+            <li><code>+ Channel Planning Revenue</code> (además de los componentes existentes)</li>
+          </ul>
+        </li>
+        <li>Actualice la fórmula de <strong>"SUM: Revenue"</strong> si existe:
+          <ul>
+            <li>Añada <code>+ Channel Planning Revenue</code> para garantizar que los ingresos por canal se incluyan en los resúmenes</li>
+          </ul>
+        </li>
+        <li><strong>Documente ambos cambios de fórmula</strong> en su registro de cambios offline</li>
+      </ol>
+
+      <div class="callout-note">
+        <span class="callout-label">ℹ Estrategia de actualización de fórmulas</span>
+        <p>Al actualizar fórmulas existentes para referenciar nuevas extensiones, use lógica condicional:</p>
+        <ul>
+          <li><code>IF(Use Channel Planning Method?, Channel Planning Revenue, 0)</code></li>
+        </ul>
+        <p>Esto previene errores cuando el método no está seleccionado y hace clara la lógica para los futuros mantenedores.</p>
+      </div>
+
+      <h3>Paso 9: Validar en la UX</h3>
+      <ol>
+        <li>Abra la UX App</li>
+        <li>Navegue a la página Gross Profit Planning para un producto de muestra (Service Offering 1)</li>
+        <li>Verifique:
+          <ul>
+            <li>El booleano "Use Channel Planning Method?" aparece y es editable</li>
+            <li>Cuando lo establece en "Yes", la interfaz de planeación se ajusta</li>
+            <li>Puede navegar a la página Channel Revenue Planning e ingresar Price y Volume</li>
+            <li>Los totales fluyen de vuelta a Gross Profit Planning correctamente</li>
+            <li>Todos los cálculos de resumen son precisos</li>
+          </ul>
+        </li>
+        <li><strong>Si algo falta o está roto:</strong>
+          <ul>
+            <li>Verifique que todos los Line Items estén añadidos al LISS</li>
+            <li>Verifique que la sintaxis de la fórmula coincida con las convenciones de nombres de su modelo</li>
+            <li>Compare con un módulo de referencia funcional</li>
+          </ul>
+        </li>
+      </ol>
+
+      <h2>Conclusiones clave</h2>
+      <ul>
+        <li><strong>Las extensiones preservan la estructura generada</strong> — usted está añadiendo, no reemplazando</li>
+        <li><strong>Los Planning Methods organizan las opciones del usuario</strong> — siempre registre los nuevos enfoques de planeación</li>
+        <li><strong>Los Line-Item Subsets controlan la visibilidad</strong> — el nuevo contenido solo aparece si se añade al LISS</li>
+        <li><strong>Las fórmulas deben ser condicionales</strong> — solo calcule lo que el usuario seleccionó</li>
+        <li><strong>La documentación es crítica</strong> — cada cambio debe registrarse para futuras actualizaciones</li>
+        <li><strong>Pruebe de extremo a extremo</strong> — desde la entrada de datos hasta los cálculos de resumen final</li>
+      </ul>
+
+      <div class="step"><div class="step-badge">1</div><div class="step-content"><h3>Crear una Lista – EXT Channel</h3><ul><li>Añadir Top Level – All Channels</li><li>Añadir 3 elementos a la lista – Channel 1, Channel 2, Channel 3</li></ul></div></div>
+
+      <div class="step"><div class="step-badge">2</div><div class="step-content"><h3>Crear un nuevo módulo EXT INP Channel Revenue Planning</h3><ul><li>Dimensiones = time más todas las dimensiones de INP Gross Profit Planning</li><li>Añadir dimensión Channel</li><li>Añadir Line Items – Price, Volume, Total</li><li>Añadir fórmula a Total – price * volume</li></ul></div></div>
+
+      <div class="step"><div class="step-badge">3</div><div class="step-content"><h3>Añadir Planning Method</h3><p>En List Planning Methods, añada un nuevo método de planeación <strong>Channel Planning</strong></p></div></div>
+
+      <div class="step"><div class="step-badge">4</div><div class="step-content"><h3>Marcar Planning Method en el módulo SYS</h3><p>En el módulo <strong>SYS by Planning Methods</strong> marque el booleano <strong>Gross Profit Planning?</strong></p></div></div>
+
+      <div class="step"><div class="step-badge">5</div><div class="step-content"><h3>Mapear Planning Method a Product</h3><p>En el módulo <strong>ADMIN Define Product to Planning Method</strong> añada <strong>Channel Planning</strong> al Planning method para Service Offering 1</p></div></div>
+
+      <div class="step"><div class="step-badge">6</div><div class="step-content"><h3>Añadir Line Items a INP Gross Profit Planning</h3><p>Abra el módulo <strong>INP Gross Profit Planning</strong> y añada 3 nuevos Line Items antes de Final Amount:</p><ul><li><strong>Channel Planning –</strong> Establecer en sin datos, heading 1</li><li><strong>Use Channel Planning Method?</strong> Establecer en Boolean; actualizar Formula, Applies To, Time Scale, Time Range, Versions (similar al Line Item Use COGS Pct of Revenue Method?)</li><li><strong>Channel Planning Revenue</strong><ul><li>Format igual que el Line Item Final Amount</li><li>Summary 3</li><li>Añadir fórmula similar al Line Item Direct Input Fcst pero ajustar y enlazar al módulo EXT INP Channel Revenue Planning, Line Item Total</li></ul></li></ul></div></div>
+
+      <div class="step"><div class="step-badge">7</div><div class="step-content"><h3>Actualizar agregaciones y documentación</h3><ul><li>Documente para qué son los Line Items en el campo "Notes"</li><li>Actualice LISS: Margin Filter</li><li>Actualice la fórmula en el Line Item Final Amount</li><li>Actualice la fórmula en el Line Item SUM: Revenue</li></ul></div></div>
+
+      <div class="callout-warning">
+        <span class="callout-label">⚠ Consideración de actualización</span>
+        <p>Cuando Anaplan lance una nueva versión de IFP, todas las extensiones que haya construido deberán reaplicarse al modelo recién generado. Mantener documentación detallada (qué cambió, por qué, fórmulas originales vs. nuevas) hace este proceso mucho más rápido y menos propenso a errores.</p>
+      </div>
+
+      <div class="prevnext-nav"><a class="prevnext-btn" href="./11-extension-exercise-1.html">← Anterior</a><a class="prevnext-btn" href="./13-whats-coming.html">Siguiente →</a></div>
+    </div>
+  </main>
+
+  <script src="../../js/script.js"></script>
+  <script src="../../js/nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ejercicio de configuración 1 — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+    <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">Primeros pasos</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">Resumen del taller</a></li>
+      <li><a class="nav-link" href="./02-tenant-access.html">Acceso al tenant</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">Resumen de IFP</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for Applications</a></li>
+    </ul>
+    <li class="nav-section-title">Configuración</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link active" href="./06-exercise-1.html">Ejercicio de configuración 1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">Ejercicio de configuración 2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">Ejercicio de configuración 3</a></li>
+      <li><a class="nav-link" href="./07-generation.html">Generación del modelo</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">Pasos posteriores a la generación</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Revisión del Error Log</a></li>
+    </ul>
+    <li class="nav-section-title">Extensiones</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">Resumen de extensiones</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">Ejercicio 1</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">Ejercicio 2</a></li>
+    </ul>
+    <li class="nav-section-title">Referencia</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">Próximas novedades</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">Preguntas y respuestas de sesiones</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 Idioma</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="es" selected>🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>Ejercicio de configuración 1: OpEx y Headcount Planning</h1>
+      <p class="subtitle">Ejercicio práctico para configurar IFP para una empresa manufacturera</p>
+      <div class="badge-row"><span class="content-badge">Configuración</span><span class="content-badge">30 min</span><span class="content-badge">Práctica guiada</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-info" style="background:#eff6ff;border-left:4px solid #3b82f6;">
+        <span class="callout-label">🌐 Aviso de traducción</span>
+        <p>Esta es una traducción automática de la versión original en inglés. Para la versión autoritativa y más actualizada, consulte <a href="../06-exercise-1.html">la versión en inglés</a>. Reporte cualquier problema de traducción a su contacto Anaplan.</p>
+      </div>
+
+      <div class="tsd-banner">
+        <div class="tsd-step tsd-step-tell">
+          <span class="tsd-step-label">📖 Contar</span>
+          <span class="tsd-step-heading">Resumen del ejercicio</span>
+          <span class="tsd-step-desc">Este ejercicio presenta un escenario de negocio real con requisitos de configuración.</span>
+        </div>
+        <div class="tsd-step tsd-step-show">
+          <span class="tsd-step-label">👁 Mostrar</span>
+          <span class="tsd-step-heading">Recorrido facilitado</span>
+          <span class="tsd-step-desc">El facilitador lo guía por las decisiones de configuración paso a paso.</span>
+        </div>
+        <div class="tsd-step tsd-step-do">
+          <span class="tsd-step-label">✅ Hacer</span>
+          <span class="tsd-step-heading">Configúrelo usted mismo</span>
+          <span class="tsd-step-desc">Configure su propia versión, comparando resultados con el ejemplo.</span>
+        </div>
+      </div>
+
+      <div class="callout-note">
+        <span class="callout-label">💡 Reglas clave para la configuración</span>
+        <ul>
+          <li><strong>Use una convención de nomenclatura estandarizada para todos los modelos y apps generados</strong>: cada nombre de modelo y app debe ser único dentro del Tenant. Los nombres duplicados harán fallar la generación. Vea el patrón de ejemplo a continuación.</li>
+          <li><strong>Los renombrados NO deben ser MÁS LARGOS que el nombre original de la Dimensión</strong>, particularmente la Dimensión 'Department'</li>
+          <li>Todas las Dimensiones estándar son <strong>Jerarquías compuestas</strong>: las Listas planas/personalizadas se manejan vía extensión</li>
+          <li>Niveles mínimos por Dimensión: <strong>2</strong> | Máximo: <strong>15</strong></li>
+          <li>Al modificar niveles de Jerarquía: <strong>añada/elimine desde el medio</strong>, nunca elimine el nivel hoja</li>
+          <li>Siempre haga clic en <strong>"Apply Changes"</strong> después de cada modificación</li>
+          <li>Use <strong>"Restore default"</strong> para restablecer si es necesario</li>
+        </ul>
+      </div>
+
+      <h3>Convención de nomenclatura estandarizada</h3>
+      <p>Reemplace los nombres de modelo y app por defecto con un formato estandarizado antes de generar. El patrón recomendado es <code>[ModelType]_Exercise ##_YYYYMMDD</code>: esto asegura que cada generación produzca artefactos con nombres únicos y evita errores de generación por colisión de nombres cuando el mismo ejercicio se ejecuta más de una vez en el Tenant.</p>
+      <figure class="screenshot">
+        <img src="../../img/configurator/naming-convention.png" alt="Tabla de convención de nomenclatura estandarizada mostrando Admin Model, Financial Planning Model, CapEx Model, Headcount Model e IFP App con nombres originales, estandarizados y de ejemplo siguiendo el patrón [ModelType]_Exercise ##_YYYYMMDD" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;">
+        <figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Convención de nomenclatura estandarizada: aplíquela a los cuatro modelos y al IFP App antes de la generación</figcaption>
+      </figure>
+
+      <h2>Escenario</h2>
+      <p><strong>Una empresa manufacturera necesita planear gastos operativos y headcount a través de múltiples departamentos y cost centers.</strong> No se requieren ingresos, COGS, balance ni gastos de capital.</p>
+
+      <h3>Configuración del modelo</h3>
+      <ul>
+        <li>Operating Expenses (Financial Planning Model)</li>
+        <li>Headcount Planning</li>
+        <li>Sin Revenue/COGS, Balance Sheet ni CapEx</li>
+        <li><strong>Tiempo estimado de generación: 20 minutos</strong></li>
+      </ul>
+
+      <h3>Configuración de Dimensiones</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Dimensión estándar</th>
+            <th>¿Requerida?</th>
+            <th>Renombrar a</th>
+            <th>Nº de niveles</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Entity</strong></td>
+            <td>Sí</td>
+            <td>—</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td><strong>Department</strong></td>
+            <td>Sí</td>
+            <td>CostCenter</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td><strong>Product</strong></td>
+            <td>No</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>Job</strong></td>
+            <td>Sí</td>
+            <td>Roles</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td><strong>Vendor</strong></td>
+            <td>Sí</td>
+            <td>Suppliers</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td><strong>Functional Area</strong></td>
+            <td>Sí</td>
+            <td>HR Org</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td><strong>Customer</strong></td>
+            <td>No</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>Location</strong></td>
+            <td>No</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Dimensiones personalizadas</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Lista personalizada</th>
+            <th>Tipo</th>
+            <th>Notas</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Projects</strong></td>
+            <td>Plana</td>
+            <td>Para seguimiento de proyectos en extensión</td>
+          </tr>
+          <tr>
+            <td><strong>Country</strong></td>
+            <td>Plana</td>
+            <td>Lista de atributo de apoyo</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Respuestas de configuración - preguntas de nivel superior</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Pregunta</th>
+            <th>Respuesta</th>
+            <th>Detalles</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>¿Soporte multi-moneda?</td>
+            <td><strong>Sí</strong></td>
+            <td>Requerido para reporte multi-entidad</td>
+          </tr>
+          <tr>
+            <td>¿Usar la Dimensión Location?</td>
+            <td><strong>No</strong></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>¿Usar la Dimensión Functional Area?</td>
+            <td><strong>Sí</strong></td>
+            <td>Se reutiliza como "HR Org"</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Respuestas de configuración - Financial Planning</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Pregunta</th>
+            <th>Respuesta</th>
+            <th>Detalles</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>¿Soporte multi-moneda?</td>
+            <td><strong>Sí</strong></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>¿Targets top-down?</td>
+            <td><strong>No</strong></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>¿Margin Planning?</td>
+            <td><strong>Expense Only</strong></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>¿Expense planning?</td>
+            <td><strong>Sí</strong></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Dimensionalidad para expense planning</td>
+            <td><strong>Department, Vendor</strong></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Dimensionalidad para itemized expense planning</td>
+            <td><strong>Department</strong></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>¿Expense allocations?</td>
+            <td><strong>No</strong></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Respuestas de configuración - Headcount</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Pregunta</th>
+            <th>Respuesta</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>¿Soporte multi-moneda?</td>
+            <td><strong>Sí</strong></td>
+          </tr>
+          <tr>
+            <td>¿Término para Job?</td>
+            <td><strong>Roles</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout-note">
+        <span class="callout-label">ℹ Notas importantes</span>
+        <ul>
+          <li>Próximamente llegará una mejora a PAF que hará que la terminología de las preguntas de configuración se adapte a cualquier renombrado de Dimensiones que haga</li>
+          <li>Una mejora adicional permitirá "restore defaults" de todos los ajustes con un solo clic</li>
+        </ul>
+      </div>
+
+      <div class="prevnext-nav"><a class="prevnext-btn" href="./05-configurator-walkthrough.html">← Anterior</a><a class="prevnext-btn" href="./06-exercise-2.html">Siguiente →</a></div>
+    </div>
+  </main>
+  <script src="../../js/nav.js"></script>
+</body>
+</html>

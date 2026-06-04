@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aperçu de l'atelier — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+      <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">Démarrage</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link active" href="./01-overview.html">Aperçu de l'atelier</a></li>
+      <li><a class="nav-link" href="./02-tenant-access.html">Accès au tenant</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">Aperçu d'IFP</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for Applications</a></li>
+    </ul>
+    <li class="nav-section-title">Configuration</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">Exercice de configuration 1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">Exercice de configuration 2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">Exercice de configuration 3</a></li>
+      <li><a class="nav-link" href="./07-generation.html">Génération du modèle</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">Étapes post-génération</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Revue de l'Error Log</a></li>
+    </ul>
+    <li class="nav-section-title">Extensions</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">Aperçu des extensions</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">Exercice 1</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">Exercice 2</a></li>
+    </ul>
+    <li class="nav-section-title">Référence</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">À venir</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">Questions et réponses des sessions</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 Langue</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr" selected>🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>Aperçu de l'atelier</h1>
+      <p class="subtitle">Objectifs, prérequis, structure et utilisation de ce guide</p>
+      <div class="badge-row"><span class="content-badge">Démarrage</span><span class="content-badge">15 min</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-info" style="background:#eff6ff;border-left:4px solid #3b82f6;">
+        <span class="callout-label">🌐 Avis de traduction</span>
+        <p>Ceci est une traduction automatique de la version originale en anglais. Pour la version officielle et la plus à jour, consultez <a href="../01-overview.html">la version anglaise</a>. Signalez tout problème de traduction à votre contact Anaplan.</p>
+      </div>
+
+      <h2>Bienvenue</h2>
+      <p>Vous y êtes ! L'<strong>IFP Delivery Workshop</strong> est un programme virtuel pratique, entièrement à votre rythme, qui vous guide à travers l'intégralité du workflow de livraison IFP 2.1 — configuration de l'Application Framework, génération du modèle, résolution des Error Logs et construction d'extensions réelles spécifiques au client, à partir de zéro.</p>
+      <p>Si vous avez déjà généré un modèle IFP, rencontré un Error Log et hésité entre escalader ou corriger vous-même — cet atelier est conçu pour combler exactement cette lacune.</p>
+
+      <h2>Ce que vous allez apprendre</h2>
+      <p>Vous parcourrez le cycle complet de livraison IFP :</p>
+      <ul>
+        <li><strong>Configuration de l'Application Framework</strong> — les 44 questions de configuration, de bout en bout</li>
+        <li><strong>Génération du modèle et vérification post-génération</strong> — ce que la génération produit, ce qu'il faut vérifier et pourquoi</li>
+        <li><strong>Revue de l'Error Log</strong> — lire, catégoriser et résoudre les erreurs de génération sans escalader</li>
+        <li><strong>Extensions à partir de zéro</strong> — deux constructions de qualité production : une méthode de saisie directe avec ajustements multiples et une méthode basée sur des taux pilotés par le Headcount</li>
+        <li><strong>Anaplan Way for Applications</strong> — la méthodologie de livraison en six phases qui structure chaque mission IFP</li>
+      </ul>
+
+      <h2>Pourquoi c'est important</h2>
+      <p>IFP est livré via l'Application Framework — <strong>il n'est pas construit à partir de zéro</strong>. Cela fait de la configuration, de la génération et du triage de l'Error Log le cœur des compétences de livraison, et non la modélisation sur mesure. Les décisions de configuration, la checklist post-génération et la discipline des data tags pour les extensions ne sont pas optionnelles — elles <em>constituent</em> la méthode de livraison.</p>
+      <p>Chaque exercice se déroule dans votre propre Tenant de formation attribué, avec des modèles IFP préparés à l'avance, en utilisant des scénarios de planification réels (OpEx/Headcount, Insurance 3-Statement, Nuclear Plant OpEx).</p>
+
+      <h2>À la fin, vous serez capable de</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Résultat</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Configurer l'Application Framework de bout en bout et générer un modèle IFP fonctionnel</td></tr>
+            <tr><td>2</td><td>Lire et résoudre les Error Logs de génération sans escalader les erreurs de formule basiques</td></tr>
+            <tr><td>3</td><td>Construire une extension de saisie directe avec des couches d'ajustement</td></tr>
+            <tr><td>4</td><td>Construire une méthode de planification par taux pilotée par le Headcount</td></tr>
+            <tr><td>5</td><td>Appliquer la discipline « Configurer vs Étendre vs Modifier » et taguer chaque changement avec des data tags</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>À qui s'adresse cet atelier</h2>
+      <p>Aux consultants Anaplan de livraison chez les partenaires qui implémentent IFP pour des clients — ou qui prévoient de le faire dans les 12 prochains mois. Il s'agit d'un atelier de praticiens, pas d'un aperçu produit.</p>
+      <p><strong>Prérequis :</strong></p>
+      <ul>
+        <li>Certification Model Builder (MB), Solution Architect (SA) ou Master Anaplanner</li>
+        <li>Expérience préalable de construction ou de configuration de modèles Anaplan</li>
+        <li>Familiarité avec les concepts de planification financière (compte de résultat, bilan, Headcount)</li>
+      </ul>
+
+      <h2>Votre Tenant de formation pour la semaine</h2>
+      <p>Un Tenant de formation dédié vous a été attribué, pré-chargé avec les modèles IFP 2.1 pour la semaine de votre session. Tous les travaux de configuration et d'extension se déroulent dans ce Tenant de formation — <strong>jamais en production</strong>. La plupart des participants terminent l'atelier, les exercices et les vidéos d'accompagnement en <strong>une à deux heures par jour</strong>.</p>
+      <div class="callout-warning">
+        <span class="callout-label">⚠ Confirmez votre accès avant de commencer</span>
+        <p>Avant toute autre chose, rendez-vous sur <a href="./02-tenant-access.html"><strong>Accès au tenant</strong></a> et effectuez les trois vérifications : connexion, confirmation du bon Tenant et vérification de vos rôles et de votre dataspace. Sauter cette étape est la cause numéro 1 pour laquelle les participants se retrouvent bloqués en cours d'atelier.</p>
+      </div>
+
+      <h2>Comment s'engager : Lire · Regarder · Faire</h2>
+      <p>Cet atelier est à votre rythme, donc le schéma d'engagement est conçu pour un travail indépendant plutôt qu'une session animée en direct :</p>
+<div class="table-wrap"><table><thead><tr><th>Mode</th><th>Ce qui se passe</th><th>Votre rôle</th></tr></thead><tbody><tr><td>📖 Lire</td><td>Chaque section explique le concept et pourquoi il est important pour la livraison IFP</td><td>Lire activement, prendre des notes, marquer les questions</td></tr><tr><td>👁 Regarder</td><td>De courtes vidéos guidées montrent le workflow dans un Tenant de formation</td><td>Suivre dans votre propre Tenant dans une fenêtre côte à côte</td></tr><tr><td>✅ Faire</td><td>Vous réalisez l'activité de manière autonome dans le modèle de formation</td><td>Dérouler les étapes, vérifier par rapport aux contrôles de complétude</td></tr></tbody></table></div>
+
+      <h2>Comment utiliser ce guide</h2>
+      <p>Parcourez les sections à votre propre rythme via la barre latérale :</p>
+      <ul>
+        <li><strong>Démarrage :</strong> Accès au tenant, Aperçu d'IFP, Anaplan Way for Applications</li>
+        <li><strong>Configuration :</strong> visite guidée de l'Application Framework Configurator, trois exercices de configuration, génération du modèle, étapes post-génération, revue de l'Error Log</li>
+        <li><strong>Extensions :</strong> aperçu des extensions et deux exercices pratiques</li>
+        <li><strong>Référence :</strong> À venir, questions et réponses des sessions précédentes</li>
+      </ul>
+
+      <h2>Ressources vidéo</h2>
+      <div class="callout-info"><span class="callout-label">📹 Introductions vidéo</span><p>De courtes vidéos guidées arrivent prochainement. Revenez ici pour les liens vers :</p>
+      <ul>
+        <li>Aperçu de l'atelier et conseils de rythme</li>
+        <li>Points forts de la visite guidée de la configuration de l'Application Framework</li>
+        <li>Conseils de dépannage post-génération</li>
+      </ul>
+      </div>
+<div class="prevnext-nav"><span></span><a class="prevnext-btn" href="./02-tenant-access.html">Suivant →</a></div>
+    </div>
+  </main>
+  <script src="../../js/nav.js"></script>
+</body>
+</html>

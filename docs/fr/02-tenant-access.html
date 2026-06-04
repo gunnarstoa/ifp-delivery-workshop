@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accès au tenant — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+      <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">Démarrage</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">Aperçu de l'atelier</a></li>
+      <li><a class="nav-link active" href="./02-tenant-access.html">Accès au tenant</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">Aperçu d'IFP</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for Applications</a></li>
+    </ul>
+    <li class="nav-section-title">Configuration</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">Exercice de configuration 1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">Exercice de configuration 2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">Exercice de configuration 3</a></li>
+      <li><a class="nav-link" href="./07-generation.html">Génération du modèle</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">Étapes post-génération</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Revue de l'Error Log</a></li>
+    </ul>
+    <li class="nav-section-title">Extensions</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">Aperçu des extensions</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">Exercice 1</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">Exercice 2</a></li>
+    </ul>
+    <li class="nav-section-title">Référence</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">À venir</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">Questions et réponses des sessions</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 Langue</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr" selected>🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>Accès au tenant</h1>
+      <p class="subtitle">Confirmez que vous avez accès au bon Tenant de formation avant de commencer</p>
+      <div class="badge-row"><span class="content-badge">Démarrage</span><span class="content-badge">5 min</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-info" style="background:#eff6ff;border-left:4px solid #3b82f6;">
+        <span class="callout-label">🌐 Avis de traduction</span>
+        <p>Ceci est une traduction automatique de la version originale en anglais. Pour la version officielle et la plus à jour, consultez <a href="../02-tenant-access.html">la version anglaise</a>. Signalez tout problème de traduction à votre contact Anaplan.</p>
+      </div>
+
+      <h2>Avant de commencer</h2>
+      <p>Cet atelier utilise un Tenant de formation partagé avec des modèles IFP 2.1 préparés à l'avance. Vous devez confirmer l'accès au bon Tenant et au bon Workspace avant de continuer. N'utilisez pas un Tenant de production.</p>
+
+      <div class="callout-warning">
+        <span class="callout-label">⚠ Important</span>
+        <p>Si vous ne pouvez pas confirmer l'accès au Tenant via les étapes ci-dessous, contactez votre animateur avant de continuer. Tous les exercices pratiques dépendent de cet accès.</p>
+      </div>
+
+      <h2>Étape 1 — Connectez-vous</h2>
+      <p>Rendez-vous sur <a href="https://us1a.app.anaplan.com/" target="_blank">https://us1a.app.anaplan.com/</a> et connectez-vous avec les identifiants fournis par votre animateur.</p>
+      <figure class="screenshot">
+        <img src="../../img/overview/tenant-access-login.png" alt="Écran de connexion Anaplan sur us1a.app.anaplan.com avec champ de saisie d'e-mail" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;">
+        <figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Écran de connexion Anaplan sur us1a.app.anaplan.com</figcaption>
+      </figure>
+
+      <h2>Étape 2 — Confirmez le bon Tenant</h2>
+      <p>Après vous être connecté, vérifiez que vous êtes dans le bon Tenant de formation. Le nom du Tenant s'affiche dans la barre de navigation supérieure.</p>
+      <figure class="screenshot">
+        <img src="../../img/overview/tenant-access-correct-tenant.png" alt="Écran d'accueil Anaplan avec sélecteur de Tenant affichant Application Training 21 mis en évidence dans la navigation supérieure" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;">
+        <figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Accueil Anaplan — sélecteur de Tenant dans la barre de navigation supérieure (Application Training 21)</figcaption>
+      </figure>
+
+      <h2>Étape 3 — Vérifiez vos rôles et votre dataspace</h2>
+      <p>Allez dans la section <strong>Administration</strong> et confirmez que votre utilisateur dispose des trois rôles requis pour exécuter la génération, ainsi que d'un dataspace attribué. Prenez l'habitude de le faire <em>avant</em> chaque génération — c'est la cause la plus fréquente pour laquelle un partenaire se retrouve bloqué en cours de mission.</p>
+
+      <p>Votre utilisateur doit posséder les <strong>trois</strong> rôles suivants :</p>
+      <ul>
+        <li><strong>Page Builder</strong></li>
+        <li><strong>Application Owner</strong></li>
+        <li><strong>Integration Admin</strong></li>
+      </ul>
+
+      <p>Vérifiez également qu'<strong>un dataspace est attribué à votre utilisateur</strong>. Sans cela, la génération échouera.</p>
+
+      <div class="callout-warning">
+        <span class="callout-label">⚠ Pourquoi c'est important</span>
+        <p>Nous voyons régulièrement des partenaires tenter une génération sans avoir vérifié au préalable ces droits d'accès auprès de l'administrateur du Tenant — puis perdre des heures à déboguer un échec de génération qui était en réalité un problème de permissions. Confirmez toujours les rôles et l'attribution du dataspace avec votre administrateur de Tenant <em>avant</em> de commencer la configuration. Faites-en un réflexe pré-génération.</p>
+      </div>
+
+      <h2>À propos des modèles TRAIN pré-remplis</h2>
+      <p>Votre Tenant de formation contient également un ensemble de modèles et une application qu'Anaplan fournit <strong>en dehors de tout ce que vous configurez pendant les exercices de l'atelier</strong>. Ils portent le préfixe <code>TRAIN</code> (par exemple, <code>IFPv2.0.0-train-base-financial-planning</code>) et sont pré-remplis avec des données d'exemple réalistes.</p>
+
+      <div class="callout-warning">
+        <span class="callout-label">⚠ Utilisez les modèles TRAIN pour les exercices d'extension</span>
+        <p>Lorsque vous arrivez à la section Extensions de l'atelier, réalisez les exercices d'extension sur les modèles <strong>TRAIN</strong> pré-remplis — et <em>non</em> sur les modèles que vous avez générés à partir de votre propre configuration. Les modèles TRAIN sont chargés en données, ce qui est nécessaire pour démontrer et valider le comportement des extensions de bout en bout. Vos propres modèles configurés ne servent qu'aux exercices de configuration et de génération.</p>
+      </div>
+
+      <h2>Vous êtes prêt</h2>
+      <p>Une fois que vous avez confirmé que vous êtes dans le bon Tenant de formation, que vous disposez des trois rôles requis, qu'un dataspace vous est attribué et que vous savez quels modèles utiliser pour quels exercices, vous êtes correctement configuré. Passez à l'Aperçu d'IFP pour commencer le contenu de l'atelier.</p>
+
+      <div class="prevnext-nav">
+        <a class="prevnext-btn" href="./01-overview.html">← Précédent</a>
+        <a class="prevnext-btn" href="./03-ifp-overview.html">Suivant →</a>
+      </div>
+    </div>
+  </main>
+  <script src="../../js/nav.js"></script>
+</body>
+</html>

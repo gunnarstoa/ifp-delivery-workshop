@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercício de extensão 1 — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+    <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">Primeiros passos</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">Visão geral do workshop</a></li>
+      <li><a class="nav-link" href="./02-tenant-access.html">Acesso ao tenant</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">Visão geral do IFP</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for Applications</a></li>
+    </ul>
+    <li class="nav-section-title">Configuração</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">Exercício de configuração 1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">Exercício de configuração 2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">Exercício de configuração 3</a></li>
+      <li><a class="nav-link" href="./07-generation.html">Geração do modelo</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">Etapas pós-geração</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Revisão do Error Log</a></li>
+    </ul>
+    <li class="nav-section-title">Extensões</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">Visão geral das extensões</a></li>
+      <li><a class="nav-link active" href="./11-extension-exercise-1.html">Exercício 1</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">Exercício 2</a></li>
+    </ul>
+    <li class="nav-section-title">Referência</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">Em breve</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">Perguntas e respostas das sessões</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 Idioma</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt" selected>🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>Exercício de extensão 1: Ajustes manuais</h1>
+      <p class="subtitle">Adicionar 2 novos Line Items de ajuste manual ao Módulo de OpEx e modificar a fórmula de agregação</p>
+      <div class="badge-row"><span class="content-badge">Extensões</span><span class="content-badge">30 min</span><span class="content-badge">Prática guiada</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-info" style="background:#eff6ff;border-left:4px solid #3b82f6;">
+        <span class="callout-label">🌐 Aviso de tradução</span>
+        <p>Esta é uma tradução automática da versão original em inglês. Para a versão oficial e mais atualizada, consulte <a href="../11-extension-exercise-1.html">a versão em inglês</a>. Reporte qualquer problema de tradução ao seu contato Anaplan.</p>
+      </div>
+
+      <div class="tsd-banner">
+        <div class="tsd-step tsd-step-tell">
+          <span class="tsd-step-label">📖 Contar</span>
+          <span class="tsd-step-heading">Requisito de negócio</span>
+          <span class="tsd-step-desc">O cliente precisa de 2 Line Items adicionais de ajuste manual para planejamento de despesas.</span>
+        </div>
+        <div class="tsd-step tsd-step-show">
+          <span class="tsd-step-label">👁 Mostrar</span>
+          <span class="tsd-step-heading">Walkthrough facilitado</span>
+          <span class="tsd-step-desc">O facilitador conduz cada etapa: adicionar Line Items, modificar fórmulas e testar no UX.</span>
+        </div>
+        <div class="tsd-step tsd-step-do">
+          <span class="tsd-step-label">✅ Fazer</span>
+          <span class="tsd-step-heading">Execute a extensão</span>
+          <span class="tsd-step-desc">Construa a extensão você mesmo, seguindo o fluxo de 5 etapas.</span>
+        </div>
+      </div>
+
+      <h2>Requisito de negócio</h2>
+      <p>Necessita de 2 tipos adicionais de ajustes manuais para inputs de despesa.</p>
+
+      <h2>Solução</h2>
+      <ul>
+        <li>Adicionar novos Line Items ao Módulo afetado</li>
+        <li>Modificar a fórmula de agregação para incluir os novos Line Items</li>
+      </ul>
+
+      <h2>Etapas</h2>
+
+      <div class="step"><div class="step-badge">1</div><div class="step-content"><h3>Abra o Módulo de Expense Planning</h3><p>Abra o Módulo <strong>INP OPX Expense Planning</strong> no modelo "Financial Planning".</p></div></div>
+
+      <div class="step"><div class="step-badge">2</div><div class="step-content"><h3>Adicione 2 novos Line Items</h3><p>Adicione 2 novos Line Items na seção "Direct Input Method" do blueprint:</p><ul><li><strong>Manual Adjustment #1</strong></li><li><strong>Manual Adjustment #2</strong></li><li>Defina o Format dos novos Line Items (igual a "Amount")</li><li>Defina o Write Access Driver para cada novo Line Item</li><li>Documente para que servem os Line Items no campo "Notes"</li></ul></div></div>
+
+      <div class="step"><div class="step-badge">3</div><div class="step-content"><h3>Modifique a fórmula de agregação</h3><p>Precisamos modificar a fórmula do Line Item <strong>Direct Input Fcst</strong> para incluir os 2 novos Line Items:</p><ul><li>Modifique a fórmula</li><li>Documente o que você fez:<ul><li>Use o campo "Notes" do blueprint do Módulo</li><li>Mantenha uma lista mestre de overrides em um documento offline, incluindo a sintaxe da fórmula original e atualizada</li></ul></li></ul></div></div>
+
+      <div class="step"><div class="step-badge">4</div><div class="step-content"><h3>Atualize o Line-Item Subset e configurações de Admin</h3><p>Adicione os 2 novos Line Items ao LISS (Line-Item Subset para Show/Hide):</p><ul><li>Abra o Line-Item Subset <strong>"LISS: OpEx Filter"</strong></li><li>Marque o booleano para os 2 novos ajustes</li><li>Abra o Módulo <strong>"ADMIN LISS OpEx Filter"</strong> e defina o "Forecast Method" como "Direct Input" para cada um dos 2 novos Line Items</li></ul></div></div>
+
+      <div class="step"><div class="step-badge">5</div><div class="step-content"><h3>Verifique no UX App</h3><p>Abra a página <strong>"OpEx – planning"</strong> no UX App:</p><ul><li>Selecione a conta <strong>"6005 Office Equipment"</strong></li><li>Confira se a lógica está funcionando corretamente</li></ul></div></div>
+
+      <div class="prevnext-nav"><a class="prevnext-btn" href="./10-extensions-overview.html">← Anterior</a><a class="prevnext-btn" href="./12-extension-exercise-2.html">Próximo →</a></div>
+    </div>
+  </main>
+  <script src="../../js/nav.js"></script>
+</body>
+</html>

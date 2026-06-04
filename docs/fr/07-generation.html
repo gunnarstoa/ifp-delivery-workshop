@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Génération du modèle — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+      <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">Démarrage</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">Aperçu de l'atelier</a></li>
+      <li><a class="nav-link" href="./02-tenant-access.html">Accès au tenant</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">Aperçu d'IFP</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for Applications</a></li>
+    </ul>
+    <li class="nav-section-title">Configuration</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">Exercice de configuration 1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">Exercice de configuration 2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">Exercice de configuration 3</a></li>
+      <li><a class="nav-link active" href="./07-generation.html">Génération du modèle</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">Étapes post-génération</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Revue de l'Error Log</a></li>
+    </ul>
+    <li class="nav-section-title">Extensions</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">Aperçu des extensions</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">Exercice 1</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">Exercice 2</a></li>
+    </ul>
+    <li class="nav-section-title">Référence</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">À venir</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">Questions et réponses des sessions</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 Langue</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr" selected>🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>Génération du modèle</h1>
+      <p class="subtitle">Ce qui se passe pendant la Génération, sa durée et à quoi s'attendre</p>
+      <div class="badge-row"><span class="content-badge">Jour 1</span><span class="content-badge">30 min</span><span class="content-badge">Visite guidée</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-info" style="background:#eff6ff;border-left:4px solid #3b82f6;">
+        <span class="callout-label">🌐 Avis de traduction</span>
+        <p>Ceci est une traduction automatique de la version originale en anglais. Pour la version officielle et la plus à jour, consultez <a href="../07-generation.html">la version anglaise</a>. Signalez tout problème de traduction à votre contact Anaplan.</p>
+      </div>
+
+      <div class="tsd-banner">
+        <div class="tsd-step tsd-step-tell">
+          <span class="tsd-step-label">📖 Présenter</span>
+          <span class="tsd-step-heading">Ce que produit la Génération</span>
+          <span class="tsd-step-desc">Ce que l'App Framework génère et ce que signifient les états de statut.</span>
+        </div>
+        <div class="tsd-step tsd-step-show">
+          <span class="tsd-step-label">👁 Montrer</span>
+          <span class="tsd-step-heading">Génération en direct</span>
+          <span class="tsd-step-desc">L'animateur lance une Génération en direct et suit le statut en temps réel.</span>
+        </div>
+        <div class="tsd-step tsd-step-do">
+          <span class="tsd-step-label">✅ Faire</span>
+          <span class="tsd-step-heading">Lancez votre Génération</span>
+          <span class="tsd-step-desc">Les participants lancent leur propre Génération et suivent la progression.</span>
+        </div>
+      </div>
+
+      <h2>Ce que fait la Génération</h2>
+      <p>Lorsque vous lancez la Génération, l'App Framework lit l'ensemble de vos 44 réponses de configuration et provisionne la structure complète du modèle IFP. Ce n'est pas une copie de template — c'est un processus de Génération dynamique qui applique vos décisions de configuration pour produire un modèle spécifique à vos réponses.</p>
+      <p>La Génération provisionne quatre modèles :</p>
+      <ul>
+        <li><strong>Financial Planning</strong> — le modèle de planification principal (Modules INP, CALC, OUT)</li>
+        <li><strong>Headcount</strong> — le modèle HC avec planification au niveau Job (si activé)</li>
+        <li><strong>Admin</strong> — emplacement principal pour les mappings de métadonnées source vers planning pour les Hiérarchies d'accounts, entity et department.</li>
+        <li><strong>CapEx</strong> — modèle de planification capex (uniquement si activé)</li>
+      </ul>
+
+      <h2>Ce qui est créé</h2>
+<div class="table-wrap"><table><thead><tr><th>Type d'objet</th><th>Nombre (typique)</th><th>Contenu</th></tr></thead><tbody><tr><td>Modèles</td><td>4</td><td>Financial Planning, Headcount, Admin, CapEx</td></tr><tr><td>UX Apps</td><td>1+</td><td>L'application de planification IFP à laquelle les utilisateurs finaux accéderont</td></tr><tr><td>Ressources</td><td>~17</td><td>Définitions d'import, saved views, configurations de tableaux de bord</td></tr></tbody></table></div>
+
+      <h2>États de statut de Génération</h2>
+<div class="table-wrap"><table><thead><tr><th>Statut</th><th>Signification</th><th>Que faire</th></tr></thead><tbody><tr><td>Generating...</td><td>La Génération est en cours. Les modèles sont en cours de provisionnement.</td><td>Attendre. Ne pas lancer une autre Génération. Attendu : 10 à 20 min.</td></tr><tr><td>Generated with Errors</td><td>La Génération est terminée. Certaines formules ont des erreurs dues aux différences de configuration par rapport au modèle de base.</td><td>Normal et attendu. Examiner les Error Logs — la plupart des erreurs sont résolubles.</td></tr><tr><td>Generated Successfully</td><td>Génération terminée sans erreur de formule détectée.</td><td>Passer aux étapes post-génération.</td></tr><tr><td>Generation Failed</td><td>La Génération ne s'est pas terminée à cause d'une erreur de plateforme.</td><td>Contacter le support Anaplan. Ne pas tenter une autre Génération sans diagnostic.</td></tr></tbody></table></div><div class="callout-important"><span class="callout-label">🚨 « Generated with Errors » ne veut pas dire cassé</span><p>« Generated with Errors » est normal et attendu, en particulier en formation et lors des premières implémentations. Cela signifie que certaines formules référencent des éléments qui diffèrent du modèle de base — généralement causé par le renommage de Hiérarchies, la suppression de la géographie ou des choix de configuration différents des hypothèses du template. Le modèle est fonctionnel. Vous parcourrez la liste d'erreurs systématiquement dans la section Revue de l'Error Log.</p></div>
+
+      <h2>Pages du modèle IFP après Génération</h2>
+<figure class="screenshot"><img src="../../img/generation/gen-0265.jpg" alt="Liste des pages du modèle IFP — 43 pages réparties sur les modules ADMIN, SYS, DAT, INP, CALC, OUT" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Liste des pages du modèle IFP — 43 pages réparties sur les modules ADMIN, SYS, DAT, INP, CALC, OUT</figcaption></figure>
+
+      <h2>Génération avec erreurs — panneau Activity</h2>
+<figure class="screenshot"><img src="../../img/generation/gen-d2-0235.jpg" alt="Génération App Framework avec erreurs — panneau Activity montrant les sources de données du modèle et le nombre d'erreurs" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Génération App Framework avec erreurs — panneau Activity montrant les sources de données du modèle et le nombre d'erreurs</figcaption></figure>
+
+      <h2>Modules Financial Planning par défaut après Génération</h2>
+<figure class="screenshot"><img src="../../img/v2.1-screenshots/modules-list.png" alt="Liste des modules par défaut en IFP v2.1 montrant les modules ADMIN, SYS, DAT, INP, CALC, OUT avec les fonctions, Line Items et propriétés" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Modules Financial Planning par défaut (v2.1) — affichant la structure des modules ADMIN, SYS, DAT, INP, CALC, OUT avec les fonctions et métadonnées</figcaption></figure>
+
+      <h2>Structure de navigation UX &amp; pages</h2>
+      <p>Une fois la Génération terminée, l'app UX générée contient des pages et des catégories organisées vers lesquelles les utilisateurs naviguent pour effectuer leur travail de planification. Le template par défaut v2.1.0 inclut :</p>
+<figure class="screenshot"><img src="../../img/v2.1-screenshots/ux-navigation-structure.png" alt="AW_FIN — navigation UX Integrated Financial Planning v2.1.0 montrant Quick Access, Catégories (Home, Reporting &amp; Analysis, Top Down Planning, Revenue &amp; COGS, Operating Expense, Headcount, CapEx Planning, Balance Sheet &amp; Cash Flow, Administration) et sous-pages." style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">AW_FIN (v2.1.0) — structure de navigation UX : catégories et pages organisées par fonction métier et type de planification</figcaption></figure>
+
+      <h2>Étapes de Génération</h2>
+<div class="step"><div class="step-badge">1</div><div class="step-content"><h3>Lancer la Génération</h3><p>Depuis l'Application Framework Configurator, après avoir complété toutes les sections, cliquez sur Generate. Confirmez les messages éventuels. Notez l'heure de début.</p></div></div><div class="step"><div class="step-badge">2</div><div class="step-content"><h3>Suivre le statut</h3><p>La page d'aperçu de l'App Framework affiche le statut de Génération. Rafraîchissez périodiquement. Ne fermez pas le navigateur et ne lancez pas une autre Génération pendant qu'une est en cours.</p></div></div><div class="step"><div class="step-badge">3</div><div class="step-content"><h3>Premier coup d'œil sur le modèle généré</h3><p>Une fois terminé, naviguez vers votre Workspace. Vous devriez voir les quatre modèles IFP listés. Ouvrez le modèle Financial Planning et vérifiez que les sous-processus de planification sont présents — y compris Revenue &amp; COGS, Operating Expense, Headcount, CapEx Planning et Balance Sheet &amp; Cash Flow (selon votre configuration).</p></div></div><div class="step"><div class="step-badge">4</div><div class="step-content"><h3>Vérifier les Error Logs</h3><p>Retournez à l'App Framework. En bas à droite de la page d'aperçu, trouvez le compteur d'Error Log. Cliquez pour développer le log. Note : plus de 0 erreur est normal. Passez à la Revue de l'Error Log.</p></div></div>
+
+      <div class="prevnext-nav"><a class="prevnext-btn" href="./06-exercise-3.html">← Précédent</a><a class="prevnext-btn" href="./08-post-gen.html">Suivant →</a></div>
+    </div>
+  </main>
+  <script src="../../js/nav.js"></script>
+</body>
+</html>

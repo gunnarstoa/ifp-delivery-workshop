@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ejercicio de configuración 3 — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+    <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">Primeros pasos</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">Resumen del taller</a></li>
+      <li><a class="nav-link" href="./02-tenant-access.html">Acceso al tenant</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">Resumen de IFP</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for Applications</a></li>
+    </ul>
+    <li class="nav-section-title">Configuración</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">Ejercicio de configuración 1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">Ejercicio de configuración 2</a></li>
+      <li><a class="nav-link active" href="./06-exercise-3.html">Ejercicio de configuración 3</a></li>
+      <li><a class="nav-link" href="./07-generation.html">Generación del modelo</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">Pasos posteriores a la generación</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Revisión del Error Log</a></li>
+    </ul>
+    <li class="nav-section-title">Extensiones</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">Resumen de extensiones</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">Ejercicio 1</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">Ejercicio 2</a></li>
+    </ul>
+    <li class="nav-section-title">Referencia</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">Próximas novedades</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">Preguntas y respuestas de sesiones</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 Idioma</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="es" selected>🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>Ejercicio de configuración 3: Nuclear Plant – OpEx y Headcount</h1>
+      <p class="subtitle">Ejercicio práctico para configurar IFP para una compañía de servicios públicos</p>
+      <div class="badge-row"><span class="content-badge">Configuración</span><span class="content-badge">30 min</span><span class="content-badge">Práctica guiada</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-info" style="background:#eff6ff;border-left:4px solid #3b82f6;">
+        <span class="callout-label">🌐 Aviso de traducción</span>
+        <p>Esta es una traducción automática de la versión original en inglés. Para la versión autoritativa y más actualizada, consulte <a href="../06-exercise-3.html">la versión en inglés</a>. Reporte cualquier problema de traducción a su contacto Anaplan.</p>
+      </div>
+
+      <div class="tsd-banner">
+        <div class="tsd-step tsd-step-tell">
+          <span class="tsd-step-label">📖 Contar</span>
+          <span class="tsd-step-heading">Resumen del ejercicio</span>
+          <span class="tsd-step-desc">Este ejercicio presenta un escenario de negocio real con requisitos de configuración.</span>
+        </div>
+        <div class="tsd-step tsd-step-show">
+          <span class="tsd-step-label">👁 Mostrar</span>
+          <span class="tsd-step-heading">Recorrido facilitado</span>
+          <span class="tsd-step-desc">El facilitador lo guía por las decisiones de configuración paso a paso.</span>
+        </div>
+        <div class="tsd-step tsd-step-do">
+          <span class="tsd-step-label">✅ Hacer</span>
+          <span class="tsd-step-heading">Configúrelo usted mismo</span>
+          <span class="tsd-step-desc">Configure su propia versión, comparando resultados con el ejemplo.</span>
+        </div>
+      </div>
+
+      <h3>Convención de nomenclatura estandarizada</h3>
+      <p>Reemplace los nombres de modelo y app por defecto con un formato estandarizado antes de generar. El patrón recomendado es <code>[ModelType]_Exercise ##_YYYYMMDD</code>: esto asegura que cada generación produzca artefactos con nombres únicos y evita errores de generación por colisión de nombres cuando el mismo ejercicio se ejecuta más de una vez en el Tenant.</p>
+      <figure class="screenshot">
+        <img src="../../img/configurator/naming-convention-exercise-3.png" alt="Convención de nomenclatura estandarizada para el Ejercicio 3 mostrando Admin Model, Financial Planning Model, CapEx Model, Headcount Model e IFP App con nombres de ejemplo siguiendo el patrón [ModelType]_Exercise 03_YYYYMMDD" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;">
+        <figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Convención de nomenclatura estandarizada para el Ejercicio 3: aplíquela a los cuatro modelos y al IFP App antes de la generación</figcaption>
+      </figure>
+
+      <h2>Escenario</h2>
+      <p><strong>Una empresa de servicios públicos que opera una planta nuclear necesita planeación de gastos operativos y headcount</strong> con un work breakdown structure (WBS) detallado para el seguimiento de proyectos de capital. No se requiere balance, cashflow ni margin planning.</p>
+
+      <h3>Configuración del modelo</h3>
+      <ul>
+        <li>Solo Operating Expense y Headcount</li>
+        <li>NO usará: targets top-down, margin planning, CapEx, balance sheet, cashflow ni allocations</li>
+        <li>Configurará una extensión para seguimiento de proyectos CapEx y PO</li>
+        <li>Estrato de tiempo: mensual</li>
+        <li><strong>Tiempo de generación: por determinar</strong></li>
+      </ul>
+
+      <h3>Configuración de Dimensiones</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Dimensión estándar</th>
+            <th>¿Requerida?</th>
+            <th>Renombrar a</th>
+            <th>¿OpEx?</th>
+            <th>Nº de niveles</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Accounts</strong></td>
+            <td>Sí</td>
+            <td>GL Accounts</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>Entity</strong></td>
+            <td>Sí</td>
+            <td>—</td>
+            <td>Sí</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td><strong>Department</strong></td>
+            <td>Sí</td>
+            <td>CostCenter</td>
+            <td>Sí</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td><strong>Job</strong></td>
+            <td>Sí</td>
+            <td>—</td>
+            <td>—</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td><strong>Vendor</strong></td>
+            <td>Sí</td>
+            <td>Supplier</td>
+            <td>—</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td><strong>Functional Area</strong></td>
+            <td>Sí</td>
+            <td>WBS</td>
+            <td>—</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td><strong>Customer</strong></td>
+            <td>No</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>Location</strong></td>
+            <td>No</td>
+            <td>—</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Dimensiones personalizadas</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Lista personalizada</th>
+            <th>Tipo</th>
+            <th>Notas</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Country</strong></td>
+            <td>Plana</td>
+            <td>Atributo de apoyo</td>
+          </tr>
+          <tr>
+            <td><strong>PO Headers</strong></td>
+            <td>Plana</td>
+            <td>Para seguimiento de órdenes de compra (extensión)</td>
+          </tr>
+          <tr>
+            <td><strong>PO Items</strong></td>
+            <td>Plana</td>
+            <td>Para detalle por Line Item (extensión)</td>
+          </tr>
+          <tr>
+            <td><strong>Managers</strong></td>
+            <td>Plana</td>
+            <td>Para Jerarquía de gerencia</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Atributos de Dimensión</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Dimensión padre</th>
+            <th>Atributo</th>
+            <th>Tipo</th>
+            <th>Lista de atributo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Cost Center</strong></td>
+            <td>Cost Ctr Manager</td>
+            <td>List</td>
+            <td>Managers</td>
+          </tr>
+          <tr>
+            <td><strong>Cost Center</strong></td>
+            <td>Entity</td>
+            <td>List</td>
+            <td>E2 Entity</td>
+          </tr>
+          <tr>
+            <td><strong>Cost Center</strong></td>
+            <td>Profit Center</td>
+            <td>List</td>
+            <td>C3 Cost Ctr</td>
+          </tr>
+          <tr>
+            <td><strong>Cost Center</strong></td>
+            <td>Country</td>
+            <td>List</td>
+            <td>Country</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Decisiones clave de configuración</h3>
+      <ul>
+        <li>Functional Area reutilizada como <strong>WBS (Work Breakdown Structure)</strong> con 5 niveles para una Jerarquía de proyecto detallada</li>
+        <li>Múltiples Dimensiones personalizadas para seguimiento de proyectos y compras (manejadas en extensión)</li>
+        <li>Rica estructura de atributos en Cost Center para análisis multi-dimensional</li>
+        <li>Alcance mínimo: solo OpEx + Headcount, manteniendo la configuración simple</li>
+      </ul>
+
+      <div class="callout-warning">
+        <span class="callout-label">⚠ Las Dimensiones personalizadas son extensiones</span>
+        <p>PO Headers, PO Items y otras Listas personalizadas para este caso de uso NO forman parte de la generación base. Se añadirán como parte de la fase de extensión, después de que el modelo se haya generado con las Dimensiones core configuradas.</p>
+      </div>
+
+      <div class="prevnext-nav"><a class="prevnext-btn" href="./06-exercise-2.html">← Anterior</a><a class="prevnext-btn" href="./07-generation.html">Siguiente →</a></div>
+    </div>
+  </main>
+  <script src="../../js/nav.js"></script>
+</body>
+</html>

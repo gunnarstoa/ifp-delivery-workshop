@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Revisão do Error Log — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+      <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">Primeiros passos</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">Visão geral do workshop</a></li>
+      <li><a class="nav-link" href="./02-tenant-access.html">Acesso ao tenant</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">Visão geral do IFP</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for Applications</a></li>
+    </ul>
+    <li class="nav-section-title">Configuração</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">Exercício de configuração 1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">Exercício de configuração 2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">Exercício de configuração 3</a></li>
+      <li><a class="nav-link" href="./07-generation.html">Geração do modelo</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">Etapas pós-geração</a></li>
+      <li><a class="nav-link active" href="./09-error-logs.html">Revisão do Error Log</a></li>
+    </ul>
+    <li class="nav-section-title">Extensões</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">Visão geral das extensões</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">Exercício 1</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">Exercício 2</a></li>
+    </ul>
+    <li class="nav-section-title">Referência</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">Em breve</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">Perguntas e respostas das sessões</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 Idioma</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt" selected>🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>Revisão do Error Log</h1>
+      <p class="subtitle">Como ler, categorizar e resolver Error Logs de Geração</p>
+      <div class="badge-row"><span class="content-badge">Dia 1</span><span class="content-badge">30 min</span><span class="content-badge">Prática</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-info" style="background:#eff6ff;border-left:4px solid #3b82f6;">
+        <span class="callout-label">🌐 Aviso de tradução</span>
+        <p>Esta é uma tradução automática da versão original em inglês. Para a versão oficial e mais atualizada, consulte <a href="../09-error-logs.html">a versão em inglês</a>. Reporte qualquer problema de tradução ao seu contato Anaplan.</p>
+      </div>
+
+      <div class="tsd-banner">
+        <div class="tsd-step tsd-step-tell">
+          <span class="tsd-step-label">📖 Contar</span>
+          <span class="tsd-step-heading">Fundamentos do Error Log</span>
+          <span class="tsd-step-desc">Como ler Error Logs e categorizar erros por tipo.</span>
+        </div>
+        <div class="tsd-step tsd-step-show">
+          <span class="tsd-step-label">👁 Mostrar</span>
+          <span class="tsd-step-heading">Resolução de erro ao vivo</span>
+          <span class="tsd-step-desc">O facilitador encontra e resolve um erro de fórmula ao vivo no modelo gerado.</span>
+        </div>
+        <div class="tsd-step tsd-step-do">
+          <span class="tsd-step-label">✅ Fazer</span>
+          <span class="tsd-step-heading">Exercício de Error Log</span>
+          <span class="tsd-step-desc">Encontre e categorize todos os erros no modelo gerado.</span>
+        </div>
+      </div>
+
+      <h2>Error Logs — O que são</h2>
+      <p>Error Logs são gerados pelo App Framework após a Geração do modelo. Eles listam questões de fórmula e configuração que surgiram quando o modelo gerado difere do template do modelo base. O Error Log é acessível pelo canto inferior direito da página de visão geral do App Framework e pode ser exportado para Excel.</p>
+      <p>Error Logs são conteúdo novo introduzido no IFP 2.0 — versões anteriores do IFP não tinham esse relatório sistemático de erros. Aprender a lê-los com eficiência é uma habilidade-chave de praticante.</p>
+
+      <h2>Referência de tipos de erro</h2>
+<div class="table-wrap"><table><thead><tr><th>Tipo de erro</th><th>O que significa</th><th>Ação</th></tr></thead><tbody><tr><td><code>LINE_ITEM_FORMULA</code></td><td>Uma fórmula referencia um Line Item que não existe ou foi renomeado no modelo gerado — frequentemente devido a renomeação de Hierarquia ou escolhas de configuração</td><td>Encontre o Line Item pelo código (prefixo underscore), compare a fórmula com o modelo base, corrija ou copie-ajuste do base</td></tr><tr><td><code>LIST_PROPERTY_FORMULA</code></td><td>A fórmula referencia uma propriedade de Lista que não existe ou foi renomeada</td><td>Encontre o Line Item pelo código, compare a fórmula com o modelo base, atualize a referência da propriedade de Lista</td></tr><tr><td><code>IMPORT_ACTION</code></td><td>Uma ação de import referencia um Módulo de origem ou Lista que mudou</td><td>Atualize o mapeamento de import no modelo afetado</td></tr><tr><td><code>MODEL_DATA_SOURCE</code></td><td>Uma conexão de fonte de dados está quebrada (referência de pipeline ADO)</td><td>Restabeleça a conexão no ADO ou atualize a referência da fonte de dados</td></tr></tbody></table></div>
+
+      <h2>Como encontrar um erro de fórmula</h2>
+      <p>O tipo de erro mais comum é <code>LINE_ITEM_FORMULA</code>. Aqui está o fluxo diagnóstico:</p>
+
+      <blockquote style="border-left:4px solid #0066cc;padding:0.75rem 1rem;background:#f0f7ff;border-radius:0 6px 6px 0;margin:1rem 0;font-style:italic;">
+        "Geralmente indicamos o Line Item com um underscore no começo — esse é o código do Line Item com erro. Entre no modelo, procure por esse código e ele leva você direto ao item exato."
+        <footer style="font-size:0.8rem;color:#6b7280;margin-top:0.25rem;">— Facilitador do workshop, Dia 1</footer>
+      </blockquote>
+<div class="step"><div class="step-badge">1</div><div class="step-content"><h3>Abra o Error Log</h3><p>Na visão geral do App Framework, clique no painel de Error Log (canto inferior direito). Filtre apenas para erros de fórmula. Se mais de 10 erros, exporte para Excel primeiro.</p></div></div><div class="step"><div class="step-badge">2</div><div class="step-content"><h3>Anote o código</h3><p>Cada erro inclui um código de Line Item no formato <code>_LINEITEMNAMEEXCEPTION</code> (prefixo underscore). Esse código é único — use-o para a busca no modelo, não o nome de exibição.</p></div></div><div class="step"><div class="step-badge">3</div><div class="step-content"><h3>Encontre o Line Item afetado</h3><p>Vá para o modelo afetado (o Error Log diz qual modelo). Abra Line Items. Procure pelo código com o prefixo underscore. O resultado da busca leva você diretamente ao Módulo e ao Line Item.</p></div></div><div class="step"><div class="step-badge">4</div><div class="step-content"><h3>Compare com o modelo base</h3><p>Abra o modelo base (seu facilitador fornecerá acesso). Encontre o mesmo Line Item. Compare a fórmula gerada com a fórmula do modelo base. Identifique o que mudou: renomeação de Hierarquia, remoção de geografia, mudança de Dimensão.</p></div></div><div class="step"><div class="step-badge">5</div><div class="step-content"><h3>Corrija ou copie-ajuste</h3><p>Opção A: Corrija a fórmula diretamente — atualize as referências para combinar com sua configuração. Opção B: Copie a fórmula do modelo base para o seu modelo e ajuste as referências de Dimensão. A Opção B é mais segura e rápida para a maioria dos erros LINE_ITEM_FORMULA.</p></div></div><div class="step"><div class="step-badge">6</div><div class="step-content"><h3>Valide</h3><p>Após corrigir, verifique se a fórmula resolve (sem indicador vermelho de erro de fórmula). Volte ao Error Log e marque o erro como resolvido. Prossiga para o próximo erro.</p></div></div><div class="step"><div class="step-badge">7</div><div class="step-content"><h3>Escale se travar</h3><p>Se o erro parecer ser um problema de nível de plataforma (não causado pela sua configuração), registre o código de erro e contate o suporte Anaplan. Não gaste tempo com erros de plataforma durante um projeto de entrega.</p></div></div>
+
+<figure class="screenshot"><img src="../../img/error-logs/gen-errors-02-50-00.jpg" alt="Revisão de Error Log — parseando códigos de erro LINE_ITEM_FORMULA do App Framework" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Revisão de Error Log — parseando códigos de erro LINE_ITEM_FORMULA do App Framework</figcaption></figure>
+
+      <h2>A regra dos 90%</h2>
+<div class="callout-note"><span class="callout-label">ℹ Espere erros, entregue sistematicamente</span><p>Cada configuração de cliente vai produzir um conjunto diferente de erros. O objetivo não é zero erros antes de prosseguir — é ir de 0% a 90% rapidamente. Categorize erros, corrija os resolvíveis de forma sistemática e registre os restantes como uma lista de issues conhecidos. "Os últimos 10% são o que você trabalha metodicamente" — não é sinal de que o projeto está quebrado.</p></div>
+
+      <h2>Exercício de Error Log</h2>
+
+<div class="mini-lab">
+  <div class="mini-lab-header">
+    <div class="mini-lab-number">1</div>
+    <div class="mini-lab-title">Exercício de Error Log</div>
+    <div class="mini-lab-duration">⏱ 30 min</div>
+  </div>
+  <div class="mini-lab-body">
+    <div class="mini-lab-objective"><strong>Objetivo</strong> Encontre todos os erros no modelo gerado. Categorize cada um por tipo de erro. Identifique a causa raiz de ao menos um erro LINE_ITEM_FORMULA e proponha uma correção.</div>
+    <ol class="mini-lab-steps">
+      <li><span class="mini-lab-step-num">1</span>No App Framework, abra o <strong>Error Log</strong>. Exporte para Excel se tiver mais de 10 erros.</li>
+      <li><span class="mini-lab-step-num">2</span>Crie uma tabela simples: Código do Erro | Tipo do Erro | Modelo | Causa Raiz | Ação</li>
+      <li><span class="mini-lab-step-num">3</span>Para cada erro, categorize como: <code>LINE_ITEM_FORMULA</code>, <code>LIST_PROPERTY_FORMULA</code>, <code>IMPORT_ACTION</code> ou <code>MODEL_DATA_SOURCE</code>.</li>
+      <li><span class="mini-lab-step-num">4</span>Escolha o primeiro erro <code>LINE_ITEM_FORMULA</code>. Anote o código (prefixo underscore).</li>
+      <li><span class="mini-lab-step-num">5</span>Vá para o modelo afetado. Procure o código em Line Items. Confirme que encontrou o Line Item correto.</li>
+      <li><span class="mini-lab-step-num">6</span>Abra o Line Item em blueprint. Registre a fórmula atual (quebrada).</li>
+      <li><span class="mini-lab-step-num">7</span>Abra o modelo base. Encontre o mesmo Line Item. Registre a fórmula do modelo base.</li>
+      <li><span class="mini-lab-step-num">8</span>Compare as duas fórmulas. Identifique qual referência mudou (renomeação de Hierarquia? geografia? Dimensão?).</li>
+      <li><span class="mini-lab-step-num">9</span>Corrija a fórmula no seu modelo OU copie-ajuste do modelo base. Confirme que resolve.</li>
+      <li><span class="mini-lab-step-num">10</span>Volte ao Error Log. Quantos erros restam? Quais erros são seguros para deixar por enquanto?</li>
+    </ol>
+
+  </div>
+  <div class="mini-lab-completion">
+    <div class="mini-lab-completion-label">✅ Como deve ficar quando concluído</div>
+    <figure class="screenshot"><img src="../../img/error-logs/err-0200.jpg" alt="Painel de atividade do App Framework — erro LINE_ITEM_FORMULA destacado no log de Geração" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Painel de atividade do App Framework — erro LINE_ITEM_FORMULA destacado no log de Geração</figcaption></figure><figure class="screenshot"><img src="../../img/error-logs/err-0205.jpg" alt="CALC OPX IS Itemized Expense Totals — visão de detalhe de erro de fórmula" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">CALC OPX IS Itemized Expense Totals — visão de detalhe de erro de fórmula</figcaption></figure><figure class="screenshot"><img src="../../img/error-logs/err-d2-0165.jpg" alt="Error Log do IFP Release — painel de atividade com breakdown de tipo de erro" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Error Log do IFP Release — painel de atividade com breakdown de tipo de erro</figcaption></figure>
+  </div>
+</div>
+
+      <h2>Perguntas de debrief</h2>
+      <ol>
+        <li>Quais erros são seguros para deixar por enquanto? Quais precisam ser corrigidos antes do teste?</li>
+        <li>Se um cliente perguntar "o modelo está pronto para usar?" e você tem 8 erros no log — o que você responde?</li>
+        <li>Quando você escala um erro para o suporte Anaplan vs. corrige por conta própria?</li>
+        <li>Como você documentaria sua abordagem de resolução de erros para o próximo consultor neste projeto?</li>
+      </ol>
+
+<div class="prevnext-nav"><a class="prevnext-btn" href="./08-post-gen.html">← Anterior</a><a class="prevnext-btn" href="./10-extensions-overview.html">Próximo →</a></div>
+    </div>
+  </main>
+  <script src="../../js/nav.js"></script>
+</body>
+</html>

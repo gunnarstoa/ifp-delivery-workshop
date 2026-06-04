@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resumen de extensiones — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+      <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">Primeros pasos</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">Resumen del taller</a></li>
+      <li><a class="nav-link" href="./02-tenant-access.html">Acceso al tenant</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">Resumen de IFP</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for Applications</a></li>
+    </ul>
+    <li class="nav-section-title">Configuración</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">Ejercicio de configuración 1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">Ejercicio de configuración 2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">Ejercicio de configuración 3</a></li>
+      <li><a class="nav-link" href="./07-generation.html">Generación del modelo</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">Pasos posteriores a la generación</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Revisión del Error Log</a></li>
+    </ul>
+    <li class="nav-section-title">Extensiones</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link active" href="./10-extensions-overview.html">Resumen de extensiones</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">Ejercicio 1</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">Ejercicio 2</a></li>
+    </ul>
+    <li class="nav-section-title">Referencia</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">Próximas novedades</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">Preguntas y respuestas de sesiones</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 Idioma</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="es" selected>🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>Resumen de extensiones</h1>
+      <p class="subtitle">Los tres tipos de extensión, 7 mejores prácticas y los dos ejercicios del Día 2</p>
+      <div class="badge-row"><span class="content-badge">Día 2</span><span class="content-badge">30 min</span><span class="content-badge">Recorrido</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-info" style="background:#eff6ff;border-left:4px solid #3b82f6;">
+        <span class="callout-label">🌐 Aviso de traducción</span>
+        <p>Esta es una traducción automática de la versión original en inglés. Para la versión autoritativa y más actualizada, consulte <a href="../10-extensions-overview.html">la versión en inglés</a>. Reporte cualquier problema de traducción a su contacto Anaplan.</p>
+      </div>
+
+      <div class="tsd-banner">
+        <div class="tsd-step tsd-step-tell">
+          <span class="tsd-step-label">📖 Contar</span>
+          <span class="tsd-step-heading">Qué son las extensiones</span>
+          <span class="tsd-step-desc">Los tres tipos de extensión y las 7 mejores prácticas para implementarlas de forma segura.</span>
+        </div>
+        <div class="tsd-step tsd-step-show">
+          <span class="tsd-step-label">👁 Mostrar</span>
+          <span class="tsd-step-heading">Marco de decisión de extensiones</span>
+          <span class="tsd-step-desc">El facilitador muestra el marco de decisión de extensiones y ejemplos reales.</span>
+        </div>
+        <div class="tsd-step tsd-step-do">
+          <span class="tsd-step-label">✅ Hacer</span>
+          <span class="tsd-step-heading">Mapear al tipo de extensión</span>
+          <span class="tsd-step-desc">Los participantes mapean los escenarios de los ejercicios del Día 2 al tipo de extensión correcto.</span>
+        </div>
+      </div>
+
+      <h2>Qué son las extensiones</h2>
+      <p>Las extensiones son adiciones o modificaciones específicas del cliente al modelo base IFP que el Application Framework Configurator no puede producir. Caen en tres categorías, y la categoría determina el riesgo y el enfoque.</p>
+<div class="table-wrap"><table><thead><tr><th>Tipo de extensión</th><th>Qué es</th><th>Riesgo de actualización</th><th>Cuándo usar</th></tr></thead><tbody><tr><td>Configurar</td><td>Use el Application Framework Configurator para habilitar una capacidad incorporada</td><td>Ninguno: está soportado</td><td>Siempre intente esto primero. Si el Application Framework Configurator tiene un ajuste para ello, úselo.</td></tr><tr><td>Extender / conectar</td><td>Añadir nuevos Line Items, Módulos o Listas sin tocar las fórmulas del modelo base</td><td>Bajo: los elementos nuevos no son sobrescritos por las actualizaciones</td><td>Cuando el cliente necesita algo que el Application Framework Configurator no cubre, pero puede añadirlo sin cambiar la lógica del modelo base.</td></tr><tr><td>Enmendar / modificar / eliminar</td><td>Cambiar una fórmula, Lista o Módulo existente del modelo base</td><td>Alto: los cambios pueden perderse o romperse en la actualización</td><td>Último recurso. Documente cada override con un Data Tag. Mantenga documentación externa.</td></tr></tbody></table></div>
+
+      <div class="callout-note">
+        <span class="callout-label">ℹ Extension FAQ en Seismic</span>
+        <p>Marque y revise la <a href="https://anaplan.seismic.com/Link/Content/DC48CC3D4DTq2GWT2WjGW3XQXXX8" target="_blank"><strong>Extension FAQ</strong></a> en Seismic. Cubre mejores prácticas para documentar extensiones, qué sobrevive a las actualizaciones y cómo prepararse para los ciclos de actualización. Es una referencia esencial para el trabajo real de delivery.</p>
+      </div>
+
+      <h2>7 mejores prácticas para extensiones IFP</h2>
+<div class="step"><div class="step-badge">1</div><div class="step-content"><h3>Configurar primero</h3><p>La configuración a través del Application Framework es la forma principal de definir la estructura de una aplicación basada en los inputs y requisitos del cliente.</p></div></div><div class="step"><div class="step-badge">2</div><div class="step-content"><h3>Extender o conectar después</h3><p>Las extensiones siempre deben ser aditivas, lo que significa que añaden nuevas capacidades sin cambiar la lógica existente.</p></div></div><div class="step"><div class="step-badge">3</div><div class="step-content"><h3>Modificar con cuidado</h3><p>Modificar objetos existentes, especialmente aquellos que no pueden configurarse, puede afectar tanto la configurabilidad como la actualizabilidad.</p></div></div><div class="step"><div class="step-badge">4</div><div class="step-content"><h3>Eliminar con precaución</h3><p>Eliminar componentes de una aplicación post-configurada puede crear esfuerzo adicional durante reconfiguraciones futuras o al adoptar una nueva versión de la aplicación.</p></div></div><div class="step"><div class="step-badge">5</div><div class="step-content"><h3>Mantener una convención de nomenclatura consistente</h3><p>Una nomenclatura consistente facilita el mantenimiento, soporte y actualización de las extensiones.</p></div></div><div class="step"><div class="step-badge">6</div><div class="step-content"><h3>Agrupar extensiones relacionadas</h3><p>Agrupar múltiples extensiones las hace más fáciles de identificar y gestionar, especialmente durante actualizaciones.</p></div></div><div class="step"><div class="step-badge">7</div><div class="step-content"><h3>Documentar todas las extensiones</h3><p>Todas las extensiones y modificaciones deben estar claramente documentadas.</p></div></div>
+
+      <h2>Data Tags: créelos primero</h2>
+<div class="callout-warning"><span class="callout-label">⚠ Etiquete antes de construir</span><p>Antes de hacer cualquier cambio de extensión a un modelo IFP, cree dos Data Tags: <strong>Extension</strong> (para todos los nuevos Line Items que añada) y <strong>Formula Override</strong> (para cualquier fórmula del modelo base que cambie). Estos tags son el único registro en el modelo de lo que ha cambiado. Sin ellos, un futuro consultor no tiene forma de saberlo.</p></div>
+
+      <h2>Extensiones que este taller cubre</h2>
+<div class="table-wrap"><table><thead><tr><th>Tipo de extensión</th><th>Requisito de negocio</th><th>Clasificación</th></tr></thead><tbody><tr><td>Direct Input + Adjustments</td><td>El cliente quiere entrada directa + dos capas de ajuste para cuentas OpEx</td><td>Extender: añade nuevos Line Items, modifica la fórmula de final amount (marcada con Formula Override)</td></tr><tr><td>Método Headcount × Rate</td><td>Planear gastos como headcount × tarifa promedio + ajuste</td><td>Extender: añade nuevo método de planeación, nuevos Line Items, modifica la fórmula de final amount</td></tr><tr><td>Extensión del módulo de revenue</td><td>Modelo de revenue más detallado como un nuevo Módulo enganchado en P&amp;L</td><td>Extender: nuevo Módulo conectado a los Módulos OUT existentes</td></tr></tbody></table></div>
+
+      <h2>UX de planeación de OpEx: extensiones en contexto</h2>
+<figure class="screenshot"><img src="../../img/extensions/opex-02-15-00.jpg" alt="Tablero de planeación de OpEx - Método de Direct Input mostrando ajustes y cálculo de final amount" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Tablero de planeación de OpEx - Método de Direct Input mostrando ajustes y cálculo de final amount</figcaption></figure>
+
+      <h2>Módulo INP OPX Expense Planning</h2>
+<figure class="screenshot"><img src="../../img/extensions/ext-0285.jpg" alt="Módulo INP Gross Profit Planning - mostrando métodos de planeación" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Módulo INP Gross Profit Planning - mostrando métodos de planeación</figcaption></figure>
+
+      <h2>Extensión EXT INP Channel Sales</h2>
+<figure class="screenshot"><img src="../../img/extensions/ext-0275.jpg" alt="Extensión EXT INP Channel Sales - Line Items Amount, Price, Total" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Extensión EXT INP Channel Sales - Line Items Amount, Price, Total</figcaption></figure>
+
+      <h2>Tablero de planeación de OpEx con extensiones</h2>
+<figure class="screenshot"><img src="../../img/extensions/ext-0270.jpg" alt="Tablero de planeación de OpEx - extensiones añadiendo inputs de ajuste junto a los Line Items generados" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Tablero de planeación de OpEx - extensiones añadiendo inputs de ajuste junto a los Line Items generados</figcaption></figure>
+
+<div class="callout-warning"><span class="callout-label">⚠ Formula overrides y actualizaciones</span><p>Los formula overrides en Line Items del modelo base son la acción de extensión de mayor riesgo. Cuando Anaplan publica una actualización IFP, los formula overrides pueden perderse o romperse. Siempre márquelos con el Data Tag Formula Override y documéntelos externamente. Después de cualquier actualización IFP, filtre por el tag Formula Override y revalide cada uno.</p></div>
+<div class="prevnext-nav"><a class="prevnext-btn" href="./09-error-logs.html">← Anterior</a><a class="prevnext-btn" href="./11-extension-exercise-1.html">Siguiente →</a></div>
+    </div>
+  </main>
+  <script src="../../js/nav.js"></script>
+</body>
+</html>

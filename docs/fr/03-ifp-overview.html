@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aperçu d'IFP — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+      <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">Démarrage</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">Aperçu de l'atelier</a></li>
+      <li><a class="nav-link" href="./02-tenant-access.html">Accès au tenant</a></li>
+      <li><a class="nav-link active" href="./03-ifp-overview.html">Aperçu d'IFP</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for Applications</a></li>
+    </ul>
+    <li class="nav-section-title">Configuration</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">Exercice de configuration 1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">Exercice de configuration 2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">Exercice de configuration 3</a></li>
+      <li><a class="nav-link" href="./07-generation.html">Génération du modèle</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">Étapes post-génération</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Revue de l'Error Log</a></li>
+    </ul>
+    <li class="nav-section-title">Extensions</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">Aperçu des extensions</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">Exercice 1</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">Exercice 2</a></li>
+    </ul>
+    <li class="nav-section-title">Référence</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">À venir</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">Questions et réponses des sessions</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 Langue</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr" selected>🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>Aperçu d'IFP</h1>
+      <p class="subtitle">Ce qu'est IFP 2.1, ce qui a changé et comment fonctionne l'App Framework</p>
+      <div class="badge-row"><span class="content-badge">Démarrage</span><span class="content-badge">20 min</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-info" style="background:#eff6ff;border-left:4px solid #3b82f6;">
+        <span class="callout-label">🌐 Avis de traduction</span>
+        <p>Ceci est une traduction automatique de la version originale en anglais. Pour la version officielle et la plus à jour, consultez <a href="../03-ifp-overview.html">la version anglaise</a>. Signalez tout problème de traduction à votre contact Anaplan.</p>
+      </div>
+
+      <div class="tsd-banner">
+        <div class="tsd-step tsd-step-tell">
+          <span class="tsd-step-label">📖 Présenter</span>
+          <span class="tsd-step-heading">Ce qu'est IFP 2.1</span>
+          <span class="tsd-step-desc">Ce qu'est IFP, en quoi il diffère des versions précédentes et pourquoi l'App Framework change la manière dont les partenaires livrent.</span>
+        </div>
+        <div class="tsd-step tsd-step-show">
+          <span class="tsd-step-label">👁 Montrer</span>
+          <span class="tsd-step-heading">Démo de l'App Framework</span>
+          <span class="tsd-step-desc">L'animateur présente la page de vue d'ensemble de l'App Framework — nombre de configurations, modèles, ressources, statut de génération.</span>
+        </div>
+        <div class="tsd-step tsd-step-do">
+          <span class="tsd-step-label">✅ Faire</span>
+          <span class="tsd-step-heading">Pas encore de pratique</span>
+          <span class="tsd-step-desc">Pas d'activité pratique sur cette page — la configuration commence à la section suivante.</span>
+        </div>
+      </div>
+
+      <h2>Ce qu'est IFP</h2>
+      <p>Integrated Financial Planning (IFP) est l'application pré-construite d'Anaplan qui prend en charge les cas d'usage fondamentaux de FP&amp;A pour la planification, la budgétisation et les prévisions du chiffre d'affaires, des dépenses opérationnelles, des dépenses d'investissement, des états financiers intégrés, et plus encore — soutenant une prise de décision sûre et un suivi continu de la santé financière. Elle offre une approche structurée, pilotée par l'Application Framework Configurator, qui élimine des mois de construction de modèles et donne aux consultants partenaires un cadre de livraison reproductible.</p>
+      <p>La version 2.1 est la version actuelle. Elle s'appuie sur la ré-architecture 2.0 qui a introduit l'<strong>Application Framework</strong> — un système de génération de modèles piloté par l'Application Framework Configurator qui remplace la configuration manuelle de modèles, ainsi que l'intégration de l'Anaplan Data Orchestrator (ADO) et de Headcount Planning 2.0. La version 2.1 affine la configuration ADO et augmente les limites de dimensionnalité.</p>
+
+      <h2>Nouveautés d'IFP 2.1</h2>
+<div class="table-wrap"><table><thead><tr><th>Capacité</th><th>De quoi il s'agit</th><th>Pourquoi c'est important</th></tr></thead><tbody><tr><td>App Framework</td><td>Génération pilotée par l'Application Framework Configurator — répondez aux questions, générez un modèle (~500 actions en arrière-plan)</td><td>Élimine des semaines de configuration manuelle de modules ; standardise la livraison ; prend 20 à 40 minutes à générer</td></tr><tr><td>Intégration ADO</td><td>Anaplan Data Orchestrator entièrement intégré ; publie automatiquement les liens et les vues de transformation</td><td>Les partenaires n'ont qu'à charger les données sources et à pousser les liens ; simplifie considérablement la configuration ADO post-génération</td></tr><tr><td>Headcount Planning 2.0</td><td>Planification du Headcount au niveau rôle/poste plutôt qu'au niveau employé ; s'intègre avec Workforce Budgeting et OWP</td><td>Répond aux préoccupations de confidentialité des données au niveau employé ; permet l'association avec Workforce Budgeting pour un détail Headcount plus poussé</td></tr><tr><td>Architecture Polaris</td><td>Tous les modèles IFP s'exécutent sur Polaris (moteur conscient de la sparsité)</td><td>Performance améliorée pour les données éparses ; nécessite une formation Polaris en prérequis ; les hiérarchies denses requièrent une planification de la dimensionnalité</td></tr><tr><td>Possibilité de mise à niveau</td><td>Les futures versions d'IFP peuvent être appliquées comme mises à niveau sans repartir de zéro</td><td>Tout premier parcours de mise à niveau pour IFP ; les mises à niveau s'appliquent en dev, puis sont propagées en QA/prod via ALM</td></tr><tr><td>Ré-architecture étendue</td><td>Nommage des modules, structures de Listes, schémas de formules : tout est standardisé avec des GUID uniques sur chaque objet</td><td>Permet le suivi des mises à niveau ; plus facile à maintenir, étendre et transférer</td></tr></tbody></table></div>
+
+      <h2>Dimensionnalité dans IFP 2.1</h2>
+      <p>Comprendre quelles Dimensions sont requises ou optionnelles est essentiel avant la première session de configuration avec un client.</p>
+<div class="table-wrap"><table><thead><tr><th>Dimension</th><th>Requise ?</th><th>Niveaux par défaut</th><th>Notes</th></tr></thead><tbody><tr><td>Entity</td><td>✅ Requise</td><td>3</td><td>Ne peut pas être supprimée ; peut être renommée/réaffectée</td></tr><tr><td>Account</td><td>✅ Requise</td><td>3</td><td>Ne peut pas être supprimée ; peut être renommée (par ex. en « Project »)</td></tr><tr><td>Location</td><td>Optionnelle</td><td>3</td><td>Activer/désactiver via une question de l'Application Framework Configurator</td></tr><tr><td>Functional Area / Dept</td><td>Optionnelle</td><td>3</td><td>Peut être renommée (par ex. en « Cost Center »)</td></tr><tr><td>Product</td><td>Optionnelle</td><td>3</td><td>Activer pour la planification du chiffre d'affaires ou des dépenses au niveau produit</td></tr><tr><td>Customer</td><td>Optionnelle</td><td>3</td><td>Activer pour la planification au niveau client</td></tr>
+<tr><td>Job</td><td>Optionnelle</td><td>4</td><td>Activer pour la planification au niveau poste ; la valeur par défaut est de 4 niveaux</td></tr>
+<tr><td>Vendor</td><td>Optionnelle</td><td>3</td><td>Activer pour la planification des dépenses au niveau fournisseur</td></tr></tbody></table></div>
+      <div class="callout-note">
+        <span class="callout-label">ℹ Plages de niveaux</span>
+        <p>La valeur par défaut est de 3 niveaux par Dimension, sauf Job qui est par défaut à 4. Chaque Hiérarchie peut être réduite à un minimum de 2 niveaux, ou augmentée jusqu'à <strong>15 niveaux</strong> par Dimension. Lors de la suppression de niveaux, le niveau feuille d'origine doit toujours rester en bas. Lors de l'ajout de niveaux, le nouveau niveau est ajouté en bas et doit être glissé au-dessus de la feuille d'origine.</p>
+      </div>
+
+      <h2>Exigences de provisionnement</h2>
+      <p>Avant toute implémentation, les étapes de provisionnement suivantes doivent être réalisées par l'équipe Anaplan :</p>
+      <ol>
+        <li>Le client achète l'application IFP (inclut les frais d'abonnement couvrant les mises à niveau)</li>
+        <li>Le Customer Success Business Partner ouvre un ticket de provisionnement demandant la création d'un Workspace (100 Go minimum)</li>
+        <li>Pour les environnements ALM (dev/QA/prod), des tickets de provisionnement de Workspace séparés sont nécessaires pour chaque environnement</li>
+        <li>L'équipe Anaplan déploie l'App Framework sur le Tenant client</li>
+        <li>Le partenaire et le Customer Success Business Partner sont notifiés lorsque le déploiement est terminé</li>
+      </ol>
+      <div class="callout-warning">
+        <span class="callout-label">⚠ Exigence d'administrateur de Tenant pour la génération</span>
+        <p>L'App Framework ne peut générer qu'à partir de votre <strong>Tenant par défaut</strong>. Un partenaire utilisant l'e-mail de son cabinet (par ex. john@partnerfirm.com) ne peut pas générer si le Tenant client n'est pas son Tenant par défaut. Solution : obtenir une adresse e-mail dans le domaine du client, ou demander à l'administrateur du Tenant du client de générer pendant que vous le guidez. Rôles requis pour la génération : Application Owner, Workspace Admin, Page Builder, Integration Admin.</p>
+      </div>
+
+      <h2>Documentation disponible</h2>
+      <p>Toute la documentation est disponible dans Seismic et sur le site SharePoint Anaplan. Ressources clés :</p>
+      <ul>
+        <li><a href="https://anaplan.seismic.com/Link/Content/DCMHG32j3m9qHG7FBFQbJTB2XXRd" target="_blank"><strong>Application Overview</strong></a> — Description complète d'IFP v2 ; comparaison détaillée avec v1.x ; aperçu de l'architecture</li>
+        <li><a href="https://anaplan.seismic.com/Link/Content/DCC7PbgRD86Ch8CM88VW4J6hjmFG" target="_blank"><strong>Configuration Guide</strong></a> — Visite étape par étape des 44 questions de configuration ; checklist des tâches post-génération ; à imprimer pour chaque implémentation</li>
+        <li><a href="https://anaplan.seismic.com/Link/Content/DCTXgMJRGVjcWGfJpJTfBVRqQj9V" target="_blank"><strong>Process Definition Documents</strong></a> — Comment les processus IFP fonctionnent de bout en bout</li>
+        <li><strong>ADO Data Templates</strong> — Modèles Excel pour chaque Hiérarchie (location, entity, account, etc.) pour la préparation des données client <em>(URL à venir)</em></li>
+        <li><strong>Functional Walkthrough Videos</strong> — Vidéos de 10 à 15 minutes couvrant les fonctionnalités principales ; micro-leçons sur des fonctionnalités spécifiques <em>(URL à venir)</em></li>
+        <li><a href="https://anaplan.seismic.com/Link/Content/DC48CC3D4DTq2GWT2WjGW3XQXXX8" target="_blank"><strong>Extension FAQ</strong></a> — Bonnes pratiques pour documenter les extensions ; ce qui survit aux mises à niveau ; comment se préparer aux cycles de mise à niveau</li>
+        <li><a href="https://anaplan.seismic.com/Link/Content/DCpX3DCWGRhj9GHCG4Dp9jTjhCC8" target="_blank"><strong>Upgrade FAQ</strong></a> — FAQ sur le processus, la fréquence, la portée et les responsabilités partenaires des mises à niveau</li>
+        <li><strong>IFP 2.0 vs 2.1 Comparison</strong> — Changements détaillés entre versions, y compris améliorations ADO, nouvelles dimensions, plages de niveaux <em>(URL à venir)</em></li>
+        <li><a href="https://anaplan.seismic.com/Link/Content/DCcbcM9d4bC4X8cPCTGTPPFVWHWj" target="_blank"><strong>The Anaplan Way for Applications Methodology</strong></a> — Méthodologie complète pour livrer des implémentations applicatives structurées</li>
+      </ul>
+
+      <h2>Architecture des modules</h2>
+      <p>IFPv2 génère une convention de nommage de modules cohérente sur les quatre modèles. Comprendre cette architecture est essentiel pour le dépannage des Error Logs et le travail d'extension.</p>
+<div class="table-wrap"><table><thead><tr><th>Préfixe</th><th>Type de Module</th><th>Objet</th></tr></thead><tbody><tr><td>ADMIN</td><td>Administration</td><td>Paramètres de configuration, mapping des méthodes de planification, accès utilisateur</td></tr><tr><td>SYS</td><td>Système</td><td>Listes système inter-modèles, mappings de Hiérarchies, contrôles booléens</td></tr><tr><td>DAT</td><td>Données</td><td>Préparation des données d'actuals, intégrations depuis ADO et le modèle Headcount</td></tr><tr><td>INP</td><td>Entrée</td><td>Modules de saisie de planification — là où les utilisateurs saisissent les données prévisionnelles</td></tr><tr><td>CALC</td><td>Calcul</td><td>Agrégation, allocation, calculs dérivés à partir des modules INP</td></tr><tr><td>OUT</td><td>Sortie</td><td>Modules de sortie consolidés — alimentent les rapports et tableaux de bord en aval</td></tr></tbody></table></div>
+
+      <h2>Le concept de l'App Framework</h2>
+      <p>L'App Framework est le moteur de configuration et de génération. Le workflow est :</p>
+<div class="step"><div class="step-badge">1</div><div class="step-content"><h3>Configurer</h3><p>Répondez à toutes les questions de configuration dans l'Application Framework Configurator. Elles définissent les niveaux de Hiérarchies, les Dimensions, les méthodes de planification et la portée.</p></div></div><div class="step"><div class="step-badge">2</div><div class="step-content"><h3>Générer</h3><p>Lancez la Génération. L'App Framework lit vos réponses et provisionne les quatre modèles IFP (Financial Planning, Headcount, Admin, Data Orchestrator). Cela prend 10 à 20 minutes.</p></div></div><div class="step"><div class="step-badge">3</div><div class="step-content"><h3>Vérifier</h3><p>Inspectez le modèle généré et les Error Logs. « Generated with errors » est normal et attendu — cela ne signifie pas que le modèle est cassé.</p></div></div><div class="step"><div class="step-badge">4</div><div class="step-content"><h3>Étendre</h3><p>Ajoutez des extensions spécifiques au client au-dessus du modèle de base généré. Documentez tout ce que vous modifiez.</p></div></div><div class="callout-important"><span class="callout-label">🚨 « Generated with Errors » est normal</span><p>Chaque génération IFP 2.0 dans un environnement de formation ou en phase initiale produit des erreurs. Ce sont des erreurs de formule causées par des choix de configuration, le renommage de Hiérarchies ou des différences de géographie par rapport au modèle de base. Le modèle est fonctionnel. Vous apprendrez à lire et résoudre ces erreurs dans la section Revue de l'Error Log.</p></div>
+
+      <h2>App Framework — Vue de configuration</h2>
+<figure class="screenshot"><img src="../../img/may7-configurator-overview.jpg" alt="Application Framework Configurator montrant la configuration de Hiérarchies lors de la session du 7 mai" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Application Framework Configurator — vue de configuration des Hiérarchies, v2.1</figcaption></figure>
+
+      <h2>Listes de Hiérarchies IFP</h2>
+<figure class="screenshot"><img src="../../img/v2.1-screenshots/hierarchy-list.png" alt="Listes de Hiérarchies IFP montrant Entity, Account, Location, Customer, Job avec leurs niveaux" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Listes de Hiérarchies IFP (v2.1) — Entity, Account, Location, Customer, Job avec leurs niveaux par défaut</figcaption></figure>
+
+      <h2>Modules SYS après génération</h2>
+<figure class="screenshot"><img src="../../img/v2.1-screenshots/system-modules.png" alt="Liste des modules système IFP (préfixe SYS) après génération v2.1" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Liste des modules système IFP (préfixe SYS) après génération v2.1</figcaption></figure>
+
+      <h2>Aperçu de l'App Framework</h2>
+<figure class="screenshot"><img src="../../img/v2.1-screenshots/app-framework-overview-2026-06.png" alt="Aperçu de l'Application Framework IFP montrant 8 hiérarchies, 44 configurations et 22 objets applicatifs" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Aperçu de l'Application Framework IFP (v2.1) — 8 hiérarchies, 44 configurations, 22 objets applicatifs</figcaption></figure>
+<div class="prevnext-nav"><a class="prevnext-btn" href="./02-tenant-access.html">← Précédent</a><a class="prevnext-btn" href="./04-anaplan-way.html">Suivant →</a></div>
+    </div>
+  </main>
+  <script src="../../js/nav.js"></script>
+</body>
+</html>
