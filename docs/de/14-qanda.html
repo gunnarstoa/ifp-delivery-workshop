@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fragen &amp; Antworten aus Sessions — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+      <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">Erste Schritte</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">Workshop-Übersicht</a></li>
+      <li><a class="nav-link" href="./02-tenant-access.html">Tenant-Zugang</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">IFP-Übersicht</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way für Applikationen</a></li>
+    </ul>
+    <li class="nav-section-title">Konfiguration</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">Konfigurationsübung 1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">Konfigurationsübung 2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">Konfigurationsübung 3</a></li>
+      <li><a class="nav-link" href="./07-generation.html">Modellgenerierung</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">Schritte nach der Generierung</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Error Log Überprüfung</a></li>
+    </ul>
+    <li class="nav-section-title">Erweiterungen</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">Erweiterungsübersicht</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">Übung 1</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">Übung 2</a></li>
+    </ul>
+    <li class="nav-section-title">Referenz</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">Was kommt als Nächstes</a></li>
+      <li><a class="nav-link active" href="./14-qanda.html">Fragen &amp; Antworten</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 Sprache</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de" selected>🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>Fragen &amp; Antworten aus Sessions</h1>
+      <p class="subtitle">Echte Fragen aus den Workshop-Sessions von April und Mai 2026 — mit ausführlichen Antworten</p>
+      <div class="badge-row"><span class="content-badge">Referenz</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-info" style="background:#eff6ff;border-left:4px solid #3b82f6;">
+        <span class="callout-label">🌐 Hinweis zur Übersetzung</span>
+        <p>Dies ist eine automatische Übersetzung der englischen Originalfassung. Die maßgebliche und aktuellste Version finden Sie <a href="../14-qanda.html">hier auf Englisch</a>.</p>
+      </div>
+
+      <div class="callout-note">
+        <p>Diese Fragen wurden während der IFP Delivery Partner Workshop-Sessions vom 28.–29. April 2026 und vom 7. Mai 2026 gestellt. Die Fragen sind nach Thema gruppiert. Die Antworten geben die Aussagen der Facilitator und die Diskussionen aus diesen Sessions wieder. Die Session vom 7. Mai wurde für eine größere multinationale Gruppe (Amsterdam) durchgeführt und deckte den gesamten Workshop von Anfang bis Ende ab.</p>
+      </div>
+
+      <h2>IFP v2 Übersicht &amp; Neuerungen</h2>
+
+      <div class="qa-item">
+        <div class="question">F: Was sind die wichtigsten Unterschiede zwischen IFP v1.x und IFP v2?</div>
+        <div class="answer">A: Die wichtigste Änderung ist das Application Framework — eine vom Application Framework Configurator gesteuerte Generierungs-Engine, die das manuelle Modell-Setup ersetzt. Sie beantworten Konfigurationsfragen, und das Framework generiert automatisch alle vier Modelle (Financial Planning, Headcount, Admin, Data Orchestrator) — etwa 500 Hintergrundaktionen, die 20–40 Minuten dauern. IFP v2 ist außerdem Polaris-basiert (entfernt Sparsity, verbessert die Performance), enthält eine native ADO-Integration mit vorkonfigurierten Pipelines, hat die Headcount-Planung von Mitarbeiterebene auf Rollen-/Job-Ebene umgestellt und unterstützt Upgradefähigkeit — zukünftige Versionen können angewendet werden, ohne von vorne zu beginnen. Das Application-Overview-Dokument auf der SharePoint-Site beschreibt die vollständigen Unterschiede.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">F: Warum wurde die Headcount-Planung in IFP v2 von Mitarbeiterebene auf Rollenbasis umgestellt?</div>
+        <div class="answer">A: Es gibt zwei Hauptgründe. Erstens das Feedback, dass die Planung auf Mitarbeiterebene sensible personenbezogene Daten innerhalb des Modells offenlegt. Zweitens passt der Wechsel zur Planung auf Rollen-/Job-Ebene zu einer umfassenderen Applikationsstrategie — wenn ein Kunde die Planung auf Mitarbeiterebene wünscht, kann er Workforce Budgeting (jetzt eine eigenständige App, eine Teilmenge von OWP) nutzen, das direkt mit IFP v2 integriert. So erhalten Sie sowohl die Planung auf Rollenebene in IFP als auch die Detailtiefe auf Personenebene in Workforce Budgeting, mit nahtloser Datenübergabe an IFP.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">F: Können wir einen Kunden von IFP v1.3 auf v2 upgraden?</div>
+        <div class="answer">A: Es gibt keinen direkten Upgrade-Pfad von IFP v1.x auf v2. Es handelt sich um eine völlig andere Applikationsarchitektur. Partner, die Kunden von v1 auf v2 umgestellt haben, haben eine Neu-Implementierung durchgeführt — sie sind frisch auf v2 gestartet. Wenn ein Kunde umsteigen möchte, beziehen Sie den Customer Success Business Partner ein, um das Vorgehen zu planen. Kunden, deren v1-Implementierungen nicht zu 100 % erfolgreich waren, haben dies als Gelegenheit für einen sauberen Neuanfang auf v2 genutzt. Nicht alle v1-Anpassungen lassen sich übertragen — wenn ein Kunde beispielsweise in v1 Headcount-Planung auf Mitarbeiterebene durchführte, benötigt er Workforce Budgeting oder OWP, um das zu replizieren.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">F: Welche Dokumentation ist für IFP-v2-Implementierungen verfügbar?</div>
+        <div class="answer">A: Die SharePoint-Site (wird vom Anaplan-Team separat versendet) enthält: Application Overview (was sich gegenüber v1 geändert hat, vollständige IFP-v2-Beschreibung), Configuration Guide (Schritt-für-Schritt-Konfigurationsanleitung plus Aufgaben nach der Generierung), Error Log Guide (häufige Fehler und deren Behebung), Process Definition Documents, Produkt-Glossar, ADO-Datentemplates (für jede Hierarchie — Geographie, Entity, Account etc.), Functional Walkthrough Videos (Mikro-Lektionen zu Kernfunktionalitäten) und ein FAQ-Dokument zu Erweiterungen und Upgrade-Hinweisen. Die Dokumentation wandert außerdem nach Seismic, sobald IFP allgemein verfügbar wird. Prüfen Sie immer auf aktualisierte Versionen — die Dokumentation verbessert sich mit jeder neuen Version.</div>
+      </div>
+
+      <h2>Dimensionalität &amp; Architektur</h2>
+
+      <div class="qa-item">
+        <div class="question">F: Welche Dimensionen sind in IFP v2 erforderlich und welche optional?</div>
+        <div class="answer">A: Zwei Dimensionen sind erforderlich und können nicht entfernt werden: Entity und Account. Sie können umbenannt und umgewidmet werden (z. B. Account in Project umbenannt), müssen aber vorhanden sein. Alle anderen Dimensionen — Location, Functional Area/Department, Product, Vendor etc. — sind optional und können über den Application Framework Configurator aktiviert, deaktiviert oder umbenannt werden. Die Standardkonfiguration umfasst 3 Dimensionsebenen je Hierarchie. Sie können auf 8 Ebenen erhöhen oder auf 2 reduzieren. Version 2.1 wird voraussichtlich das Maximum auf 12 Ebenen anheben.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">F: Gibt es eine Performance-Auswirkung bei vielen Hierarchieebenen (z. B. 12)?</div>
+        <div class="answer">A: Ja, möglicherweise. IFP v2 ist Polaris-basiert, was Sparsity entfernt und die Performance im Allgemeinen verbessert. Bei Kunden mit sehr dichten Hierarchien, bei denen die Daten nicht spärlich sind, wurden jedoch Vergrößerungen der Modellgröße beobachtet. Das Income-Statement-Modul verwendet eine „ratio"-Summary-Methode, die einen hohen Berechnungsaufwand verursacht, besonders beim Hochaggregieren der Hierarchie — dieser Effekt verstärkt sich mit vielen Dimensionen. Ein Kunde mit 9–10 Dimensionen verursachte Performance-Probleme. Anaplans Empfehlung: die Polaris-Architektur vor der Implementierung verstehen, Dimension Stacking dort einsetzen, wo eine 1:1-Zuordnung zwischen Hierarchien besteht, Entwicklungsumgebungen klein halten (minimale Daten), während Test und Prod die vollständigen Hierarchien tragen. Das Entwicklungsteam verbessert zudem aktiv die Berechnungsmuster im Modell.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">F: Können wir Custom Versions anstelle von Native Versions in IFP v2 verwenden?</div>
+        <div class="answer">A: Nein — Native Versions sind eine Voraussetzung für IFP v2. Dies ist eine häufig gestellte Frage, die im FAQ-Dokument behandelt wird. Der Grund ist, dass das Application Framework und der Upgrade-Mechanismus auf Native Versions beruhen. Partner weisen häufig darauf hin, dass Custom Versions mehr Flexibilität bieten (einfache Erstellung über UX, Lookups ohne SELECT, einfacheres Archivieren), doch diese Einschränkung ist bekannt. Das Entwicklungsteam arbeitet daran, Native Versions mit Custom-ähnlichen Szenarien zu unterstützen. Es ist zu erwarten, dass dies später im Jahr 2026 adressiert wird — bleiben Sie hier dran.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">F: Unser vorheriger IFP-v1.x-Kunde hatte Performance-Probleme mit Modell-Langsamkeit — behebt IFP v2 das?</div>
+        <div class="answer">A: Möglicherweise. Die umfassende Neu-Architektur für v2 zielte gezielt auf Performance-Verbesserungen und auf die Erkenntnisse aus dem v1-Feedback ab. Ohne Diagnose des konkreten Engpasses gibt es jedoch keine Garantie. Schauen Sie als Architekt, welche Module 1:n-Beziehungen oder große Fan-outs haben — das sind typischerweise die Performance-Engpässe. Das Entwicklungsteam kann beraten, ob ein bestimmtes Muster, das in v1 Probleme verursachte, in v2 gelöst wurde. Allerdings ist der Kunde auf v1 vermutlich noch nicht umgezogen und müsste eine Neu-Implementierung durchführen, um von den v2-Verbesserungen zu profitieren.</div>
+      </div>
+
+      <h2>Provisioning &amp; Tenant-Anforderungen</h2>
+
+      <div class="qa-item">
+        <div class="question">F: Was muss der Kunde einrichten, bevor wir mit dem App Framework starten können?</div>
+        <div class="answer">A: Der Customer Success Business Partner muss bei Anaplan Support ein Provisioning-Ticket öffnen, um im Kunden-Tenant einen Workspace anzulegen (mindestens 100 GB). Für ALM-Umgebungen (Dev/QA/Prod) müssen mehrere Workspaces bereitgestellt werden. Das Anaplan-Team deployed die Applikation nach Bearbeitung des Tickets in den Kunden-Tenant — das dauert etwa 10 Minuten. Partner werden anschließend informiert und können mit der Arbeit beginnen.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">F: Welche Rollen brauchen wir im Kunden-Tenant, um die Applikation zu generieren?</div>
+        <div class="answer">A: Um die Applikation zu generieren, benötigen Sie folgende Rollen: Application Owner, Workspace Admin, Page Builder und Integration Admin. Entscheidend: Das App Framework kann nur aus Ihrem Default-Tenant heraus generieren. Das bedeutet: Wenn Sie sich mit der E-Mail-Adresse Ihres Partner-Unternehmens anmelden (z. B. john@partnerfirm.com), können Sie NICHT generieren — der Kunden-Tenant ist nicht Ihr Default-Tenant. Workarounds: Entweder erhalten Sie eine E-Mail-Adresse in der Kundendomäne, damit der Kunden-Tenant Ihr Default-Tenant wird, oder Sie lassen den Tenant-Admin des Kunden die Applikation generieren, während Sie ihn anleiten. Sobald die App generiert ist, können Sie mit Ihrem normalen Partner-Login daran arbeiten.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">F: Kann die Applikation gleichzeitig in mehreren Workspaces (Dev, QA, Prod) deployed werden?</div>
+        <div class="answer">A: Aktuell nein — das App Framework kann eine generierte Applikation jeweils nur in einen Workspace deployen. Um Dev/QA/Prod zu erhalten, nutzen Sie die normale ALM-Funktionalität, um Modelle nach der initialen Generierung in Dev über Workspaces hinweg zu übertragen. Upgrades werden auf die zuletzt generierte Version (Dev) angewendet, und Sie pushen sie über ALM durch QA/Prod. Diese Einschränkung steht auf der Roadmap und soll behoben werden.</div>
+      </div>
+
+      <h2>Application Framework &amp; Generierung</h2>
+
+      <div class="qa-item">
+        <div class="question">F: Wir haben die App mehrfach generiert, während wir die Konfiguration verfeinern — ist das ein Problem?</div>
+        <div class="answer">A: Vorsicht: Die ZULETZT generierte Version ist diejenige, die künftige Upgrades erhält. Wenn Sie gestern eine Version generiert haben und heute eine weitere, aber tatsächlich an der gestrigen arbeiten, wird diese Version KEINE Upgrades erhalten — das Upgrade wird auf die jüngste Generierung angewendet. Arbeiten Sie immer mit der jüngsten generierten Version als finaler Kopie. Best Practice: Generieren Sie zuerst eine Basis-Kopie ohne Konfigurationsänderungen (vor jeglichen Umbenennungen). Damit haben Sie eine Referenz mit allen Formeln intakt. Konfigurieren und generieren Sie dann Ihre Arbeitsversion. Bei Formelfehlern können Sie die korrekte Formel in der Basis-Kopie nachschlagen.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">F: Gibt es eine Möglichkeit, die Anzahl der Hierarchieebenen zu ändern, ohne die gesamte App neu zu generieren?</div>
+        <div class="answer">A: Nein — eine Änderung der Hierarchieebenen erfordert eine Neugenerierung. Wenn Sie eine neue Ebene hinzufügen, fügt das System sie am Ende der Liste hinzu. Sie müssen dann die ursprüngliche „Leaf"-Ebene per Drag-and-Drop wieder nach unten verschieben (die Leaf-Ebene ist aus technischen Gründen wichtig und muss am Ende bleiben). Die neu hinzugefügten Ebenen dürfen nicht denselben Namen wie das ursprüngliche Leaf haben. Es gibt keine „partielle Neugenerierung" nur der Hierarchie — es ist eine vollständige Generierung. Dies ist eine bekannte Einschränkung und wurde von Partnern adressiert. Die Empfehlung lautet, stark in Session Zero zu investieren, um Hierarchieentscheidungen vor der ersten echten Generierung festzuzurren.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">F: Sollen wir CapEx konfigurieren, auch wenn der Kunde sagt, dass er es derzeit nicht braucht?</div>
+        <div class="answer">A: Ja — Anaplan empfiehlt, die CapEx-Module auch dann zu generieren, wenn der Kunde sie nicht sofort nutzen möchte. In Polaris-Modellen verbrauchen Module keinen nennenswerten Speicher/Platz, solange sie keine tatsächlichen Daten enthalten. CapEx jetzt zu generieren vermeidet eine spätere Neugenerierung, um es hinzuzufügen. Der Kunde kann es ungenutzt lassen und in einer späteren Phase ohne Auswirkungen auf das aktuelle Modell implementieren.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">F: Was passiert, wenn eine Generierung fehlschlägt — alle roten Fehler? Was sollen wir tun?</div>
+        <div class="answer">A: Wenn alles fehlgeschlagen ist, deutet das meist auf ein Berechtigungsproblem hin — der generierende Benutzer hatte keine Page Builder- oder eine andere erforderliche Rolle. Korrigieren Sie die Tenant-Admin-Berechtigungen und generieren Sie neu. Wenn einige Punkte fehlschlagen: Prüfen Sie zuerst, ob es sich um ein bekanntes Problem handelt (Import-Action-Fehler und Saved-View-Fehler in v2.1.0 sind erwartet und können ignoriert werden — sie werden in v2.1 behoben). Bei Formelfehlern: Suchen Sie den Underscore-Code im Error Log nach (z. B. _492_...), gehen Sie in Modules → Line Items, suchen Sie nach diesem Code, und die fehlende Formel ist leer. Kopieren Sie die korrekte Formel aus Ihrem Basis-Kopie-Modell. Wenn viele unerwartete Fehler auftreten, kontaktieren Sie das Anaplan-Implementierungsteam, bevor Sie Zeit in die Behebung investieren — exportieren Sie das Error Log und schicken Sie es weiter.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">F: Gibt es eine Anleitung, wann Fehler manuell behoben und wann neu generiert werden soll?</div>
+        <div class="answer">A: Grundregel: Wenn die erste Generierungsaktivität fehlschlug (was Kaskaden auslöst), liegt meist ein Konfigurations-/Benennungsproblem vor — alle nachfolgenden Aktivitäten schlagen ebenfalls fehl. In diesem Fall korrigieren Sie den Application Framework Configurator und generieren neu. Wenn es nur ein oder zwei isolierte Formelfehler sind (die Formel ist leer, kein Kaskaden-Ausfall), beheben Sie sie manuell, indem Sie aus dem Basismodell kopieren. Wenn Sie noch in der frühen Entwicklung sind und noch keine Erweiterungen umgesetzt haben, ist die Neugenerierung risikoarm. Wenn Sie bereits Erweiterungen umgesetzt haben, bewahrt die manuelle Behebung Ihre Arbeit. Ab v2.1 ist die Menge erwarteter Fehler sehr gering — die Londoner Gruppe (20 Personen) hatte nur einen Formelfehler und einige Saved-View-Fehler.</div>
+      </div>
+
+      <h2>Upgrades &amp; Erweiterungen</h2>
+
+      <div class="qa-item">
+        <div class="question">F: Wenn ein IFP-Upgrade angewendet wird, was wird genau überschrieben und was bleibt erhalten?</div>
+        <div class="answer">A: Die Regel basiert darauf, ob etwas eine vom Application Framework verfolgte GUID hat. NEUE Elemente (von Ihnen hinzugefügte Line Items, neue Module, neue Dashboards, neue Prozesse, neue Listen) werden von Upgrades NICHT angetastet — sie haben GUIDs, die dem Framework unbekannt sind, sodass das Upgrade sie ignoriert. GEÄNDERTE bestehende Elemente (Line Items, die im Basismodell existierten und deren Formel Sie geändert haben oder deren Formula Override Sie hinzugefügt haben) WERDEN auf die Framework-Version zurückgesetzt — das Upgrade überschreibt die Formel. Line Item Subsets können ebenfalls zurückgesetzt werden (kein Konzept von „Produktionsdaten"). Data Tags überstehen Upgrades voraussichtlich (mit dem Anaplan-Team bestätigen). Notes auf Line Items können überschrieben werden. Deshalb lautet das Erweiterungsmuster „Neues hinzufügen, Bestehendes nicht ändern" — die einzigen bestehenden Elemente, die Sie ändern müssen, sind die „Connection Points" (wie die Final-Amount-Formel), an denen Ihre Erweiterung andocken muss.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">F: Was, wenn ein Kunde stark angepasst ist — 85 % Custom, 15 % Standard-IFP? Ist ein Upgrade überhaupt machbar?</div>
+        <div class="answer">A: Das ist ein realer Konflikt, den mehrere Partner adressiert haben. Die praktische Antwort: Wenn das Upgrade keine Funktionalität bringt, die der Kunde benötigt, kann er es ablehnen. Upgrades können bis zu 3-mal abgelehnt werden, bevor die App aus dem Support-Vertrag fällt — und Anaplan erwartet, dass Kunden oft ablehnen, wenn das Upgrade kein Problem löst, das sie haben. Bei stark angepassten Modellen sollte die Upgrade-Entscheidung so gerahmt werden: „Rechtfertigt die neue Funktionalität den erneuten Aufwand für unsere Custom-Formeln?" Wenn nicht, überspringen Sie es. Anaplans Empfehlung ist, so viel wie möglich über neue Module und Erweiterungen zu bauen anstatt bestehende Elemente zu ändern, was den Nacharbeitsaufwand bei jedem Upgrade minimiert.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">F: Wenn wir ein Basismodell-Line Item löschen, das wir nicht wollen, kommt es bei einem Upgrade zurück?</div>
+        <div class="answer">A: Ja — das Upgrade wird es wieder hinzufügen. Die Empfehlung lautet, Basismodell-Line Items NICHT zu löschen. Stattdessen: Verschieben Sie sie ans Ende der Liste, schließen Sie sie aus Line Item Subsets aus, damit sie nicht auf Dashboards erscheinen, und nullen oder neutralisieren Sie jede Formel, die auf sie verweist. So kann das Upgrade sie sauber wieder hinzufügen, ohne etwas zu zerstören. Wenn Sie löschen und das Upgrade fügt es zurück, müssen Sie erneut löschen — und die zurückgebrachte Formel kann mit Ihren Anpassungen kollidieren.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">F: Beeinflusst ein Upgrade historische Daten oder bereits im Modell vorhandene Ist-Werte?</div>
+        <div class="answer">A: Nein — Applikations-Upgrades ändern nicht die Dimensionalität bestehender Module. Historische Daten und Ist-Werte sind sicher. Der Risikobereich sind Formeln: Wenn eine Formel auf einem Modul-Line Item durch ein Upgrade zurückgesetzt wird und Sie sie erweitert haben (z. B. Ihre neuen Erweiterungs-Line Items in die Final-Amount-Formel aufgenommen haben), kehrt die Formel zur Basis zurück und enthält Ihre Erweiterungs-Berechnung nicht mehr. Die Daten in Ihren Erweiterungs-Modulen sind weiterhin vorhanden, aber die Formel zieht sie nicht mehr heran. Sie müssten Ihre Formula Overrides nach dem Upgrade erneut einsetzen. Deshalb ist es entscheidend, jeden Formula Override mit einem Data Tag zu dokumentieren — das wird Ihre Post-Upgrade-Checkliste.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">F: Kostet das IFP-Upgrade Geld?</div>
+        <div class="answer">A: Das Upgrade selbst ist in der IFP-Applikations-Subscription-Gebühr enthalten. Was Geld kostet, ist die Professional-Services-Arbeit, um nach einem Upgrade Formula Overrides und Anpassungen erneut anzuwenden. Wenn ein Kunde einen CoE-Lead hat, der das selbst machen kann, entstehen keine zusätzlichen Kosten. Falls er den Partner dafür benötigt, wäre das ein Professional-Services-Auftrag. Partner sollten frühzeitig Erwartungen beim Kunden setzen: Ein Upgrade anzunehmen kann einige Tage Partnerzeit erfordern, um Anpassungen zu validieren und erneut anzuwenden.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">F: Wenn wir einer bestehenden generierten Process eine neue Action hinzufügen, übersteht sie Upgrades?</div>
+        <div class="answer">A: Risikoreich — bestehende Prozesse werden vom Framework verfolgt und könnten zurückgesetzt werden. Best Practice: Kopieren Sie den Prozess, fügen Sie Ihre neuen Actions zur Kopie hinzu und verlinken Sie dann die Kopie mit der UX-Page. Oder erstellen Sie einen vollständig separaten Prozess und führen Sie ihn als ergänzende Action aus. So kann der ursprüngliche generierte Prozess durch ein Upgrade zurückgesetzt werden, ohne Ihre Ergänzungen zu verlieren. Ihr kopierter Prozess und seine Actions haben neue GUIDs, die das Upgrade nicht kennt.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">F: Wie sollen wir Erweiterungen dokumentieren, um auf zukünftige Upgrades vorbereitet zu sein?</div>
+        <div class="answer">A: Verwenden Sie Data Tags in Anaplan — erstellen Sie einen Tag namens „Extension" und wenden Sie ihn auf jedes Line Item an, das Sie neu hinzugefügt haben. Erstellen Sie einen zweiten Tag namens „Formula Override" und wenden Sie ihn auf jedes bestehende Basismodell-Line Item an, dessen Formel Sie geändert haben. Sie können dann die Line-Items-Liste exportieren und nach diesen Tags filtern, um Ihre vollständige Änderungsliste zu erhalten. Pflegen Sie zusätzlich externe Dokumentation (ein Abschnitt pro Erweiterungsbereich, z. B. „Channel Planning", mit allen geänderten Objekten und Änderungen). Wenn ein Upgrade angewendet wird, filtern Sie nach dem „Formula Override"-Tag, um Ihre Post-Upgrade-Checkliste zu erhalten. Notes auf Line Items sind noch nicht als upgrade-sicher bestätigt — nutzen Sie Data Tags als primären Tracking-Mechanismus.</div>
+      </div>
+
+      <h2>Implementierungsansatz &amp; Schätzung</h2>
+
+      <div class="qa-item">
+        <div class="question">F: Was ist ein realistischer Implementierungs-Zeitrahmen für IFP v2?</div>
+        <div class="answer">A: Das Schnellste, was wir für das Basismodell gesehen haben (keine Anpassungen, nur Konfiguration + Datenladung), liegt bei etwa 6 Wochen. QROS in den USA hat einen tagesgenauen Arbeitsplan, um von Null bis zum MVP zu gelangen. Mit Anpassungen (Erweiterungen) kommen je nach Umfang weitere 6–10 Wochen hinzu. Ein phasenweiser Ansatz: 6 Wochen für Basismodell + Datenladungen, dann Erweiterungen scopen und bauen. Planen Sie bei der ersten Implementierung zusätzliche Zeit für Anaplan-Supportzyklen und mögliche Generierungsprobleme ein.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">F: Wie sollten wir die Designphase für IFP strukturieren — führen wir ein vollständiges Prozessdesign durch, bevor wir den Application Framework Configurator anfassen?</div>
+        <div class="answer">A: Machen Sie genug Design, um die Application Framework Configurator-Fragen vor der Generierung beantworten zu können — Sie benötigen aber nicht den vollen traditionellen User-Story-Detailgrad im Voraus. Der empfohlene Ansatz: Starten Sie mit Prozessdesign, um das Datenmodell zu verstehen (welche Dimensionen existieren, welchem Planungsprozess der Kunde folgt). Verwenden Sie das, um die Application Framework Configurator-Fragen zu beantworten. Identifizieren Sie kritisch in dieser Phase auch geplante Erweiterungen — selbst wenn Sie die Erweiterungsmodule noch nicht bauen, müssen Sie ihre Dimensionalität im Application Framework Configurator erfassen, damit die Verbindungen von Anfang an stehen. Nach der Generierung führen Sie das detaillierte Design der einzelnen Erweiterungen durch. Denken Sie es so: Prozessdesign → Application Framework Configurator-Fragen → Generieren → detailliertes Erweiterungsdesign.</div>
+      </div>
+
+      <div class="qa-item">
+        <div class="question">F: Welche Branchen / Kundentypen passen gut zu IFP?</div>
+        <div class="answer">A: Fast jedes Unternehmen, das eine monatliche Finanzplanung mit einer traditionellen GuV-Struktur betreibt, passt gut. Starke Passungen: Fertigung, Finanzdienstleistungen (OpEx und Headcount), Technologieunternehmen, Professional Services. Schwierige Passungen: Retail mit saisonaler Planung oder sehr granularer SKU-Level-Planung, Banken mit bankenspezifischen Bilanzen (IFP deckt die Standard-Corporate-GuV ab, keine Banken-Bilanzen) und Kunden mit extrem hoher Datendichte und sehr großen Hierarchien (potenzielle Polaris-Performance-Bedenken). Anaplan bündelt aktiv Applikationen — IFP ist der Eckpfeiler und kann mit Workforce Budgeting, OWP und Revenue-Applikationen kombiniert werden, um eine breitere FP&amp;A-Plattform aufzubauen.</div>
+      </div>
+
+      <h2>Modellgenerierung</h2>
+
+      <div class="callout-note">
+  <p><strong>F: Wir haben mit Fehlern generiert — ist das Modell nutzbar?</strong></p>
+  <p><strong>A:</strong> „Generated with errors" ist normal, besonders in Trainings und frühen Implementierungen. Fehler weisen auf Formelreferenzen hin, die aufgrund von Konfigurationsentscheidungen oder Hierarchie-Umbenennungen vom Basismodell-Template abweichen. Das Modell ist für die meisten Zwecke funktional, während Sie die Fehlerliste systematisch abarbeiten. Lassen Sie sich vom Fehlerstatus nicht aufhalten — kategorisieren Sie die Fehler, beheben Sie die lösbaren und machen Sie weiter.</p>
+</div>
+
+      <div class="callout-note">
+  <p><strong>F: Kann ich Error Logs nach Excel exportieren?</strong></p>
+  <p><strong>A:</strong> Ja. Aus dem App Framework können Sie das Error Log nach Excel exportieren. Das ist bei mehr als 10 Fehlern empfehlenswert — Filtern und Kategorisieren nach Fehlertyp ist in Excel deutlich schneller als in der In-App-Log-Ansicht. Sortieren Sie zuerst nach Fehlertyp, dann nach Modell, um verwandte Fehler zu gruppieren.</p>
+</div>
+
+      <div class="callout-note">
+  <p><strong>F: Wie lange dauert die Generierung?</strong></p>
+  <p><strong>A:</strong> Typischerweise 10–20 Minuten, abhängig von der Konfigurations-Komplexität. In Trainings-Umgebungen, in denen mehrere Teilnehmer gleichzeitig generieren, kann es länger dauern, da die Plattform parallele Jobs handhabt. Lösen Sie keine zweite Generierung aus, solange die erste noch läuft — überwachen Sie den Status und warten Sie, bis sie abgeschlossen ist.</p>
+</div>
+
+      <div class="callout-note">
+  <p><strong>F: Können wir nach dem Beheben von Konfigurationsfehlern neu generieren?</strong></p>
+  <p><strong>A:</strong> Ja, Sie können neu generieren. Allerdings überschreibt die Neugenerierung das generierte Modell — Erweiterungen oder manuelle Änderungen, die nach der vorherigen Generierung vorgenommen wurden, müssen erneut eingebracht werden. Deshalb ist es kritisch, Hierarchie- und Dimensionsentscheidungen vor der ersten Generierung festzuzurren. Behandeln Sie eine Neugenerierung als Ausnahme, nicht als Routine.</p>
+</div>
+
+      <hr>
+
+      <h2>Error Logs &amp; Troubleshooting</h2>
+
+      <div class="callout-note">
+  <p><strong>F: Wie finde ich ein Line Item anhand eines Fehlercodes?</strong></p>
+  <p><strong>A:</strong> Fehlercodes nutzen ein Underscore-Präfix (z. B. <code>_FINALAMOUNTEXCEPTION</code>). Gehen Sie ins betroffene Modell, navigieren Sie zu Line Items und suchen Sie nach dem Code. Die Suche bringt Sie direkt zum Modul und Line Item mit dem Fehler. Vergleichen Sie die generierte Formel mit der Basismodell-Formel, um zu erkennen, was sich geändert hat — meist eine Hierarchie-Umbenennung, eine Geographie-Entfernung oder eine Dimensions-Abweichung.</p>
+</div>
+
+      <div class="callout-note">
+  <p><strong>F: Es gab zwei Line Items mit ähnlichen Namen — woher weiß ich, welches den Fehler hat?</strong></p>
+  <p><strong>A:</strong> Verwenden Sie den Code, nicht den Anzeigenamen. Codes mit Underscore-Präfix sind eindeutige Identifikatoren für Fehler-Targets. Wenn die Namenssuche mehrere Treffer liefert, suchen Sie gezielt nach dem Underscore-präfixierten Code, und Sie finden genau das richtige Item. Der Error-Log-Eintrag enthält immer den Code — danach sollten Sie suchen.</p>
+</div>
+
+      <div class="callout-note">
+  <p><strong>F: Einige Fehler scheinen lokal nicht behebbar zu sein — was tun wir?</strong></p>
+  <p><strong>A:</strong> Wenn der Fehler nach einem Plattform-Problem aussieht (nicht durch Ihre Konfigurationsentscheidungen oder Hierarchieänderungen verursacht), notieren Sie den Fehlercode und die Symptome und kontaktieren Sie dann den Anaplan Support oder Ihren Anaplan-Delivery-Ansprechpartner. Verwenden Sie während eines Kundenprojekts keine Zeit darauf, Plattform-Fehler zu beheben — diese werden in zukünftigen IFP-Releases adressiert. Der Workshop-Facilitator merkte an: „Wir wollen nicht, dass Sie Zeit für Dinge verschwenden, die eigentlich Probleme in der Plattform sind."</p>
+</div>
+
+      <div class="callout-note">
+  <p><strong>F: Ist es möglich, dass derselbe Fehler in verschiedenen Modellen auftritt?</strong></p>
+  <p><strong>A:</strong> Ja. Eine Konfigurationsentscheidung oder Hierarchieänderung, die eine gemeinsam genutzte Liste oder ein Formel-Muster betrifft, kann denselben Fehlertyp in mehreren Modellen erzeugen. Das Error Log gibt an, in welchem Modell sich der jeweilige Fehler befindet — prüfen Sie jedes Modell einzeln. Die Ursache ist oft dieselbe, und ihre Behebung in einem Modell zeigt das Muster für die anderen.</p>
+</div>
+
+      <hr>
+
+      <h2>Erweiterungen</h2>
+
+      <div class="callout-note">
+  <p><strong>F: Wie erkenne ich, ob eine Änderung Konfigurieren, Erweitern oder Modifizieren ist?</strong></p>
+  <p><strong>A:</strong> Konfigurieren = prüfen Sie zuerst den Application Framework Configurator. Wenn es eine Einstellung für die Kundenanforderung gibt, nutzen Sie sie — bauen Sie keine Erweiterung, wenn die Konfiguration es abdeckt. Erweitern = neue Line Items, Module oder Listen hinzufügen, ohne bestehende Basismodell-Formeln anzufassen. Dies ist mit geringem Upgrade-Risiko verbunden. Modifizieren = eine bestehende Basismodell-Formel oder -Struktur ändern. Dies trägt das höchste Upgrade-Risiko. Im Zweifel fragen Sie: „Ändere ich etwas, das generiert wurde, oder füge ich etwas Neues hinzu?" Wenn Sie ändern, ist es ein Modifizieren.</p>
+</div>
+
+      <div class="callout-note">
+  <p><strong>F: Was passiert mit Formula Overrides, wenn IFP upgegradet wird?</strong></p>
+  <p><strong>A:</strong> Formula Overrides auf Basismodell-Line Items können verloren gehen oder brechen, wenn Anaplan ein IFP-Update veröffentlicht, abhängig davon, ob das Update das jeweilige Modul betrifft. Deshalb ist es entscheidend, Formula Overrides mit dem Formula-Override-Data-Tag zu markieren — wenn ein Upgrade kommt, filtern Sie nach diesem Tag, um Ihre vollständige Prüfliste zu erhalten. Pflegen Sie zusätzlich externe Dokumentation jedes Overrides.</p>
+</div>
+
+      <div class="callout-note">
+  <p><strong>F: Können wir mehr als zwei Adjustments hinzufügen?</strong></p>
+  <p><strong>A:</strong> Ja — das Muster ist dasselbe. Fügen Sie zusätzliche Adjustment-Line Items hinzu, wenden Sie denselben Access Driver an, aktualisieren Sie das Filter Subset und aktualisieren Sie die Final-Amount-Formel, um die zusätzlichen Adjustments einzubeziehen. Es gibt keine plattformseitige Begrenzung der Anzahl von Adjustments. Dokumentieren Sie jedoch klar und berücksichtigen Sie die UX-Erfahrung — ein Planungsraster mit 6 Adjustment-Feldern beginnt, Endanwender zu verwirren.</p>
+</div>
+
+      <div class="callout-note">
+  <p><strong>F: Wann verwenden wir den Extension-Data-Tag und wann den Formula-Override-Tag?</strong></p>
+  <p><strong>A:</strong> Verwenden Sie <strong>Extension</strong> auf jedem Line Item, das Sie neu hinzufügen (nicht Teil des Basismodells). Verwenden Sie <strong>Formula Override</strong> auf jedem Basismodell-Line Item, dessen Formel Sie geändert haben. Ein Line Item kann beide Tags haben — wenn Sie z. B. ein neues Line Item hinzufügen und es zusätzlich in einer modifizierten Basismodell-Formel referenzieren, erhält das Basismodell-Line Item beide Tags.</p>
+</div>
+
+      <hr>
+
+      <h2>Planungsmethoden</h2>
+
+      <div class="callout-note">
+  <p><strong>F: Kann eine Planungsmethode für einige GL Accounts gelten, aber nicht für andere?</strong></p>
+  <p><strong>A:</strong> Ja — das ist genau der Zweck des Modulen für die Zuordnung Account-zu-Planungsmethode. Jede GL-Account-Zeile gibt an, welche Planungsmethode auf sie angewendet wird. Das Boolean-Line Item im INP-Modul (abgeleitet aus der Zuordnung) steuert, ob die Methode für jeden Account aktiv ist. Stellen Sie die Methode pro Account-Zeile im Zuordnungsmodul ein.</p>
+</div>
+
+      <div class="callout-note">
+  <p><strong>F: Warum einen Access Driver (DCA) auf methodenspezifischen Line Items verwenden, statt sie nur im UX auszublenden?</strong></p>
+  <p><strong>A:</strong> Ein Access Driver (DCA) verhindert sowohl Berechnung als auch Dateneingabe, wenn die Methode nicht auf einen GL Account zutrifft. UX-Sichtbarkeitsregeln allein lassen die Formel weiterhin laufen (verbraucht Berechnungsressourcen) und erlauben die Dateneingabe über Import-Actions (verursacht Datenintegritätsprobleme). Der Access Driver ist das korrekte Muster für methodenspezifische Line Items — er erzwingt die Regel auf Modellebene, nicht nur auf der Anzeigeebene.</p>
+</div>
+
+      <div class="callout-note">
+  <p><strong>F: Was ist der Unterschied zwischen dem Aktualisieren des Filter Subset und des Admin Subset?</strong></p>
+  <p><strong>A:</strong> Das Filter Subset (OPEX-Filter-Line Item Subset) steuert, welche Line Items für Endanwender im Planungsraster sichtbar sind. Das Admin Subset steuert, welche Line Items auf der Top-Level-Admin-Konfigurationsseite erscheinen. Beide müssen aktualisiert werden, damit eine neue Planungsmethode end-to-end korrekt funktioniert — das Filter Subset für die Benutzererfahrung und das Admin Subset für die Admin-Konfigurationsansicht.</p>
+</div>
+
+      <div class="callout-note">
+  <p><strong>F: Muss eine Planungsmethode neu konfiguriert werden, wenn wir das Modell neu generieren?</strong></p>
+  <p><strong>A:</strong> Wenn die Planungsmethode als Erweiterung hinzugefügt wurde (nicht als Configurator-Einstellung), ja — sie muss nach der Neugenerierung neu aufgebaut werden. Das ist ein weiterer Grund, warum eine Neugenerierung als Ausnahme behandelt werden sollte. Erweiterungen, die nach der Generierung hinzugefügt werden, werden vom Application Framework Configurator nicht erfasst und überstehen eine Neugenerierung nicht.</p>
+</div>
+
+      <hr>
+
+      <h2>Headcount × Rate Methode</h2>
+
+      <div class="callout-note">
+  <p><strong>F: Woher kommen die Headcount-Daten in der Rate-Formel?</strong></p>
+  <p><strong>A:</strong> Für Actuals-Perioden: aus dem DAT-Modul, das die Ist-Headcount-Daten aus dem GL oder der Headcount-Quelle speichert. Für Forecast-Perioden: aus dem Headcount Planning-Modell über die Integration zwischen den Headcount- und Financial-Planning-Modellen. Die Rate-Line Item-Formel nutzt eine Formel-Scope-Beschränkung (nur Actuals-Version), um auf Actuals eine Formel zu setzen und in Forecast-Perioden die Eingabe durch den Benutzer zuzulassen.</p>
+</div>
+
+      <div class="callout-note">
+  <p><strong>F: Was, wenn die Headcount-Daten für eine Forecast-Periode nicht geladen sind?</strong></p>
+  <p><strong>A:</strong> Wenn für eine Periode keine Headcount-Daten vorhanden sind, liefert das HC-Amount-Line Item für diese Periode 0. Daraus ergibt sich ein Final Amount von 0 (oder lediglich der Adjustment-Wert), was für Benutzer falsch wirkt. Stellen Sie sicher, dass das Headcount-Modell befüllt und integriert ist, bevor Benutzer mit der Forecast-Eingabe beginnen. Dies ist eine Datenlade-Abhängigkeit — dokumentieren Sie sie in der UAT-Checkliste.</p>
+</div>
+
+      <div class="callout-note">
+  <p><strong>F: Warum brauchen wir das Boolean-Line Item?</strong></p>
+  <p><strong>A:</strong> Das Boolean (HC Boolean) entscheidet, ob die Headcount × Rate-Methode für einen bestimmten GL Account aktiv ist. Ohne dieses würde jede Formel für jeden Account laufen, unabhängig von der Planungsmethoden-Zuordnung — was zu falschen Berechnungen und unnötiger Rechenlast führt. Das Boolean steuert alle methodenspezifischen Berechnungen, und der Access Driver nutzt es, um die Sichtbarkeit von Line Items zu kontrollieren.</p>
+</div>
+
+<div class="prevnext-nav"><a class="prevnext-btn" href="./13-whats-coming.html">← Zurück</a><span></span></div>
+    </div>
+  </main>
+  <script src="../../js/nav.js"></script>
+</body>
+</html>

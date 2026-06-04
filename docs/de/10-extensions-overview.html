@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Erweiterungsübersicht — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+      <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">Erste Schritte</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">Workshop-Übersicht</a></li>
+      <li><a class="nav-link" href="./02-tenant-access.html">Tenant-Zugang</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">IFP-Übersicht</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way für Applikationen</a></li>
+    </ul>
+    <li class="nav-section-title">Konfiguration</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">Konfigurationsübung 1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">Konfigurationsübung 2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">Konfigurationsübung 3</a></li>
+      <li><a class="nav-link" href="./07-generation.html">Modellgenerierung</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">Schritte nach der Generierung</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Error Log Überprüfung</a></li>
+    </ul>
+    <li class="nav-section-title">Erweiterungen</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link active" href="./10-extensions-overview.html">Erweiterungsübersicht</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">Übung 1</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">Übung 2</a></li>
+    </ul>
+    <li class="nav-section-title">Referenz</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">Was kommt als Nächstes</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">Fragen &amp; Antworten</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 Sprache</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de" selected>🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>Erweiterungsübersicht</h1>
+      <p class="subtitle">Die drei Erweiterungstypen, 7 Best Practices und die zwei Übungen an Tag 2</p>
+      <div class="badge-row"><span class="content-badge">Tag 2</span><span class="content-badge">30 Min.</span><span class="content-badge">Walkthrough</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-info" style="background:#eff6ff;border-left:4px solid #3b82f6;">
+        <span class="callout-label">🌐 Hinweis zur Übersetzung</span>
+        <p>Dies ist eine automatische Übersetzung der englischen Originalfassung. Die maßgebliche und aktuellste Version finden Sie <a href="../10-extensions-overview.html">hier auf Englisch</a>.</p>
+      </div>
+
+      <div class="tsd-banner">
+        <div class="tsd-step tsd-step-tell">
+          <span class="tsd-step-label">📖 Tell</span>
+          <span class="tsd-step-heading">Was Erweiterungen sind</span>
+          <span class="tsd-step-desc">Die drei Erweiterungstypen und die 7 Best Practices für deren sichere Umsetzung.</span>
+        </div>
+        <div class="tsd-step tsd-step-show">
+          <span class="tsd-step-label">👁 Show</span>
+          <span class="tsd-step-heading">Entscheidungsrahmen für Erweiterungen</span>
+          <span class="tsd-step-desc">Der Facilitator zeigt den Entscheidungsrahmen für Erweiterungen und reale Beispiele.</span>
+        </div>
+        <div class="tsd-step tsd-step-do">
+          <span class="tsd-step-label">✅ Do</span>
+          <span class="tsd-step-heading">Zuordnung zum Erweiterungstyp</span>
+          <span class="tsd-step-desc">Die Teilnehmer ordnen die Szenarien der Übungen an Tag 2 dem korrekten Erweiterungstyp zu.</span>
+        </div>
+      </div>
+
+      <h2>Was Erweiterungen sind</h2>
+      <p>Erweiterungen sind kundenspezifische Ergänzungen oder Modifikationen am IFP-Basismodell, die der Application Framework Configurator nicht erzeugen kann. Sie fallen in drei Kategorien — und die Kategorie bestimmt das Risiko und das Vorgehen.</p>
+<div class="table-wrap"><table><thead><tr><th>Erweiterungstyp</th><th>Was es ist</th><th>Upgrade-Risiko</th><th>Wann zu verwenden</th></tr></thead><tbody><tr><td>Konfigurieren</td><td>Verwenden Sie den Application Framework Configurator, um eine eingebaute Funktion zu aktivieren</td><td>Keines — dies wird unterstützt</td><td>Versuchen Sie dies immer zuerst. Wenn der Application Framework Configurator eine Einstellung dafür hat, nutzen Sie den Application Framework Configurator.</td></tr><tr><td>Erweitern / Anbinden</td><td>Neue Line Items, Module oder Listen hinzufügen, ohne Formeln des Basismodells anzufassen</td><td>Niedrig — neue Objekte werden bei Upgrades nicht überschrieben</td><td>Wenn der Kunde etwas benötigt, das der Application Framework Configurator nicht abdeckt, Sie es aber ergänzen können, ohne die Logik des Basismodells zu ändern.</td></tr><tr><td>Ändern / Modifizieren / Löschen</td><td>Eine bestehende Formel, Liste oder ein Modul des Basismodells ändern</td><td>Hoch — Änderungen können bei einem Upgrade verloren gehen oder brechen</td><td>Letzte Option. Dokumentieren Sie jede Überschreibung mit einem Data Tag. Pflegen Sie externe Dokumentation.</td></tr></tbody></table></div>
+
+      <div class="callout-note">
+        <span class="callout-label">ℹ Extension FAQ in Seismic</span>
+        <p>Speichern Sie das <a href="https://anaplan.seismic.com/Link/Content/DC48CC3D4DTq2GWT2WjGW3XQXXX8" target="_blank"><strong>Extension FAQ</strong></a> in Seismic als Lesezeichen und studieren Sie es. Es behandelt Best Practices zur Dokumentation von Erweiterungen, was Upgrades übersteht und wie man sich auf Upgrade-Zyklen vorbereitet. Eine unverzichtbare Referenz für die reale Delivery-Arbeit.</p>
+      </div>
+
+      <h2>7 Best Practices für IFP-Erweiterungen</h2>
+<div class="step"><div class="step-badge">1</div><div class="step-content"><h3>Zuerst konfigurieren</h3><p>Die Konfiguration über das Application Framework ist der primäre Weg, die Struktur einer Applikation auf Basis von Kundeneingaben und Anforderungen zu definieren.</p></div></div><div class="step"><div class="step-badge">2</div><div class="step-content"><h3>Als nächstes erweitern oder anbinden</h3><p>Erweiterungen sollten immer additiv sein, das heißt sie fügen neue Funktionalität hinzu, ohne bestehende Logik zu ändern.</p></div></div><div class="step"><div class="step-badge">3</div><div class="step-content"><h3>Modifizieren mit Vorsicht</h3><p>Das Modifizieren bestehender Objekte — insbesondere solcher, die nicht konfiguriert werden können — kann sowohl die Konfigurierbarkeit als auch die Upgrade-Fähigkeit beeinträchtigen.</p></div></div><div class="step"><div class="step-badge">4</div><div class="step-content"><h3>Entfernen mit Vorsicht</h3><p>Das Entfernen von Komponenten aus einer konfigurierten Applikation kann bei zukünftigen Neukonfigurationen oder beim Übergang auf eine neue Applikationsversion zusätzlichen Aufwand verursachen.</p></div></div><div class="step"><div class="step-badge">5</div><div class="step-content"><h3>Konsistente Namenskonvention einhalten</h3><p>Konsistente Benennung macht Erweiterungen leichter wartbar, supportbar und upgradefähig.</p></div></div><div class="step"><div class="step-badge">6</div><div class="step-content"><h3>Verwandte Erweiterungen gruppieren</h3><p>Das Gruppieren mehrerer Erweiterungen erleichtert die Identifikation und Verwaltung, insbesondere bei Upgrades.</p></div></div><div class="step"><div class="step-badge">7</div><div class="step-content"><h3>Alle Erweiterungen dokumentieren</h3><p>Alle Erweiterungen und Modifikationen sollten klar dokumentiert sein.</p></div></div>
+
+      <h2>Data Tags — zuerst anlegen</h2>
+<div class="callout-warning"><span class="callout-label">⚠ Erst taggen, dann bauen</span><p>Bevor Sie irgendwelche Erweiterungsänderungen an einem IFP-Modell vornehmen, legen Sie zwei Data Tags an: <strong>Extension</strong> (für alle neuen Line Items, die Sie hinzufügen) und <strong>Formula Override</strong> (für jede geänderte Formel des Basismodells). Diese Tags sind die einzige modellinterne Aufzeichnung dessen, was Sie geändert haben. Ohne sie hat ein künftiger Berater keine Möglichkeit, dies nachzuvollziehen.</p></div>
+
+      <h2>Erweiterungen, die dieser Workshop abdeckt</h2>
+<div class="table-wrap"><table><thead><tr><th>Erweiterungstyp</th><th>Geschäftsanforderung</th><th>Klassifizierung</th></tr></thead><tbody><tr><td>Direct Input + Anpassungen</td><td>Der Kunde möchte Direct Input + zwei Anpassungsebenen für OpEx-Konten</td><td>Erweitern — fügt neue Line Items hinzu, modifiziert die Formel für den Endbetrag (mit Formula Override getaggt)</td></tr><tr><td>Headcount × Rate-Methode</td><td>Aufwände als Headcount × durchschnittliche Rate + Anpassung planen</td><td>Erweitern — fügt neue Planungsmethode, neue Line Items hinzu, modifiziert die Formel für den Endbetrag</td></tr><tr><td>Revenue-Modul-Erweiterung</td><td>Detaillierteres Umsatzmodell als neues Modul, in die GuV eingebunden</td><td>Erweitern — neues Modul, an bestehende OUT-Module angebunden</td></tr></tbody></table></div>
+
+      <h2>OpEx Planning UX — Erweiterungen im Kontext</h2>
+<figure class="screenshot"><img src="../../img/extensions/opex-02-15-00.jpg" alt="OpEx-Planungsboard — Direct-Input-Methode mit Anpassungen und Berechnung des Endbetrags" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">OpEx-Planungsboard — Direct-Input-Methode mit Anpassungen und Berechnung des Endbetrags</figcaption></figure>
+
+      <h2>INP OPX Expense Planning Modul</h2>
+<figure class="screenshot"><img src="../../img/extensions/ext-0285.jpg" alt="INP Gross Profit Planning Modul — zeigt Planungsmethoden" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">INP Gross Profit Planning Modul — zeigt Planungsmethoden</figcaption></figure>
+
+      <h2>EXT INP Channel Sales Extension</h2>
+<figure class="screenshot"><img src="../../img/extensions/ext-0275.jpg" alt="EXT INP Channel Sales Extension — Amount-, Price-, Total-Line Items" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">EXT INP Channel Sales Extension — Amount-, Price-, Total-Line Items</figcaption></figure>
+
+      <h2>OpEx-Planungsboard mit Erweiterungen</h2>
+<figure class="screenshot"><img src="../../img/extensions/ext-0270.jpg" alt="OpEx-Planungsboard — Erweiterungen fügen Anpassungseingaben neben generierten Line Items hinzu" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">OpEx-Planungsboard — Erweiterungen fügen Anpassungseingaben neben generierten Line Items hinzu</figcaption></figure>
+
+<div class="callout-warning"><span class="callout-label">⚠ Formula Overrides und Upgrades</span><p>Formula Overrides auf Line Items des Basismodells sind die Erweiterungsaktion mit dem höchsten Risiko. Wenn Anaplan ein IFP-Update veröffentlicht, können Formula Overrides verloren gehen oder brechen. Taggen Sie sie immer mit dem Formula-Override-Data-Tag und dokumentieren Sie sie extern. Filtern Sie nach jedem IFP-Upgrade nach dem Formula-Override-Tag und validieren Sie jeden Eintrag erneut.</p></div>
+<div class="prevnext-nav"><a class="prevnext-btn" href="./09-error-logs.html">← Zurück</a><a class="prevnext-btn" href="./11-extension-exercise-1.html">Weiter →</a></div>
+    </div>
+  </main>
+  <script src="../../js/nav.js"></script>
+</body>
+</html>
