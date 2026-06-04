@@ -42,31 +42,54 @@ document.addEventListener('DOMContentLoaded', function () {
     hamburger.addEventListener('click', () => sidebar.classList.toggle('open'));
   }
 
-  // Language switcher
+  // ── Language switcher ─────────────────────────────────────────────────────
+  // Handles two URL patterns:
+  //   1. Docs pages:  /docs/page.html  ↔  /docs/{lang}/page.html
+  //   2. Root index:  /index.html      ↔  /{lang}/index.html
+  // GitHub Pages subpath prefixes (e.g. /ifp-delivery-workshop/) are preserved.
   const langSelect = document.getElementById('lang-select');
   if (langSelect) {
-    const pathParts = window.location.pathname.split('/');
-    const langIndex = pathParts.indexOf('docs') + 1;
-    const currentLang = (langIndex > 0 && pathParts[langIndex] && pathParts[langIndex].length === 2)
-      ? pathParts[langIndex]
-      : 'en';
-    langSelect.value = currentLang;
-
-    langSelect.addEventListener('change', function () {
-      const selectedLang = this.value;
-      const currentPath = window.location.pathname;
-
-      let newPath;
-      if (selectedLang === 'en') {
-        newPath = currentPath.replace(/\/docs\/[a-z]{2}\//, '/docs/');
-      } else {
-        if (currentPath.includes('/docs/') && !currentPath.match(/\/docs\/[a-z]{2}\//)) {
-          newPath = currentPath.replace('/docs/', `/docs/${selectedLang}/`);
-        } else {
-          newPath = currentPath.replace(/\/docs\/[a-z]{2}\//, `/docs/${selectedLang}/`);
-        }
+    function detectLang(path) {
+      const docsMatch = path.match(/\/docs\/([a-z]{2})\//);
+      if (docsMatch) return docsMatch[1];
+      // Root /{lang}/ — only when NOT under /docs/
+      if (!path.includes('/docs/')) {
+        const rootMatch = path.match(/\/([a-z]{2})\/(?:index\.html)?$/);
+        if (rootMatch) return rootMatch[1];
       }
-      window.location.href = newPath;
+      return 'en';
+    }
+
+    function switchLanguage(currentPath, selectedLang) {
+      const isDocsPage = /\/docs\//.test(currentPath);
+      const docsLangMatch = currentPath.match(/\/docs\/([a-z]{2})\//);
+      const currentDocsLang = docsLangMatch ? docsLangMatch[1] : null;
+
+      if (isDocsPage) {
+        if (selectedLang === 'en') {
+          return currentDocsLang
+            ? currentPath.replace(`/docs/${currentDocsLang}/`, '/docs/')
+            : currentPath;
+        }
+        return currentDocsLang
+          ? currentPath.replace(`/docs/${currentDocsLang}/`, `/docs/${selectedLang}/`)
+          : currentPath.replace('/docs/', `/docs/${selectedLang}/`);
+      }
+
+      // Root-level navigation
+      const rootLangMatch = currentPath.match(/^(.*?)\/([a-z]{2})\/(?:index\.html)?$/);
+      const basePath = rootLangMatch
+        ? (rootLangMatch[1] || '')
+        : currentPath.replace(/\/(?:index\.html)?$/, '');
+
+      return selectedLang === 'en'
+        ? basePath + '/index.html'
+        : basePath + `/${selectedLang}/index.html`;
+    }
+
+    langSelect.value = detectLang(window.location.pathname);
+    langSelect.addEventListener('change', function () {
+      window.location.href = switchLanguage(window.location.pathname, this.value);
     });
   }
 

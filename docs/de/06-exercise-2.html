@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Konfigurationsübung 2 — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+    <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">Erste Schritte</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">Workshop-Übersicht</a></li>
+      <li><a class="nav-link" href="./02-tenant-access.html">Tenant-Zugang</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">IFP-Übersicht</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way für Applikationen</a></li>
+    </ul>
+    <li class="nav-section-title">Konfiguration</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">Konfigurationsübung 1</a></li>
+      <li><a class="nav-link active" href="./06-exercise-2.html">Konfigurationsübung 2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">Konfigurationsübung 3</a></li>
+      <li><a class="nav-link" href="./07-generation.html">Modellgenerierung</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">Schritte nach der Generierung</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Error Log Überprüfung</a></li>
+    </ul>
+    <li class="nav-section-title">Erweiterungen</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">Erweiterungsübersicht</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">Übung 1</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">Übung 2</a></li>
+    </ul>
+    <li class="nav-section-title">Referenz</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">Was kommt als Nächstes</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">Fragen &amp; Antworten</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 Sprache</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de" selected>🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>Konfigurationsübung 2: Insurance 3-Statement Planning</h1>
+      <p class="subtitle">Praktische Übung zur Konfiguration von IFP für ein Versicherungsunternehmen</p>
+      <div class="badge-row"><span class="content-badge">Konfiguration</span><span class="content-badge">30 Min.</span><span class="content-badge">Geführte Übung</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-info" style="background:#eff6ff;border-left:4px solid #3b82f6;">
+        <span class="callout-label">🌐 Hinweis zur Übersetzung</span>
+        <p>Dies ist eine automatische Übersetzung der englischen Originalfassung. Die maßgebliche und aktuellste Version finden Sie <a href="../06-exercise-2.html">hier auf Englisch</a>.</p>
+      </div>
+
+      <div class="tsd-banner">
+        <div class="tsd-step tsd-step-tell">
+          <span class="tsd-step-label">📖 Tell</span>
+          <span class="tsd-step-heading">Übungsübersicht</span>
+          <span class="tsd-step-desc">Diese Übung stellt ein reales Geschäftsszenario mit Konfigurationsanforderungen vor.</span>
+        </div>
+        <div class="tsd-step tsd-step-show">
+          <span class="tsd-step-label">👁 Show</span>
+          <span class="tsd-step-heading">Geführter Walkthrough</span>
+          <span class="tsd-step-desc">Der Facilitator führt Sie Schritt für Schritt durch die Konfigurationsentscheidungen.</span>
+        </div>
+        <div class="tsd-step tsd-step-do">
+          <span class="tsd-step-label">✅ Do</span>
+          <span class="tsd-step-heading">Selbst konfigurieren</span>
+          <span class="tsd-step-desc">Konfigurieren Sie Ihre eigene Version und vergleichen Sie die Ergebnisse mit dem Beispiel.</span>
+        </div>
+      </div>
+
+      <h3>Standardisierte Namenskonvention</h3>
+      <p>Ersetzen Sie die Standard-Modell- und App-Namen vor der Generierung durch ein standardisiertes Format. Das empfohlene Muster ist <code>[ModelType]_Exercise ##_YYYYMMDD</code> — dadurch wird sichergestellt, dass jede Generierung eindeutig benannte Artefakte erzeugt und Namenskonflikt-Generierungsfehler vermieden werden, wenn dieselbe Übung mehrfach im Tenant ausgeführt wird.</p>
+      <figure class="screenshot">
+        <img src="../../img/configurator/naming-convention-exercise-2.png" alt="Standardisierte Namenskonvention für Übung 2 mit Admin Model, Financial Planning Model, CapEx Model, Headcount Model und IFP App mit Beispielnamen nach dem Muster [ModelType]_Exercise 02_YYYYMMDD" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;">
+        <figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Standardisierte Namenskonvention für Übung 2 — vor der Generierung auf alle vier Modelle und die IFP App anwenden</figcaption>
+      </figure>
+
+      <h2>Szenario</h2>
+      <p><strong>Ein Versicherungsunternehmen benötigt eine umfassende Finanzplanung über GuV, Bilanz und Cashflow.</strong> Mehrere Produkte mit detailliertem Tracking von Kostenstellen und Vendoren.</p>
+
+      <h3>Modell-Setup</h3>
+      <ul>
+        <li>Versicherungsunternehmen mit Multi-Produkt-Portfolio</li>
+        <li>Alle Use Cases im Scope (GuV, Bilanz, Cashflow)</li>
+        <li>Verwendet keine Top-Down Targets</li>
+        <li>Zeit-Strata: Monatlich</li>
+        <li><strong>Generierungsdauer: TBD</strong></li>
+      </ul>
+
+      <h3>Dimensionskonfiguration</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Standarddimension</th>
+            <th>Erforderlich?</th>
+            <th>Umbenennen in</th>
+            <th>Anzahl Ebenen</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Entity</strong></td>
+            <td>Ja</td>
+            <td>—</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td><strong>Department</strong></td>
+            <td>Ja</td>
+            <td>—</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td><strong>Product</strong></td>
+            <td>Ja</td>
+            <td>Produit</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td><strong>Job</strong></td>
+            <td>Ja</td>
+            <td>—</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td><strong>Vendor</strong></td>
+            <td>Ja</td>
+            <td>Projects</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td><strong>Functional Area</strong></td>
+            <td>Ja</td>
+            <td>—</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td><strong>Customer</strong></td>
+            <td>Nein</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>Location</strong></td>
+            <td>Nein</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Benutzerdefinierte Dimensionen</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Benutzerdefinierte Liste</th>
+            <th>Typ</th>
+            <th>Hinweise</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>CapEx List</strong></td>
+            <td>Flach</td>
+            <td>Für das Tracking von Investitionsprojekten</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Wichtige Konfigurationsentscheidungen</h3>
+      <ul>
+        <li>Balance Sheet: <strong>Ja</strong> (3-Statement Planning erforderlich)</li>
+        <li>Cashflow Reporting: <strong>Ja</strong></li>
+        <li>Product-Dimension tief konfiguriert (5 Ebenen) für detaillierte Produktrentabilität</li>
+        <li>Erweiterung für CapEx-Projekt-Tracking erforderlich</li>
+      </ul>
+
+      <h3>Beispiel 2 — Konfigurationen</h3>
+      <div class="table-wrap"><table><thead><tr><th>Frage</th><th>Antwort</th><th>Details</th></tr></thead><tbody><tr><td colspan="3" style="background-color:#e8f1f8;font-weight:bold;">Übergeordnete Fragen</td></tr><tr><td>8. Geography-Dimension verwenden?</td><td>Nein</td><td></td></tr><tr><td>11. Functional Area-Dimension verwenden?</td><td>Ja</td><td>Wird für Projects umgewidmet</td></tr><tr><td colspan="3" style="background-color:#e8f1f8;font-weight:bold;">Financial Planning-Fragen</td></tr><tr><td>2. Top-Down Targets?</td><td>Nein</td><td></td></tr><tr><td>15. Dimensionalität für Expense Planning</td><td></td><td>Department, Vendor</td></tr><tr><td>16. Dimensionalität für Itemized Expense Planning</td><td></td><td>Department</td></tr><tr><td>17. Expense Allocations?</td><td>Nein</td><td></td></tr></tbody></table></div>
+
+      <div class="prevnext-nav"><a class="prevnext-btn" href="./06-exercise-1.html">← Zurück</a><a class="prevnext-btn" href="./06-exercise-3.html">Weiter →</a></div>
+    </div>
+  </main>
+  <script src="../../js/nav.js"></script>
+</body>
+</html>
