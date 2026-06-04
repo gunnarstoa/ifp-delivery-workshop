@@ -91,6 +91,7 @@
       <div class="callout-note">
         <span class="callout-label">💡 Key Rules for Configuration</span>
         <ul>
+          <li><strong>Use a standardized naming convention for all generated models and apps</strong> — every model and app name must be unique within the tenant. Duplicate names will cause generation to fail. See the example pattern below.</li>
           <li><strong>Renames should be NO LONGER than the original dimension name</strong>, particularly the 'Department' dimension</li>
           <li>All standard dimensions are <strong>composite hierarchies</strong> — custom/flat lists are handled via extension</li>
           <li>Minimum levels per dimension: <strong>2</strong> | Maximum: <strong>15</strong></li>
@@ -99,6 +100,13 @@
           <li>Use <strong>"Restore default"</strong> to reset if needed</li>
         </ul>
       </div>
+
+      <h3>Standardized Naming Convention</h3>
+      <p>Replace the default model and app names with a standardized format before generating. The recommended pattern is <code>[ModelType]_Exercise ##_YYYYMMDD</code> — this ensures every generation produces uniquely-named artifacts and avoids name-collision generation errors when the same exercise is run more than once in the tenant.</p>
+      <figure class="screenshot">
+        <img src="../img/configurator/naming-convention.png" alt="Standardized naming convention table showing Admin Model, Financial Planning Model, CapEx Model, Headcount Model, and IFP App with original, standardized, and example new names following the [ModelType]_Exercise ##_YYYYMMDD pattern" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;">
+        <figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Standardized naming convention — apply to all four models and the IFP App before generation</figcaption>
+      </figure>
 
       <h2>Scenario</h2>
       <p><strong>A manufacturing company needs to plan operating expenses and headcount across multiple departments and cost centers.</strong> No revenue, COGS, balance sheet, or capital expenditure are required.</p>
