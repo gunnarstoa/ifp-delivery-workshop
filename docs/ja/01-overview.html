@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ワークショップ概要 — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+      <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">はじめに</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link active" href="./01-overview.html">ワークショップ概要</a></li>
+      <li><a class="nav-link" href="./02-tenant-access.html">テナントアクセス</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">IFP概要</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for Applications</a></li>
+    </ul>
+    <li class="nav-section-title">構成</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">構成演習1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">構成演習2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">構成演習3</a></li>
+      <li><a class="nav-link" href="./07-generation.html">モデル生成</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">生成後のステップ</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Error Logレビュー</a></li>
+    </ul>
+    <li class="nav-section-title">拡張機能</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">拡張機能概要</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">演習1</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">演習2</a></li>
+    </ul>
+    <li class="nav-section-title">リファレンス</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">今後の予定</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">セッションのQ&amp;A</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 言語</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja" selected>🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>ワークショップ概要</h1>
+      <p class="subtitle">目的、前提条件、構成、本ガイドの使い方</p>
+      <div class="badge-row"><span class="content-badge">はじめに</span><span class="content-badge">15分</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-info" style="background:#eff6ff;border-left:4px solid #3b82f6;">
+        <span class="callout-label">🌐 翻訳に関するご案内</span>
+        <p>これは英語原版の自動翻訳です。正確かつ最新のバージョンについては、<a href="../01-overview.html">英語版</a>をご確認ください。翻訳の問題はAnaplanパートナー担当者までご報告ください。</p>
+      </div>
+
+      <h2>ようこそ</h2>
+      <p>ご参加いただきありがとうございます。<strong>IFP Delivery Workshop</strong>は実践的かつ完全に自己学習形式で進められる仮想プログラムで、IFP 2.1のDeliveryワークフロー全体——Application Frameworkの構成、モデル生成、Error Log対応、お客様固有の拡張機能の構築——をご案内します。</p>
+      <p>IFPモデルを生成してError Logに遭遇したものの、エスカレーションすべきか自分で対応すべきか迷った経験がある方にとって、このワークショップはまさにそのギャップを埋めるために設計されています。</p>
+
+      <h2>このワークショップで学べること</h2>
+      <p>IFPのDeliveryライフサイクル全体を通して、以下を習得します：</p>
+      <ul>
+        <li><strong>Application Frameworkの構成</strong> — 44の構成質問すべてをエンドツーエンドで</li>
+        <li><strong>モデル生成と生成後の検証</strong> — 生成によって何が作られるか、何を確認すべきか、その理由</li>
+        <li><strong>Error Logレビュー</strong> — 生成エラーをエスカレーションせずに読み、分類し、解決する</li>
+        <li><strong>拡張機能をゼロから構築</strong> — 実務レベルの2つの構築：複数調整可能なDirect Inputメソッドと、Headcount駆動のレートメソッド</li>
+        <li><strong>Anaplan Way for Applications</strong> — すべてのIFPプロジェクトを支える6段階のDelivery方法論</li>
+      </ul>
+
+      <h2>なぜこれが重要か</h2>
+      <p>IFPはApplication Frameworkを通じてDeliveryされるものであり、<strong>ゼロから構築するものではありません</strong>。そのため、構成、生成、Error Logのトリアージこそが、カスタムモデリングではなくDelivery能力の中核となります。構成上の意思決定、生成後のチェックリスト、拡張機能におけるData Tag運用は任意のものではなく、それら自体が<em>Delivery手法そのもの</em>です。</p>
+      <p>すべての演習は、IFPモデルを事前準備した専用のトレーニング用テナント上で、実際のプランニングシナリオ（OpEx/Headcount、Insurance 3-Statement、Nuclear Plant OpEx）を用いて実施します。</p>
+
+      <h2>修了時に到達できる状態</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>到達目標</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Application Frameworkをエンドツーエンドで構成し、機能するIFPモデルを生成できる</td></tr>
+            <tr><td>2</td><td>生成のError Logを読み、基本的な数式エラーをエスカレーションせずに解決できる</td></tr>
+            <tr><td>3</td><td>調整レイヤー付きのDirect Input拡張機能を構築できる</td></tr>
+            <tr><td>4</td><td>Headcount駆動のレート プランニングメソッドを構築できる</td></tr>
+            <tr><td>5</td><td>「構成 vs. 拡張 vs. 変更」の判断軸を適用し、変更箇所をすべてData Tagで管理できる</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>対象者</h2>
+      <p>パートナー企業に所属し、お客様向けにIFPを実装している、または今後12ヶ月以内に実装する見込みのあるAnaplan Deliveryコンサルタントの方を対象としています。本ワークショップは実務者向けであり、製品概要セッションではありません。</p>
+      <p><strong>前提条件：</strong></p>
+      <ul>
+        <li>Model Builder（MB）、Solution Architect（SA）、またはMaster Anaplannerの認定</li>
+        <li>Anaplanモデルの構築または構成の実務経験</li>
+        <li>財務計画の基本概念（P&amp;L、貸借対照表、Headcount）への理解</li>
+      </ul>
+
+      <h2>本週のトレーニング用テナント</h2>
+      <p>セッション期間中、IFP 2.1モデルが事前準備された専用のトレーニング用テナントが割り当てられます。すべての構成および拡張作業はこのトレーニング用テナント内で行います——<strong>本番環境では行いません</strong>。多くの参加者は、ワークショップ・演習・関連動画を<strong>1日1〜2時間</strong>で完了しています。</p>
+      <div class="callout-warning">
+        <span class="callout-label">⚠ 開始前にアクセスを確認してください</span>
+        <p>他の作業を始める前に、まず<a href="./02-tenant-access.html"><strong>テナントアクセス</strong></a>に進み、3つの確認（ログイン、正しいテナントの確認、ロールとDataspaceの確認）を完了してください。この手順を省略すると、ワークショップの途中で詰まる原因として最も多く挙げられます。</p>
+      </div>
+
+      <h2>取り組み方：読む・見る・実践する</h2>
+      <p>本ワークショップは自己学習形式のため、ライブのFacilitatorセッションとは異なり、各自で進める形に最適化されています。</p>
+<div class="table-wrap"><table><thead><tr><th>モード</th><th>内容</th><th>あなたの役割</th></tr></thead><tbody><tr><td>📖 読む</td><td>各セクションが概念とIFP Deliveryにおける重要性を説明します</td><td>能動的に読み、メモを取り、疑問点を記録</td></tr><tr><td>👁 見る</td><td>短時間の動画でトレーニング用テナント上のワークフローを紹介します</td><td>ご自身のテナントを並べて開き、追従する</td></tr><tr><td>✅ 実践する</td><td>トレーニングモデル上で各自が独立して演習を完了します</td><td>手順を進め、完了確認項目で検証する</td></tr></tbody></table></div>
+
+      <h2>本ガイドの使い方</h2>
+      <p>サイドバーから、ご自身のペースで各セクションを進めてください：</p>
+      <ul>
+        <li><strong>はじめに：</strong> テナントアクセス、IFP概要、Anaplan Way for Applications</li>
+        <li><strong>構成：</strong> Application Framework Configuratorウォークスルー、3つの構成演習、モデル生成、生成後のステップ、Error Logレビュー</li>
+        <li><strong>拡張機能：</strong> 拡張機能概要と2つの実践演習</li>
+        <li><strong>リファレンス：</strong> 今後の予定、これまでのセッションのQ&amp;A</li>
+      </ul>
+
+      <h2>動画リソース</h2>
+      <div class="callout-info"><span class="callout-label">📹 動画イントロダクション</span><p>短い動画ウォークスルーを近日公開予定です。以下へのリンクを掲載予定です：</p>
+      <ul>
+        <li>ワークショップ概要とペース配分のガイダンス</li>
+        <li>Application Framework構成ウォークスルーのハイライト</li>
+        <li>生成後のトラブルシューティングのヒント</li>
+      </ul>
+      </div>
+<div class="prevnext-nav"><span></span><a class="prevnext-btn" href="./02-tenant-access.html">次へ →</a></div>
+    </div>
+  </main>
+  <script src="../../js/nav.js"></script>
+</body>
+</html>

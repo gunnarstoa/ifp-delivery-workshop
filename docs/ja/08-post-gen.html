@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>生成後のステップ — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+      <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">はじめに</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">ワークショップ概要</a></li>
+      <li><a class="nav-link" href="./02-tenant-access.html">テナントアクセス</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">IFP概要</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for Applications</a></li>
+    </ul>
+    <li class="nav-section-title">構成</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">構成演習1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">構成演習2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">構成演習3</a></li>
+      <li><a class="nav-link" href="./07-generation.html">モデル生成</a></li>
+      <li><a class="nav-link active" href="./08-post-gen.html">生成後のステップ</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Error Logレビュー</a></li>
+    </ul>
+    <li class="nav-section-title">拡張機能</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">拡張機能概要</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">演習1</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">演習2</a></li>
+    </ul>
+    <li class="nav-section-title">リファレンス</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">今後の予定</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">セッションのQ&amp;A</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 言語</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja" selected>🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>生成後のステップ</h1>
+      <p class="subtitle">他の作業に着手する前に、生成のたびに必ず実施する検証チェックリスト</p>
+      <div class="badge-row"><span class="content-badge">Day 1</span><span class="content-badge">20分</span><span class="content-badge">ウォークスルー</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-info" style="background:#eff6ff;border-left:4px solid #3b82f6;">
+        <span class="callout-label">🌐 翻訳に関するご案内</span>
+        <p>これは英語原版の自動翻訳です。正確かつ最新のバージョンについては、<a href="../08-post-gen.html">英語版</a>をご確認ください。翻訳の問題はAnaplanパートナー担当者までご報告ください。</p>
+      </div>
+
+      <div class="tsd-banner">
+        <div class="tsd-step tsd-step-tell">
+          <span class="tsd-step-label">📖 読む</span>
+          <span class="tsd-step-heading">必須の生成後ステップ</span>
+          <span class="tsd-step-desc">生成のたびに完了させるべきチェックリスト。</span>
+        </div>
+        <div class="tsd-step tsd-step-show">
+          <span class="tsd-step-label">👁 見る</span>
+          <span class="tsd-step-heading">Facilitatorによるウォークスルー</span>
+          <span class="tsd-step-desc">Facilitatorが、ライブ生成されたモデル上で各生成後ステップを実演します。</span>
+        </div>
+        <div class="tsd-step tsd-step-do">
+          <span class="tsd-step-label">✅ 実践する</span>
+          <span class="tsd-step-heading">チェックリストを完了する</span>
+          <span class="tsd-step-desc">生成済みモデル上で生成後チェックリストを完了します。</span>
+        </div>
+      </div>
+
+      <div class="callout-note">
+        <span class="callout-label">🔍 生成後の検証 — ワークショップと実務の違い</span>
+        <p>このページは、モデルを機能させるために<strong>必須となる優先度の高いチェック</strong>を扱います。</p>
+        <p>実際の本番導入では、生成後の検証はもっと広範囲です——通常は<strong>1〜2日かけて体系的にレビュー</strong>し、以下を網羅します：</p>
+        <ul style="margin-left: 1.5rem;">
+          <li>構成の検証（階層構造、ディメンション設定）</li>
+          <li>セキュリティとアクセスの検証</li>
+          <li>パフォーマンス最適化と数式の効率</li>
+          <li>ドキュメント整備と引き継ぎ準備</li>
+          <li>データロードの検証（実績データ連携）</li>
+          <li>ユーザー受け入れテストシナリオ</li>
+        </ul>
+        <p>完全な生成後チェックリストは<strong>Configuration GuideのSection 5および付録A</strong>に記載されています。</p>
+        <p>本ワークショップは中核となる概念とワークフローに焦点を当てています。実プロジェクト導入では、必ずConfiguration Guideの完全なチェックリストに従ってください。</p>
+      </div>
+
+      <h2>生成のたびに必ず実施すること</h2>
+      <p>生成が完了したら、他の作業を始める前に以下のチェックリストを実行してください。これにより、データや拡張機能を追加する前に、完全で安定したベースラインが確保されます。</p>
+
+      <ul class="checklist">
+        <li>4つのモデルがすべてワークスペースに存在することを確認する（Financial Planning、Headcount、Admin、CapEx）</li>
+        <li>アプリケーションオブジェクトの個数を確認する — Application Frameworkの概要に、モデル、UXアプリ、アセット、Data Orchestratorオブジェクトが表示されます</li>
+        <li>Error Logを開き、エラー総数を記録する — これをベースラインとして残します</li>
+        <li>Error Logを確認し、すべてのモジュールが正しく生成されたことを検証する — モジュールが欠落している場合は、ここにエラーとして現れます。詳細は<a href="./09-error-logs.html">Error Logレビュー</a>セクションを参照してください。</li>
+        <li>主要なSYSモジュールのラインアイテムが投入されていることを確認する：Planning Methodsリストは事前投入された状態で生成されます。すべての本番データリスト（エンティティ、部門、口座）は未投入の状態で生成され、Data Orchestratorからデータをプッシュすることで投入されます。</li>
+        <li>階層リストに想定どおりのメンバーがロードされていることを確認する。すべての階層リストメンバーはADO経由で投入されます——一部はCSVまたは接続された外部ソース経由です。エンティティ、部門、IS Accounts、BS Accountsなどの階層では、ソースリストメンバーをプランニング側の同等項目にマッピングするため、他のスポークモデルへプッシュする前にAdminモデルで追加のマッピング手順が必要です。</li>
+        <li>Planning Methodリストのメンバーが投入されていることを確認する — この段階で検証可能なのはこの項目のみです。Planning Methodsに紐づくSYSおよびADMINモジュールは後から投入されます。この手順を完了するには、Configuration Guideの付録A3を参照してください。</li>
+        <li>CALCモジュール内の計算ラインアイテムをスポットチェックする — 数式が空ではないことを確認します</li>
+      </ul>
+
+<div class="callout-warning"><span class="callout-label">⚠ 数式が空ですか？まずError Logを確認してください</span><p>本来あるはずの数式が空になっている場合、最も確実な検証方法はError Logを確認することです。すべての数式エラーは数式を<strong>空（BLANK）</strong>にします——参照無効が原因で失敗しており、ラインアイテム名の変更が認識されていないか、構造変更が原因です。数式が欠けていると決めつける前に、必ずError Logを確認してください。</p></div>
+
+      <h2>生成後のミニ演習</h2>
+
+<div class="mini-lab">
+  <div class="mini-lab-header">
+    <div class="mini-lab-number">1</div>
+    <div class="mini-lab-title">生成したモデルを検証する</div>
+    <div class="mini-lab-duration">⏱ 20分</div>
+  </div>
+  <div class="mini-lab-body">
+    <div class="mini-lab-objective"><strong>目的</strong> 生成後チェックリストを一通り実施します。ベースラインのエラー件数を把握し、モデル構造が完全であることを確認します。</div>
+    <ol class="mini-lab-steps">
+      <li><span class="mini-lab-step-num">1</span>ご自身のワークスペースで、<strong>4つのモデル</strong>が一覧に表示されていることを確認します。メモに名前を記録します。</li>
+      <li><span class="mini-lab-step-num">2</span><strong>Application Framework</strong>の概要ページを開きます。記録項目：モデル数、UXアプリ数、アセット数、エラー数。</li>
+      <li><span class="mini-lab-step-num">3</span>右下の<strong>Error Logs</strong>をクリックします。エラー総数を記録します — これがベースラインです。</li>
+      <li><span class="mini-lab-step-num">4</span><strong>Financial Planning</strong>モデルを開きます。<strong>Modules</strong>に移動します。各プレフィックス（ADMIN、SYS、DAT、INP、CALC、OUT）ごとに少なくとも1つのモジュールが存在することを確認します。</li>
+      <li><span class="mini-lab-step-num">5</span><strong>SYSモジュール</strong>を開きます。Planning Methodsリストを探します。Application Framework Configuratorで有効化したメソッドが存在することを確認します。</li>
+      <li><span class="mini-lab-step-num">6</span><strong>CALCモジュール</strong>（例：CALC OPX IS Itemizedなど）を開きます。Blueprintでラインアイテムを開きます。数式フィールドが空でないことを確認します。</li>
+      <li><span class="mini-lab-step-num">7</span>チェックリスト完了をマークします。Error Logレビューに進む準備が整いました。</li>
+    </ol>
+
+  </div>
+  <div class="callout-note" style="margin-top: 0.75rem;">
+    <span class="callout-label">ℹ 完全な生成後チェックリスト</span>
+    <p>完全な生成後検証チェックリストは、<strong>Configuration GuideのSection 5および付録A</strong>を参照してください。</p>
+  </div>
+</div>
+<div class="prevnext-nav"><a class="prevnext-btn" href="./07-generation.html">← 前へ</a><a class="prevnext-btn" href="./09-error-logs.html">次へ →</a></div>
+    </div>
+  </main>
+  <script src="../../js/nav.js"></script>
+</body>
+</html>

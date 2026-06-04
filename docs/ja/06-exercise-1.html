@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>構成演習1 — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+    <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">はじめに</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">ワークショップ概要</a></li>
+      <li><a class="nav-link" href="./02-tenant-access.html">テナントアクセス</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">IFP概要</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for Applications</a></li>
+    </ul>
+    <li class="nav-section-title">構成</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link active" href="./06-exercise-1.html">構成演習1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">構成演習2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">構成演習3</a></li>
+      <li><a class="nav-link" href="./07-generation.html">モデル生成</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">生成後のステップ</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Error Logレビュー</a></li>
+    </ul>
+    <li class="nav-section-title">拡張機能</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">拡張機能概要</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">演習1</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">演習2</a></li>
+    </ul>
+    <li class="nav-section-title">リファレンス</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">今後の予定</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">セッションのQ&amp;A</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 言語</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja" selected>🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>構成演習1: OpEx and Headcount Planning</h1>
+      <p class="subtitle">製造業向けにIFPを構成する実践演習</p>
+      <div class="badge-row"><span class="content-badge">構成</span><span class="content-badge">30分</span><span class="content-badge">ガイド付き演習</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-info" style="background:#eff6ff;border-left:4px solid #3b82f6;">
+        <span class="callout-label">🌐 翻訳に関するご案内</span>
+        <p>これは英語原版の自動翻訳です。正確かつ最新のバージョンについては、<a href="../06-exercise-1.html">英語版</a>をご確認ください。翻訳の問題はAnaplanパートナー担当者までご報告ください。</p>
+      </div>
+
+      <div class="tsd-banner">
+        <div class="tsd-step tsd-step-tell">
+          <span class="tsd-step-label">📖 Tell</span>
+          <span class="tsd-step-heading">演習概要</span>
+          <span class="tsd-step-desc">この演習では、構成要件を伴う実際のビジネスシナリオを提示します。</span>
+        </div>
+        <div class="tsd-step tsd-step-show">
+          <span class="tsd-step-label">👁 Show</span>
+          <span class="tsd-step-heading">ファシリテーター付きウォークスルー</span>
+          <span class="tsd-step-desc">ファシリテーターが構成上の意思決定をステップごとにご案内します。</span>
+        </div>
+        <div class="tsd-step tsd-step-do">
+          <span class="tsd-step-label">✅ Do</span>
+          <span class="tsd-step-heading">ご自身で構成する</span>
+          <span class="tsd-step-desc">サンプルと結果を比較しながら、ご自身のバージョンを構成します。</span>
+        </div>
+      </div>
+
+      <div class="callout-note">
+        <span class="callout-label">💡 構成における主要なルール</span>
+        <ul>
+          <li><strong>生成するすべてのモデルおよびアプリには標準化された命名規則を用いてください</strong> — モデル名およびアプリ名はテナント内で一意である必要があります。重複した名前は生成失敗の原因となります。下記の例パターンを参照してください。</li>
+          <li><strong>リネームは元のディメンション名より長くしないでください</strong>。特に「Department」ディメンションは注意してください</li>
+          <li>すべての標準ディメンションは<strong>複合階層</strong>です — カスタム/フラットなリストは拡張機能で扱います</li>
+          <li>ディメンションごとの階層レベル数: 最小<strong>2</strong>、最大<strong>15</strong></li>
+          <li>階層レベルを変更する場合: <strong>真ん中から追加/削除</strong>してください。リーフレベルは絶対に削除しないでください</li>
+          <li>変更のたびに必ず<strong>「Apply Changes」</strong>をクリックしてください</li>
+          <li>必要に応じて<strong>「Restore default」</strong>でリセットしてください</li>
+        </ul>
+      </div>
+
+      <h3>標準化された命名規則</h3>
+      <p>生成前に、デフォルトのモデル名およびアプリ名を標準化された形式に置き換えてください。推奨パターンは<code>[ModelType]_Exercise ##_YYYYMMDD</code>です — これにより、毎回の生成で一意な名前のアーティファクトが作成され、同じ演習をテナント内で複数回実行する際の名前衝突による生成エラーを回避できます。</p>
+      <figure class="screenshot">
+        <img src="../../img/configurator/naming-convention.png" alt="標準化された命名規則の表 — Admin Model、Financial Planning Model、CapEx Model、Headcount Model、IFP Appについて、元の名前、標準化された名前、[ModelType]_Exercise ##_YYYYMMDDパターンに従った新しい名前の例を示している" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;">
+        <figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">標準化された命名規則 — 生成前に、4つすべてのモデルおよびIFP Appに適用してください</figcaption>
+      </figure>
+
+      <h2>シナリオ</h2>
+      <p><strong>ある製造業の企業は、複数の部門およびコストセンターをまたいで営業費用とHeadcountを計画する必要があります。</strong>売上、COGS、貸借対照表、設備投資は不要です。</p>
+
+      <h3>モデル設定</h3>
+      <ul>
+        <li>Operating Expenses（Financial Planning Model）</li>
+        <li>Headcount Planning</li>
+        <li>Revenue/COGS、貸借対照表、CapExなし</li>
+        <li><strong>想定生成時間: 20分</strong></li>
+      </ul>
+
+      <h3>ディメンション構成</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>標準ディメンション</th>
+            <th>必須？</th>
+            <th>リネーム先</th>
+            <th>レベル数</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Entity</strong></td>
+            <td>はい</td>
+            <td>—</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td><strong>Department</strong></td>
+            <td>はい</td>
+            <td>CostCenter</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td><strong>Product</strong></td>
+            <td>いいえ</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>Job</strong></td>
+            <td>はい</td>
+            <td>Roles</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td><strong>Vendor</strong></td>
+            <td>はい</td>
+            <td>Suppliers</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td><strong>Functional Area</strong></td>
+            <td>はい</td>
+            <td>HR Org</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td><strong>Customer</strong></td>
+            <td>いいえ</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>Location</strong></td>
+            <td>いいえ</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>カスタムディメンション</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>カスタムリスト</th>
+            <th>タイプ</th>
+            <th>備考</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Projects</strong></td>
+            <td>Flat</td>
+            <td>拡張機能でのプロジェクト追跡用</td>
+          </tr>
+          <tr>
+            <td><strong>Country</strong></td>
+            <td>Flat</td>
+            <td>補助属性リスト</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>構成の回答 — トップレベルの質問</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>質問</th>
+            <th>回答</th>
+            <th>詳細</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>多通貨サポートは必要ですか？</td>
+            <td><strong>はい</strong></td>
+            <td>マルチエンティティのレポートに必要</td>
+          </tr>
+          <tr>
+            <td>Locationディメンションを使用しますか？</td>
+            <td><strong>いいえ</strong></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Functional Areaディメンションを使用しますか？</td>
+            <td><strong>はい</strong></td>
+            <td>「HR Org」として再利用</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>構成の回答 — Financial Planning</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>質問</th>
+            <th>回答</th>
+            <th>詳細</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>多通貨サポートは必要ですか？</td>
+            <td><strong>はい</strong></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>トップダウンターゲットは使用しますか？</td>
+            <td><strong>いいえ</strong></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Margin Planning？</td>
+            <td><strong>Expense Only</strong></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>費用計画は行いますか？</td>
+            <td><strong>はい</strong></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>費用計画のディメンション</td>
+            <td><strong>Department, Vendor</strong></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>明細費用計画のディメンション</td>
+            <td><strong>Department</strong></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>費用配賦は行いますか？</td>
+            <td><strong>いいえ</strong></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>構成の回答 — Headcount</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>質問</th>
+            <th>回答</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>多通貨サポートは必要ですか？</td>
+            <td><strong>はい</strong></td>
+          </tr>
+          <tr>
+            <td>Jobの呼称は？</td>
+            <td><strong>Roles</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout-note">
+        <span class="callout-label">ℹ 重要なお知らせ</span>
+        <ul>
+          <li>PAFの機能強化により、構成質問の用語がディメンションのリネームに自動で追従するようになる予定です</li>
+          <li>さらに、すべての設定をワンクリックで「restore defaults」できる機能も追加される予定です</li>
+        </ul>
+      </div>
+
+      <div class="prevnext-nav"><a class="prevnext-btn" href="./05-configurator-walkthrough.html">← 前へ</a><a class="prevnext-btn" href="./06-exercise-2.html">次へ →</a></div>
+    </div>
+  </main>
+  <script src="../../js/nav.js"></script>
+</body>
+</html>

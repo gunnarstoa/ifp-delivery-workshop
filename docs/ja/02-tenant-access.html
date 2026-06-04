@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>テナントアクセス — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+      <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">はじめに</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">ワークショップ概要</a></li>
+      <li><a class="nav-link active" href="./02-tenant-access.html">テナントアクセス</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">IFP概要</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for Applications</a></li>
+    </ul>
+    <li class="nav-section-title">構成</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">構成演習1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">構成演習2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">構成演習3</a></li>
+      <li><a class="nav-link" href="./07-generation.html">モデル生成</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">生成後のステップ</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Error Logレビュー</a></li>
+    </ul>
+    <li class="nav-section-title">拡張機能</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">拡張機能概要</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">演習1</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">演習2</a></li>
+    </ul>
+    <li class="nav-section-title">リファレンス</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">今後の予定</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">セッションのQ&amp;A</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 言語</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja" selected>🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>テナントアクセス</h1>
+      <p class="subtitle">開始前に、正しいトレーニング用テナントへのアクセスを確認してください</p>
+      <div class="badge-row"><span class="content-badge">はじめに</span><span class="content-badge">5分</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-info" style="background:#eff6ff;border-left:4px solid #3b82f6;">
+        <span class="callout-label">🌐 翻訳に関するご案内</span>
+        <p>これは英語原版の自動翻訳です。正確かつ最新のバージョンについては、<a href="../02-tenant-access.html">英語版</a>をご確認ください。翻訳の問題はAnaplanパートナー担当者までご報告ください。</p>
+      </div>
+
+      <h2>開始前に</h2>
+      <p>本ワークショップでは、IFP 2.1モデルを事前準備した共有のトレーニング用テナントを使用します。先に進む前に、正しいテナントとワークスペースへのアクセスを必ず確認してください。本番テナントは使用しないでください。</p>
+
+      <div class="callout-warning">
+        <span class="callout-label">⚠ 重要</span>
+        <p>以下の手順でテナントアクセスを確認できない場合は、続行する前にFacilitatorにご連絡ください。すべての実践演習はこのアクセスが整っていることが前提となります。</p>
+      </div>
+
+      <h2>ステップ1 — ログイン</h2>
+      <p><a href="https://us1a.app.anaplan.com/" target="_blank">https://us1a.app.anaplan.com/</a> にアクセスし、Facilitatorから提供されたログイン情報でサインインしてください。</p>
+      <figure class="screenshot">
+        <img src="../../img/overview/tenant-access-login.png" alt="us1a.app.anaplan.com のAnaplanログイン画面 — メールアドレス入力欄付き" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;">
+        <figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">us1a.app.anaplan.com のAnaplanログイン画面</figcaption>
+      </figure>
+
+      <h2>ステップ2 — 正しいテナントを確認</h2>
+      <p>ログイン後、正しいトレーニング用テナントにいることを確認してください。テナント名は上部ナビゲーションバーに表示されます。</p>
+      <figure class="screenshot">
+        <img src="../../img/overview/tenant-access-correct-tenant.png" alt="Anaplanのホーム画面 — 上部ナビゲーションに「Application Training 21」テナントセレクターがハイライトされている" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;">
+        <figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Anaplanホーム — 上部ナビゲーションバーのテナントセレクター（Application Training 21）</figcaption>
+      </figure>
+
+      <h2>ステップ3 — ロールとDataspaceの確認</h2>
+      <p><strong>Administration</strong>セクションに移動し、生成に必要な3つのロールがすべてユーザーに付与されていること、およびDataspaceが割り当てられていることを確認してください。これを<em>生成の前に必ず</em>行う習慣をつけてください——パートナーがプロジェクトの途中で詰まる最も一般的な原因です。</p>
+
+      <p>ユーザーには、以下の<strong>3つすべて</strong>のロールが必要です：</p>
+      <ul>
+        <li><strong>Page Builder</strong></li>
+        <li><strong>Application Owner</strong></li>
+        <li><strong>Integration Admin</strong></li>
+      </ul>
+
+      <p>加えて、<strong>ユーザーにDataspaceが割り当てられている</strong>ことも確認してください。これがないと生成は失敗します。</p>
+
+      <div class="callout-warning">
+        <span class="callout-label">⚠ なぜこれが重要か</span>
+        <p>これらのアクセス権をテナント管理者と事前に確認せずに生成を試みた結果、実は権限の問題だった生成失敗のデバッグに何時間も費やすパートナーをよく見かけます。構成を始める<em>前に</em>、必ずロールとDataspaceの割り当てをテナント管理者と確認してください。生成前の習慣にしましょう。</p>
+      </div>
+
+      <h2>事前準備済みのTRAINモデルについて</h2>
+      <p>お使いのトレーニング用テナントには、ワークショップ演習で<strong>各自が構成するものとは別に</strong>、Anaplanが提供する一連のモデルとアプリケーションも含まれています。これらは<code>TRAIN</code>プレフィックス（例：<code>IFPv2.0.0-train-base-financial-planning</code>）で命名されており、リアルなサンプルデータが事前に投入されています。</p>
+
+      <div class="callout-warning">
+        <span class="callout-label">⚠ 拡張機能演習にはTRAINモデルを使用してください</span>
+        <p>ワークショップの拡張機能セクションに到達した際は、各自の構成から生成したモデルではなく、事前準備済みの<strong>TRAIN</strong>モデルに対して拡張機能演習を実施してください。TRAINモデルにはデータが投入済みであり、拡張機能の動作をエンドツーエンドで実証・検証するために必要です。各自が構成したモデルは、構成と生成の演習専用とお考えください。</p>
+      </div>
+
+      <h2>準備完了です</h2>
+      <p>正しいトレーニング用テナントにいること、必要な3つのロールを持っていること、Dataspaceが割り当てられていること、どの演習でどのモデルを使うかが分かったら、セットアップは完了です。IFP概要に進み、ワークショップの本編を始めてください。</p>
+
+      <div class="prevnext-nav">
+        <a class="prevnext-btn" href="./01-overview.html">← 前へ</a>
+        <a class="prevnext-btn" href="./03-ifp-overview.html">次へ →</a>
+      </div>
+    </div>
+  </main>
+  <script src="../../js/nav.js"></script>
+</body>
+</html>

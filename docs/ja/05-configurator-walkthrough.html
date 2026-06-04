@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Application Framework Configurator - IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+      <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">はじめに</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">ワークショップ概要</a></li>
+      <li><a class="nav-link" href="./02-tenant-access.html">テナントアクセス</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">IFP概要</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for Applications</a></li>
+    </ul>
+    <li class="nav-section-title">構成</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link active" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">構成演習1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">構成演習2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">構成演習3</a></li>
+      <li><a class="nav-link" href="./07-generation.html">モデル生成</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">生成後のステップ</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Error Logレビュー</a></li>
+    </ul>
+    <li class="nav-section-title">拡張機能</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">拡張機能概要</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">演習1</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">演習2</a></li>
+    </ul>
+    <li class="nav-section-title">リファレンス</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">今後の予定</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">セッションのQ&amp;A</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 言語</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja" selected>🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>Application Framework Configurator</h1>
+      <p class="subtitle">Application Framework Configuratorが制御する範囲と、44の構成質問の進め方</p>
+      <div class="badge-row"><span class="content-badge">Day 1</span><span class="content-badge">45分</span><span class="content-badge">ウォークスルー</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-info" style="background:#eff6ff;border-left:4px solid #3b82f6;">
+        <span class="callout-label">🌐 翻訳に関するご案内</span>
+        <p>これは英語原版の自動翻訳です。正確かつ最新のバージョンについては、<a href="../05-configurator-walkthrough.html">英語版</a>をご確認ください。翻訳の問題はAnaplanパートナー担当者までご報告ください。</p>
+      </div>
+
+      <div class="tsd-banner">
+        <div class="tsd-step tsd-step-tell">
+          <span class="tsd-step-label">📖 読む</span>
+          <span class="tsd-step-heading">Application Framework Configuratorが制御するもの</span>
+          <span class="tsd-step-desc">Application Framework Configuratorとは何か、各セクションが何を制御するか。</span>
+        </div>
+        <div class="tsd-step tsd-step-show">
+          <span class="tsd-step-label">👁 見る</span>
+          <span class="tsd-step-heading">Configuratorのライブデモ</span>
+          <span class="tsd-step-desc">Facilitatorがトレーニング用テナント上で全構成セクションをライブで紹介します。</span>
+        </div>
+        <div class="tsd-step tsd-step-do">
+          <span class="tsd-step-label">✅ 実践する</span>
+          <span class="tsd-step-heading">追従する</span>
+          <span class="tsd-step-desc">参加者は各自のワークスペースで追従し、次の演習に向けて判断内容をメモします。</span>
+        </div>
+      </div>
+
+      <h2>Application Framework Configuratorとは</h2>
+      <p>Application Frameworkのコンフィギュレーターは、IFPに関するすべての構成上の意思決定の唯一の窓口です。3つのカテゴリ——トップレベル質問（23）、財務プランニング構成（17）、Headcount構成（3）——に加えて追加設定を含む、<strong>44の構成質問</strong>を提示します。これらの回答が、生成される内容——モジュール構造、リスト階層、数式ロジック、利用可能なプランニングメソッド——を決定します。</p>
+      <p>Application Framework Configuratorには専用のURLからアクセスします。ブラウザのAnaplanホームURL内の「home」を「applications」に置き換えてください（v2.1.0では、通常のワークスペースナビゲーションにApplicationsリンクがまだ表示されません）。たとえば、ホームのAnaplan URLが「https://us1a.app.anaplan.com/home」であれば、URLを「https://us1a.app.anaplan.com/applications」に変更します。一般提供（GA）に達した時点で、このリンクは標準ナビゲーション内に表示される予定です。</p>
+
+      <div class="callout-note">
+        <span class="callout-label">i ベストプラクティス：まずベースコピーを生成する</span>
+        <p>構成を変更する前に、まずデフォルト設定のままアプリケーションを生成してください。これにより<strong>ベースコピー</strong>——すべての数式が正しく生成され、デフォルトの階層名とデフォルトディメンションがそのまま入ったモデル——が得られます。後で構成済みの生成で数式エラーが発生した場合、ベースコピーで正しい数式を確認してコピーできます。この生成にはわかりやすいラベルを付けてください（例：「Base - no changes」）。</p>
+      </div>
+
+      <div class="callout-warning">
+        <span class="callout-label">⚠ 構成は生成時に確定する</span>
+        <p>いったん生成をトリガーすると、構造に関する多くの判断はモデルを再生成しない限り変更できません。階層レベル、エンティティ構造、地理構成は、生成前に確定させる必要があります。これらはSession Zeroで正しく決めてください——後で変更するのが最も難しい項目です。</p>
+      </div>
+
+      <h2>Application Framework Configurator概要（v2.1）</h2>
+<figure class="screenshot"><img src="../../img/v2.1-screenshots/configurator-hierarchies.png" alt="Locationディメンション、Customer、Jobオプションを表示するIFP Application Framework Configurator" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Application Framework Configurator（v2.1）- Locationディメンション、Customer、Jobオプションを表示</figcaption></figure>
+
+      <h2>構成セクション</h2>
+
+      <h3>階層</h3>
+      <p>階層セクションは、生成されるモデルのディメンション構造を定義します。ここでの決定はすべてのモジュールに波及し、完全な再生成なしには生成後に変更できません。</p>
+      <ul>
+        <li><strong>Location：</strong> 何レベルにするか？（例：Global → Region → Country → City）どのレベルがプランニングレベルで、どのレベルがロールアップ専用か？</li>
+        <li><strong>Functional Area：</strong> どのファンクショナルエリアがスコープに含まれるか？（Gross Profit、OpEx、Headcount、Balance Sheet）有効化された各エリアは追加のモジュールを生成します。</li>
+        <li><strong>Entity：</strong> エンティティのレベル数は？最上位の連結エンティティは何か？</li>
+        <li><strong>Product：</strong> 製品レベルのプランニングが必要か？製品階層のレベル数は？</li>
+      </ul>
+<figure class="screenshot"><img src="../../img/v2.1-screenshots/hierarchies-list.png" alt="IFP階層 - すべてのディメンションのレベル数、参照モジュール、タイムスタンプ一覧" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">IFP階層（v2.1）— Vendor、Product、Customer、Department、Functional Area、Location、Job、Entityをレベルと更新履歴とともに表示</figcaption></figure>
+<figure class="screenshot"><img src="../../img/configurator/cfg-0105.jpg" alt="Application Framework Configurator - トップレベル質問：Department、Location、Functional Area、Vendor" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Application Framework Configurator - トップレベル質問：Department、Location、Functional Area、Vendor</figcaption></figure>
+
+      <h2>トップレベル質問（23問）</h2>
+      <p>トップレベルの質問は影響が最も大きい項目です。これらがIFPモデルの構造的な骨格を定義します。</p>
+<div class="table-wrap"><table><thead><tr><th>質問／質問タイプ</th><th>制御する内容</th><th>回答例</th></tr></thead><tbody><tr><td>Xディメンションを何と呼びますか？（大文字を使用）</td><td>オブジェクト生成は大文字小文字を区別する場合があります。一部のオブジェクトは先頭が大文字のままで綴られる必要があります。</td><td>Entity</td></tr><tr><td>Xディメンションを何と呼びますか？（小文字を使用）</td><td>オブジェクト生成は大文字小文字を区別する場合があります。一部のオブジェクトは名前がすべて小文字で綴られたときに作成されます。</td><td>entity</td></tr><tr><td>生成されるアプリケーションをデモ目的で使用しますか？</td><td>「はい」の場合、デモデータの投入に活用できるSaved Viewやアクションオブジェクトが作成されます。</td><td>Yes / No</td></tr><tr><td>マルチカレンシーサポートが必要ですか？</td><td>「はい」の場合、「Reporting Currency」リストと、EntityのLocal CurrencyをReporting Currencyに換算するロジックが作成されます。</td><td>Yes / No</td></tr><tr><td>FPで貸借対照表のプランニングを行いますか？</td><td>Balance Sheetレポートが必要かどうかを判定します。</td><td>Yes / No</td></tr><tr><td>キャッシュフローレポートが必要ですか？</td><td>Cash Flowレポートが必要かどうかを判定します。</td><td>Yes / No</td></tr><tr><td>Headcount Planningはどう行いますか？</td><td>メインのHeadcountプランニングロジックを、IFP Headcount Planningモデルで持つか、別の外部モデル（例：WFB／OWP）で持つかを特定します。</td><td>ドロップダウン選択：「Use the IFP Role-based headcount model」</td></tr><tr><td>Capital Expense Planningはどう行いますか？</td><td>メインのCapital Expenseプランニングロジックを、IFP CapEx Planningモデルで持つか、別の外部モデルで持つかを特定します。</td><td>Use the Capital Expense model</td></tr></tbody></table></div><figure class="screenshot"><img src="../../img/configurator/cfg-0110.jpg" alt="Application Framework Configurator - マージンプランニングのドロップダウン付きFinancial Planning質問" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Application Framework Configurator - マージンプランニングのドロップダウン付きFinancial Planning質問</figcaption></figure>
+
+      <h2>Financial Planning構成（17問）</h2>
+      <p>Financial Planning構成は、利用可能なプランニングメソッド、Headcount設定、OpExの挙動を制御します。トップレベル質問ほど構造的ではありませんが、それでも数式生成に影響を与えます。</p>
+<div class="table-wrap"><table><thead><tr><th>質問／質問タイプ</th><th>制御する内容</th><th>回答例</th></tr></thead><tbody><tr><td>Xディメンションを何と呼びますか？（大文字を使用）</td><td>オブジェクト生成は大文字小文字を区別する場合があります。一部のオブジェクトは先頭が大文字のままで綴られる必要があります。</td><td>Product</td></tr><tr><td>Xディメンションを何と呼びますか？（小文字を使用）</td><td>オブジェクト生成は大文字小文字を区別する場合があります。一部のオブジェクトは名前がすべて小文字で綴られたときに作成されます。</td><td>product</td></tr><tr><td>Top-Down Targetsを入力しますか？</td><td>Top-Down TargetsをIFPモデル内で行うかを判定します。「はい」の場合、それに関連するオブジェクトが作成されます。</td><td>Yes / No</td></tr><tr><td>Yのディメンション設定は？</td><td>これらの質問は、サブプロセスY向けにモジュール構造を構築する際の「Applies To」を決定します。主に、ディメンションYが使われないと特定された場合に、すべてのチェックボックスをオフにする必要があります。</td><td>オプションディメンションをオン／オフできるチェックボックス。必須ディメンションはロックされており編集できません。</td></tr><tr><td>マージンプランニングはどう行いますか？</td><td>マージンプランニングをIFPモデル内で行うか外部モデルで行うかを判定します。</td><td>ドロップダウン選択：「in IFP only」</td></tr><tr><td>FPで経費プランニングを行いますか？</td><td>経費プランニング用オブジェクトの作成が必要かを判定します。</td><td>Yes / No</td></tr><tr><td>経費配賦のサポートが必要ですか？</td><td>「はい」の場合、AAFはOp Ex配賦ロジックを補助するオブジェクトを生成します。</td><td>Yes / No</td></tr></tbody></table></div><figure class="screenshot"><img src="../../img/configurator/cfg-0115.jpg" alt="Application Framework Configurator - 経費プランニング向けFinancial Planningディメンション設定チェックボックス" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Application Framework Configurator - 経費プランニング向けFinancial Planningディメンション設定チェックボックス</figcaption></figure>
+
+      <h2>構成質問（v2.1新機能）</h2>
+<figure class="screenshot"><img src="../../img/v2.1-screenshots/configurator-questions.png" alt="Application Framework Configurator - v2.1の新オプションを緑色でハイライト表示した構成質問" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Application Framework Configurator - v2.1の拡張点を含む構成質問</figcaption></figure>
+
+      <div class="callout-note">
+        <span class="callout-label">📝 注記：緑のボックス＝v2.0 → v2.1の新規オブジェクトおよび機能</span>
+        <ul style="margin-left: 1.5rem;">
+          <li><strong>新しい「トップレベル質問」</strong>
+            <ul style="margin-left: 1.5rem;">
+              <li>生成されるアプリケーションをデモ目的で使用しますか（デフォルト：いいえ）</li>
+              <li>「いいえ」の場合、デモ用に使われていたオブジェクトは生成されません。</li>
+            </ul>
+          </li>
+          <li><strong>Restore Default：</strong> プロセスボタンで、すべての質問の回答をデフォルトに戻します。該当する質問のグレーのボックスが「CUSTOM ANSWER」から「DEFAULT ANSWER」に切り替わるのも確認できるはずです。</li>
+        </ul>
+      </div>
+
+      <h2>ディメンション設定</h2>
+<figure class="screenshot"><img src="../../img/v2.1-screenshots/dimensionality-questions.png" alt="Application Framework Configurator - オプションディメンション向けのディメンション設定質問" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Application Framework Configurator - オプションディメンション向けのディメンション設定</figcaption></figure>
+
+<figure class="screenshot"><img src="../../img/v2.1-screenshots/dimensionality-settings-v2.png" alt="Configurations - 質問13-17：Account、Entity、Department、Functional Area、Location、Vendor、Monthのチェックボックスを表示するDimensionality質問" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Configurations - Financial PlanningのDimensionality質問（v2.1）：オプションディメンションのチェックボックスを表示</figcaption></figure>
+
+      <div class="callout-note">
+        <span class="callout-label">ℹ Dimensionality質問が「Applies To」に与える影響</span>
+        <p>これらの質問（13〜17）は、モジュール生成時の<strong>「Applies To」</strong>に影響します。デフォルトでは、すべてのディメンションが使用される前提のため、オプションディメンションがすべて選択されています。不要と判断されたディメンションがあれば、オフにしてください。</p>
+        <p>ディメンションをオフにすると、生成されるモジュールの複雑性が下がり、不要なディメンションの組み合わせを計算から除外することでパフォーマンスが向上します。</p>
+      </div>
+
+      <h2>Configuratorの主な留意点（デリバリーから得た学び）</h2>
+      <ul>
+        <li><strong>階層名とApplication Framework Configuratorの質問は一致させる必要があります：</strong> v2.1.0では、Hierarchiesセクションの階層名と、構成質問内のリネームは連動していません。両方を更新する必要があります。将来のリリースで修正予定です。</li>
+        <li><strong>名前の末尾に空白を入れない：</strong> リネームした階層の末尾の空白が生成エラーの原因となった事例があります。名前の前後に空白がないかダブルチェックしてください。</li>
+        <li><strong>リーフレベルは最下部に維持する：</strong> レベルを削除する場合は中間レベルを削除し、リーフを最下部に残します。レベルを追加すると、システムは最下部に追加するため、元のリーフレベルの上にドラッグしてください。元のリーフを新しいレベルと同じ名前にリネームすることはできません。</li>
+        <li><strong>HierarchiesとConfiguration Questionsは別物：</strong> リネームしたディメンションごとに2つの質問があります——一つはリストを作成、もう一つはモジュールを作成します。後者は小文字です。両方を更新する必要があります。</li>
+        <li><strong>階層ごとのRestore Default：</strong> 各階層に固有の「Restore Default」ボタンがあります。</li>
+        <li><strong>Configuratorと階層の順序：</strong> 階層から先に進めても、構成質問から先に進めても構いません——決まった順序はありません。</li>
+        <li><strong>今すぐ必要なくてもCapExを生成する：</strong> Polarisモジュールはデータが入るまで大きなメモリを使いません。お客様が後で追加した場合の再生成を避けるため、今のうちにCapExを生成しておきましょう。</li>
+        <li><strong>カスタムディメンション（フラットリスト）は拡張機能であり、階層ではない：</strong> フラットリスト形式のディメンション（例：Channel）はHierarchiesセクションで構成するものではなく、生成後に拡張機能として構築します。</li>
+      </ul>
+
+      <h2>生成プロセス</h2>
+      <p>すべての構成質問と階層設定を完了したら：</p>
+      <ol>
+        <li>Application Frameworkの概要から<strong>Generate</strong>をクリック</li>
+        <li>この生成の説明を入力（例：「Base — no changes」または「Customer Name — 3 entity levels, no geography」）</li>
+        <li>ターゲットワークスペースを選択</li>
+        <li>生成はクラウド上で実行され、約20〜40分かかります。進捗はApplication Framework内ではなく、メインの/applicationsページで監視してください（フレームワーク内のステータス表示は遅延する場合があります）</li>
+        <li>完了すると、すべての項目が緑色で表示されます。赤はエラー、黄色は警告です。</li>
+        <li>Error Logをレビューします。詳細は<a href="./09-error-logs.html">「Error Logレビュー」</a>のセクションを参照してください。</li>
+      </ol>
+
+      <h2>演習の前に</h2>
+<div class="callout-note"><span class="callout-label">i 準備</span><p>お客様向けにApplication Frameworkを構成する前に、エンティティのレベル、地理構造、スコープに含めるファンクショナルエリア、その他特別な構成など、主要なスコープ質問を整理してください。曖昧な判断は、開始前にお客様と協働して明確にしておきましょう。</p></div>
+<div class="prevnext-nav"><a class="prevnext-btn" href="./04-anaplan-way.html">← 前へ</a><a class="prevnext-btn" href="./06-exercise-1.html">次へ →</a></div>
+    </div>
+  </main>
+  <script src="../../js/nav.js"></script>
+</body>
+</html>

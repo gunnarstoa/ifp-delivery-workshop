@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IFP概要 — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+      <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">はじめに</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">ワークショップ概要</a></li>
+      <li><a class="nav-link" href="./02-tenant-access.html">テナントアクセス</a></li>
+      <li><a class="nav-link active" href="./03-ifp-overview.html">IFP概要</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for Applications</a></li>
+    </ul>
+    <li class="nav-section-title">構成</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">構成演習1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">構成演習2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">構成演習3</a></li>
+      <li><a class="nav-link" href="./07-generation.html">モデル生成</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">生成後のステップ</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Error Logレビュー</a></li>
+    </ul>
+    <li class="nav-section-title">拡張機能</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">拡張機能概要</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">演習1</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">演習2</a></li>
+    </ul>
+    <li class="nav-section-title">リファレンス</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">今後の予定</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">セッションのQ&amp;A</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 言語</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja" selected>🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>IFP概要</h1>
+      <p class="subtitle">IFP 2.1とは何か、何が変わったか、Application Frameworkの仕組み</p>
+      <div class="badge-row"><span class="content-badge">はじめに</span><span class="content-badge">20分</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-info" style="background:#eff6ff;border-left:4px solid #3b82f6;">
+        <span class="callout-label">🌐 翻訳に関するご案内</span>
+        <p>これは英語原版の自動翻訳です。正確かつ最新のバージョンについては、<a href="../03-ifp-overview.html">英語版</a>をご確認ください。翻訳の問題はAnaplanパートナー担当者までご報告ください。</p>
+      </div>
+
+      <div class="tsd-banner">
+        <div class="tsd-step tsd-step-tell">
+          <span class="tsd-step-label">📖 読む</span>
+          <span class="tsd-step-heading">IFP 2.1とは</span>
+          <span class="tsd-step-desc">IFPとは何か、以前のバージョンとどう違うのか、なぜApplication Frameworkがパートナーの納品方法を変えるのか。</span>
+        </div>
+        <div class="tsd-step tsd-step-show">
+          <span class="tsd-step-label">👁 見る</span>
+          <span class="tsd-step-heading">Application Frameworkデモ</span>
+          <span class="tsd-step-desc">Facilitatorが、Application Frameworkの概要ページ（構成数、モデル、アセット、生成ステータス）を紹介します。</span>
+        </div>
+        <div class="tsd-step tsd-step-do">
+          <span class="tsd-step-label">✅ 実践する</span>
+          <span class="tsd-step-heading">本ページでの実践はありません</span>
+          <span class="tsd-step-desc">本ページに実践演習はありません——構成作業は次のセクションから始まります。</span>
+        </div>
+      </div>
+
+      <h2>IFPとは</h2>
+      <p>Integrated Financial Planning（IFP）はAnaplanの事前構築済みアプリケーションであり、収益、営業費用、資本支出、統合財務諸表などを対象としたプランニング、予算策定、フォーキャストといったFP&amp;Aの基幹ユースケースを実現します。これにより、確信を持った意思決定と継続的な財務健全性のモニタリングを支援します。Application Framework Configuratorによって駆動される構造化された財務プランニング手法を提供し、何ヶ月にも及ぶモデル構築時間を不要にし、パートナーコンサルタントに再現性のあるデリバリーフレームワークをもたらします。</p>
+      <p>バージョン2.1が現行リリースです。これは、手動でのモデルセットアップを置き換えるApplication Framework Configurator駆動のモデル生成システムである<strong>Application Framework</strong>と、Anaplan Data Orchestrator（ADO）連携、およびHeadcount Planning 2.0を導入した2.0の再設計を基盤としています。バージョン2.1ではADO構成が洗練され、ディメンションの上限が拡張されました。</p>
+
+      <h2>IFP 2.1の新機能</h2>
+<div class="table-wrap"><table><thead><tr><th>機能</th><th>内容</th><th>重要性</th></tr></thead><tbody><tr><td>Application Framework</td><td>Application Framework Configurator駆動の生成——質問に回答し、モデルを生成（バックグラウンドで約500のアクション）</td><td>数週間にわたる手動のモジュールセットアップを不要にし、デリバリーを標準化。生成には20〜40分かかります</td></tr><tr><td>ADO連携</td><td>Anaplan Data Orchestratorが完全に統合され、リンクと変換ビューを自動で公開</td><td>パートナーはソースデータのロードとリンクの反映のみで済み、生成後のADOセットアップが大幅に簡素化</td></tr><tr><td>Headcount Planning 2.0</td><td>従業員単位ではなくロール／ジョブ単位のHC計画。Workforce BudgetingおよびOWPと連携</td><td>従業員単位データのプライバシー懸念に対応。より詳細なHC情報のためにWorkforce Budgetingと組み合わせ可能</td></tr><tr><td>Polarisアーキテクチャ</td><td>すべてのIFPモデルがPolaris（スパース対応エンジン）上で稼働</td><td>スパースデータでパフォーマンス向上。前提としてPolarisトレーニングが必要。密な階層にはディメンション設計が必要</td></tr><tr><td>アップグレード対応</td><td>将来のIFPバージョンを、ゼロから作り直すことなくアップグレードとして適用可能</td><td>IFP初のアップグレードパス。devに適用後、ALM経由でQA／prodへ反映</td></tr><tr><td>大規模な再アーキテクチャ</td><td>モジュール命名、リスト構造、数式パターンを標準化し、すべてのオブジェクトに固有GUIDを付与</td><td>アップグレード追跡を実現。保守、拡張、引き継ぎが容易に</td></tr></tbody></table></div>
+
+      <h2>IFP 2.1におけるディメンション</h2>
+      <p>お客様との最初の構成セッションの前に、必須ディメンションとオプションディメンションを理解しておくことが極めて重要です。</p>
+<div class="table-wrap"><table><thead><tr><th>ディメンション</th><th>必須か？</th><th>デフォルトレベル数</th><th>備考</th></tr></thead><tbody><tr><td>Entity</td><td>✅ 必須</td><td>3</td><td>削除不可。リネームや目的変更は可能</td></tr><tr><td>Account</td><td>✅ 必須</td><td>3</td><td>削除不可。リネーム可能（例：「Project」へ）</td></tr><tr><td>Location</td><td>オプション</td><td>3</td><td>Application Framework Configuratorの質問で有効化／無効化</td></tr><tr><td>Functional Area / Dept</td><td>オプション</td><td>3</td><td>リネーム可能（例：「Cost Center」へ）</td></tr><tr><td>Product</td><td>オプション</td><td>3</td><td>製品レベルの収益または経費プランニングに有効化</td></tr><tr><td>Customer</td><td>オプション</td><td>3</td><td>顧客レベルのプランニングに有効化</td></tr>
+<tr><td>Job</td><td>オプション</td><td>4</td><td>ジョブレベルのプランニングに有効化。デフォルトは4レベル</td></tr>
+<tr><td>Vendor</td><td>オプション</td><td>3</td><td>ベンダーレベルの経費プランニングに有効化</td></tr></tbody></table></div>
+      <div class="callout-note">
+        <span class="callout-label">ℹ レベル範囲について</span>
+        <p>デフォルトは各ディメンションにつき3レベルですが、Jobのみデフォルトが4レベルです。各階層は最小2レベルまで減らすことができ、最大<strong>15レベル</strong>まで増やせます。レベルを削除する場合、元のリーフレベルは常に最下部に残さなければなりません。レベルを追加する場合、新しいレベルは最下部に追加されるため、元のリーフの上にドラッグする必要があります。</p>
+      </div>
+
+      <h2>プロビジョニング要件</h2>
+      <p>実装を開始する前に、Anaplanチームが以下のプロビジョニング手順を完了する必要があります：</p>
+      <ol>
+        <li>お客様がIFPアプリケーションを購入（サブスクリプション料金にはアップグレードが含まれます）</li>
+        <li>Customer Success Business Partnerが、ワークスペース作成（最小100GB）のプロビジョニングチケットを起票</li>
+        <li>ALM環境（dev／QA／prod）の場合、環境ごとに個別のワークスペース プロビジョニングチケットが必要</li>
+        <li>AnaplanチームがApplication Frameworkをお客様のテナントへデプロイ</li>
+        <li>デプロイ完了時にパートナーとCustomer Success Business Partnerに通知</li>
+      </ol>
+      <div class="callout-warning">
+        <span class="callout-label">⚠ 生成にあたってのテナント管理者要件</span>
+        <p>Application Frameworkは、<strong>デフォルトテナント</strong>からしか生成できません。自社のメール（例：john@partnerfirm.com）を使うパートナーは、お客様のテナントがデフォルトでない場合は生成できません。解決策：お客様のドメイン内のメールアドレスを取得するか、お客様のテナント管理者に手順を案内しながら生成してもらってください。生成に必要なロール：Application Owner、Workspace Admin、Page Builder、Integration Admin。</p>
+      </div>
+
+      <h2>利用可能なドキュメント</h2>
+      <p>すべてのドキュメントはSeismicおよびAnaplan SharePointサイトから入手できます。主要なリソース：</p>
+      <ul>
+        <li><a href="https://anaplan.seismic.com/Link/Content/DCMHG32j3m9qHG7FBFQbJTB2XXRd" target="_blank"><strong>Application Overview</strong></a> — IFP v2の全体説明、v1.xとの詳細比較、アーキテクチャ概要</li>
+        <li><a href="https://anaplan.seismic.com/Link/Content/DCC7PbgRD86Ch8CM88VW4J6hjmFG" target="_blank"><strong>Configuration Guide</strong></a> — 44の構成質問すべてをステップごとに解説。生成後のタスクチェックリスト付き。実装ごとに印刷を推奨</li>
+        <li><a href="https://anaplan.seismic.com/Link/Content/DCTXgMJRGVjcWGfJpJTfBVRqQj9V" target="_blank"><strong>Process Definition Documents</strong></a> — IFPのプロセスがエンドツーエンドでどう機能するか</li>
+        <li><strong>ADO Data Templates</strong> — 各階層（location、entity、accountなど）向けのExcelテンプレート。お客様のデータ準備用 <em>(URL公開予定)</em></li>
+        <li><strong>Functional Walkthrough Videos</strong> — 中核機能を扱う10〜15分の動画。特定機能のマイクロレッスン <em>(URL公開予定)</em></li>
+        <li><a href="https://anaplan.seismic.com/Link/Content/DC48CC3D4DTq2GWT2WjGW3XQXXX8" target="_blank"><strong>Extension FAQ</strong></a> — 拡張機能ドキュメンテーションのベストプラクティス。アップグレードで何が引き継がれるか、アップグレード サイクルへの準備方法</li>
+        <li><a href="https://anaplan.seismic.com/Link/Content/DCpX3DCWGRhj9GHCG4Dp9jTjhCC8" target="_blank"><strong>Upgrade FAQ</strong></a> — アップグレードプロセス、頻度、範囲、パートナーの責任に関するFAQ</li>
+        <li><strong>IFP 2.0 vs 2.1 Comparison</strong> — ADO拡張、新ディメンション、レベル範囲などリリース間の詳細な変更点 <em>(URL公開予定)</em></li>
+        <li><a href="https://anaplan.seismic.com/Link/Content/DCcbcM9d4bC4X8cPCTGTPPFVWHWj" target="_blank"><strong>The Anaplan Way for Applications Methodology</strong></a> — 構造化されたアプリケーション実装のための完全な方法論</li>
+      </ul>
+
+      <h2>モジュールアーキテクチャ</h2>
+      <p>IFPv2は、4つのモデル全体で一貫したモジュール命名規約に従って生成されます。このアーキテクチャを理解することは、Error Logのトラブルシューティングや拡張機能の構築に不可欠です。</p>
+<div class="table-wrap"><table><thead><tr><th>プレフィックス</th><th>モジュール種別</th><th>目的</th></tr></thead><tbody><tr><td>ADMIN</td><td>Administration</td><td>構成設定、プランニングメソッドのマッピング、ユーザーアクセス</td></tr><tr><td>SYS</td><td>System</td><td>モデル横断のシステムリスト、階層マッピング、Boolean制御</td></tr><tr><td>DAT</td><td>Data</td><td>実績データのステージング、ADOおよびHeadcountモデルからの連携</td></tr><tr><td>INP</td><td>Input</td><td>プランニング入力モジュール——ユーザーがフォーキャストデータを入力する場所</td></tr><tr><td>CALC</td><td>Calculation</td><td>INPモジュールからの集計、配賦、派生計算</td></tr><tr><td>OUT</td><td>Output</td><td>統合された出力モジュール——下流のレポートとダッシュボードへ連携</td></tr></tbody></table></div>
+
+      <h2>Application Frameworkの考え方</h2>
+      <p>Application Frameworkは構成および生成のエンジンです。ワークフローは以下のとおりです：</p>
+<div class="step"><div class="step-badge">1</div><div class="step-content"><h3>構成</h3><p>Application Framework Configuratorですべての構成質問に回答します。これにより、階層レベル、ディメンション、プランニングメソッド、スコープが定義されます。</p></div></div><div class="step"><div class="step-badge">2</div><div class="step-content"><h3>生成</h3><p>生成をトリガーします。Application Frameworkが回答内容を読み取り、IFPの4つのモデル（Financial Planning、Headcount、Admin、Data Orchestrator）すべてをプロビジョニングします。所要時間は10〜20分です。</p></div></div><div class="step"><div class="step-badge">3</div><div class="step-content"><h3>レビュー</h3><p>生成されたモデルとError Logを確認します。「Generated with errors」は正常で想定どおりの状態であり——モデルが壊れているという意味ではありません。</p></div></div><div class="step"><div class="step-badge">4</div><div class="step-content"><h3>拡張</h3><p>生成されたベースモデルの上に、お客様固有の拡張機能を追加します。変更点はすべて文書化してください。</p></div></div><div class="callout-important"><span class="callout-label">🚨 「Generated with Errors」は正常です</span><p>トレーニングや初期段階の環境におけるIFP 2.0の生成は、必ずエラーを生み出します。これらは構成上の選択、階層のリネーム、ベースモデルテンプレートとの地理的差異に起因する数式エラーです。モデル自体は機能しています。これらのエラーの読み方と解決方法は、Error Logレビューのセクションで習得します。</p></div>
+
+      <h2>Application Framework — 構成ビュー</h2>
+<figure class="screenshot"><img src="../../img/may7-configurator-overview.jpg" alt="5月7日セッションでの階層構成を示すApplication Framework Configurator" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Application Framework Configurator — 階層構成ビュー、v2.1</figcaption></figure>
+
+      <h2>IFP階層リスト</h2>
+<figure class="screenshot"><img src="../../img/v2.1-screenshots/hierarchy-list.png" alt="Entity、Account、Location、Customer、Jobのレベルを示すIFP階層リスト" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">IFP階層リスト（v2.1）— Entity、Account、Location、Customer、Jobとデフォルトレベル</figcaption></figure>
+
+      <h2>生成後のSYSモジュール</h2>
+<figure class="screenshot"><img src="../../img/v2.1-screenshots/system-modules.png" alt="v2.1生成後のIFPシステムモジュール（SYSプレフィックス）一覧" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">v2.1生成後のIFPシステムモジュール（SYSプレフィックス）一覧</figcaption></figure>
+
+      <h2>Application Framework概要</h2>
+<figure class="screenshot"><img src="../../img/v2.1-screenshots/app-framework-overview-2026-06.png" alt="8階層、44構成、22アプリケーションオブジェクトを表示するIFP Application Framework概要" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">IFP Application Framework概要（v2.1）— 8階層、44構成、22アプリケーションオブジェクト</figcaption></figure>
+<div class="prevnext-nav"><a class="prevnext-btn" href="./02-tenant-access.html">← 前へ</a><a class="prevnext-btn" href="./04-anaplan-way.html">次へ →</a></div>
+    </div>
+  </main>
+  <script src="../../js/nav.js"></script>
+</body>
+</html>
