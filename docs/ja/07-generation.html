@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>モデル生成 — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+      <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">はじめに</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">ワークショップ概要</a></li>
+      <li><a class="nav-link" href="./02-tenant-access.html">テナントアクセス</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">IFP概要</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for Applications</a></li>
+    </ul>
+    <li class="nav-section-title">構成</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">構成演習1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">構成演習2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">構成演習3</a></li>
+      <li><a class="nav-link active" href="./07-generation.html">モデル生成</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">生成後のステップ</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Error Logレビュー</a></li>
+    </ul>
+    <li class="nav-section-title">拡張機能</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">拡張機能概要</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">演習1</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">演習2</a></li>
+    </ul>
+    <li class="nav-section-title">リファレンス</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">今後の予定</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">セッションのQ&amp;A</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 言語</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja" selected>🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>モデル生成</h1>
+      <p class="subtitle">生成中に何が起こるか、どのくらい時間がかかるか、何を想定しておくべきか</p>
+      <div class="badge-row"><span class="content-badge">Day 1</span><span class="content-badge">30分</span><span class="content-badge">ウォークスルー</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-info" style="background:#eff6ff;border-left:4px solid #3b82f6;">
+        <span class="callout-label">🌐 翻訳に関するご案内</span>
+        <p>これは英語原版の自動翻訳です。正確かつ最新のバージョンについては、<a href="../07-generation.html">英語版</a>をご確認ください。翻訳の問題はAnaplanパートナー担当者までご報告ください。</p>
+      </div>
+
+      <div class="tsd-banner">
+        <div class="tsd-step tsd-step-tell">
+          <span class="tsd-step-label">📖 読む</span>
+          <span class="tsd-step-heading">生成によって作られるもの</span>
+          <span class="tsd-step-desc">Application Frameworkが生成するものと、ステータスの意味を理解します。</span>
+        </div>
+        <div class="tsd-step tsd-step-show">
+          <span class="tsd-step-label">👁 見る</span>
+          <span class="tsd-step-heading">生成のライブデモ</span>
+          <span class="tsd-step-desc">Facilitatorが実際に生成を実行し、リアルタイムでステータスを監視します。</span>
+        </div>
+        <div class="tsd-step tsd-step-do">
+          <span class="tsd-step-label">✅ 実践する</span>
+          <span class="tsd-step-heading">ご自身の生成を実行</span>
+          <span class="tsd-step-desc">受講者各自が生成を実行し、進捗をモニターします。</span>
+        </div>
+      </div>
+
+      <h2>生成で何が行われるか</h2>
+      <p>生成を実行すると、Application Frameworkは44の構成質問への回答をすべて読み取り、完全なIFPモデル構造をプロビジョニングします。これはテンプレートのコピーではなく、構成上の意思決定を反映して回答内容に応じたモデルを生み出す動的な生成プロセスです。</p>
+      <p>生成によって、以下の4つのモデルがプロビジョニングされます：</p>
+      <ul>
+        <li><strong>Financial Planning</strong> — メインのプランニングモデル（INP、CALC、OUTモジュール）</li>
+        <li><strong>Headcount</strong> — HCモデル、Jobレベルのプランニング（有効化されている場合）</li>
+        <li><strong>Admin</strong> — 口座階層、エンティティ、部門のソースからプランニングへのメタデータマッピングを行う主要な場所です。</li>
+        <li><strong>CapEx</strong> — capexプランニングモデル（有効化されている場合のみ）</li>
+      </ul>
+
+      <h2>作成されるもの</h2>
+<div class="table-wrap"><table><thead><tr><th>オブジェクトタイプ</th><th>個数（標準）</th><th>含まれるもの</th></tr></thead><tbody><tr><td>モデル</td><td>4</td><td>Financial Planning、Headcount、Admin、CapEx</td></tr><tr><td>UXアプリ</td><td>1以上</td><td>エンドユーザーがアクセスするIFPプランニングアプリケーション</td></tr><tr><td>アセット</td><td>約17</td><td>インポート定義、Saved Views、ダッシュボード構成</td></tr></tbody></table></div>
+
+      <h2>生成のステータス</h2>
+<div class="table-wrap"><table><thead><tr><th>ステータス</th><th>意味</th><th>対応</th></tr></thead><tbody><tr><td>Generating...</td><td>生成が進行中です。モデルがプロビジョニングされています。</td><td>そのまま待ちます。別の生成を実行しないでください。想定所要時間：10〜20分。</td></tr><tr><td>Generated with Errors</td><td>生成は完了しました。ベースモデルとの構成差異により、一部の数式にエラーがあります。</td><td>これは正常かつ想定内です。Error Logを確認してください——ほとんどのエラーは解決可能です。</td></tr><tr><td>Generated Successfully</td><td>数式エラーが検出されることなく生成が完了しました。</td><td>生成後のステップに進んでください。</td></tr><tr><td>Generation Failed</td><td>プラットフォームエラーにより生成が完了しませんでした。</td><td>Anaplanサポートに連絡してください。原因を特定せずに再生成を試みないでください。</td></tr></tbody></table></div><div class="callout-important"><span class="callout-label">🚨 「Generated with Errors」は壊れているという意味ではありません</span><p>「Generated with Errors」は正常かつ想定内であり、特にトレーニングや初期導入ではよく見られます。これは、ベースモデルテンプレートとは異なるアイテムを参照する数式があることを意味します——通常は階層名の変更、地域の削除、またはテンプレート前提とは異なる構成上の選択が原因です。モデルは機能します。Error Logレビューのセクションでエラーリストを体系的に処理していきます。</p></div>
+
+      <h2>生成後のIFPモデルページ</h2>
+<figure class="screenshot"><img src="../../img/generation/gen-0265.jpg" alt="IFPモデルページ一覧 — ADMIN、SYS、DAT、INP、CALC、OUTモジュールにまたがる43ページ" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">IFPモデルページ一覧 — ADMIN、SYS、DAT、INP、CALC、OUTモジュールにまたがる43ページ</figcaption></figure>
+
+      <h2>エラーありの生成 — Activityパネル</h2>
+<figure class="screenshot"><img src="../../img/generation/gen-d2-0235.jpg" alt="エラーありのApplication Framework生成 — モデルのデータソースとエラー数を表示するActivityパネル" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">エラーありのApplication Framework生成 — モデルのデータソースとエラー数を表示するActivityパネル</figcaption></figure>
+
+      <h2>生成後のデフォルトFinancial Planningモジュール</h2>
+<figure class="screenshot"><img src="../../img/v2.1-screenshots/modules-list.png" alt="IFP v2.1のデフォルトモジュール一覧 — ADMIN、SYS、DAT、INP、CALC、OUTモジュールを機能領域、ラインアイテム、プロパティとともに表示" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">デフォルトのFinancial Planningモジュール（v2.1） — ADMIN、SYS、DAT、INP、CALC、OUTモジュール構造を機能領域とメタデータとともに表示</figcaption></figure>
+
+      <h2>UXナビゲーション構造とページ</h2>
+      <p>生成が完了すると、生成されたUXアプリには、ユーザーがプランニング業務を行うためにナビゲートする整理されたページとカテゴリが含まれます。v2.1.0のデフォルトテンプレートには以下が含まれます：</p>
+<figure class="screenshot"><img src="../../img/v2.1-screenshots/ux-navigation-structure.png" alt="AW_FIN - Integrated Financial Planning v2.1.0のUXナビゲーション。Quick Access、カテゴリ（Home、Reporting &amp; Analysis、Top Down Planning、Revenue &amp; COGS、Operating Expense、Headcount、CapEx Planning、Balance Sheet &amp; Cash Flow、Administration）、および各カテゴリ配下のサブページを表示" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">AW_FIN（v2.1.0）UXナビゲーション構造 — ビジネス機能とプランニングタイプ別に整理されたカテゴリとページ</figcaption></figure>
+
+      <h2>生成のステップ</h2>
+<div class="step"><div class="step-badge">1</div><div class="step-content"><h3>生成を実行する</h3><p>Application Framework Configuratorからすべてのセクションを完了したら、Generateをクリックします。プロンプトが表示されたら確認します。開始時刻を記録します。</p></div></div><div class="step"><div class="step-badge">2</div><div class="step-content"><h3>ステータスを監視する</h3><p>Application Frameworkの概要ページに生成ステータスが表示されます。定期的に更新してください。進行中にブラウザを閉じたり、別の生成を実行したりしないでください。</p></div></div><div class="step"><div class="step-badge">3</div><div class="step-content"><h3>生成されたモデルを最初に確認する</h3><p>完了したら、ご自身のワークスペースに移動します。4つのIFPモデルが一覧に表示されているはずです。Financial Planningモデルを開き、構成内容に応じてプランニングのサブプロセス（Revenue &amp; COGS、Operating Expense、Headcount、CapEx Planning、Balance Sheet &amp; Cash Flow）が存在することを確認します。</p></div></div><div class="step"><div class="step-badge">4</div><div class="step-content"><h3>Error Logを確認する</h3><p>Application Frameworkに戻ります。概要ページの右下にError Log件数があります。クリックしてログを展開します。注：エラーが0件以上あるのは正常です。Error Logレビューに進んでください。</p></div></div>
+
+      <div class="prevnext-nav"><a class="prevnext-btn" href="./06-exercise-3.html">← 前へ</a><a class="prevnext-btn" href="./08-post-gen.html">次へ →</a></div>
+    </div>
+  </main>
+  <script src="../../js/nav.js"></script>
+</body>
+</html>

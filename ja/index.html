@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+    </div>
+    <ul class="nav-list">
+      <li class="nav-section-title">はじめに</li>
+      <ul class="nav-submenu">
+        <li><a class="nav-link" href="../docs/ja/01-overview.html">ワークショップ概要</a></li>
+        <li><a class="nav-link" href="../docs/ja/02-tenant-access.html">テナントアクセス</a></li>
+        <li><a class="nav-link" href="../docs/ja/03-ifp-overview.html">IFP概要</a></li>
+        <li><a class="nav-link" href="../docs/ja/04-anaplan-way.html">Anaplan Way for Applications</a></li>
+      </ul>
+      <li class="nav-section-title">構成</li>
+      <ul class="nav-submenu">
+        <li><a class="nav-link" href="../docs/ja/05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+        <li><a class="nav-link" href="../docs/ja/06-exercise-1.html">構成演習1</a></li>
+        <li><a class="nav-link" href="../docs/ja/06-exercise-2.html">構成演習2</a></li>
+        <li><a class="nav-link" href="../docs/ja/06-exercise-3.html">構成演習3</a></li>
+        <li><a class="nav-link" href="../docs/ja/07-generation.html">モデル生成</a></li>
+        <li><a class="nav-link" href="../docs/ja/08-post-gen.html">生成後のステップ</a></li>
+        <li><a class="nav-link" href="../docs/ja/09-error-logs.html">Error Logレビュー</a></li>
+      </ul>
+      <li class="nav-section-title">拡張機能</li>
+      <ul class="nav-submenu">
+        <li><a class="nav-link" href="../docs/ja/10-extensions-overview.html">拡張機能概要</a></li>
+        <li><a class="nav-link" href="../docs/ja/11-extension-exercise-1.html">演習1</a></li>
+        <li><a class="nav-link" href="../docs/ja/12-extension-exercise-2.html">演習2</a></li>
+      </ul>
+      <li class="nav-section-title">リファレンス</li>
+      <ul class="nav-submenu">
+        <li><a class="nav-link" href="../docs/ja/13-whats-coming.html">今後の予定</a></li>
+        <li><a class="nav-link" href="../docs/ja/14-qanda.html">セッションのQ&amp;A</a></li>
+      </ul>
+    </ul>
+    <div class="lang-switcher">
+      <span class="lang-switcher-label">🌐 言語</span>
+      <select id="lang-select" class="lang-select">
+        <option value="en">🇺🇸 English</option>
+        <option value="ja" selected>🇯🇵 日本語</option>
+        <option value="es">🇪🇸 Español</option>
+        <option value="fr">🇫🇷 Français</option>
+        <option value="de">🇩🇪 Deutsch</option>
+        <option value="pt">🇧🇷 Português</option>
+        <option value="ko">🇰🇷 한국어</option>
+        <option value="zh">🇨🇳 中文</option>
+      </select>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="index-hero">
+      <h1>IFP Delivery Partner Workshop</h1>
+      <p>IFP 2.1 Application Framework · モデル生成 · 拡張機能</p>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-info" style="background:#eff6ff;border-left:4px solid #3b82f6;">
+        <span class="callout-label">🌐 翻訳に関するご案内</span>
+        <p>これは英語原版の自動翻訳です。正確かつ最新のバージョンについては、<a href="../index.html">英語版</a>をご確認ください。翻訳の問題はAnaplanパートナー担当者までご報告ください。</p>
+      </div>
+
+      <h2>ようこそ</h2>
+      <p>これは、IFP Delivery Partner Workshop向けの自己学習形式の実務者ラボガイドです。IFP 2.1のDeliveryワークフロー全体——Application Frameworkの構成、モデル生成、Error Logレビュー、お客様固有の拡張機能の構築——をカバーします。</p>
+      <p>サイドバーを使って、ご自身のペースで各セクションを進めてください。</p>
+
+      <h2>ワークショップモジュール</h2>
+
+      <h3 style="margin-top:1.5rem;margin-bottom:0.5rem;color:#1e3a5f;">はじめに</h3>
+      <div class="index-nav-grid">
+        <a class="index-nav-card" href="../docs/ja/01-overview.html">
+          <div class="inc-num">ここから開始</div>
+          <div class="inc-title">ワークショップ概要</div>
+          <div class="inc-desc">目的、前提条件、2日間の構成、本ガイドの使い方</div>
+        </a>
+        <a class="index-nav-card" href="../docs/ja/02-tenant-access.html">
+          <div class="inc-num">はじめに · 2</div>
+          <div class="inc-title">テナントアクセス</div>
+          <div class="inc-desc">開始前に、正しいトレーニング用テナントへのアクセスを確認</div>
+        </a>
+        <a class="index-nav-card" href="../docs/ja/03-ifp-overview.html">
+          <div class="inc-num">はじめに · 3</div>
+          <div class="inc-title">IFP概要</div>
+          <div class="inc-desc">IFP 2.0とは何か、何が変わったか、Application Frameworkはどう動くか</div>
+        </a>
+        <a class="index-nav-card" href="../docs/ja/04-anaplan-way.html">
+          <div class="inc-num">はじめに · 4</div>
+          <div class="inc-title">Anaplan Way for IFP</div>
+          <div class="inc-desc">6段階のDelivery方法論 — 各フェーズで何が起こるか</div>
+        </a>
+      </div>
+
+      <h3 style="margin-top:1.5rem;margin-bottom:0.5rem;color:#0066cc;">🔧 構成</h3>
+      <div class="index-nav-grid">
+        <a class="index-nav-card" href="../docs/ja/05-configurator-walkthrough.html">
+          <div class="inc-num">構成 · 1</div>
+          <div class="inc-title">Application Framework Configurator</div>
+          <div class="inc-desc">44の構成質問すべてのウォークスルー — 階層、データ構造、財務計画</div>
+        </a>
+        <a class="index-nav-card" href="../docs/ja/06-configuration-exercises.html">
+          <div class="inc-num">構成 · 2</div>
+          <div class="inc-title">構成演習1〜3</div>
+          <div class="inc-desc">3つの実務レベルの演習：OpEx/Headcount、Insurance 3-Statement、Nuclear Plant OpEx</div>
+        </a>
+        <a class="index-nav-card" href="../docs/ja/07-generation.html">
+          <div class="inc-num">構成 · 3</div>
+          <div class="inc-title">モデル生成</div>
+          <div class="inc-desc">生成によって何が作られるか、所要時間、ステータス状態の意味</div>
+        </a>
+        <a class="index-nav-card" href="../docs/ja/08-post-gen.html">
+          <div class="inc-num">構成 · 4</div>
+          <div class="inc-title">生成後のステップ</div>
+          <div class="inc-desc">生成のたびに実施する検証チェックリスト</div>
+        </a>
+        <a class="index-nav-card" href="../docs/ja/09-error-logs.html">
+          <div class="inc-num">構成 · 5</div>
+          <div class="inc-title">Error Logレビュー</div>
+          <div class="inc-desc">生成エラーログを読み、分類し、解決する — ハンズオン演習を含む</div>
+        </a>
+      </div>
+
+      <h3 style="margin-top:1.5rem;margin-bottom:0.5rem;color:#7c3aed;">⚡ 拡張機能</h3>
+      <div class="index-nav-grid">
+        <a class="index-nav-card" href="../docs/ja/10-extensions-overview.html">
+          <div class="inc-num">拡張機能 · 1</div>
+          <div class="inc-title">拡張機能概要</div>
+          <div class="inc-desc">構成 vs. 拡張 vs. 変更 — 7つのベストプラクティスとData Tagアプローチ</div>
+        </a>
+        <a class="index-nav-card" href="../docs/ja/11-extension-exercise-1.html">
+          <div class="inc-num">拡張機能 · 2</div>
+          <div class="inc-title">拡張機能演習1</div>
+          <div class="inc-desc">手動調整：生成済みモデルにカスタムの経費調整ラインアイテムを追加</div>
+        </a>
+        <a class="index-nav-card" href="../docs/ja/12-extension-exercise-2.html">
+          <div class="inc-num">拡張機能 · 3</div>
+          <div class="inc-title">拡張機能演習2</div>
+          <div class="inc-desc">Channel Revenue Planning：新しい収益プランニング次元をエンドツーエンドで追加</div>
+        </a>
+      </div>
+
+      <h3 style="margin-top:1.5rem;margin-bottom:0.5rem;color:#374151;">📚 リファレンス</h3>
+      <div class="index-nav-grid">
+        <a class="index-nav-card" href="../docs/ja/13-whats-coming.html">
+          <div class="inc-num">リファレンス · 1</div>
+          <div class="inc-title">今後の予定</div>
+          <div class="inc-desc">IFPロードマップ項目 — 2026年4月のDelivery時点で確定</div>
+        </a>
+        <a class="index-nav-card" href="../docs/ja/14-qanda.html">
+          <div class="inc-num">リファレンス · 2</div>
+          <div class="inc-title">セッションのQ&amp;A</div>
+          <div class="inc-desc">2026年4月ワークショップからの実際の質問とFacilitatorの完全回答</div>
+        </a>
+      </div>
+
+    </div>
+  </main>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

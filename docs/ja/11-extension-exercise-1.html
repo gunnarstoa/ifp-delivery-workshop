@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>拡張機能演習1 — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+    <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">はじめに</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">ワークショップ概要</a></li>
+      <li><a class="nav-link" href="./02-tenant-access.html">テナントアクセス</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">IFP概要</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for Applications</a></li>
+    </ul>
+    <li class="nav-section-title">構成</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">構成演習1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">構成演習2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">構成演習3</a></li>
+      <li><a class="nav-link" href="./07-generation.html">モデル生成</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">生成後のステップ</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Error Logレビュー</a></li>
+    </ul>
+    <li class="nav-section-title">拡張機能</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">拡張機能概要</a></li>
+      <li><a class="nav-link active" href="./11-extension-exercise-1.html">演習1</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">演習2</a></li>
+    </ul>
+    <li class="nav-section-title">リファレンス</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">今後の予定</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">セッションのQ&amp;A</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 言語</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja" selected>🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>拡張機能演習1: Manual Adjustments</h1>
+      <p class="subtitle">OpExモジュールに新規のManual Adjustmentラインアイテムを2つ追加し、集計数式を変更する</p>
+      <div class="badge-row"><span class="content-badge">拡張機能</span><span class="content-badge">30分</span><span class="content-badge">ガイド付き演習</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-info" style="background:#eff6ff;border-left:4px solid #3b82f6;">
+        <span class="callout-label">🌐 翻訳に関するご案内</span>
+        <p>これは英語原版の自動翻訳です。正確かつ最新のバージョンについては、<a href="../11-extension-exercise-1.html">英語版</a>をご確認ください。翻訳の問題はAnaplanパートナー担当者までご報告ください。</p>
+      </div>
+
+      <div class="tsd-banner">
+        <div class="tsd-step tsd-step-tell">
+          <span class="tsd-step-label">📖 読む</span>
+          <span class="tsd-step-heading">ビジネス要件</span>
+          <span class="tsd-step-desc">お客様は費用計画用にManual Adjustmentラインアイテムを2つ追加で必要としています。</span>
+        </div>
+        <div class="tsd-step tsd-step-show">
+          <span class="tsd-step-label">👁 見る</span>
+          <span class="tsd-step-heading">ガイド付きウォークスルー</span>
+          <span class="tsd-step-desc">Facilitatorが各ステップ（ラインアイテム追加、数式変更、UXでの検証）を順に解説します。</span>
+        </div>
+        <div class="tsd-step tsd-step-do">
+          <span class="tsd-step-label">✅ 実践する</span>
+          <span class="tsd-step-heading">拡張機能を実装する</span>
+          <span class="tsd-step-desc">5ステップのワークフローに従い、ご自身で拡張機能を構築します。</span>
+        </div>
+      </div>
+
+      <h2>ビジネス要件</h2>
+      <p>費用入力用に、Manual Adjustmentを2種類追加する必要があります。</p>
+
+      <h2>ソリューション</h2>
+      <ul>
+        <li>対象モジュールに新規ラインアイテムを追加する</li>
+        <li>新規ラインアイテムを含むよう集計数式を変更する</li>
+      </ul>
+
+      <h2>手順</h2>
+
+      <div class="step"><div class="step-badge">1</div><div class="step-content"><h3>Expense Planningモジュールを開く</h3><p>「Financial Planning」モデル内のモジュール<strong>INP OPX Expense Planning</strong>を開きます。</p></div></div>
+
+      <div class="step"><div class="step-badge">2</div><div class="step-content"><h3>新規ラインアイテムを2つ追加する</h3><p>ブループリントの「Direct Input Method」セクションに、新規ラインアイテムを2つ追加します：</p><ul><li><strong>Manual Adjustment #1</strong></li><li><strong>Manual Adjustment #2</strong></li><li>新規ラインアイテムのFormatを設定する（「Amount」と同じ）</li><li>各新規ラインアイテムのWrite Access Driverを設定する</li><li>各ラインアイテムの用途を「Notes」フィールドにドキュメント化する</li></ul></div></div>
+
+      <div class="step"><div class="step-badge">3</div><div class="step-content"><h3>集計数式を変更する</h3><p>新規ラインアイテム2つを含めるため、ラインアイテム<strong>Direct Input Fcst</strong>の数式を変更する必要があります：</p><ul><li>数式を変更する</li><li>実施内容をドキュメント化する：<ul><li>モジュールブループリントの「Notes」フィールドを使用する</li><li>オフラインのドキュメントにオーバーライドのマスターリストを保持する（元の数式と更新後の数式の構文を含める）</li></ul></li></ul></div></div>
+
+      <div class="step"><div class="step-badge">4</div><div class="step-content"><h3>Line-Item Subsetと管理設定を更新する</h3><p>新規ラインアイテム2つをLISS（Line-Item Subset for Show/Hide）に追加します：</p><ul><li>Line-Item Subset<strong>「LISS: OpEx Filter」</strong>を開く</li><li>新規調整2つのBooleanにチェックを入れる</li><li>モジュール<strong>「ADMIN LISS OpEx Filter」</strong>を開き、新規ラインアイテム2つそれぞれの「Forecast Method」を「Direct Input」に設定する</li></ul></div></div>
+
+      <div class="step"><div class="step-badge">5</div><div class="step-content"><h3>UXアプリで検証する</h3><p>UXアプリでページ<strong>「OpEx – planning」</strong>を開きます：</p><ul><li>勘定<strong>「6005 Office Equipment」</strong>を選択する</li><li>ロジックが正しく動作することを確認する</li></ul></div></div>
+
+      <div class="prevnext-nav"><a class="prevnext-btn" href="./10-extensions-overview.html">← 前へ</a><a class="prevnext-btn" href="./12-extension-exercise-2.html">次へ →</a></div>
+    </div>
+  </main>
+  <script src="../../js/nav.js"></script>
+</body>
+</html>

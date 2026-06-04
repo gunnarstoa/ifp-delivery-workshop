@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>拡張機能演習2 — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+      <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">はじめに</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">ワークショップ概要</a></li>
+      <li><a class="nav-link" href="./02-tenant-access.html">テナントアクセス</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">IFP概要</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for Applications</a></li>
+    </ul>
+    <li class="nav-section-title">構成</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">構成演習1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">構成演習2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">構成演習3</a></li>
+      <li><a class="nav-link" href="./07-generation.html">モデル生成</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">生成後のステップ</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Error Logレビュー</a></li>
+    </ul>
+    <li class="nav-section-title">拡張機能</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">拡張機能概要</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">演習1</a></li>
+      <li><a class="nav-link active" href="./12-extension-exercise-2.html">演習2</a></li>
+    </ul>
+    <li class="nav-section-title">リファレンス</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">今後の予定</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">セッションのQ&amp;A</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 言語</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja" selected>🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>拡張機能演習2: Channel Revenue Planning</h1>
+      <p class="subtitle">新しいフラットリスト（Channel）とRevenue計画モジュールを追加し、Gross Profit Planningに統合する</p>
+      <div class="badge-row"><span class="content-badge">拡張機能</span><span class="content-badge">60分</span><span class="content-badge">ガイド付き演習</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-info" style="background:#eff6ff;border-left:4px solid #3b82f6;">
+        <span class="callout-label">🌐 翻訳に関するご案内</span>
+        <p>これは英語原版の自動翻訳です。正確かつ最新のバージョンについては、<a href="../12-extension-exercise-2.html">英語版</a>をご確認ください。翻訳の問題はAnaplanパートナー担当者までご報告ください。</p>
+      </div>
+
+      <div class="tsd-banner">
+        <div class="tsd-step tsd-step-tell">
+          <span class="tsd-step-label">📖 読む</span>
+          <span class="tsd-step-heading">ビジネス要件</span>
+          <span class="tsd-step-desc">お客様は新しいディメンション（例：Channel）でRevenue計画を1種類必要としています。</span>
+        </div>
+        <div class="tsd-step tsd-step-show">
+          <span class="tsd-step-label">👁 見る</span>
+          <span class="tsd-step-heading">ステップバイステップのウォークスルー</span>
+          <span class="tsd-step-desc">Facilitatorがリスト・モジュール・プランニングメソッドの作成と既存Revenueフローへの統合を順に解説します。</span>
+        </div>
+        <div class="tsd-step tsd-step-do">
+          <span class="tsd-step-label">✅ 実践する</span>
+          <span class="tsd-step-heading">拡張機能を構築する</span>
+          <span class="tsd-step-desc">7ステップのワークフローを実行し、Channel Revenue計画をエンドツーエンドで追加します。</span>
+        </div>
+      </div>
+
+      <h2>ビジネス要件</h2>
+      <p>Revenue計画を1種類、例えばChannel別に必要としています。</p>
+
+      <h2>ソリューション</h2>
+      <ul>
+        <li>新しいChannelのフラットリストを追加する（トップレベル – All Channels）</li>
+        <li>既存のRevenue計画ディメンションに加え、Channelディメンションを追加した新規モジュールを作成する</li>
+        <li>対象モジュールに新規ラインアイテムを追加する</li>
+        <li>新規ラインアイテムを含むよう集計数式を変更する</li>
+      </ul>
+
+      <h2>手順</h2>
+
+      <h3>ステップ1: Channelリストを作成する</h3>
+      <ol>
+        <li>Data Model editorで、新規<strong>List: EXT Channel</strong>を作成します
+          <ul>
+            <li>命名規則：「EXT」プレフィックスはこれが拡張機能であること（自動生成されたものではない）を示します</li>
+            <li>フラットリスト（階層なし） — 個別のチャネル名のみ</li>
+          </ul>
+        </li>
+        <li><strong>Top Level</strong>項目を追加：<strong>「All Channels」</strong>
+          <ul>
+            <li>これは個々のチャネル値をすべて集約します</li>
+          </ul>
+        </li>
+        <li>サンプルのチャネル項目を3つ追加：
+          <ul>
+            <li><strong>Channel 1</strong></li>
+            <li><strong>Channel 2</strong></li>
+            <li><strong>Channel 3</strong></li>
+          </ul>
+        </li>
+        <li>リストを保存する</li>
+      </ol>
+
+      <div class="callout-note">
+        <span class="callout-label">ℹ 命名規則: EXTプレフィックス</span>
+        <p>拡張機能として作成されたリストとモジュールには「EXT」プレフィックスを付け、自動生成されたコンテンツと区別します。これにより、アップグレード時に生成後に追加された項目を簡単に追跡できます。</p>
+      </div>
+
+      <h3>ステップ2: Channel Revenue Planningモジュールを作成する</h3>
+      <ol>
+        <li>新規モジュールを作成：<strong>EXT INP Channel Revenue Planning</strong></li>
+        <li>モジュールのディメンションを定義する：
+          <ul>
+            <li><strong>Time</strong>（標準ディメンション）</li>
+            <li><strong>INP Gross Profit Planningのすべてのディメンション</strong>（Product, Job, Entityなど）</li>
+            <li><strong>Channel</strong>（新規ディメンション — EXT Channelリスト）</li>
+          </ul>
+        </li>
+        <li>モジュールにラインアイテムを追加する：
+          <ul>
+            <li><strong>Price</strong> — チャネルごとの単価</li>
+            <li><strong>Volume</strong> — チャネルごとの販売数量</li>
+            <li><strong>Total</strong> — 計算されたRevenue（Price × Volume）</li>
+          </ul>
+        </li>
+        <li>「Total」ラインアイテムに数式を設定する：<strong>Price × Volume</strong></li>
+        <li>モジュールを保存する</li>
+      </ol>
+
+      <h3>ステップ3: 新規プランニングメソッドを追加する</h3>
+      <ol>
+        <li><strong>「SYS by Planning Methods」</strong>モジュールを開く</li>
+        <li><strong>「List Planning Methods」</strong>に新規項目を追加：<strong>「Channel Planning」</strong></li>
+        <li>変更を保存する</li>
+      </ol>
+
+      <div class="callout-warning">
+        <span class="callout-label">⚠ プランニングメソッドは登録が必要</span>
+        <p>新規のプランニングアプローチ（Channel Planning、Direct Inputなど）はすべて、Planning Methodsリストに登録する必要があります。この登録がないと、UXはそれを有効な選択肢としてユーザーに認識させません。</p>
+      </div>
+
+      <h3>ステップ4: プランニングメソッドの利用可否を構成する</h3>
+      <ol>
+        <li>モジュール<strong>「ADMIN Define Product to Planning Method」</strong>を開く</li>
+        <li><strong>「Service Offering 1」</strong>（または対象製品）に対し、利用可能なプランニングメソッドのリストに<strong>「Channel Planning」</strong>を追加する</li>
+        <li>これによりシステムに「Service Offering 1はChannel Planningで計画できる」と伝えます</li>
+        <li>変更を保存する</li>
+      </ol>
+
+      <h3>ステップ5: Gross Profit Planningモジュールを更新する</h3>
+      <p>INP Gross Profit Planningに参照用のラインアイテムを追加し、Channel Planningをメインの計画フローに統合します：</p>
+
+      <ol>
+        <li>モジュール<strong>「INP Gross Profit Planning」</strong>を開く</li>
+        <li><strong>「Final Amount」ラインアイテムの前</strong>に新規ラインアイテムを3つ追加する：
+          <ul>
+            <li><strong>Channel Planning</strong> — 見出し／セクション指標
+              <ul>
+                <li><strong>Heading 1</strong>として設定（スタイル／整理用のみ、データなし）</li>
+              </ul>
+            </li>
+            <li><strong>Use Channel Planning Method?</strong> — Booleanフラグ
+              <ul>
+                <li>Format: Boolean</li>
+                <li>用途: ユーザーが「Yes」を選択するとチャネルレベルの計画が有効化される</li>
+                <li>類似のラインアイテム（例：「Use COGS Pct of Revenue Method?」）から設定をコピーする</li>
+              </ul>
+            </li>
+            <li><strong>Channel Planning Revenue</strong> — 集計された結果
+              <ul>
+                <li>Format: 「Final Amount」と同じ</li>
+                <li>EXT INP Channel Revenue Planningからデータを取得し、チャネルで合計する</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ol>
+
+      <h3>ステップ6: Channel Planning Revenueの数式を作成する</h3>
+      <ol>
+        <li><strong>「Channel Planning Revenue」</strong>ラインアイテムに対し、以下を満たす数式を作成する：
+          <ul>
+            <li><strong>EXT INP Channel Revenue Planningのラインアイテム「Total」</strong>にリンクする</li>
+            <li>Channelディメンションで合計する（すべてのチャネルを集約）</li>
+            <li><strong>「Use Channel Planning Method?」= True</strong>のときのみ計算する</li>
+            <li>メソッドが選択されていない場合は0または空白を返す</li>
+          </ul>
+        </li>
+        <li><strong>数式パターン（例）:</strong>
+          <ul>
+            <li><code>IF(Use Channel Planning Method?, SUM(EXT INP Channel Revenue Planning.Total), 0)</code></li>
+          </ul>
+        </li>
+        <li>モデルの命名規則と構造に応じて、実際の数式を調整する</li>
+        <li>モジュールブループリントのNotesフィールドに<strong>数式をドキュメント化する</strong></li>
+      </ol>
+
+      <h3>ステップ7: Line-Item Subsets（LISS）を更新する</h3>
+      <p>新規ラインアイテムを適切なサブセットに登録し、適切なUXページに表示されるようにします：</p>
+
+      <ol>
+        <li><strong>「LISS: Margin Filter」</strong>を開く</li>
+        <li>新規ラインアイテム3つのBooleanにチェックを入れる：
+          <ul>
+            <li>Channel Planning（見出し）</li>
+            <li>Use Channel Planning Method?</li>
+            <li>Channel Planning Revenue</li>
+          </ul>
+        </li>
+        <li>変更を保存する</li>
+      </ol>
+
+      <h3>ステップ8: 集計数式を更新する</h3>
+      <p>既存ラインアイテムの数式を更新し、Channel Planning Revenueを含めます：</p>
+
+      <ol>
+        <li>モジュール<strong>「INP Gross Profit Planning」</strong>で<strong>「Final Amount」</strong>の数式を開く</li>
+        <li>数式に以下を含めるよう更新する：
+          <ul>
+            <li><code>+ Channel Planning Revenue</code>（既存の構成要素に加えて）</li>
+          </ul>
+        </li>
+        <li><strong>「SUM: Revenue」</strong>が存在する場合は、その数式も更新する：
+          <ul>
+            <li><code>+ Channel Planning Revenue</code>を追加し、チャネルベースのRevenueが集計に含まれるようにする</li>
+          </ul>
+        </li>
+        <li>オフラインの変更ログに<strong>両方の数式変更をドキュメント化する</strong></li>
+      </ol>
+
+      <div class="callout-note">
+        <span class="callout-label">ℹ 数式更新の戦略</span>
+        <p>既存数式を新規拡張機能を参照する形に更新する場合は、条件付きロジックを使用します：</p>
+        <ul>
+          <li><code>IF(Use Channel Planning Method?, Channel Planning Revenue, 0)</code></li>
+        </ul>
+        <p>これにより、メソッドが選択されていないときのエラーを防ぎ、将来の保守担当者にもロジックが明確に伝わります。</p>
+      </div>
+
+      <h3>ステップ9: UXで検証する</h3>
+      <ol>
+        <li>UXアプリを開く</li>
+        <li>サンプル製品（Service Offering 1）のGross Profit Planningページに移動する</li>
+        <li>以下を確認する：
+          <ul>
+            <li>「Use Channel Planning Method?」Booleanが表示され、編集可能であること</li>
+            <li>「Yes」に設定すると、計画インターフェースが変化すること</li>
+            <li>Channel Revenue PlanningページでPriceとVolumeを入力できること</li>
+            <li>合計が正しくGross Profit Planningに戻って反映されること</li>
+            <li>すべての集計計算が正確であること</li>
+          </ul>
+        </li>
+        <li><strong>欠落や不具合がある場合：</strong>
+          <ul>
+            <li>すべてのラインアイテムがLISSに追加されているか確認する</li>
+            <li>数式の構文がモデルの命名規則に一致しているか検証する</li>
+            <li>動作する参照モジュールと比較する</li>
+          </ul>
+        </li>
+      </ol>
+
+      <h2>主なポイント</h2>
+      <ul>
+        <li><strong>拡張機能は生成済み構造を維持する</strong> — 置き換えるのではなく追加するもの</li>
+        <li><strong>プランニングメソッドはユーザーの選択肢を整理する</strong> — 新しいプランニングアプローチは必ず登録する</li>
+        <li><strong>Line-Item Subsetsは表示制御を行う</strong> — 新規コンテンツはLISSに追加した場合のみ表示される</li>
+        <li><strong>数式は条件付きにする</strong> — ユーザーが選択したものだけを計算する</li>
+        <li><strong>ドキュメントは必須</strong> — すべての変更は将来のアップグレードに備えて記録する</li>
+        <li><strong>エンドツーエンドでテストする</strong> — データ入力から最終集計計算まで通して確認する</li>
+      </ul>
+
+      <div class="step"><div class="step-badge">1</div><div class="step-content"><h3>List – EXT Channelを作成する</h3><ul><li>Top Level – All Channelsを追加</li><li>リストに3項目を追加 – Channel 1, Channel 2, Channel 3</li></ul></div></div>
+
+      <div class="step"><div class="step-badge">2</div><div class="step-content"><h3>新規モジュールEXT INP Channel Revenue Planningを作成する</h3><ul><li>ディメンション = Timeと、INP Gross Profit Planningのすべてのディメンション</li><li>ディメンションChannelを追加</li><li>ラインアイテムを追加 – Price, Volume, Total</li><li>Totalに数式を追加 – price * volume</li></ul></div></div>
+
+      <div class="step"><div class="step-badge">3</div><div class="step-content"><h3>プランニングメソッドを追加する</h3><p>List Planning Methodsに、新しいプランニングメソッド<strong>Channel Planning</strong>を追加する</p></div></div>
+
+      <div class="step"><div class="step-badge">4</div><div class="step-content"><h3>SYSモジュールでプランニングメソッドをマークする</h3><p>モジュール<strong>SYS by Planning Methods</strong>で<strong>Gross Profit Planning?</strong> Booleanをマークする</p></div></div>
+
+      <div class="step"><div class="step-badge">5</div><div class="step-content"><h3>プランニングメソッドを製品にマッピングする</h3><p>モジュール<strong>ADMIN Define Product to Planning Method</strong>で、Service Offering 1のPlanning methodに<strong>Channel Planning</strong>を追加する</p></div></div>
+
+      <div class="step"><div class="step-badge">6</div><div class="step-content"><h3>INP Gross Profit Planningにラインアイテムを追加する</h3><p>モジュール<strong>INP Gross Profit Planning</strong>を開き、Final Amountの前に新規ラインアイテムを3つ追加する：</p><ul><li><strong>Channel Planning –</strong> データなし、heading 1に設定</li><li><strong>Use Channel Planning Method?</strong> Booleanに設定；Formula、Applies To、Time Scale、Time Range、Versionsを更新（ラインアイテムUse COGS Pct of Revenue Method?と同様に）</li><li><strong>Channel Planning Revenue</strong><ul><li>FormatはラインアイテムFinal Amountと同じ</li><li>Summary 3</li><li>ラインアイテムDirect Input Fcstと類似の数式を追加し、モジュールEXT INP Channel Revenue Planning、ラインアイテムTotalにリンクするよう調整する</li></ul></li></ul></div></div>
+
+      <div class="step"><div class="step-badge">7</div><div class="step-content"><h3>集計とドキュメントを更新する</h3><ul><li>各ラインアイテムの用途を「Notes」フィールドにドキュメント化する</li><li>LISS: Margin Filterを更新する</li><li>ラインアイテムFinal Amountの数式を更新する</li><li>ラインアイテムSUM: Revenueの数式を更新する</li></ul></div></div>
+
+      <div class="callout-warning">
+        <span class="callout-label">⚠ アップグレード時の留意点</span>
+        <p>AnaplanがIFPの新バージョンをリリースすると、構築したすべての拡張機能は新たに生成されたモデルに再適用する必要があります。詳細なドキュメント（変更内容、理由、元の数式と新しい数式）を残しておくと、このプロセスがはるかに高速かつエラーの少ないものになります。</p>
+      </div>
+
+      <div class="prevnext-nav"><a class="prevnext-btn" href="./11-extension-exercise-1.html">← 前へ</a><a class="prevnext-btn" href="./13-whats-coming.html">次へ →</a></div>
+    </div>
+  </main>
+
+  <script src="../../js/script.js"></script>
+  <script src="../../js/nav.js"></script>
+</body>
+</html>
