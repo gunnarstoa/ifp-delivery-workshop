@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pasos posteriores a la generación — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+      <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">Primeros pasos</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">Resumen del taller</a></li>
+      <li><a class="nav-link" href="./02-tenant-access.html">Acceso al tenant</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">Resumen de IFP</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for Applications</a></li>
+    </ul>
+    <li class="nav-section-title">Configuración</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">Ejercicio de configuración 1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">Ejercicio de configuración 2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">Ejercicio de configuración 3</a></li>
+      <li><a class="nav-link" href="./07-generation.html">Generación del modelo</a></li>
+      <li><a class="nav-link active" href="./08-post-gen.html">Pasos posteriores a la generación</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Revisión del Error Log</a></li>
+    </ul>
+    <li class="nav-section-title">Extensiones</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">Resumen de extensiones</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">Ejercicio 1</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">Ejercicio 2</a></li>
+    </ul>
+    <li class="nav-section-title">Referencia</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">Próximas novedades</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">Preguntas y respuestas de sesiones</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 Idioma</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="es" selected>🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>Pasos posteriores a la generación</h1>
+      <p class="subtitle">La lista de verificación a ejecutar después de cada generación, antes de cualquier otro trabajo</p>
+      <div class="badge-row"><span class="content-badge">Día 1</span><span class="content-badge">20 min</span><span class="content-badge">Recorrido</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-info" style="background:#eff6ff;border-left:4px solid #3b82f6;">
+        <span class="callout-label">🌐 Aviso de traducción</span>
+        <p>Esta es una traducción automática de la versión original en inglés. Para la versión autoritativa y más actualizada, consulte <a href="../08-post-gen.html">la versión en inglés</a>. Reporte cualquier problema de traducción a su contacto Anaplan.</p>
+      </div>
+
+      <div class="tsd-banner">
+        <div class="tsd-step tsd-step-tell">
+          <span class="tsd-step-label">📖 Contar</span>
+          <span class="tsd-step-heading">Pasos requeridos posteriores a la generación</span>
+          <span class="tsd-step-desc">La lista de verificación que debe completar después de cada generación.</span>
+        </div>
+        <div class="tsd-step tsd-step-show">
+          <span class="tsd-step-label">👁 Mostrar</span>
+          <span class="tsd-step-heading">Recorrido del facilitador</span>
+          <span class="tsd-step-desc">El facilitador ejecuta cada paso posterior a la generación sobre el modelo generado en vivo.</span>
+        </div>
+        <div class="tsd-step tsd-step-do">
+          <span class="tsd-step-label">✅ Hacer</span>
+          <span class="tsd-step-heading">Complete la lista de verificación</span>
+          <span class="tsd-step-desc">Complete la lista de verificación posterior a la generación en el modelo generado.</span>
+        </div>
+      </div>
+
+      <div class="callout-note">
+        <span class="callout-label">🔍 Verificación posterior a la generación: taller vs. realidad</span>
+        <p>Esta página cubre las <strong>verificaciones esenciales de alta prioridad</strong> para un modelo funcional.</p>
+        <p>En una implementación real de producción, la validación posterior a la generación es mucho más extensa: típicamente <strong>1–2 días de revisión sistemática</strong> que cubren:</p>
+        <ul style="margin-left: 1.5rem;">
+          <li>Verificación de configuración (estructura de Jerarquía, ajustes de Dimensiones)</li>
+          <li>Validación de seguridad y acceso</li>
+          <li>Optimización de rendimiento y eficiencia de fórmulas</li>
+          <li>Documentación y preparación de entrega</li>
+          <li>Validación de carga de datos (integración de actuals)</li>
+          <li>Escenarios de pruebas de aceptación de usuario</li>
+        </ul>
+        <p>La lista de verificación completa posterior a la generación está en la <strong>Sección 5 y el Apéndice A de la Configuration Guide</strong>.</p>
+        <p>Este taller se enfoca en los conceptos centrales y el flujo de trabajo. Para implementaciones en vivo, siempre siga la lista de verificación completa de la Configuration Guide.</p>
+      </div>
+
+      <h2>Requerido después de cada generación</h2>
+      <p>Después de que la generación complete, recorra la siguiente lista de verificación antes de hacer cualquier otro trabajo. Esto asegura que tiene una línea base completa y estable antes de añadir datos o extensiones.</p>
+
+      <ul class="checklist">
+        <li>Verifique que los 4 modelos existan en el Workspace (Financial Planning, Headcount, Admin, CapEx)</li>
+        <li>Revise el conteo de objetos de aplicación: el resumen del App Framework muestra: modelos, UX apps, activos, objetos de data orchestrator</li>
+        <li>Abra los Error Logs y anote el conteo total de errores: registre esto como su línea base</li>
+        <li>Revise el Error Log para verificar que todos los Módulos se generaron correctamente: cualquier Módulo faltante surgirá aquí como error. Vea la sección <a href="./09-error-logs.html">Revisión del Error Log</a> para detalles.</li>
+        <li>Verifique que los Line Items clave de los Módulos SYS estén poblados: la Lista Planning Methods vendrá pre-poblada. Todas las Listas de datos de producción (entity, department, accounts) vendrán sin poblar y se poblarán al publicar datos desde Data Orchestrator.</li>
+        <li>Confirme que las Listas de Jerarquía cargaron con los miembros esperados. Todos los miembros de Listas de Jerarquía se poblan vía ADO, algunos vía CSV o fuente externa conectada. Jerarquías como entity, department, IS Accounts y BS Accounts requieren un paso de mapeo adicional en el Admin Model para mapear los miembros de la Lista source a sus equivalentes de planeación antes de publicar a otros modelos spoke.</li>
+        <li>Revise que los miembros de la Lista Planning Method estén poblados: este es el único elemento verificable en esta etapa. Los Módulos SYS y ADMIN ligados a Planning Methods se pueblan después; consulte el Apéndice A3 de la Configuration Guide para completar este paso.</li>
+        <li>Ejecute una verificación puntual en un Line Item calculado en un Módulo CALC: confirme que la fórmula no esté en blanco</li>
+      </ul>
+
+<div class="callout-warning"><span class="callout-label">⚠ ¿Fórmulas en blanco? Revise primero el Error Log</span><p>La forma #1 de verificar si una fórmula debería estar y resulta en blanco es revisar el Error Log. Todos los errores de fórmula harán que la fórmula esté <strong>EN BLANCO</strong>: fallan debido a una referencia inválida, ya sea por cambios de nombre de Line Item no reconocidos o cambios de estructura. Siempre revise el Error Log antes de suponer que una fórmula falta.</p></div>
+
+      <h2>Mini-ejercicio posterior a la generación</h2>
+
+<div class="mini-lab">
+  <div class="mini-lab-header">
+    <div class="mini-lab-number">1</div>
+    <div class="mini-lab-title">Verifique su modelo generado</div>
+    <div class="mini-lab-duration">⏱ 20 min</div>
+  </div>
+  <div class="mini-lab-body">
+    <div class="mini-lab-objective"><strong>Objetivo</strong> Recorra la lista de verificación posterior a la generación. Identifique el conteo de errores de línea base y confirme que la estructura del modelo está completa.</div>
+    <ol class="mini-lab-steps">
+      <li><span class="mini-lab-step-num">1</span>Desde su Workspace, confirme que <strong>4 modelos</strong> están listados. Nombrelos en sus notas.</li>
+      <li><span class="mini-lab-step-num">2</span>Abra la página de resumen del <strong>App Framework</strong>. Registre: conteo de modelos, conteo de UX apps, conteo de activos, conteo de errores.</li>
+      <li><span class="mini-lab-step-num">3</span>Haga clic en <strong>Error Logs</strong> (parte inferior derecha). Registre el conteo total de errores: esta es su línea base.</li>
+      <li><span class="mini-lab-step-num">4</span>Abra el modelo <strong>Financial Planning</strong>. Navegue a <strong>Modules</strong>. Verifique que exista al menos un Módulo para cada prefijo: ADMIN, SYS, DAT, INP, CALC, OUT.</li>
+      <li><span class="mini-lab-step-num">5</span>Abra un <strong>Módulo SYS</strong>. Encuentre la Lista Planning Methods. Verifique que los métodos que habilitó en el Application Framework Configurator estén presentes.</li>
+      <li><span class="mini-lab-step-num">6</span>Abra un <strong>Módulo CALC</strong> (por ej., CALC OPX IS Itemized o similar). Abra un Line Item en blueprint. Verifique que el campo fórmula no esté en blanco.</li>
+      <li><span class="mini-lab-step-num">7</span>Marque su lista de verificación como completa. Está listo para revisar los Error Logs.</li>
+    </ol>
+
+  </div>
+  <div class="callout-note" style="margin-top: 0.75rem;">
+    <span class="callout-label">ℹ Lista de verificación completa posterior a la generación</span>
+    <p>Para la lista de verificación completa posterior a la generación, consulte la <strong>Sección 5 y el Apéndice A de la Configuration Guide</strong>.</p>
+  </div>
+</div>
+<div class="prevnext-nav"><a class="prevnext-btn" href="./07-generation.html">← Anterior</a><a class="prevnext-btn" href="./09-error-logs.html">Siguiente →</a></div>
+    </div>
+  </main>
+  <script src="../../js/nav.js"></script>
+</body>
+</html>

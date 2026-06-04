@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Application Framework Configurator - IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+      <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">Primeiros passos</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">Visão geral do workshop</a></li>
+      <li><a class="nav-link" href="./02-tenant-access.html">Acesso ao tenant</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">Visão geral do IFP</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for Applications</a></li>
+    </ul>
+    <li class="nav-section-title">Configuração</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link active" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">Exercício de configuração 1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">Exercício de configuração 2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">Exercício de configuração 3</a></li>
+      <li><a class="nav-link" href="./07-generation.html">Geração do modelo</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">Etapas pós-geração</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Revisão do Error Log</a></li>
+    </ul>
+    <li class="nav-section-title">Extensões</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">Visão geral das extensões</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">Exercício 1</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">Exercício 2</a></li>
+    </ul>
+    <li class="nav-section-title">Referência</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">Em breve</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">Perguntas e respostas das sessões</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 Idioma</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt" selected>🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>Application Framework Configurator</h1>
+      <p class="subtitle">O que o Application Framework Configurator controla e como navegar pelas 44 perguntas de configuração</p>
+      <div class="badge-row"><span class="content-badge">Dia 1</span><span class="content-badge">45 min</span><span class="content-badge">Walkthrough</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-info" style="background:#eff6ff;border-left:4px solid #3b82f6;">
+        <span class="callout-label">🌐 Aviso de tradução</span>
+        <p>Esta é uma tradução automática da versão original em inglês. Para a versão oficial e mais atualizada, consulte <a href="../05-configurator-walkthrough.html">a versão em inglês</a>. Reporte qualquer problema de tradução ao seu contato Anaplan.</p>
+      </div>
+
+      <div class="tsd-banner">
+        <div class="tsd-step tsd-step-tell">
+          <span class="tsd-step-label">📖 Contar</span>
+          <span class="tsd-step-heading">O que o Application Framework Configurator controla</span>
+          <span class="tsd-step-desc">O que é o Application Framework Configurator e o que cada seção controla.</span>
+        </div>
+        <div class="tsd-step tsd-step-show">
+          <span class="tsd-step-label">👁 Mostrar</span>
+          <span class="tsd-step-heading">Demo ao vivo do Configurator</span>
+          <span class="tsd-step-desc">O facilitador percorre todas as seções de configuração ao vivo no tenant de treinamento.</span>
+        </div>
+        <div class="tsd-step tsd-step-do">
+          <span class="tsd-step-label">✅ Fazer</span>
+          <span class="tsd-step-heading">Acompanhe</span>
+          <span class="tsd-step-desc">Os participantes acompanham no próprio Workspace e anotam decisões para o exercício seguinte.</span>
+        </div>
+      </div>
+
+      <h2>O que é o Application Framework Configurator</h2>
+      <p>O Application Framework Configurator é a interface única para todas as decisões de configuração do IFP. Ele apresenta <strong>44 perguntas de configuração</strong> em três categorias: perguntas de nível superior (23), configurações de financial planning (17) e configurações de headcount (3), além de configurações adicionais. As respostas a essas perguntas determinam o que é gerado — estrutura de Módulos, Hierarquias de Listas, lógica de fórmulas e disponibilidade de método de planejamento.</p>
+      <p>O Application Framework Configurator é acessado por uma URL específica: substitua 'home' na URL do Anaplan home do seu navegador por 'applications' (não pela navegação normal do Workspace, que ainda não mostra o link Applications no v2.1.0). Por exemplo, se sua URL do Anaplan home é 'https://us1a.app.anaplan.com/home', altere a URL para 'https://us1a.app.anaplan.com/applications'. Quando o app chegar à disponibilidade geral, esse link aparecerá na navegação padrão.</p>
+
+      <div class="callout-note">
+        <span class="callout-label">i Melhor prática: gere uma cópia base primeiro</span>
+        <p>Antes de fazer qualquer alteração de configuração, gere a aplicação com todas as configurações padrão primeiro. Isso lhe dá uma <strong>cópia base</strong> — um modelo onde todas as fórmulas foram geradas corretamente, com nomes de Hierarquia padrão e Dimensões padrão intactos. Se mais tarde você tiver um erro de fórmula em sua Geração configurada, pode consultar a fórmula correta na cópia base e copiá-la. Rotule essa Geração claramente (ex.: "Base — sem alterações").</p>
+      </div>
+
+      <div class="callout-warning">
+        <span class="callout-label">⚠ A configuração é final na Geração</span>
+        <p>Depois que você dispara a Geração, muitas decisões estruturais não podem ser alteradas sem regenerar o modelo. Níveis de Hierarquia, estrutura de entity e configuração de geografia precisam ser travados antes da Geração. Acerte essas decisões na Session Zero — são as coisas mais difíceis de mudar depois.</p>
+      </div>
+
+      <h2>Visão geral do Application Framework Configurator (v2.1)</h2>
+<figure class="screenshot"><img src="../../img/v2.1-screenshots/configurator-hierarchies.png" alt="IFP Application Framework Configurator mostrando Dimensão Location, opções Customer e Job" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Application Framework Configurator (v2.1) — mostrando Dimensão Location, opções Customer e Job</figcaption></figure>
+
+      <h2>Seções de configuração</h2>
+
+      <h3>Hierarquias</h3>
+      <p>A seção Hierarquias define a estrutura de Dimensões do modelo gerado. Decisões feitas aqui cascateiam por cada Módulo e não podem ser alteradas após a Geração sem uma regeneração completa.</p>
+      <ul>
+        <li><strong>Location:</strong> Quantos níveis? (ex.: Global → Region → Country → City). Quais níveis são de planejamento vs. somente roll-up?</li>
+        <li><strong>Functional Area:</strong> Quais áreas funcionais estão no escopo? (Gross Profit, OpEx, Headcount, Balance Sheet). Cada área habilitada gera Módulos adicionais.</li>
+        <li><strong>Entity:</strong> Quantos níveis de entity? Qual é a entity de consolidação de nível superior?</li>
+        <li><strong>Product:</strong> O planejamento em nível de produto é necessário? Níveis de Hierarquia de Product?</li>
+      </ul>
+<figure class="screenshot"><img src="../../img/v2.1-screenshots/hierarchies-list.png" alt="Hierarquias do IFP - lista de todas as Dimensões com número de níveis, Módulos referenciados e timestamps" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Hierarquias do IFP (v2.1) — mostrando Vendor, Product, Customer, Department, Functional Area, Location, Job, Entity com níveis e histórico de atualização</figcaption></figure>
+<figure class="screenshot"><img src="../../img/configurator/cfg-0105.jpg" alt="Application Framework Configurator - perguntas de nível superior: Department, Location, Functional Area, Vendor" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Application Framework Configurator - perguntas de nível superior: Department, Location, Functional Area, Vendor</figcaption></figure>
+
+      <h2>Perguntas de nível superior (23 perguntas)</h2>
+      <p>As perguntas de nível superior são as mais impactantes. Elas definem o esqueleto estrutural do modelo IFP.</p>
+<div class="table-wrap"><table><thead><tr><th>Perguntas/Tipos de pergunta</th><th>O que controla</th><th>Resposta de exemplo</th></tr></thead><tbody><tr><td>Como você chama sua Dimensão X? (use letra maiúscula)</td><td>A criação de objetos pode ser case sensitive. Certos objetos podem ser escritos como estão, com a primeira letra maiúscula.</td><td>Entity</td></tr><tr><td>Como você chama sua Dimensão X? (use letra minúscula)</td><td>A criação de objetos pode ser case sensitive. Certos objetos são criados quando o nome é escrito todo em minúsculas.</td><td>entity</td></tr><tr><td>Essas aplicações geradas serão usadas para fins de demo?</td><td>Se sim, criará certos objetos de saved view e ações que podem ser aproveitados para popular dados de demo.</td><td>Sim / Não</td></tr><tr><td>Você precisa de suporte multimoeda?</td><td>Se sim, criará uma Lista "Reporting Currency" e lógica para traduzir a moeda local da Entity para a Reporting Currency.</td><td>Sim / Não</td></tr><tr><td>Você fará planejamento de balance sheet em FP?</td><td>Determina se o reporting de Balance Sheet é necessário.</td><td>Sim / Não</td></tr><tr><td>Você precisa de reporting de cash flow?</td><td>Determina se o reporting de Cash Flow é necessário.</td><td>Sim / Não</td></tr><tr><td>Como você fará o planejamento de Headcount?</td><td>Identifica se a lógica principal de planejamento de headcount será mantida pelo modelo IFP Headcount Planning ou por outro modelo externo (ex.: WFB / OWP)</td><td>Seleção em picklist: "Use the IFP Role-based headcount model"</td></tr><tr><td>Como você fará o planejamento de Capital Expense?</td><td>Identifica se a lógica principal de planejamento de Capital Expense será mantida no modelo IFP CapEx Planning ou em outro modelo externo.</td><td>Use the Capital Expense model</td></tr></tbody></table></div><figure class="screenshot"><img src="../../img/configurator/cfg-0110.jpg" alt="Application Framework Configurator - perguntas de Financial Planning com dropdown de margin planning" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Application Framework Configurator - perguntas de Financial Planning com dropdown de margin planning</figcaption></figure>
+
+      <h2>Configurações de Financial Planning (17 perguntas)</h2>
+      <p>As configurações de financial planning controlam os métodos de planejamento disponíveis, configurações de headcount e comportamento de OpEx. Essas são menos estruturais que as perguntas de nível superior, mas ainda afetam a geração de fórmulas.</p>
+<div class="table-wrap"><table><thead><tr><th>Perguntas/Tipos de pergunta</th><th>O que controla</th><th>Resposta de exemplo</th></tr></thead><tbody><tr><td>Como você chama sua Dimensão X? (use letra maiúscula)</td><td>A criação de objetos pode ser case sensitive. Certos objetos podem ser escritos como estão, com a primeira letra maiúscula.</td><td>Product</td></tr><tr><td>Como você chama sua Dimensão X? (use letra minúscula)</td><td>A criação de objetos pode ser case sensitive. Certos objetos são criados quando o nome é escrito todo em minúsculas.</td><td>product</td></tr><tr><td>Você inserirá metas top-down?</td><td>Determina se as metas top-down serão feitas no modelo IFP. Se sim, os objetos relacionados serão criados.</td><td>Sim / Não</td></tr><tr><td>Dimensionalidade para Y?</td><td>Essas perguntas determinam o "Applies To" ao construir as estruturas de Módulos para o sub-processo Y. Geralmente será preciso desmarcar as caixas se a Dimensão Y for identificada como não usada.</td><td>Caixas onde Dimensões opcionais podem ser marcadas/desmarcadas. Dimensões obrigatórias serão bloqueadas e não poderão ser editadas.</td></tr><tr><td>Como você fará margin planning?</td><td>Determina se margin planning será feito em um modelo IFP ou modelo externo.</td><td>Seleção em picklist: "in IFP only"</td></tr><tr><td>Você fará planejamento de despesas em FP?</td><td>Determina se objetos de planejamento de despesas precisam ser criados.</td><td>Sim / Não</td></tr><tr><td>Você precisa de suporte para alocações de despesas?</td><td>Se sim, o AAF gerará objetos que auxiliam na lógica de alocações de OpEx.</td><td>Sim / Não</td></tr></tbody></table></div><figure class="screenshot"><img src="../../img/configurator/cfg-0115.jpg" alt="Application Framework Configurator - checkboxes de dimensionalidade de Financial Planning para planejamento de despesas" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Application Framework Configurator - checkboxes de dimensionalidade de Financial Planning para planejamento de despesas</figcaption></figure>
+
+      <h2>Perguntas de configuração (novos recursos v2.1)</h2>
+<figure class="screenshot"><img src="../../img/v2.1-screenshots/configurator-questions.png" alt="Application Framework Configurator - perguntas de configuração mostrando novas opções v2.1 destacadas em verde" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Application Framework Configurator - perguntas de configuração com melhorias v2.1</figcaption></figure>
+
+      <div class="callout-note">
+        <span class="callout-label">📝 Nota: Caixas verdes = Novos objetos e recursos v2.0 → v2.1</span>
+        <ul style="margin-left: 1.5rem;">
+          <li><strong>Novas "Perguntas de nível superior"</strong>
+            <ul style="margin-left: 1.5rem;">
+              <li>Essas aplicações geradas serão usadas para fins de demo (padrão: não)</li>
+              <li>Se não, todos os objetos que eram usados para demos não serão gerados.</li>
+            </ul>
+          </li>
+          <li><strong>Restore Default:</strong> Botão de processo que reseta TODAS as respostas para o padrão. Também deve ver a caixa cinza dessas perguntas mudar de "CUSTOM ANSWER" para "DEFAULT ANSWER"</li>
+        </ul>
+      </div>
+
+      <h2>Configurações de dimensionalidade</h2>
+<figure class="screenshot"><img src="../../img/v2.1-screenshots/dimensionality-questions.png" alt="Application Framework Configurator - perguntas de dimensionalidade para Dimensões opcionais" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Application Framework Configurator - configurações de dimensionalidade para Dimensões opcionais</figcaption></figure>
+
+<figure class="screenshot"><img src="../../img/v2.1-screenshots/dimensionality-settings-v2.png" alt="Configurations - Perguntas 13-17 mostrando perguntas de dimensionalidade com checkboxes para Account, Entity, Department, Functional Area, Location, Vendor e Month" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Configurations - Perguntas de Dimensionalidade de Financial Planning (v2.1) mostrando checkboxes de Dimensões opcionais</figcaption></figure>
+
+      <div class="callout-note">
+        <span class="callout-label">ℹ Impacto das perguntas de dimensionalidade no "Applies To"</span>
+        <p>Essas perguntas (13-17) impactam o <strong>"Applies To"</strong> ao gerar Módulos. O padrão tem todas as Dimensões opcionais selecionadas porque assumiu-se que todas as Dimensões serão usadas. Se alguma Dimensão for determinada como não necessária, desmarque-a.</p>
+        <p>Desmarcar Dimensões reduz a complexidade dos Módulos gerados e melhora o desempenho ao excluir combinações desnecessárias de Dimensões dos cálculos.</p>
+      </div>
+
+      <h2>Nuances importantes do Configurator (aprendidas em entrega)</h2>
+      <ul>
+        <li><strong>Nome de Hierarquia + pergunta do Application Framework Configurator precisam coincidir:</strong> No v2.1.0, o nome da Hierarquia na seção Hierarquias e a renomeação nas Perguntas de Configuração NÃO estão linkados. Você precisa atualizar ambos. Espera-se correção em release futura.</li>
+        <li><strong>Sem espaços no final dos nomes:</strong> Espaços ao final de Hierarquias renomeadas causaram erros de Geração. Confira duas vezes se os nomes não têm espaços antes ou depois.</li>
+        <li><strong>O nível folha precisa permanecer no fundo:</strong> Ao remover um nível, remova o nível do meio e mantenha a folha no fundo. Ao adicionar um nível, o sistema adiciona no fundo — arraste-o para acima do nível folha original. A folha original não pode ser renomeada com o mesmo nome do novo nível.</li>
+        <li><strong>Hierarquias e Perguntas de Configuração são separadas:</strong> Existem duas perguntas por Dimensão renomeada — uma cria a Lista, outra cria os Módulos. A segunda é em minúsculas. Você precisa atualizar ambas.</li>
+        <li><strong>Restore Default por Hierarquia:</strong> Cada Hierarquia tem seu próprio botão "Restore Default".</li>
+        <li><strong>Ordem do Configurator vs Hierarquias:</strong> Você pode completar Hierarquias primeiro ou Perguntas de Configuração primeiro — não há ordem obrigatória.</li>
+        <li><strong>Gere CapEx mesmo se não precisar agora:</strong> Módulos Polaris não usam memória significativa até conterem dados. Gere CapEx agora para evitar regeneração futura se o cliente adicionar mais tarde.</li>
+        <li><strong>Dimensões personalizadas (Listas planas) são extensões, não Hierarquias:</strong> Dimensões de Lista plana (ex.: Channel) não são configuradas na seção Hierarquias — são construídas como extensões pós-geração.</li>
+      </ul>
+
+      <h2>Processo de Geração</h2>
+      <p>Após concluir todas as Perguntas de Configuração e configurações de Hierarquia:</p>
+      <ol>
+        <li>Clique em <strong>Generate</strong> na visão geral do App Framework</li>
+        <li>Insira uma descrição para esta Geração (ex.: "Base — sem alterações" ou "Customer Name — 3 níveis de entity, sem geografia")</li>
+        <li>Selecione o Workspace alvo</li>
+        <li>A Geração roda na nuvem — aproximadamente 20–40 minutos. Monitore o progresso na página principal /applications em vez de dentro do App Framework (o indicador de status dentro do framework pode atrasar)</li>
+        <li>Quando concluído, todos os itens aparecem em verde. Itens em vermelho são erros. Itens em âmbar são avisos.</li>
+        <li>Revise o Error Log. Veja a seção <a href="./09-error-logs.html">"Revisão do Error Log"</a> para mais orientações.</li>
+      </ol>
+
+      <h2>Antes do Exercício</h2>
+<div class="callout-note"><span class="callout-label">i Preparação</span><p>Antes de configurar o App Framework para seu cliente, identifique as perguntas-chave de escopo: níveis de entity, estrutura de geografia, áreas funcionais no escopo e quaisquer configurações especiais. Trabalhe com o cliente para esclarecer decisões ambíguas antes de começar.</p></div>
+<div class="prevnext-nav"><a class="prevnext-btn" href="./04-anaplan-way.html">← Anterior</a><a class="prevnext-btn" href="./06-exercise-1.html">Próximo →</a></div>
+    </div>
+  </main>
+  <script src="../../js/nav.js"></script>
+</body>
+</html>

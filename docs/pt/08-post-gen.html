@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Etapas pós-geração — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+      <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">Primeiros passos</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">Visão geral do workshop</a></li>
+      <li><a class="nav-link" href="./02-tenant-access.html">Acesso ao tenant</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">Visão geral do IFP</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for Applications</a></li>
+    </ul>
+    <li class="nav-section-title">Configuração</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">Exercício de configuração 1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">Exercício de configuração 2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">Exercício de configuração 3</a></li>
+      <li><a class="nav-link" href="./07-generation.html">Geração do modelo</a></li>
+      <li><a class="nav-link active" href="./08-post-gen.html">Etapas pós-geração</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Revisão do Error Log</a></li>
+    </ul>
+    <li class="nav-section-title">Extensões</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">Visão geral das extensões</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">Exercício 1</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">Exercício 2</a></li>
+    </ul>
+    <li class="nav-section-title">Referência</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">Em breve</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">Perguntas e respostas das sessões</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 Idioma</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt" selected>🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>Etapas pós-geração</h1>
+      <p class="subtitle">A lista de verificação a executar após cada Geração antes de qualquer outro trabalho</p>
+      <div class="badge-row"><span class="content-badge">Dia 1</span><span class="content-badge">20 min</span><span class="content-badge">Walkthrough</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-info" style="background:#eff6ff;border-left:4px solid #3b82f6;">
+        <span class="callout-label">🌐 Aviso de tradução</span>
+        <p>Esta é uma tradução automática da versão original em inglês. Para a versão oficial e mais atualizada, consulte <a href="../08-post-gen.html">a versão em inglês</a>. Reporte qualquer problema de tradução ao seu contato Anaplan.</p>
+      </div>
+
+      <div class="tsd-banner">
+        <div class="tsd-step tsd-step-tell">
+          <span class="tsd-step-label">📖 Contar</span>
+          <span class="tsd-step-heading">Etapas pós-geração obrigatórias</span>
+          <span class="tsd-step-desc">A lista de verificação que você precisa completar após cada Geração.</span>
+        </div>
+        <div class="tsd-step tsd-step-show">
+          <span class="tsd-step-label">👁 Mostrar</span>
+          <span class="tsd-step-heading">Walkthrough do facilitador</span>
+          <span class="tsd-step-desc">O facilitador percorre cada etapa pós-geração no modelo gerado ao vivo.</span>
+        </div>
+        <div class="tsd-step tsd-step-do">
+          <span class="tsd-step-label">✅ Fazer</span>
+          <span class="tsd-step-heading">Complete o checklist</span>
+          <span class="tsd-step-desc">Complete o checklist pós-geração no modelo gerado.</span>
+        </div>
+      </div>
+
+      <div class="callout-note">
+        <span class="callout-label">🔍 Verificação pós-geração — Workshop vs. realidade</span>
+        <p>Esta página cobre as <strong>verificações essenciais de alta prioridade</strong> para um modelo funcional.</p>
+        <p>Em uma implementação real de produção, a validação pós-geração é muito mais extensa — tipicamente <strong>1 a 2 dias de revisão sistemática</strong> cobrindo:</p>
+        <ul style="margin-left: 1.5rem;">
+          <li>Verificação de configuração (estrutura de Hierarquia, configurações de Dimensão)</li>
+          <li>Validação de segurança e acesso</li>
+          <li>Otimização de desempenho e eficiência de fórmulas</li>
+          <li>Documentação e preparação para handoff</li>
+          <li>Validação de carga de dados (integração de actuals)</li>
+          <li>Cenários de teste de aceitação de usuário</li>
+        </ul>
+        <p>O checklist completo pós-geração está na <strong>Seção 5 e Apêndice A do Configuration Guide</strong>.</p>
+        <p>Este workshop foca em conceitos centrais e fluxo de trabalho. Para implementações ao vivo, sempre siga o checklist completo do Configuration Guide.</p>
+      </div>
+
+      <h2>Obrigatório após cada Geração</h2>
+      <p>Após a Geração ser concluída, percorra o checklist abaixo antes de fazer qualquer outro trabalho. Isso garante que você tenha uma baseline completa e estável antes de adicionar dados ou extensões.</p>
+
+      <ul class="checklist">
+        <li>Verifique se os 4 modelos existem no Workspace (Financial Planning, Headcount, Admin, CapEx)</li>
+        <li>Confira a contagem de objetos de aplicação — a visão geral do App Framework mostra: modelos, UX apps, assets, objetos do data orchestrator</li>
+        <li>Abra os Error Logs e anote a contagem total de erros — registre isso como sua baseline</li>
+        <li>Revise o Error Log para verificar se todos os Módulos foram gerados corretamente — quaisquer Módulos ausentes aparecerão aqui como erros. Veja a seção <a href="./09-error-logs.html">Revisão do Error Log</a> para detalhes.</li>
+        <li>Verifique se Line Items-chave de Módulos SYS estão populados: a Lista Planning Methods virá pré-populada. Todas as Listas de dados de produção (entity, department, accounts) virão não populadas e são populadas pelo push de dados do Data Orchestrator.</li>
+        <li>Confirme se as Listas de Hierarquia foram carregadas com os membros esperados. Todos os membros de Lista de Hierarquia são populados via ADO — alguns via CSV ou fonte externa conectada. Hierarquias como entity, department, IS Accounts e BS Accounts requerem uma etapa adicional de mapeamento no Admin Model para mapear membros da Lista de origem para seus equivalentes de planejamento antes de fazer push para outros modelos spoke.</li>
+        <li>Confira se os membros da Lista Planning Method estão populados — esse é o único item verificável neste estágio. Os Módulos SYS e ADMIN ligados aos Planning Methods são populados depois; consulte o Apêndice A3 do Configuration Guide para completar esta etapa.</li>
+        <li>Faça uma verificação por amostragem em um Line Item calculado em um Módulo CALC — confirme que a fórmula não está em branco</li>
+      </ul>
+
+<div class="callout-warning"><span class="callout-label">⚠ Fórmulas em branco? Verifique o Error Log primeiro</span><p>A melhor forma de verificar se uma fórmula deveria estar lá mas aparece em branco é revisar o Error Log. Todos os erros de fórmula farão a fórmula ficar <strong>EM BRANCO</strong> — falham por uma referência inválida, seja por mudanças de nome de Line Item não reconhecidas ou mudanças de estrutura. Sempre verifique o Error Log antes de assumir que uma fórmula está faltando.</p></div>
+
+      <h2>Mini-exercício pós-geração</h2>
+
+<div class="mini-lab">
+  <div class="mini-lab-header">
+    <div class="mini-lab-number">1</div>
+    <div class="mini-lab-title">Verifique seu modelo gerado</div>
+    <div class="mini-lab-duration">⏱ 20 min</div>
+  </div>
+  <div class="mini-lab-body">
+    <div class="mini-lab-objective"><strong>Objetivo</strong> Trabalhar pelo checklist pós-geração. Identificar a contagem baseline de erros e confirmar que a estrutura do modelo está completa.</div>
+    <ol class="mini-lab-steps">
+      <li><span class="mini-lab-step-num">1</span>No seu Workspace, confirme que <strong>4 modelos</strong> estão listados. Nomeie-os em suas notas.</li>
+      <li><span class="mini-lab-step-num">2</span>Abra a página de visão geral do <strong>App Framework</strong>. Registre: contagem de modelos, contagem de UX apps, contagem de assets, contagem de erros.</li>
+      <li><span class="mini-lab-step-num">3</span>Clique em <strong>Error Logs</strong> (canto inferior direito). Registre a contagem total de erros — esta é sua baseline.</li>
+      <li><span class="mini-lab-step-num">4</span>Abra o modelo <strong>Financial Planning</strong>. Navegue até <strong>Modules</strong>. Verifique se existe ao menos um Módulo para cada prefixo: ADMIN, SYS, DAT, INP, CALC, OUT.</li>
+      <li><span class="mini-lab-step-num">5</span>Abra um <strong>Módulo SYS</strong>. Encontre a Lista Planning Methods. Verifique se os métodos que você habilitou no Application Framework Configurator estão presentes.</li>
+      <li><span class="mini-lab-step-num">6</span>Abra um <strong>Módulo CALC</strong> (ex.: CALC OPX IS Itemized ou similar). Abra um Line Item em blueprint. Verifique se o campo de fórmula não está em branco.</li>
+      <li><span class="mini-lab-step-num">7</span>Marque seu checklist como concluído. Você está pronto para revisar os Error Logs.</li>
+    </ol>
+
+  </div>
+  <div class="callout-note" style="margin-top: 0.75rem;">
+    <span class="callout-label">ℹ Checklist completo pós-geração</span>
+    <p>Para o checklist completo de verificação pós-geração, consulte a <strong>Seção 5 e Apêndice A do Configuration Guide</strong>.</p>
+  </div>
+</div>
+<div class="prevnext-nav"><a class="prevnext-btn" href="./07-generation.html">← Anterior</a><a class="prevnext-btn" href="./09-error-logs.html">Próximo →</a></div>
+    </div>
+  </main>
+  <script src="../../js/nav.js"></script>
+</body>
+</html>

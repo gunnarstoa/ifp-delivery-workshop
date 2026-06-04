@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+    </div>
+    <ul class="nav-list">
+      <li class="nav-section-title">Démarrage</li>
+      <ul class="nav-submenu">
+        <li><a class="nav-link" href="../docs/fr/01-overview.html">Aperçu de l'atelier</a></li>
+        <li><a class="nav-link" href="../docs/fr/02-tenant-access.html">Accès au tenant</a></li>
+        <li><a class="nav-link" href="../docs/fr/03-ifp-overview.html">Aperçu d'IFP</a></li>
+        <li><a class="nav-link" href="../docs/fr/04-anaplan-way.html">Anaplan Way for Applications</a></li>
+      </ul>
+      <li class="nav-section-title">Configuration</li>
+      <ul class="nav-submenu">
+        <li><a class="nav-link" href="../docs/fr/05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+        <li><a class="nav-link" href="../docs/fr/06-exercise-1.html">Exercice de configuration 1</a></li>
+        <li><a class="nav-link" href="../docs/fr/06-exercise-2.html">Exercice de configuration 2</a></li>
+        <li><a class="nav-link" href="../docs/fr/06-exercise-3.html">Exercice de configuration 3</a></li>
+        <li><a class="nav-link" href="../docs/fr/07-generation.html">Génération du modèle</a></li>
+        <li><a class="nav-link" href="../docs/fr/08-post-gen.html">Étapes post-génération</a></li>
+        <li><a class="nav-link" href="../docs/fr/09-error-logs.html">Revue de l'Error Log</a></li>
+      </ul>
+      <li class="nav-section-title">Extensions</li>
+      <ul class="nav-submenu">
+        <li><a class="nav-link" href="../docs/fr/10-extensions-overview.html">Aperçu des extensions</a></li>
+        <li><a class="nav-link" href="../docs/fr/11-extension-exercise-1.html">Exercice 1</a></li>
+        <li><a class="nav-link" href="../docs/fr/12-extension-exercise-2.html">Exercice 2</a></li>
+      </ul>
+      <li class="nav-section-title">Référence</li>
+      <ul class="nav-submenu">
+        <li><a class="nav-link" href="../docs/fr/13-whats-coming.html">À venir</a></li>
+        <li><a class="nav-link" href="../docs/fr/14-qanda.html">Questions et réponses des sessions</a></li>
+      </ul>
+    </ul>
+    <div class="lang-switcher">
+      <span class="lang-switcher-label">🌐 Langue</span>
+      <select id="lang-select" class="lang-select">
+        <option value="en">🇺🇸 English</option>
+        <option value="ja">🇯🇵 日本語</option>
+        <option value="es">🇪🇸 Español</option>
+        <option value="fr" selected>🇫🇷 Français</option>
+        <option value="de">🇩🇪 Deutsch</option>
+        <option value="pt">🇧🇷 Português</option>
+        <option value="ko">🇰🇷 한국어</option>
+        <option value="zh">🇨🇳 中文</option>
+      </select>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="index-hero">
+      <h1>IFP Delivery Partner Workshop</h1>
+      <p>IFP 2.1 App Framework · Génération du modèle · Extensions</p>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-info" style="background:#eff6ff;border-left:4px solid #3b82f6;">
+        <span class="callout-label">🌐 Avis de traduction</span>
+        <p>Ceci est une traduction automatique de la version originale en anglais. Pour la version officielle et la plus à jour, consultez <a href="../index.html">la version anglaise</a>. Signalez tout problème de traduction à votre contact Anaplan.</p>
+      </div>
+
+      <h2>Bienvenue</h2>
+      <p>Ceci est un guide de praticien à votre rythme pour l'IFP Delivery Partner Workshop. Il couvre l'intégralité du workflow de livraison IFP 2.1 : configuration de l'App Framework, génération du modèle, revue de l'Error Log et construction d'extensions spécifiques au client.</p>
+      <p>Parcourez les sections à votre propre rythme via la barre latérale.</p>
+
+      <h2>Modules de l'atelier</h2>
+
+      <h3 style="margin-top:1.5rem;margin-bottom:0.5rem;color:#1e3a5f;">Démarrage</h3>
+      <div class="index-nav-grid">
+        <a class="index-nav-card" href="../docs/fr/01-overview.html">
+          <div class="inc-num">Commencer ici</div>
+          <div class="inc-title">Aperçu de l'atelier</div>
+          <div class="inc-desc">Objectifs, prérequis, structure sur deux jours et utilisation de ce guide</div>
+        </a>
+        <a class="index-nav-card" href="../docs/fr/02-tenant-access.html">
+          <div class="inc-num">Démarrage · 2</div>
+          <div class="inc-title">Accès au tenant</div>
+          <div class="inc-desc">Confirmez que vous avez accès au bon Tenant de formation avant de commencer</div>
+        </a>
+        <a class="index-nav-card" href="../docs/fr/03-ifp-overview.html">
+          <div class="inc-num">Démarrage · 3</div>
+          <div class="inc-title">Aperçu d'IFP</div>
+          <div class="inc-desc">Ce qu'est IFP 2.0, ce qui a changé et comment fonctionne l'App Framework</div>
+        </a>
+        <a class="index-nav-card" href="../docs/fr/04-anaplan-way.html">
+          <div class="inc-num">Démarrage · 4</div>
+          <div class="inc-title">Anaplan Way pour IFP</div>
+          <div class="inc-desc">Méthodologie de livraison en six phases — ce qui se passe à chaque phase</div>
+        </a>
+      </div>
+
+      <h3 style="margin-top:1.5rem;margin-bottom:0.5rem;color:#0066cc;">🔧 Configuration</h3>
+      <div class="index-nav-grid">
+        <a class="index-nav-card" href="../docs/fr/05-configurator-walkthrough.html">
+          <div class="inc-num">Configuration · 1</div>
+          <div class="inc-title">App Framework Configurator</div>
+          <div class="inc-desc">Visite guidée des 44 questions de configuration — hiérarchies, structure de données, planification financière</div>
+        </a>
+        <a class="index-nav-card" href="../docs/fr/06-configuration-exercises.html">
+          <div class="inc-num">Configuration · 2</div>
+          <div class="inc-title">Exercices de configuration 1-3</div>
+          <div class="inc-desc">Trois exercices de qualité production : OpEx/Headcount, Insurance 3-Statement, Nuclear Plant OpEx</div>
+        </a>
+        <a class="index-nav-card" href="../docs/fr/07-generation.html">
+          <div class="inc-num">Configuration · 3</div>
+          <div class="inc-title">Génération du modèle</div>
+          <div class="inc-desc">Ce que produit la génération, combien de temps elle prend, et ce que signifient les états de statut</div>
+        </a>
+        <a class="index-nav-card" href="../docs/fr/08-post-gen.html">
+          <div class="inc-num">Configuration · 4</div>
+          <div class="inc-title">Étapes post-génération</div>
+          <div class="inc-desc">La checklist de vérification à exécuter après chaque génération</div>
+        </a>
+        <a class="index-nav-card" href="../docs/fr/09-error-logs.html">
+          <div class="inc-num">Configuration · 5</div>
+          <div class="inc-title">Revue de l'Error Log</div>
+          <div class="inc-desc">Lire, catégoriser et résoudre les Error Logs de génération — exercice pratique inclus</div>
+        </a>
+      </div>
+
+      <h3 style="margin-top:1.5rem;margin-bottom:0.5rem;color:#7c3aed;">⚡ Extensions</h3>
+      <div class="index-nav-grid">
+        <a class="index-nav-card" href="../docs/fr/10-extensions-overview.html">
+          <div class="inc-num">Extensions · 1</div>
+          <div class="inc-title">Aperçu des extensions</div>
+          <div class="inc-desc">Configurer vs Étendre vs Modifier — 7 bonnes pratiques et approche par data tag</div>
+        </a>
+        <a class="index-nav-card" href="../docs/fr/11-extension-exercise-1.html">
+          <div class="inc-num">Extensions · 2</div>
+          <div class="inc-title">Exercice d'extension 1</div>
+          <div class="inc-desc">Manual Adjustments : ajouter des Line Items d'ajustement de dépenses personnalisés à un modèle généré</div>
+        </a>
+        <a class="index-nav-card" href="../docs/fr/12-extension-exercise-2.html">
+          <div class="inc-num">Extensions · 3</div>
+          <div class="inc-title">Exercice d'extension 2</div>
+          <div class="inc-desc">Channel Revenue Planning : ajouter une nouvelle Dimension de planification du revenu de bout en bout</div>
+        </a>
+      </div>
+
+      <h3 style="margin-top:1.5rem;margin-bottom:0.5rem;color:#374151;">📚 Référence</h3>
+      <div class="index-nav-grid">
+        <a class="index-nav-card" href="../docs/fr/13-whats-coming.html">
+          <div class="inc-num">Référence · 1</div>
+          <div class="inc-title">À venir</div>
+          <div class="inc-desc">Éléments de la roadmap IFP — figés à la livraison d'avril 2026</div>
+        </a>
+        <a class="index-nav-card" href="../docs/fr/14-qanda.html">
+          <div class="inc-num">Référence · 2</div>
+          <div class="inc-title">Questions et réponses des sessions</div>
+          <div class="inc-desc">Vraies questions de l'atelier d'avril 2026 avec réponses complètes de l'animateur</div>
+        </a>
+      </div>
+
+    </div>
+  </main>
+  <script src="../js/nav.js"></script>
+</body>
+</html>
