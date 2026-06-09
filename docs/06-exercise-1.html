@@ -44,6 +44,7 @@
     <ul class="nav-submenu">
       <li><a class="nav-link" href="./13-whats-coming.html">What's Coming</a></li>
       <li><a class="nav-link" href="./14-qanda.html">Q&A from Sessions</a></li>
+      <li><a class="nav-link" href="./15-workshop-wrap-up.html">Workshop Wrap-up</a></li>
     </ul>
   </ul>
   <div class="lang-switcher">
@@ -69,25 +70,7 @@
     </div>
     <div class="content-body">
 
-      <div class="tsd-banner">
-        <div class="tsd-step tsd-step-tell">
-          <span class="tsd-step-label">📖 Tell</span>
-          <span class="tsd-step-heading">Exercise Overview</span>
-          <span class="tsd-step-desc">This exercise presents a real business scenario with configuration requirements.</span>
-        </div>
-        <div class="tsd-step tsd-step-show">
-          <span class="tsd-step-label">👁 Show</span>
-          <span class="tsd-step-heading">Facilitated Walk-Through</span>
-          <span class="tsd-step-desc">Facilitator guides you through configuration decisions step-by-step.</span>
-        </div>
-        <div class="tsd-step tsd-step-do">
-          <span class="tsd-step-label">✅ Do</span>
-          <span class="tsd-step-heading">Configure It Yourself</span>
-          <span class="tsd-step-desc">Configure your own version, comparing results to the example.</span>
-        </div>
-      </div>
-
-      <div class="callout-note">
+<div class="callout-note">
         <span class="callout-label">💡 Key Rules for Configuration</span>
         <ul>
           <li><strong>Use a standardized naming convention for all generated models and apps</strong> — every model and app name must be unique within the tenant. Duplicate names will cause generation to fail. See the example pattern below.</li>
@@ -100,7 +83,7 @@
         </ul>
       </div>
 
-      <h3>Standardized Naming Convention</h3>
+      <h2>Standardized Naming Convention</h2>
       <p>Replace the default model and app names with a standardized format before generating. The recommended pattern is <code>[ModelType]_Exercise ##_YYYYMMDD</code> — this ensures every generation produces uniquely-named artifacts and avoids name-collision generation errors when the same exercise is run more than once in the tenant.</p>
       <figure class="screenshot">
         <img src="../img/configurator/naming-convention.png" alt="Standardized naming convention table showing Admin Model, Financial Planning Model, CapEx Model, Headcount Model, and IFP App with original, standardized, and example new names following the [ModelType]_Exercise ##_YYYYMMDD pattern" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;">
@@ -302,7 +285,7 @@
       <div class="callout-note">
         <span class="callout-label">ℹ Important Notes</span>
         <ul>
-          <li>An enhancement to PAF is coming that will make configuration question terminology adapt to any dimension renames you make</li>
+          <li>An enhancement to Application Framework is coming that will make configuration question terminology adapt to any dimension renames you make</li>
           <li>An additional enhancement will allow 1-click "restore defaults" of all settings</li>
         </ul>
       </div>

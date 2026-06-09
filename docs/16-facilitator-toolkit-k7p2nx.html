@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="googlebot" content="noindex, nofollow">
+  <title>Facilitator Launch Toolkit — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .toolkit-toc {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin: 1rem 0 2rem 0;
+      font-size: 0.9rem;
+    }
+    .toolkit-toc ol { margin: 0.5rem 0 0 1.25rem; padding: 0; }
+    .toolkit-toc li { margin: 0.25rem 0; }
+    .toolkit-toc a { color: #0066cc; text-decoration: none; }
+    .toolkit-toc a:hover { text-decoration: underline; }
+
+    .asset {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+      background: #fff;
+    }
+    .asset h3 {
+      margin-top: 0;
+      color: #1e3a5f;
+      font-size: 1.1rem;
+    }
+    .asset-meta {
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin: -0.25rem 0 0.75rem 0;
+    }
+    .asset-meta strong { color: #374151; }
+
+    .asset details {
+      border-top: 1px solid #f0f4f8;
+      padding-top: 0.75rem;
+      margin-top: 0.75rem;
+    }
+    .asset details summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: #0066cc;
+      padding: 0.4rem 0;
+      list-style: none;
+      font-size: 0.92rem;
+    }
+    .asset details summary::-webkit-details-marker { display: none; }
+    .asset details summary::before {
+      content: "▶ ";
+      display: inline-block;
+      transition: transform 0.15s;
+      font-size: 0.7rem;
+    }
+    .asset details[open] summary::before {
+      transform: rotate(90deg);
+    }
+
+    .asset-preview {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin-top: 0.75rem;
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+    .asset-preview p { margin: 0.5rem 0; }
+    .asset-preview h4 { margin: 1rem 0 0.4rem 0; font-size: 1rem; color: #1e3a5f; }
+    .asset-preview .subject-line {
+      font-size: 0.8rem;
+      color: #6b7280;
+      padding-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .asset-preview .subject-line strong { color: #374151; }
+
+    .asset textarea {
+      width: 100%;
+      min-height: 260px;
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      background: #fafafa;
+      resize: vertical;
+      box-sizing: border-box;
+      margin-top: 0.5rem;
+    }
+
+    .copy-hint {
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin: 0.25rem 0 0 0;
+    }
+
+    .placeholder-note {
+      background: #fef9c3;
+      border-left: 3px solid #ca8a04;
+      padding: 0.6rem 0.85rem;
+      border-radius: 0 4px 4px 0;
+      font-size: 0.85rem;
+      margin: 0.75rem 0;
+    }
+
+    .section-heading {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid #e2e8f0;
+    }
+
+    .download-link {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: #0066cc;
+      color: white;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    @media print {
+      .sidebar, .mobile-header, .prevnext-nav, .asset details summary { display: none !important; }
+      .main-content { margin-left: 0 !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+      <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">Getting Started</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">Workshop Overview</a></li>
+      <li><a class="nav-link" href="./02-tenant-access.html">Tenant Access</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">IFP Overview</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for Applications</a></li>
+    </ul>
+    <li class="nav-section-title">Configuration</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">Configuration Exercise 1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">Configuration Exercise 2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">Configuration Exercise 3</a></li>
+      <li><a class="nav-link" href="./07-generation.html">Model Generation</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">Post-Generation Steps</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Error Log Review</a></li>
+    </ul>
+    <li class="nav-section-title">Extensions</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">Extensions Overview</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">Exercise 1</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">Exercise 2</a></li>
+    </ul>
+    <li class="nav-section-title">Reference</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">What's Coming</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">Q&amp;A from Sessions</a></li>
+      <li><a class="nav-link" href="./15-workshop-wrap-up.html">Workshop Wrap-up</a></li>
+    </ul>
+  </ul>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>Facilitator Launch Toolkit</h1>
+      <p class="subtitle">Every email, post, and script you need to promote, kick off, and wrap up the workshop. All copy-paste ready.</p>
+      <div class="badge-row"><span class="content-badge">Facilitator Only</span><span class="content-badge">Internal Use</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-warning">
+        <span class="callout-label">🔒 Private — Do Not Share This URL Publicly</span>
+        <p>This page contains facilitator-internal content (emails, scripts, prep materials). It's reachable only via a non-guessable URL and is excluded from search engines. Share the URL with other facilitators directly, not in public partner channels. The companion <a href="./15-facilitator-r9k2x7.html">Facilitator Run-of-Show</a> covers session execution.</p>
+      </div>
+
+      <div class="toolkit-toc">
+        <strong>Jump to:</strong>
+        <ol>
+          <li><a href="#promote">Promote &amp; Invite</a> — invitations, social, PDF overview</li>
+          <li><a href="#registered">After Registration</a> — confirmation, day-before, tenant credentials</li>
+          <li><a href="#kickoff">Workshop Morning</a> — kickoff email, Slack welcome, live intro script</li>
+          <li><a href="#during">During the Week</a> — mid-week check-in, Slack cheat sheet</li>
+          <li><a href="#wrapup">Wrap-up</a> — thank-you email, survey reminder</li>
+          <li><a href="#reference">Reference</a> — fact sheet, URLs, branding</li>
+        </ol>
+      </div>
+
+      <div class="placeholder-note">
+        <strong>Placeholders to fill in throughout:</strong> <code>[FIRST NAME]</code>, <code>[YOUR NAME]</code>, <code>[ZOOM LINK]</code>, <code>[WORKSHOP URL]</code>, <code>[END DATE]</code>, <code>[USERNAME]</code>, <code>[PASSWORD]</code>, <code>[NN]</code> (tenant number), <code>[SURVEY URL]</code>, <code>[RECORDING URL]</code>. Search for the square brackets in any email before sending.
+      </div>
+
+      <!-- ============================================================ -->
+      <h2 id="promote" class="section-heading">1. Promote &amp; Invite</h2>
+      <p>Before participants register. Use these to drive sign-ups from partner Slack channels, LinkedIn, and direct email.</p>
+
+      <!-- Short invitation -->
+      <div class="asset">
+        <h3>Short Invitation Email (~200 words)</h3>
+        <p class="asset-meta"><strong>Use when:</strong> Direct invite to known partners. Best when you want a quick yes.</p>
+        <details>
+          <summary>Rendered preview</summary>
+          <div class="asset-preview">
+            <p class="subject-line"><strong>Subject:</strong> Hands-On Virtual Enablement: IFP Delivery Workshop — Reserve Your Seat (and Your Tenant!)</p>
+            <p>Hi team,</p>
+            <p>We're running the <strong>IFP Delivery Workshop</strong> — a hands-on, fully self-paced virtual program covering the complete IFP 2.1 delivery workflow: Application Framework configuration, model generation, error log resolution, and building customer extensions from scratch.</p>
+            <p>You'll get your <strong>own dedicated training tenant</strong> for the week of your session. Most participants finish the workshop, labs, and supporting videos in <strong>an hour or two a day</strong>.</p>
+            <p><strong>Who it's for:</strong> Anaplan delivery consultants at partner firms implementing IFP — or expecting to in the next 12 months.</p>
+            <p><strong>Prerequisites:</strong></p>
+            <ul>
+              <li>MB, SA, or Master Anaplanner certification</li>
+              <li>Prior Anaplan model-building experience</li>
+              <li>Familiarity with financial planning (P&amp;L, balance sheet, headcount)</li>
+              <li>Registration via one of the links below</li>
+            </ul>
+            <h4>Register</h4>
+            <p>Two sessions, 50 seats each. If June 9 fills up, grab a seat on June 15.</p>
+            <ul>
+              <li><strong>June 9 — IFP Virtual Workshop</strong> → <a href="https://academy.anaplan.com/learn/courses/558/sessions/438?generated_by=19252&amp;hash=793de368169e514c7d9ae274d32bba05cd6f2ec0">Register</a></li>
+              <li><strong>June 15 — IFP Virtual Workshop</strong> → <a href="https://academy.anaplan.com/learn/courses/558/sessions/440?generated_by=19252&amp;hash=73281f9a7ce5a6df522c4e12c42eb4b2bbddaccd">Register</a></li>
+            </ul>
+            <p><a href="https://academy.anaplan.com/learn/courses/558/integrated-financial-planning-ifp-workshop-v2/sessions/438/BQ5QK95">Full course details on Anaplan Academy</a></p>
+            <p>— [YOUR NAME]</p>
+          </div>
+        </details>
+        <details>
+          <summary>Copy plain text</summary>
+          <p class="copy-hint">Click into the box, Cmd+A, Cmd+C.</p>
+          <textarea readonly>Subject: Hands-On Virtual Enablement: IFP Delivery Workshop — Reserve Your Seat (and Your Tenant!)
+
+Hi team,
+
+We're running the IFP Delivery Workshop — a hands-on, fully self-paced virtual program covering the complete IFP 2.1 delivery workflow: Application Framework configuration, model generation, error log resolution, and building customer extensions from scratch.
+
+You'll get your own dedicated training tenant for the week of your session. Most participants finish the workshop, labs, and supporting videos in an hour or two a day.
+
+Who it's for: Anaplan delivery consultants at partner firms implementing IFP — or expecting to in the next 12 months.
+
+Prerequisites:
+- MB, SA, or Master Anaplanner certification
+- Prior Anaplan model-building experience
+- Familiarity with financial planning (P&L, balance sheet, headcount)
+- Registration via one of the links below
+
+Register
+--------
+
+Two sessions, 50 seats each. If June 9 fills up, grab a seat on June 15.
+
+- June 9 — IFP Virtual Workshop:
+  https://academy.anaplan.com/learn/courses/558/sessions/438?generated_by=19252&hash=793de368169e514c7d9ae274d32bba05cd6f2ec0
+
+- June 15 — IFP Virtual Workshop:
+  https://academy.anaplan.com/learn/courses/558/sessions/440?generated_by=19252&hash=73281f9a7ce5a6df522c4e12c42eb4b2bbddaccd
+
+Full course details on Anaplan Academy:
+https://academy.anaplan.com/learn/courses/558/integrated-financial-planning-ifp-workshop-v2/sessions/438/BQ5QK95
+
+— [YOUR NAME]
+</textarea>
+        </details>
+      </div>
+
+      <!-- Long invitation -->
+      <div class="asset">
+        <h3>Long Invitation Email (~500 words)</h3>
+        <p class="asset-meta"><strong>Use when:</strong> Broader announcement, partners who need more context before committing. Includes outcomes, why-it-matters, and workshop modules.</p>
+        <details>
+          <summary>Rendered preview</summary>
+          <div class="asset-preview">
+            <p class="subject-line"><strong>Subject:</strong> Hands-On Virtual Enablement: IFP Delivery Workshop — Reserve Your Seat (and Your Tenant!)</p>
+            <p>Hi team,</p>
+            <p>We're running the <strong>IFP Delivery Workshop</strong> — a hands-on, fully self-paced virtual program that takes Anaplan partner practitioners through the complete IFP 2.1 delivery workflow: Application Framework configuration, model generation, error log resolution, and building real customer-specific extensions from scratch.</p>
+            <p>If you've ever generated an IFP model, hit an error log, and weren't sure whether to escalate or fix it yourself — this workshop is built to close that gap.</p>
+            <h4>What you'll learn</h4>
+            <p>You'll work through the full IFP delivery lifecycle. Application Framework configuration (all 44 questions, end-to-end). Model generation and post-generation verification. Error log review — read, categorize, and resolve generation errors without escalating. Extensions from scratch (two production-grade builds). Anaplan Way for Applications — the six-phase delivery methodology.</p>
+            <h4>Format &amp; sessions</h4>
+            <p>The workshop is <strong>entirely virtual and self-paced</strong>. Most participants finish the workshop, labs, and supporting videos in <strong>an hour or two a day</strong>. Each participant is assigned their <strong>own dedicated training tenant</strong>, available <strong>only during the week of your registered session</strong>.</p>
+            <p>Two sessions, 50 seats each:</p>
+            <ul>
+              <li><strong>June 9 — IFP Virtual Workshop</strong> → <a href="https://academy.anaplan.com/learn/courses/558/sessions/438?generated_by=19252&amp;hash=793de368169e514c7d9ae274d32bba05cd6f2ec0">Register for June 9</a></li>
+              <li><strong>June 15 — IFP Virtual Workshop</strong> → <a href="https://academy.anaplan.com/learn/courses/558/sessions/440?generated_by=19252&amp;hash=73281f9a7ce5a6df522c4e12c42eb4b2bbddaccd">Register for June 15</a></li>
+            </ul>
+            <p><em>[Preview truncated — see plain text for full version]</em></p>
+          </div>
+        </details>
+        <details>
+          <summary>Copy plain text</summary>
+          <p class="copy-hint">Click into the box, Cmd+A, Cmd+C.</p>
+          <textarea readonly>Subject: Hands-On Virtual Enablement: IFP Delivery Workshop — Reserve Your Seat (and Your Tenant!)
+
+Hi team,
+
+We're running the IFP Delivery Workshop — a hands-on, fully self-paced virtual program that takes Anaplan partner practitioners through the complete IFP 2.1 delivery workflow: Application Framework configuration, model generation, error log resolution, and building real customer-specific extensions from scratch.
+
+If you've ever generated an IFP model, hit an error log, and weren't sure whether to escalate or fix it yourself — this workshop is built to close that gap.
+
+What you'll learn
+-----------------
+
+You'll work through the full IFP delivery lifecycle:
+
+- Application Framework configuration — all 44 configuration questions, end-to-end
+- Model generation & post-generation verification — what generation produces, what to check, and why
+- Error log review — read, categorize, and resolve generation errors without escalating
+- Extensions from scratch — two production-grade builds: a multi-adjustment direct input method and a headcount-driven rate method
+- Anaplan Way for Applications — the six-phase delivery methodology that frames every IFP engagement
+
+Why this matters
+----------------
+
+IFP is delivered through the Application Framework — not built from scratch. That makes configuration, generation, and error log triage the core of the delivery skillset, not custom modeling. The configuration decisions, the post-generation checklist, and the data tag discipline for extensions aren't optional — they ARE the delivery method. Every lab happens in your own assigned training tenant with pre-staged IFP models, using real planning scenarios (OpEx/Headcount, Insurance 3-Statement, Nuclear Plant OpEx).
+
+By the end, you should be able to:
+- Configure the Application Framework end-to-end and generate a functional IFP model
+- Read and resolve generation error logs without escalating basic formula errors
+- Build a direct-input extension with adjustment layers
+- Build a headcount-driven rate planning method
+- Apply Configure-vs-Extend-vs-Modify discipline and data tag every change you make
+
+Who should attend
+-----------------
+
+Anaplan delivery consultants at partner firms who are implementing IFP for customers — or expect to in the next 12 months. This is a practitioner workshop, not a product overview.
+
+Prerequisites:
+- You must register using one of the links below
+- Model Builder (MB), Solution Architect (SA), or Master Anaplanner certification
+- Prior experience building or configuring Anaplan models
+- Familiarity with financial planning concepts (P&L, balance sheet, headcount)
+
+Format & sessions
+-----------------
+
+The workshop is entirely virtual and self-paced — work through the content on your own schedule, in any order. Most participants find an hour or two a day is enough to fully complete the workshop, labs, and supporting videos within the week.
+
+Each participant is assigned their own dedicated training tenant, available only during the week of your registered session. Plan to complete the workshop within that window.
+
+We're running two sessions, with capacity for 50 participants each. If the first session fills up, please register for the second.
+
+- June 9 — IFP Virtual Workshop:
+  https://academy.anaplan.com/learn/courses/558/sessions/438?generated_by=19252&hash=793de368169e514c7d9ae274d32bba05cd6f2ec0
+
+- June 15 — IFP Virtual Workshop:
+  https://academy.anaplan.com/learn/courses/558/sessions/440?generated_by=19252&hash=73281f9a7ce5a6df522c4e12c42eb4b2bbddaccd
+
+Course details and general information:
+https://academy.anaplan.com/learn/courses/558/integrated-financial-planning-ifp-workshop-v2/sessions/438/BQ5QK95
+
+Looking forward to working through this with you.
+
+— [YOUR NAME]
+</textarea>
+        </details>
+      </div>
+
+      <!-- LinkedIn short -->
+      <div class="asset">
+        <h3>LinkedIn / Social — Short Post</h3>
+        <p class="asset-meta"><strong>Use when:</strong> Quick LinkedIn share. Fits under most character limits including X/Twitter.</p>
+        <details>
+          <summary>Copy plain text</summary>
+          <textarea readonly>Anaplan partners — we're running a hands-on, fully self-paced IFP Delivery Workshop. 1–2 hours/day for a week, your own training tenant, IFP product experts on Slack throughout. Two June sessions opening — 50 seats each.
+
+Register: https://academy.anaplan.com/learn/courses/558/integrated-financial-planning-ifp-workshop-v2/sessions/438/BQ5QK95
+
+#Anaplan #IFP #FinancialPlanning #Workshop
+</textarea>
+        </details>
+      </div>
+
+      <!-- LinkedIn long -->
+      <div class="asset">
+        <h3>LinkedIn — Long Post</h3>
+        <p class="asset-meta"><strong>Use when:</strong> Anchor announcement on LinkedIn or partner blog.</p>
+        <details>
+          <summary>Copy plain text</summary>
+          <textarea readonly>🚀 IFP Delivery Workshop — registration open
+
+If you're an Anaplan delivery consultant implementing IFP for customers (or you expect to in the next 12 months), our hands-on workshop is built to close the gap between knowing about the Application Framework and actually delivering it.
+
+What you get:
+✅ Your own dedicated training tenant for the week
+✅ All 44 Application Framework configuration questions, end-to-end
+✅ Error log triage and resolution
+✅ Two production-grade extension builds, from scratch
+✅ IFP product experts on Slack throughout the workshop week
+
+Fully virtual, fully self-paced. Most participants finish in an hour or two a day.
+
+Two sessions opening in June, 50 seats each. Reserve your seat:
+👉 https://academy.anaplan.com/learn/courses/558/integrated-financial-planning-ifp-workshop-v2/sessions/438/BQ5QK95
+
+#Anaplan #IFP #IntegratedFinancialPlanning #PartnerEnablement
+</textarea>
+        </details>
+      </div>
+
+      <!-- Internal Slack -->
+      <div class="asset">
+        <h3>Internal Partner Slack Announcement</h3>
+        <p class="asset-meta"><strong>Use when:</strong> Posting in Anaplan partner Slack channels to drive registrations.</p>
+        <details>
+          <summary>Copy plain text</summary>
+          <textarea readonly>👋 Heads up — registration is open for the IFP Delivery Partner Workshop.
+
+Hands-on, fully self-paced. Get your own dedicated training tenant for the week, work through all 44 Application Framework configuration questions, build two real extensions, and have our IFP product experts on Slack the whole time.
+
+Two June sessions, 50 seats each.
+
+June 9: https://academy.anaplan.com/learn/courses/558/sessions/438?generated_by=19252&hash=793de368169e514c7d9ae274d32bba05cd6f2ec0
+June 15: https://academy.anaplan.com/learn/courses/558/sessions/440?generated_by=19252&hash=73281f9a7ce5a6df522c4e12c42eb4b2bbddaccd
+
+DM me with questions.
+</textarea>
+        </details>
+      </div>
+
+      <!-- PDF -->
+      <div class="asset">
+        <h3>Front/Back PDF Overview</h3>
+        <p class="asset-meta"><strong>Use when:</strong> Forwarding a polished one-pager to a partner who hasn't seen the workshop yet. Attach to email or share via Drive.</p>
+        <p>Page 1: what it is + outcomes. Page 2: format, sessions, prerequisites, register.</p>
+        <p style="margin-top: 0.75rem;">
+          <a class="download-link" href="../assets/ifp-workshop-overview.pdf" download>⬇ Download IFP Workshop Overview (PDF)</a>
+        </p>
+        <p class="copy-hint">PDF is regenerated from <code>docs/printable-workshop-overview.html</code> if the source content changes.</p>
+      </div>
+
+      <!-- ============================================================ -->
+      <h2 id="registered" class="section-heading">2. After Registration</h2>
+      <p>Participant has signed up. Send these in order leading up to the workshop start.</p>
+
+      <!-- Registration confirmation -->
+      <div class="asset">
+        <h3>Registration Confirmation Email</h3>
+        <p class="asset-meta"><strong>Use when:</strong> Send right after a participant registers. Confirms they're in and sets expectations for the week ahead.</p>
+        <details>
+          <summary>Copy plain text</summary>
+          <textarea readonly>Subject: You're In — IFP Delivery Workshop opens Tuesday, June 9
+
+Hi [FIRST NAME],
+
+You're confirmed for the IFP Delivery Workshop. Here's what to expect.
+
+What happens Tuesday, June 9
+----------------------------
+
+- Your training tenant goes live in the morning and stays yours through the workshop week
+- Workshop content opens the same morning — work through it at your own pace
+- Live kickoff session at 12:00 PM Eastern — optional but recommended; we'll walk through the workshop structure, surface common pitfalls, and answer any questions before you dive in
+- Can't make the live session? No problem. A recording will be posted shortly after, and the workshop is fully self-paced.
+
+Most participants finish the workshop, labs, and supporting videos in an hour or two a day.
+
+What you'll get the morning of June 9
+-------------------------------------
+
+- An email with your dedicated training tenant credentials
+- A link to the workshop lab guide
+- The live kickoff Zoom link (or recording link, whichever you prefer)
+- An invite to our Slack channel where IFP product experts will be on hand all week to answer questions
+
+Anything to do beforehand?
+--------------------------
+
+Nothing required. If you want to skim ahead, the workshop overview is open now:
+[WORKSHOP URL]/docs/01-overview.html
+
+See you Tuesday.
+
+— [YOUR NAME]
+</textarea>
+        </details>
+      </div>
+
+      <!-- Day-before welcome -->
+      <div class="asset">
+        <h3>Day-Before Welcome Email (with Pre-Workshop Survey)</h3>
+        <p class="asset-meta"><strong>Use when:</strong> Send the day before the workshop opens. Asks for the pre-workshop survey to tune content.</p>
+        <details>
+          <summary>Copy plain text</summary>
+          <textarea readonly>Subject: Welcome — Your IFP Delivery Workshop Starts Tomorrow
+
+Hi [FIRST NAME],
+
+Tomorrow your IFP Delivery Workshop begins. Your dedicated training tenant goes live in the morning and stays yours for the full week — long enough to work through every section, every lab, and every video at the pace that works for you.
+
+Before you log in, take 5 minutes to do one thing.
+
+Tell us what you need
+---------------------
+
+👉 Pre-workshop survey — 5 minutes: [SURVEY URL]
+
+This is the most important thing you can do today. Our goal for this workshop is simple: every minute you spend in it should be worth spending. To make that real, we need to know what YOU are bringing into the week — what you already know, what you're stuck on, what you're hoping to walk away able to do.
+
+We use your answers to:
+- Cut what doesn't help you — sections you already know, concepts that aren't relevant
+- Reinforce what does — extra time on the topics this cohort is least confident in
+- Tune the labs — so the scenarios match the kinds of customers you're working with
+
+You'll get a second survey at the end of the week. That one tells us whether we delivered. The two together are how this workshop gets better every time we run it.
+
+What's waiting for you tomorrow
+-------------------------------
+
+- Your training tenant credentials — arriving in a separate email tomorrow morning
+- The workshop lab guide — your home base for the week: [WORKSHOP URL]
+- A short welcome video — the first thing to watch when you log in
+- About an hour or two a day — most participants finish everything in well under 10 hours over the week
+
+You don't need to do anything else to prepare. Just take the survey, get a good night's sleep, and we'll see you in the tenant tomorrow.
+
+— [YOUR NAME]
+
+P.S. If anything in your tenant doesn't look right when you log in tomorrow, reply to this email immediately — we'd rather fix it in the first hour than have you lose a day.
+</textarea>
+        </details>
+      </div>
+
+      <!-- Tenant credentials -->
+      <div class="asset">
+        <h3>Tenant Credentials Email</h3>
+        <p class="asset-meta"><strong>Use when:</strong> Send the morning the workshop opens with each participant's specific tenant login.</p>
+        <details>
+          <summary>Copy plain text</summary>
+          <textarea readonly>Subject: Your IFP Workshop Tenant Access is Ready
+
+Hi [FIRST NAME],
+
+Your training tenant for the IFP Delivery Workshop is provisioned. Here's everything you need to get started.
+
+Your tenant access
+------------------
+
+- URL: https://us1a.app.anaplan.com/
+- Username: [USERNAME]
+- Temporary password: [PASSWORD] (you'll be prompted to change this on first login)
+- Tenant name: Application Training [NN]
+
+Required roles (already assigned to you)
+----------------------------------------
+
+- Page Builder
+- Application Owner
+- Integration Admin
+- Workspace Admin
+
+Dataspace (already assigned to you)
+-----------------------------------
+
+- Dataspace [NN]
+
+Where to start
+--------------
+
+1. Log in and confirm access. Full instructions: [WORKSHOP URL]/docs/02-tenant-access.html
+2. Open the workshop lab guide and start with Workshop Overview: [WORKSHOP URL]
+3. Drop into Slack (link below) if you hit any access issues
+
+Your tenant is yours through [END DATE] — work at your own pace.
+
+Slack channel: #ext-delivery-workshop-ifp-anaplan
+https://anaplan.enterprise.slack.com/archives/C0B96145RKJ
+IFP product experts on hand all week. No Slack? Email questions to ext-delivery-workshop-aaaausokasy5ajaxtrn2rw433u@anaplan.org.slack.com (it posts in the channel).
+
+— [YOUR NAME]
+</textarea>
+        </details>
+      </div>
+
+      <!-- ============================================================ -->
+      <h2 id="kickoff" class="section-heading">3. Workshop Morning</h2>
+      <p>The day the workshop opens. Send the kickoff email, post the Slack channel welcome, and run the live intro.</p>
+
+      <!-- Morning kickoff -->
+      <div class="asset">
+        <h3>Morning Kickoff Email (with workshop link &amp; Zoom)</h3>
+        <p class="asset-meta"><strong>Use when:</strong> Send the morning the workshop opens. Includes the workshop URL and the live Zoom kickoff link.</p>
+        <details>
+          <summary>Rendered preview</summary>
+          <div class="asset-preview">
+            <p class="subject-line"><strong>Subject:</strong> Good morning — your IFP Workshop opens today</p>
+            <p>Hi [FIRST NAME],</p>
+            <p>Your IFP Delivery Workshop opens this morning. Here's everything you need.</p>
+            <h4>🎯 Workshop lab guide</h4>
+            <p><a href="[WORKSHOP URL]">[WORKSHOP URL]</a> — start with Workshop Overview, then Tenant Access.</p>
+            <h4>📅 Live kickoff session at 12:00 PM Eastern (optional but recommended)</h4>
+            <p>Join via Zoom: <a href="[ZOOM LINK]">[ZOOM LINK]</a></p>
+            <p>We'll walk through the workshop structure, surface common pitfalls, and answer questions. Can't make it? A recording will be posted by end of day, and the workshop is fully self-paced regardless.</p>
+            <h4>💬 Questions during the week → Slack</h4>
+            <p>Drop into <a href="https://anaplan.enterprise.slack.com/archives/C0B96145RKJ">#ext-delivery-workshop-ifp-anaplan</a>. Our IFP product experts are on hand all week. No Slack? Email <a href="mailto:ext-delivery-workshop-aaaausokasy5ajaxtrn2rw433u@anaplan.org.slack.com">ext-delivery-workshop-aaaausokasy5ajaxtrn2rw433u@anaplan.org.slack.com</a>.</p>
+            <h4>What to expect this week</h4>
+            <ul>
+              <li>1–2 hours per day is enough to complete the workshop, labs, and supporting videos</li>
+              <li>Your dedicated training tenant is yours through <strong>[END DATE]</strong></li>
+              <li>Work in whatever order makes sense — the lab guide is fully self-paced</li>
+            </ul>
+            <p>Got tenant credentials yesterday but haven't logged in yet? Now's the time. If you hit any issues, ping me or drop them in Slack.</p>
+            <p>Looking forward to working through this with you.</p>
+            <p>— [YOUR NAME]</p>
+          </div>
+        </details>
+        <details>
+          <summary>Copy plain text</summary>
+          <textarea readonly>Subject: Good morning — your IFP Workshop opens today
+
+Hi [FIRST NAME],
+
+Your IFP Delivery Workshop opens this morning. Here's everything you need.
+
+🎯 Workshop lab guide
+---------------------
+
+[WORKSHOP URL]
+
+Start with Workshop Overview, then Tenant Access.
+
+📅 Live kickoff session at 12:00 PM Eastern (optional but recommended)
+---------------------------------------------------------------------
+
+Join via Zoom: [ZOOM LINK]
+
+We'll walk through the workshop structure, surface common pitfalls, and answer questions. Can't make it? A recording will be posted by end of day, and the workshop is fully self-paced regardless.
+
+💬 Questions during the week → Slack
+------------------------------------
+
+Drop into #ext-delivery-workshop-ifp-anaplan:
+https://anaplan.enterprise.slack.com/archives/C0B96145RKJ
+
+Our IFP product experts are on hand all week. No Slack? Email ext-delivery-workshop-aaaausokasy5ajaxtrn2rw433u@anaplan.org.slack.com.
+
+What to expect this week
+------------------------
+
+- 1–2 hours per day is enough to complete the workshop, labs, and supporting videos
+- Your dedicated training tenant is yours through [END DATE]
+- Work in whatever order makes sense — the lab guide is fully self-paced
+
+Got tenant credentials yesterday but haven't logged in yet? Now's the time. If you hit any issues, ping me or drop them in Slack.
+
+Looking forward to working through this with you.
+
+— [YOUR NAME]
+</textarea>
+        </details>
+      </div>
+
+      <!-- Slack channel welcome -->
+      <div class="asset">
+        <h3>Slack Channel Welcome Message (Pinned)</h3>
+        <p class="asset-meta"><strong>Use when:</strong> Post and pin in the workshop Slack channel on Day 1 morning so newcomers see it.</p>
+        <details>
+          <summary>Copy plain text</summary>
+          <textarea readonly>👋 Welcome to the IFP Delivery Workshop channel!
+
+This is your direct line to IFP product experts during the workshop week. A few things:
+
+Ask anything. Configuration questions, generation errors, "is this normal," "how would you scope this for a real customer" — all fair game. Threading is encouraged so the channel stays scannable.
+
+Tag specific topics if helpful:
+🔧 Configuration questions
+🪵 Error log help
+⚡ Extension building
+🧭 Anaplan Way / methodology
+
+Workshop lab guide: [WORKSHOP URL]
+Live kickoff today at 12 ET: [ZOOM LINK]
+
+Daily hours: Experts are most active 9 AM – 5 PM Eastern, but you'll usually get a reply within an hour during the workshop week. Channel stays open after the workshop closes too.
+
+Glad you're here. Let's go.
+</textarea>
+        </details>
+      </div>
+
+      <!-- Kickoff script -->
+      <div class="asset">
+        <h3>Live Kickoff Intro Script (~10 min)</h3>
+        <p class="asset-meta"><strong>Use when:</strong> Running the noon Eastern Zoom kickoff. Talking points, not a read-aloud script — adapt to your style.</p>
+        <details>
+          <summary>Copy plain text</summary>
+          <textarea readonly>LIVE KICKOFF INTRO — TALKING POINTS (~10 min)
+
+Adapt freely to your delivery style. Use these as anchors.
+
+OPEN (1 min)
+------------
+Welcome everyone. Quick agenda: about 10 minutes from me on what to expect this week, then Q&A. Recording will be posted later today for anyone who couldn't join live.
+
+WHAT THIS WORKSHOP IS (2 min)
+-----------------------------
+Five sentences:
+1. IFP is delivered through the Application Framework — not built from scratch.
+2. Configuration, generation, and error log triage are the core skills.
+3. Two extension builds, from scratch, mirroring real customer asks.
+4. Your tenant is provisioned and yours through end of week.
+5. Anaplan IFP product experts are on Slack throughout the workshop week to answer questions.
+
+THE LAB GUIDE (2 min)
+---------------------
+[Screen share the workshop landing page]
+Sidebar navigation: Getting Started → Configuration → Extensions → Reference.
+Work at your own pace. Most participants finish in an hour or two a day.
+The "Read · Watch · Do" pattern is consistent across sections.
+
+THREE THINGS TO NOT MESS UP (2 min)
+-----------------------------------
+1. Do not generate against a production tenant.
+2. Confirm your roles AND dataspace assignment before generating — biggest reason people get stuck.
+3. Use the TRAIN models for extension exercises, not the ones you generated yourself.
+
+WHERE TO GET HELP (1 min)
+-------------------------
+Slack channel is the fastest path. Link's in the lab guide. No Slack? Email-into-channel address is there too.
+
+AT THE END OF THE WEEK (1 min)
+------------------------------
+Workshop Wrap-up page has the tenant cleanup checklist — please run through it before you log out for the last time. Post-workshop survey link is at the top of the wrap-up page.
+
+Q&A (1+ min)
+------------
+Open the floor. Common questions to be ready for:
+- "How long does generation take?" → 20–40 min
+- "Can I extend my tenant access?" → Case by case, contact me
+- "Do I need to attend the live kickoff to count as participating?" → No, fully self-paced
+</textarea>
+        </details>
+      </div>
+
+      <!-- ============================================================ -->
+      <h2 id="during" class="section-heading">4. During the Week</h2>
+      <p>Keep momentum, surface blockers, and have ready answers for the common questions.</p>
+
+      <!-- Mid-week check-in -->
+      <div class="asset">
+        <h3>Mid-Week Check-In Email</h3>
+        <p class="asset-meta"><strong>Use when:</strong> Send Wednesday or Thursday of the workshop week. Surfaces blockers and reminds about Slack.</p>
+        <details>
+          <summary>Copy plain text</summary>
+          <textarea readonly>Subject: Halfway through — quick check-in
+
+Hi [FIRST NAME],
+
+Quick midweek nudge from the IFP Workshop. Three things:
+
+1. How's it going?
+   Drop a thumbs-up or thumbs-down in #ext-delivery-workshop-ifp-anaplan
+   (https://anaplan.enterprise.slack.com/archives/C0B96145RKJ)
+   so I can see if anything's stuck.
+
+2. Reminder: experts in Slack all week.
+   If you hit something weird in generation, or you're not sure if a formula error is a real problem — that's exactly what the channel is for. Don't bang your head on it for hours.
+
+3. Pacing.
+   Most participants are through the Configuration section by now and into Extensions. If you're behind, no stress — you've got the rest of the week. If you're ahead, the Reference section has the Q&A from prior sessions which is worth skimming.
+
+— [YOUR NAME]
+</textarea>
+        </details>
+      </div>
+
+      <!-- Slack cheat sheet -->
+      <div class="asset">
+        <h3>Common Questions — Slack Cheat Sheet</h3>
+        <p class="asset-meta"><strong>Use when:</strong> Quick reference for facilitators answering in Slack. Paste any of these as a starting point for your reply.</p>
+        <details>
+          <summary>View cheat sheet</summary>
+          <div class="asset-preview">
+            <p><strong>"Generation is taking forever"</strong> → 20–40 min is normal. Watch the <code>/applications</code> page, not the App Framework page (status indicator lags inside the Application Framework).</p>
+            <p><strong>"I see errors after generation"</strong> → That's expected. Page 09 (Error Log Review) walks the diagnostic. Most are <code>LINE_ITEM_FORMULA</code> — fixable by copying from the base TRAIN model.</p>
+            <p><strong>"Which models do I use for extensions?"</strong> → The pre-populated TRAIN models (with <code>TRAIN</code> prefix), not the ones you generated. The TRAIN models have data; extensions need data to demonstrate behavior.</p>
+            <p><strong>"Can I delete a hierarchy level?"</strong> → Yes, but only middle levels — the leaf must stay at the bottom. When adding levels, drag new ones above the original leaf.</p>
+            <p><strong>"What if I make a mistake in configuration?"</strong> → Restore Default per hierarchy (one at a time — no global reset). Or regenerate — you have the rest of the week.</p>
+            <p><strong>"How do I know if my formula error is a real bug or my fault?"</strong> → Compare against the base TRAIN model. If the formula works there with similar config, it's something you renamed or changed during configuration.</p>
+            <p><strong>"My generation hit an error and now I can't restart"</strong> → Confirm your four roles (Page Builder, Application Owner, Integration Admin, Workspace Admin) and Dataspace assignment with the tenant admin. Most "stuck" generations are actually permissions problems.</p>
+            <p><strong>"Where's the recording of the live kickoff?"</strong> → Posted in the Slack channel as a pinned message. Also available at [RECORDING URL].</p>
+          </div>
+        </details>
+        <details>
+          <summary>Copy plain text</summary>
+          <textarea readonly>COMMON QUESTIONS — SLACK CHEAT SHEET
+
+"Generation is taking forever"
+→ 20–40 min is normal. Watch the /applications page, not the App Framework page (status indicator lags inside the Application Framework).
+
+"I see errors after generation"
+→ That's expected. Page 09 (Error Log Review) walks the diagnostic. Most are LINE_ITEM_FORMULA — fixable by copying from the base TRAIN model.
+
+"Which models do I use for extensions?"
+→ The pre-populated TRAIN models (with TRAIN prefix), not the ones you generated. The TRAIN models have data; extensions need data to demonstrate behavior.
+
+"Can I delete a hierarchy level?"
+→ Yes, but only middle levels — the leaf must stay at the bottom. When adding levels, drag new ones above the original leaf.
+
+"What if I make a mistake in configuration?"
+→ Restore Default per hierarchy (one at a time — no global reset). Or regenerate — you have the rest of the week.
+
+"How do I know if my formula error is a real bug or my fault?"
+→ Compare against the base TRAIN model. If the formula works there with similar config, it's something you renamed or changed during configuration.
+
+"My generation hit an error and now I can't restart"
+→ Confirm your four roles (Page Builder, Application Owner, Integration Admin, Workspace Admin) and Dataspace assignment with the tenant admin. Most "stuck" generations are actually permissions problems.
+
+"Where's the recording of the live kickoff?"
+→ Posted in the Slack channel as a pinned message. Also available at [RECORDING URL].
+</textarea>
+        </details>
+      </div>
+
+      <!-- ============================================================ -->
+      <h2 id="wrapup" class="section-heading">5. Wrap-up</h2>
+      <p>Close the loop, get the survey filled out, hand off to the long-term Slack relationship.</p>
+
+      <!-- Thank you -->
+      <div class="asset">
+        <h3>Thank-You / Wrap-Up Email</h3>
+        <p class="asset-meta"><strong>Use when:</strong> Send Friday afternoon or Monday after the workshop closes. Drives survey responses and cements the Slack channel as the ongoing relationship.</p>
+        <details>
+          <summary>Copy plain text</summary>
+          <textarea readonly>Subject: Thank you — see you on the next one
+
+Hi [FIRST NAME],
+
+That's a wrap on the IFP Delivery Workshop. Thank you for the time and attention you put into the week.
+
+Three quick things:
+
+1. Tenant cleanup
+   If you haven't already, please run through the Workshop Wrap-up checklist — five steps to leave the training tenant clean for the next cohort. Takes 10 minutes.
+   [WORKSHOP URL]/docs/15-workshop-wrap-up.html
+
+2. Post-workshop survey
+   Five minutes: [SURVEY URL]
+   We read every response and use them directly to cut what didn't add value and reinforce what did. The next cohort gets a better workshop because you fill this out.
+
+3. The Slack channel stays open
+   #ext-delivery-workshop-ifp-anaplan doesn't close.
+   https://anaplan.enterprise.slack.com/archives/C0B96145RKJ
+   Our IFP product experts are still there. Drop in any time you hit something on a real engagement and want a second opinion.
+
+The lab guide also stays available — bookmark it. Looking forward to working with you again.
+
+— [YOUR NAME]
+</textarea>
+        </details>
+      </div>
+
+      <!-- Survey reminder -->
+      <div class="asset">
+        <h3>Survey Reminder (Slack post or short email)</h3>
+        <p class="asset-meta"><strong>Use when:</strong> 3–5 days after the wrap-up email if survey response rate is low.</p>
+        <details>
+          <summary>Copy plain text</summary>
+          <textarea readonly>Friendly reminder — if you finished the IFP workshop last week and haven't filled out the post-workshop survey yet, would you spare 5 minutes? [SURVEY URL]
+
+We use every response. Especially valuable: what was unclear, what was redundant, what should we have spent more (or less) time on.
+
+Thank you 🙏
+</textarea>
+        </details>
+      </div>
+
+      <!-- ============================================================ -->
+      <h2 id="reference" class="section-heading">6. Reference</h2>
+      <p>Quick-grab facts you'll want when sending emails, writing Slack replies, or filling out the placeholders above.</p>
+
+      <div class="asset">
+        <h3>Workshop Fact Sheet</h3>
+        <details open>
+          <summary>View facts</summary>
+          <div class="asset-preview">
+            <p><strong>Workshop name:</strong> IFP Delivery Partner Workshop</p>
+            <p><strong>One-line description:</strong> A hands-on, fully self-paced virtual program covering the complete IFP 2.1 delivery workflow — Application Framework configuration, model generation, error log resolution, and building customer-specific extensions from scratch.</p>
+            <p><strong>Audience:</strong> Anaplan delivery consultants at partner firms implementing IFP — or expecting to in the next 12 months.</p>
+            <p><strong>Format:</strong> Virtual, self-paced, week-long. Optional live kickoff Tuesday 12 PM ET.</p>
+            <p><strong>Time commitment:</strong> 1–2 hours per day for one week (~6–10 hours total).</p>
+            <p><strong>Capacity per session:</strong> 50 participants.</p>
+            <p><strong>Prerequisites:</strong> MB / SA / Master Anaplanner cert. Prior Anaplan model-building experience. Familiarity with P&amp;L, balance sheet, headcount concepts.</p>
+            <p><strong>Anaplan Academy course URL:</strong> <a href="https://academy.anaplan.com/learn/courses/558/integrated-financial-planning-ifp-workshop-v2/sessions/438/BQ5QK95">https://academy.anaplan.com/learn/courses/558/integrated-financial-planning-ifp-workshop-v2/sessions/438/BQ5QK95</a></p>
+            <p><strong>Session registration links:</strong></p>
+            <ul>
+              <li>June 9: <a href="https://academy.anaplan.com/learn/courses/558/sessions/438?generated_by=19252&amp;hash=793de368169e514c7d9ae274d32bba05cd6f2ec0">academy.anaplan.com/.../sessions/438</a></li>
+              <li>June 15: <a href="https://academy.anaplan.com/learn/courses/558/sessions/440?generated_by=19252&amp;hash=73281f9a7ce5a6df522c4e12c42eb4b2bbddaccd">academy.anaplan.com/.../sessions/440</a></li>
+            </ul>
+            <p><strong>Workshop lab guide URL:</strong> <code>https://gunnarstoa.github.io/ifp-delivery-workshop/</code></p>
+            <p><strong>Available languages:</strong> English, German (<code>/de/</code>), Japanese (<code>/ja/</code>), Spanish (<code>/es/</code>), French (<code>/fr/</code>), Portuguese (<code>/pt/</code>).</p>
+            <p><strong>Slack channel:</strong> <code>#ext-delivery-workshop-ifp-anaplan</code></p>
+            <p><strong>Slack channel URL:</strong> <a href="https://anaplan.enterprise.slack.com/archives/C0B96145RKJ">https://anaplan.enterprise.slack.com/archives/C0B96145RKJ</a></p>
+            <p><strong>Slack email-into-channel:</strong> <code>ext-delivery-workshop-aaaausokasy5ajaxtrn2rw433u@anaplan.org.slack.com</code></p>
+            <p><strong>Tenant URL participants log in to:</strong> <code>https://us1a.app.anaplan.com/</code></p>
+            <p><strong>Roles required for generation</strong> (assigned during provisioning): Page Builder, Application Owner, Integration Admin, Workspace Admin.</p>
+            <p><strong>Critical pre-flight check:</strong> participants must confirm all 4 roles + Dataspace assignment before generating. Page 02 (Tenant Access) walks the check.</p>
+          </div>
+        </details>
+      </div>
+
+      <div class="asset">
+        <h3>Workshop URLs by Language</h3>
+        <details>
+          <summary>Show URLs</summary>
+          <div class="asset-preview">
+            <p><strong>English (source):</strong> <code>https://gunnarstoa.github.io/ifp-delivery-workshop/</code></p>
+            <p><strong>German:</strong> <code>https://gunnarstoa.github.io/ifp-delivery-workshop/de/</code></p>
+            <p><strong>Japanese:</strong> <code>https://gunnarstoa.github.io/ifp-delivery-workshop/ja/</code></p>
+            <p><strong>Spanish:</strong> <code>https://gunnarstoa.github.io/ifp-delivery-workshop/es/</code></p>
+            <p><strong>French:</strong> <code>https://gunnarstoa.github.io/ifp-delivery-workshop/fr/</code></p>
+            <p><strong>Portuguese:</strong> <code>https://gunnarstoa.github.io/ifp-delivery-workshop/pt/</code></p>
+            <p class="copy-hint">All non-English versions are LLM-only translations. Send the matching language URL based on participant region — or just send the English URL and let them switch from the in-page language switcher.</p>
+          </div>
+        </details>
+      </div>
+
+      <div class="asset">
+        <h3>Tenant Cleanup Reference (for facilitator visibility)</h3>
+        <details>
+          <summary>The 5-step participant cleanup checklist</summary>
+          <div class="asset-preview">
+            <p>This is what participants run through at the end of the week. Knowing it lets you answer questions and verify the tenant before the next cohort.</p>
+            <ol>
+              <li>Delete the applications they configured during exercises (those <em>without</em> the <code>TRAIN</code> prefix)</li>
+              <li>Delete the models generated from their configured applications (those <em>without</em> the <code>TRAIN</code> prefix)</li>
+              <li>Delete any objects they added to their assigned Dataspace</li>
+              <li>Reset hierarchies and configuration questions to default in the Application Framework Configurator (one hierarchy at a time — no global reset)</li>
+              <li>Restore the Financial Planning model to its pre-extension ID
+                <ul>
+                  <li>For Application Training tenants 00–60: ID is <code>2064565</code></li>
+                  <li>For EMEA tenants: confirm ID with the EMEA tenant admin</li>
+                </ul>
+              </li>
+            </ol>
+            <p>Full participant-facing version: <a href="./15-workshop-wrap-up.html">Workshop Wrap-up page</a>.</p>
+          </div>
+        </details>
+      </div>
+
+      <div class="prevnext-nav">
+        <a class="prevnext-btn" href="./15-facilitator-r9k2x7.html">← Facilitator Run-of-Show</a>
+        <span></span>
+      </div>
+    </div>
+  </main>
+  <script src="../js/nav.js"></script>
+</body>
+</html>
