@@ -44,6 +44,7 @@
     <ul class="nav-submenu">
       <li><a class="nav-link" href="./13-whats-coming.html">Em breve</a></li>
       <li><a class="nav-link" href="./14-qanda.html">Perguntas e respostas das sessões</a></li>
+      <li><a class="nav-link" href="./15-workshop-wrap-up.html">Encerramento do workshop</a></li>
     </ul>
   </ul>
   <div class="lang-switcher">
@@ -65,7 +66,7 @@
     <div class="content-header">
       <h1>Geração do modelo</h1>
       <p class="subtitle">O que acontece durante a Geração, quanto tempo leva e o que esperar</p>
-      <div class="badge-row"><span class="content-badge">Dia 1</span><span class="content-badge">30 min</span><span class="content-badge">Walkthrough</span></div>
+      <div class="badge-row"><span class="content-badge">30 min</span><span class="content-badge">Walkthrough</span></div>
     </div>
     <div class="content-body">
 
@@ -75,7 +76,7 @@
       </div>
 
 <h2>O que a Geração faz</h2>
-      <p>Quando você dispara a Geração, o App Framework lê todas as 44 respostas de configuração e provisiona a estrutura completa do modelo IFP. Isso não é uma cópia de template — é um processo dinâmico de Geração que aplica suas decisões de configuração para produzir um modelo específico para suas respostas.</p>
+      <p>Quando você dispara a Geração, o Application Framework lê todas as 44 respostas de configuração e provisiona a estrutura completa do modelo IFP. Isso não é uma cópia de template — é um processo dinâmico de Geração que aplica suas decisões de configuração para produzir um modelo específico para suas respostas.</p>
       <p>A Geração provisiona quatro modelos:</p>
       <ul>
         <li><strong>Financial Planning</strong> — o modelo principal de planejamento (Módulos INP, CALC, OUT)</li>
@@ -94,7 +95,7 @@
 <figure class="screenshot"><img src="../../img/generation/gen-0265.jpg" alt="Lista de páginas do modelo IFP — 43 páginas entre Módulos ADMIN, SYS, DAT, INP, CALC, OUT" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Lista de páginas do modelo IFP — 43 páginas entre Módulos ADMIN, SYS, DAT, INP, CALC, OUT</figcaption></figure>
 
       <h2>Geração com erros — Painel de atividade</h2>
-<figure class="screenshot"><img src="../../img/generation/gen-d2-0235.jpg" alt="Geração do App Framework com erros — painel de atividade mostrando fontes de dados do modelo e contagem de erros" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Geração do App Framework com erros — painel de atividade mostrando fontes de dados do modelo e contagem de erros</figcaption></figure>
+<figure class="screenshot"><img src="../../img/generation/gen-d2-0235.jpg" alt="Geração do Application Framework com erros — painel de atividade mostrando fontes de dados do modelo e contagem de erros" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Geração do Application Framework com erros — painel de atividade mostrando fontes de dados do modelo e contagem de erros</figcaption></figure>
 
       <h2>Módulos padrão de Financial Planning após a Geração</h2>
 <figure class="screenshot"><img src="../../img/v2.1-screenshots/modules-list.png" alt="Lista de Módulos padrão no IFP v2.1 mostrando Módulos ADMIN, SYS, DAT, INP, CALC, OUT com áreas funcionais, Line Items e propriedades" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Módulos padrão de Financial Planning (v2.1) — mostrando estrutura de Módulos ADMIN, SYS, DAT, INP, CALC, OUT com áreas funcionais e metadados</figcaption></figure>
@@ -104,7 +105,7 @@
 <figure class="screenshot"><img src="../../img/v2.1-screenshots/ux-navigation-structure.png" alt="AW_FIN - Navegação UX do Integrated Financial Planning v2.1.0 mostrando Quick Access, Categorias (Home, Reporting &amp; Analysis, Top Down Planning, Revenue &amp; COGS, Operating Expense, Headcount, CapEx Planning, Balance Sheet &amp; Cash Flow, categorias de Administration) e sub-páginas em cada uma." style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Estrutura de navegação UX do AW_FIN (v2.1.0) — categorias e páginas organizadas por função de negócio e tipo de planejamento</figcaption></figure>
 
       <h2>Etapas da Geração</h2>
-<div class="step"><div class="step-badge">1</div><div class="step-content"><h3>Dispare a Geração</h3><p>No Application Framework Configurator, após concluir todas as seções, clique em Generate. Confirme quaisquer prompts. Anote a hora de início.</p></div></div><div class="step"><div class="step-badge">2</div><div class="step-content"><h3>Monitore o status</h3><p>A página de visão geral do App Framework mostra o status da Geração. Atualize periodicamente. Não feche o navegador nem dispare outra Geração enquanto estiver em andamento.</p></div></div><div class="step"><div class="step-badge">3</div><div class="step-content"><h3>Primeiro olhar no modelo gerado</h3><p>Uma vez concluído, navegue até seu Workspace. Você deve ver os quatro modelos IFP listados. Abra o modelo Financial Planning e verifique se os sub-processos de planejamento estão presentes — incluindo Revenue &amp; COGS, Operating Expense, Headcount, CapEx Planning e Balance Sheet &amp; Cash Flow (com base em sua configuração).</p></div></div><div class="step"><div class="step-badge">4</div><div class="step-content"><h3>Verifique os Error Logs</h3><p>Volte ao App Framework. No canto inferior direito da página de visão geral, encontre a contagem de Error Log. Clique para expandir o log. Nota: mais de 0 erros é normal. Prossiga para a Revisão do Error Log.</p></div></div>
+<div class="step"><div class="step-badge">1</div><div class="step-content"><h3>Dispare a Geração</h3><p>No Application Framework Configurator, após concluir todas as seções, clique em Generate. Confirme quaisquer prompts. Anote a hora de início.</p></div></div><div class="step"><div class="step-badge">2</div><div class="step-content"><h3>Monitore o status</h3><p>A página de visão geral do Application Framework mostra o status da Geração. Atualize periodicamente. Não feche o navegador nem dispare outra Geração enquanto estiver em andamento.</p></div></div><div class="step"><div class="step-badge">3</div><div class="step-content"><h3>Primeiro olhar no modelo gerado</h3><p>Uma vez concluído, navegue até seu Workspace. Você deve ver os quatro modelos IFP listados. Abra o modelo Financial Planning e verifique se os sub-processos de planejamento estão presentes — incluindo Revenue &amp; COGS, Operating Expense, Headcount, CapEx Planning e Balance Sheet &amp; Cash Flow (com base em sua configuração).</p></div></div><div class="step"><div class="step-badge">4</div><div class="step-content"><h3>Verifique os Error Logs</h3><p>Volte ao Application Framework. No canto inferior direito da página de visão geral, encontre a contagem de Error Log. Clique para expandir o log. Nota: mais de 0 erros é normal. Prossiga para a Revisão do Error Log.</p></div></div>
 
       <div class="prevnext-nav"><a class="prevnext-btn" href="./06-exercise-3.html">← Anterior</a><a class="prevnext-btn" href="./08-post-gen.html">Próximo →</a></div>
     </div>
