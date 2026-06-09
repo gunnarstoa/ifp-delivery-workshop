@@ -74,25 +74,7 @@
         <p>Esta es una traducción automática de la versión original en inglés. Para la versión autoritativa y más actualizada, consulte <a href="../10-extensions-overview.html">la versión en inglés</a>. Reporte cualquier problema de traducción a su contacto Anaplan.</p>
       </div>
 
-      <div class="tsd-banner">
-        <div class="tsd-step tsd-step-tell">
-          <span class="tsd-step-label">📖 Contar</span>
-          <span class="tsd-step-heading">Qué son las extensiones</span>
-          <span class="tsd-step-desc">Los tres tipos de extensión y las 7 mejores prácticas para implementarlas de forma segura.</span>
-        </div>
-        <div class="tsd-step tsd-step-show">
-          <span class="tsd-step-label">👁 Mostrar</span>
-          <span class="tsd-step-heading">Marco de decisión de extensiones</span>
-          <span class="tsd-step-desc">El facilitador muestra el marco de decisión de extensiones y ejemplos reales.</span>
-        </div>
-        <div class="tsd-step tsd-step-do">
-          <span class="tsd-step-label">✅ Hacer</span>
-          <span class="tsd-step-heading">Mapear al tipo de extensión</span>
-          <span class="tsd-step-desc">Los participantes mapean los escenarios de los ejercicios del Día 2 al tipo de extensión correcto.</span>
-        </div>
-      </div>
-
-      <h2>Qué son las extensiones</h2>
+<h2>Qué son las extensiones</h2>
       <p>Las extensiones son adiciones o modificaciones específicas del cliente al modelo base IFP que el Application Framework Configurator no puede producir. Caen en tres categorías, y la categoría determina el riesgo y el enfoque.</p>
 <div class="table-wrap"><table><thead><tr><th>Tipo de extensión</th><th>Qué es</th><th>Riesgo de actualización</th><th>Cuándo usar</th></tr></thead><tbody><tr><td>Configurar</td><td>Use el Application Framework Configurator para habilitar una capacidad incorporada</td><td>Ninguno: está soportado</td><td>Siempre intente esto primero. Si el Application Framework Configurator tiene un ajuste para ello, úselo.</td></tr><tr><td>Extender / conectar</td><td>Añadir nuevos Line Items, Módulos o Listas sin tocar las fórmulas del modelo base</td><td>Bajo: los elementos nuevos no son sobrescritos por las actualizaciones</td><td>Cuando el cliente necesita algo que el Application Framework Configurator no cubre, pero puede añadirlo sin cambiar la lógica del modelo base.</td></tr><tr><td>Enmendar / modificar / eliminar</td><td>Cambiar una fórmula, Lista o Módulo existente del modelo base</td><td>Alto: los cambios pueden perderse o romperse en la actualización</td><td>Último recurso. Documente cada override con un Data Tag. Mantenga documentación externa.</td></tr></tbody></table></div>
 

@@ -44,6 +44,7 @@
     <ul class="nav-submenu">
       <li><a class="nav-link" href="./13-whats-coming.html">What's Coming</a></li>
       <li><a class="nav-link" href="./14-qanda.html">Q&A from Sessions</a></li>
+      <li><a class="nav-link" href="./15-workshop-wrap-up.html">Workshop Wrap-up</a></li>
     </ul>
   </ul>
   <div class="lang-switcher">
@@ -69,25 +70,19 @@
     </div>
     <div class="content-body">
 
-      <div class="tsd-banner">
-        <div class="tsd-step tsd-step-tell">
-          <span class="tsd-step-label">📖 Tell</span>
-          <span class="tsd-step-heading">Exercise Overview</span>
-          <span class="tsd-step-desc">This exercise presents a real business scenario with configuration requirements.</span>
-        </div>
-        <div class="tsd-step tsd-step-show">
-          <span class="tsd-step-label">👁 Show</span>
-          <span class="tsd-step-heading">Facilitated Walk-Through</span>
-          <span class="tsd-step-desc">Facilitator guides you through configuration decisions step-by-step.</span>
-        </div>
-        <div class="tsd-step tsd-step-do">
-          <span class="tsd-step-label">✅ Do</span>
-          <span class="tsd-step-heading">Configure It Yourself</span>
-          <span class="tsd-step-desc">Configure your own version, comparing results to the example.</span>
-        </div>
+      <div class="callout-warning">
+        <span class="callout-label">⚠ Reset Before You Start — Each Exercise is Net-New</span>
+        <p>This exercise is independent of the previous one. Before you begin, restore the Application Framework Configurator to its default state so prior answers don't carry over.</p>
+        <p><strong>Important:</strong> Hierarchies must be restored to default <strong>one at a time</strong> — there is no global "restore all hierarchies" button. Work through each hierarchy individually.</p>
+        <p>Complete all three resets in this order:</p>
+        <ol>
+          <li><strong>Restore Default for Configuration Questions</strong> — In the Configuration Questions section, click <strong>Restore default</strong>. All gray "CUSTOM ANSWER" indicators should flip back to "DEFAULT ANSWER".</li>
+          <li><strong>Restore Default for each Hierarchy</strong> — In the Hierarchies section, open each hierarchy (Entity, Account, Location, etc.) and click <strong>Restore default</strong> for each one individually. Confirm levels return to the documented defaults.</li>
+          <li><strong>Clear Dataspace Objects</strong> — Remove any objects from your assigned Dataspace that were created during the prior exercise so generation starts from a clean slate.</li>
+        </ol>
       </div>
 
-      <h3>Standardized Naming Convention</h3>
+<h2>Standardized Naming Convention</h2>
       <p>Replace the default model and app names with a standardized format before generating. The recommended pattern is <code>[ModelType]_Exercise ##_YYYYMMDD</code> — this ensures every generation produces uniquely-named artifacts and avoids name-collision generation errors when the same exercise is run more than once in the tenant.</p>
       <figure class="screenshot">
         <img src="../img/configurator/naming-convention-exercise-2.png" alt="Standardized naming convention for Exercise 2 showing Admin Model, Financial Planning Model, CapEx Model, Headcount Model, and IFP App with example names following the [ModelType]_Exercise 02_YYYYMMDD pattern" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;">
@@ -103,7 +98,7 @@
         <li>All use cases in-scope (P&L, Balance Sheet, Cashflow)</li>
         <li>Will not use top-down targets</li>
         <li>Time strata: Monthly</li>
-        <li><strong>Generation time: TBD</strong></li>
+        <li><strong>Estimated generation time: 20–40 minutes</strong></li>
       </ul>
 
       <h3>Dimension Configuration</h3>
@@ -132,7 +127,7 @@
           <tr>
             <td><strong>Product</strong></td>
             <td>Yes</td>
-            <td>Produit</td>
+            <td>Product</td>
             <td>5</td>
           </tr>
           <tr>
@@ -194,8 +189,8 @@
         <li>Will require extension for CapEx project tracking</li>
       </ul>
 
-      <h3>Example 2 - Configurations</h3>
-      <div class="table-wrap"><table><thead><tr><th>Question</th><th>Answer</th><th>Details</th></tr></thead><tbody><tr><td colspan="3" style="background-color:#e8f1f8;font-weight:bold;">Top-Level Questions</td></tr><tr><td>8. Use geography dimension?</td><td>No</td><td></td></tr><tr><td>11. Use functional area dimension?</td><td>Yes</td><td>Is being re-purposed for Projects</td></tr><tr><td colspan="3" style="background-color:#e8f1f8;font-weight:bold;">Financial Planning Questions</td></tr><tr><td>2. Top-down targets?</td><td>No</td><td></td></tr><tr><td>15. Dimensionality for expense planning</td><td></td><td>Department, Vendor</td></tr><tr><td>16. Dimensionality for itemized expense planning</td><td></td><td>Department</td></tr><tr><td>17. Expense allocations?</td><td>No</td><td></td></tr></tbody></table></div>
+      <h3>Configuration Answers</h3>
+      <div class="table-wrap"><table><thead><tr><th>Question</th><th>Answer</th><th>Notes</th></tr></thead><tbody><tr><td colspan="3" style="background-color:#e8f1f8;font-weight:bold;">Top-Level Questions</td></tr><tr><td>8. Use geography dimension?</td><td>No</td><td>—</td></tr><tr><td>11. Use functional area dimension?</td><td>Yes</td><td>Re-purposed for Projects</td></tr><tr><td colspan="3" style="background-color:#e8f1f8;font-weight:bold;">Financial Planning Questions</td></tr><tr><td>2. Top-down targets?</td><td>No</td><td>—</td></tr><tr><td>15. Dimensionality for expense planning</td><td>Department, Vendor</td><td>—</td></tr><tr><td>16. Dimensionality for itemized expense planning</td><td>Department</td><td>—</td></tr><tr><td>17. Expense allocations?</td><td>No</td><td>—</td></tr></tbody></table></div>
 
       <div class="prevnext-nav"><a class="prevnext-btn" href="./06-exercise-1.html">← Previous</a><a class="prevnext-btn" href="./06-exercise-3.html">Next →</a></div>
     </div>

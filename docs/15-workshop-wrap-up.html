@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workshop Wrap-up — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+      <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">Getting Started</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">Workshop Overview</a></li>
+      <li><a class="nav-link" href="./02-tenant-access.html">Tenant Access</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">IFP Overview</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for Applications</a></li>
+    </ul>
+    <li class="nav-section-title">Configuration</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">Configuration Exercise 1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">Configuration Exercise 2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">Configuration Exercise 3</a></li>
+      <li><a class="nav-link" href="./07-generation.html">Model Generation</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">Post-Generation Steps</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Error Log Review</a></li>
+    </ul>
+    <li class="nav-section-title">Extensions</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">Extensions Overview</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">Exercise 1</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">Exercise 2</a></li>
+    </ul>
+    <li class="nav-section-title">Reference</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">What's Coming</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">Q&A from Sessions</a></li>
+      <li><a class="nav-link active" href="./15-workshop-wrap-up.html">Workshop Wrap-up</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 Language</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>Workshop Wrap-up</h1>
+      <p class="subtitle">Thank you for participating — please help us leave the training tenant clean for the next cohort</p>
+      <div class="badge-row"><span class="content-badge">Reference</span><span class="content-badge">10 min</span><span class="content-badge">Action Required</span></div>
+    </div>
+    <div class="content-body">
+
+      <h2>Thank You</h2>
+      <p>You've made it to the end of the IFP Delivery Workshop. Thank you for the time, attention, and questions you brought to it.</p>
+      <p>One last favor before you log out: please help us reset the training tenant for the next cohort.</p>
+
+      <h2>Tenant Cleanup Checklist</h2>
+      <p>The training tenant is shared across many cohorts. Running through these five steps before you leave keeps the tenant in a clean state for the next group of participants — and keeps these workshops sustainable to run.</p>
+
+      <div class="callout-warning">
+        <span class="callout-label">⚠ Do Not Delete TRAIN Models or Apps</span>
+        <p>The pre-populated <strong>TRAIN</strong> models and applications (those with the <code>TRAIN</code> prefix, for example <code>IFPv2.0.0-train-base-financial-planning</code>) belong to all participants and must stay in place. Only delete the apps, models, and objects <strong>you created during the exercises</strong>.</p>
+      </div>
+
+      <ul class="checklist">
+        <li>Delete the applications you configured during the exercises — those <em>without</em> the <code>TRAIN</code> prefix</li>
+        <li>Delete the models generated from your configured applications — those <em>without</em> the <code>TRAIN</code> prefix</li>
+        <li>Delete any objects you added to your assigned Dataspace during the exercises</li>
+        <li>Reset hierarchies and configuration questions to default in the Application Framework Configurator (one hierarchy at a time — there is no global reset)</li>
+        <li>Restore the Financial Planning model to its pre-extension ID
+          <ul style="margin-top:0.5rem;">
+            <li>For <strong>Application Training tenants 00 through 60</strong>, the pre-extension ID is <code>2064565</code></li>
+            <li>For tenants used in <strong>EMEA workshops</strong>, the ID may differ — confirm with the EMEA tenant admin before restoring</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h2>One More Thing</h2>
+      <p>If you haven't already, please take 5 minutes to complete the <strong>post-workshop survey</strong>. We use the responses directly to cut what didn't add value and reinforce what did — your feedback is the most direct way to shape what the next cohort sees.</p>
+
+      <div class="callout-tip">
+        <span class="callout-label">💬 The Slack Channel Stays Open</span>
+        <p>The workshop is over but our IFP product experts are still in <a href="https://anaplan.enterprise.slack.com/archives/C0B96145RKJ" target="_blank" rel="noopener">#ext-delivery-workshop-ifp-anaplan</a>. Drop in any time with follow-up questions, or when you hit something on a real engagement and want a second opinion.</p>
+      </div>
+
+      <p style="text-align:center;font-style:italic;margin-top:2.5rem;color:#6b7280;">Until next time. Thanks again.</p>
+
+      <div class="prevnext-nav">
+        <a class="prevnext-btn" href="./14-qanda.html">← Previous</a>
+        <span></span>
+      </div>
+    </div>
+  </main>
+  <script src="../js/nav.js"></script>
+</body>
+</html>

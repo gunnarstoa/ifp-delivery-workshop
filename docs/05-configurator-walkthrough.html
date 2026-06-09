@@ -44,6 +44,7 @@
     <ul class="nav-submenu">
       <li><a class="nav-link" href="./13-whats-coming.html">What's Coming</a></li>
       <li><a class="nav-link" href="./14-qanda.html">Q&A from Sessions</a></li>
+      <li><a class="nav-link" href="./15-workshop-wrap-up.html">Workshop Wrap-up</a></li>
     </ul>
   </ul>
   <div class="lang-switcher">
@@ -64,30 +65,12 @@
   <main class="main-content">
     <div class="content-header">
       <h1>Application Framework Configurator</h1>
-      <p class="subtitle">What The Application Framework Configurator controls and how to navigate all 44 configuration questions</p>
-      <div class="badge-row"><span class="content-badge">Day 1</span><span class="content-badge">45 min</span><span class="content-badge">Walkthrough</span></div>
+      <p class="subtitle">What the Application Framework Configurator controls and how to navigate all 44 configuration questions</p>
+      <div class="badge-row"><span class="content-badge">45 min</span><span class="content-badge">Walkthrough</span></div>
     </div>
     <div class="content-body">
 
-      <div class="tsd-banner">
-        <div class="tsd-step tsd-step-tell">
-          <span class="tsd-step-label">📖 Tell</span>
-          <span class="tsd-step-heading">What The Application Framework Configurator Controls</span>
-          <span class="tsd-step-desc">What The Application Framework Configurator is and what each section controls.</span>
-        </div>
-        <div class="tsd-step tsd-step-show">
-          <span class="tsd-step-label">👁 Show</span>
-          <span class="tsd-step-heading">Live Configurator Demo</span>
-          <span class="tsd-step-desc">Facilitator walks through all configuration sections live in the training tenant.</span>
-        </div>
-        <div class="tsd-step tsd-step-do">
-          <span class="tsd-step-label">✅ Do</span>
-          <span class="tsd-step-heading">Follow Along</span>
-          <span class="tsd-step-desc">Participants follow along in their own workspace and note decisions for the upcoming lab.</span>
-        </div>
-      </div>
-
-      <h2>What The Application Framework Configurator Is</h2>
+<h2>What the Application Framework Configurator Is</h2>
       <p>The Application Framework Configurator is the single interface for all IFP configuration decisions. It presents <strong>44 configuration questions</strong> across three categories: top-level questions (23), financial planning configurations (17), and headcount configurations (3), plus additional settings. The answers to these questions determine what gets generated - module structure, list hierarchies, formula logic, and planning method availability.</p>
       <p>The Application Framework Configurator is accessed via a specific URL: replace the 'home' in your browser's Anaplan home URL with 'applications' (not through the normal workspace navigation, which doesn't yet show the Applications link in v2.1.0). For example, if your home Anaplan url is 'https://us1a.app.anaplan.com/home' change the url to 'https://us1a.app.anaplan.com/applications'. As the app reaches general availability, this link will appear in the standard navigation.</p>
 
@@ -114,6 +97,16 @@
         <li><strong>Entity:</strong> How many entity levels? What is the top-level consolidation entity?</li>
         <li><strong>Product:</strong> Is product-level planning required? Product hierarchy levels?</li>
       </ul>
+
+      <div class="callout-tip">
+        <span class="callout-label">▶ Watch: Editing Hierarchy Levels</span>
+        <p>How to add, remove, and rename levels in a hierarchy — including the leaf-level rule and what gets re-generated when you change one.</p>
+        <p style="margin-top:0.5rem;">
+          <a href="https://anaplan-my.sharepoint.com/:v:/r/personal/ben_wilson_anaplan_com/Documents/IFPv2.1%20Workshop%20Materials/Editing%20Hierarchy%20Levels.mp4?csf=1&amp;web=1&amp;nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&amp;e=AlJZfC" target="_blank" rel="noopener" style="display:inline-block;padding:0.5rem 1rem;background:#0066cc;color:white;border-radius:4px;text-decoration:none;font-weight:600;font-size:0.9rem;">▶ Open in SharePoint</a>
+          <span style="font-size:0.8rem;color:#6b7280;margin-left:0.5rem;">Opens in a new tab · Anaplan sign-in required</span>
+        </p>
+      </div>
+
 <figure class="screenshot"><img src="../img/v2.1-screenshots/hierarchies-list.png" alt="IFP Hierarchies - list of all dimensions with number of levels, referenced modules, and timestamps" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">IFP Hierarchies (v2.1) — showing Vendor, Product, Customer, Department, Functional Area, Location, Job, Entity with levels and update history</figcaption></figure>
 <figure class="screenshot"><img src="../img/configurator/cfg-0105.jpg" alt="Application Framework Configurator - top-level questions: Department, Location, Functional Area, Vendor" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Application Framework Configurator - top-level questions: Department, Location, Functional Area, Vendor</figcaption></figure>
 
@@ -123,7 +116,7 @@
 
       <h2>Financial Planning Configurations (17 Questions)</h2>
       <p>Financial planning configurations control the planning methods available, headcount settings, and OpEx behavior. These are less structural than top-level questions but still affect formula generation.</p>
-<div class="table-wrap"><table><thead><tr><th>Questions/Question Types</th><th>What It Controls</th><th>Example Answer</th></tr></thead><tbody><tr><td>What do you call your X dimension? (use capital letter)</td><td>Object creation can be case sensitive. Certain objects can be spelled as is with the first letter being capital.</td><td>Product</td></tr><tr><td>What do you call your X dimension? (use lower case letter)</td><td>Object creation can be case sensitive. Certain objects are created when the name is spelled in all lower case.</td><td>product</td></tr><tr><td>Will you be entering top-down targets?</td><td>Determine if top-down targets will be done in IFP model. If yes, then the objects related to it will be created.</td><td>Yes / No</td></tr><tr><td>Dimensionality for Y?</td><td>These questions determine the "Applies To" when building out the module structures for sub-process Y. Mainly will need to uncheck all the boxes if dimension Y is identified to not be used.</td><td>Check boxes where optional dimensions can be flagged or unflagged. Required dimensions will be locked and can't be edited.</td></tr><tr><td>How will you be doing margin planning?</td><td>Determine if margin planning will be done in an IFP model or external model.</td><td>Drop down picklist selection: "in IFP only"</td></tr><tr><td>Will you be doing expense planning in FP?</td><td>Determines if expense planning objects need to be created.</td><td>Yes / No</td></tr><tr><td>Do you need support for expense allocations?</td><td>If yes, AAF will generate objects that assist with the Op Ex allocations logic.</td><td>Yes / No</td></tr></tbody></table></div><figure class="screenshot"><img src="../img/configurator/cfg-0115.jpg" alt="Application Framework Configurator - Financial Planning dimensionality checkboxes for expense planning" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Application Framework Configurator - Financial Planning dimensionality checkboxes for expense planning</figcaption></figure>
+<div class="table-wrap"><table><thead><tr><th>Questions/Question Types</th><th>What It Controls</th><th>Example Answer</th></tr></thead><tbody><tr><td>What do you call your X dimension? (use capital letter)</td><td>Object creation can be case sensitive. Certain objects can be spelled as is with the first letter being capital.</td><td>Product</td></tr><tr><td>What do you call your X dimension? (use lower case letter)</td><td>Object creation can be case sensitive. Certain objects are created when the name is spelled in all lower case.</td><td>product</td></tr><tr><td>Will you be entering top-down targets?</td><td>Determine if top-down targets will be done in IFP model. If yes, then the objects related to it will be created.</td><td>Yes / No</td></tr><tr><td>Dimensionality for Y?</td><td>These questions determine the "Applies To" when building out the module structures for sub-process Y. Mainly will need to uncheck all the boxes if dimension Y is identified to not be used.</td><td>Check boxes where optional dimensions can be flagged or unflagged. Required dimensions will be locked and can't be edited.</td></tr><tr><td>How will you be doing margin planning?</td><td>Determine if margin planning will be done in an IFP model or external model.</td><td>Drop down picklist selection: "in IFP only"</td></tr><tr><td>Will you be doing expense planning in FP?</td><td>Determines if expense planning objects need to be created.</td><td>Yes / No</td></tr><tr><td>Do you need support for expense allocations?</td><td>If yes, Application Framework will generate objects that assist with the Op Ex allocations logic.</td><td>Yes / No</td></tr></tbody></table></div><figure class="screenshot"><img src="../img/configurator/cfg-0115.jpg" alt="Application Framework Configurator - Financial Planning dimensionality checkboxes for expense planning" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Application Framework Configurator - Financial Planning dimensionality checkboxes for expense planning</figcaption></figure>
 
       <h2>Configuration Questions (v2.1 New Features)</h2>
 <figure class="screenshot"><img src="../img/v2.1-screenshots/configurator-questions.png" alt="Application Framework Configurator - Configuration questions showing new v2.1 options highlighted in green" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Application Framework Configurator - Configuration questions with v2.1 enhancements</figcaption></figure>
@@ -167,16 +160,16 @@
       <h2>Generation Process</h2>
       <p>After completing all configuration questions and hierarchy settings:</p>
       <ol>
-        <li>Click <strong>Generate</strong> from the App Framework overview</li>
+        <li>Click <strong>Generate</strong> from the Application Framework overview</li>
         <li>Enter a description for this generation (e.g., "Base — no changes" or "Customer Name — 3 entity levels, no geography")</li>
         <li>Select the target workspace</li>
-        <li>Generation runs in the cloud - approximately 20-40 minutes. Monitor progress on the main /applications page rather than inside the App Framework (the status indicator inside the framework may lag)</li>
+        <li>Generation runs in the cloud - approximately 20-40 minutes. Monitor progress on the main /applications page rather than inside the Application Framework (the status indicator inside the framework may lag)</li>
         <li>When complete, all items show green. Items in red are errors. Items in amber are warnings.</li>
         <li>Review Error Log. See section <a href="./09-error-logs.html">"Error Log Review"</a> for more guidance.</li>
       </ol>
 
       <h2>Before the Lab</h2>
-<div class="callout-note"><span class="callout-label">i Preparation</span><p>Before configuring the App Framework for your customer, identify key scope questions: entity levels, geography structure, functional areas in scope, and any special configurations. Work with the customer to clarify ambiguous decisions before you begin.</p></div>
+<div class="callout-note"><span class="callout-label">i Preparation</span><p>Before configuring the Application Framework for your customer, identify key scope questions: entity levels, geography structure, functional areas in scope, and any special configurations. Work with the customer to clarify ambiguous decisions before you begin.</p></div>
 <div class="prevnext-nav"><a class="prevnext-btn" href="./04-anaplan-way.html">← Previous</a><a class="prevnext-btn" href="./06-exercise-1.html">Next →</a></div>
     </div>
   </main>

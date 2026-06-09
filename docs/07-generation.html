@@ -44,6 +44,7 @@
     <ul class="nav-submenu">
       <li><a class="nav-link" href="./13-whats-coming.html">What's Coming</a></li>
       <li><a class="nav-link" href="./14-qanda.html">Q&A from Sessions</a></li>
+      <li><a class="nav-link" href="./15-workshop-wrap-up.html">Workshop Wrap-up</a></li>
     </ul>
   </ul>
   <div class="lang-switcher">
@@ -65,30 +66,12 @@
     <div class="content-header">
       <h1>Model Generation</h1>
       <p class="subtitle">What happens during generation, how long it takes, and what to expect</p>
-      <div class="badge-row"><span class="content-badge">Day 1</span><span class="content-badge">30 min</span><span class="content-badge">Walkthrough</span></div>
+      <div class="badge-row"><span class="content-badge">30 min</span><span class="content-badge">Walkthrough</span></div>
     </div>
     <div class="content-body">
 
-      <div class="tsd-banner">
-        <div class="tsd-step tsd-step-tell">
-          <span class="tsd-step-label">📖 Tell</span>
-          <span class="tsd-step-heading">What Generation Produces</span>
-          <span class="tsd-step-desc">What the App Framework generates and what status states mean.</span>
-        </div>
-        <div class="tsd-step tsd-step-show">
-          <span class="tsd-step-label">👁 Show</span>
-          <span class="tsd-step-heading">Live Generation</span>
-          <span class="tsd-step-desc">Facilitator triggers generation live and monitors status in real time.</span>
-        </div>
-        <div class="tsd-step tsd-step-do">
-          <span class="tsd-step-label">✅ Do</span>
-          <span class="tsd-step-heading">Trigger Your Generation</span>
-          <span class="tsd-step-desc">Participants trigger their own generation and monitor progress.</span>
-        </div>
-      </div>
-
-      <h2>What Generation Does</h2>
-      <p>When you trigger generation, the App Framework reads all 44 of your configuration answers and provisions the complete IFP model structure. This is not a template copy — it is a dynamic generation process that applies your configuration decisions to produce a model specific to your answers.</p>
+<h2>What Generation Does</h2>
+      <p>When you trigger generation, the Application Framework reads all 44 of your configuration answers and provisions the complete IFP model structure. This is not a template copy — it is a dynamic generation process that applies your configuration decisions to produce a model specific to your answers.</p>
       <p>Generation provisions four models:</p>
       <ul>
         <li><strong>Financial Planning</strong> — the main planning model (INP, CALC, OUT modules)</li>
@@ -101,13 +84,13 @@
 <div class="table-wrap"><table><thead><tr><th>Object Type</th><th>Count (Typical)</th><th>What It Contains</th></tr></thead><tbody><tr><td>Models</td><td>4</td><td>Financial Planning, Headcount, Admin, CapEx</td></tr><tr><td>UX Apps</td><td>1+</td><td>The IFP planning application end users will access</td></tr><tr><td>Assets</td><td>~17</td><td>Import definitions, saved views, dashboard configurations</td></tr></tbody></table></div>
 
       <h2>Generation Status States</h2>
-<div class="table-wrap"><table><thead><tr><th>Status</th><th>What It Means</th><th>What to Do</th></tr></thead><tbody><tr><td>Generating...</td><td>Generation is in progress. Models are being provisioned.</td><td>Wait. Do not trigger another generation. Expected: 10–20 min.</td></tr><tr><td>Generated with Errors</td><td>Generation completed. Some formulas have errors due to configuration differences from base model.</td><td>Normal and expected. Review error logs — most errors are resolvable.</td></tr><tr><td>Generated Successfully</td><td>Generation completed with no formula errors detected.</td><td>Proceed to post-generation steps.</td></tr><tr><td>Generation Failed</td><td>Generation did not complete due to a platform error.</td><td>Contact Anaplan support. Do not attempt another generation without diagnosis.</td></tr></tbody></table></div><div class="callout-important"><span class="callout-label">🚨 'Generated with Errors' Does Not Mean Broken</span><p>'Generated with Errors' is normal and expected, especially in training and early implementations. It means some formulas reference items that differ from the base model template — usually caused by hierarchy renaming, geography removal, or configuration choices that differ from the template assumptions. The model is functional. You will work through the error list systematically in the Error Log Review section.</p></div>
+<div class="table-wrap"><table><thead><tr><th>Status</th><th>What It Means</th><th>What to Do</th></tr></thead><tbody><tr><td>Generating...</td><td>Generation is in progress. Models are being provisioned.</td><td>Wait. Do not trigger another generation. Expected: 20–40 min.</td></tr><tr><td>Generated with Errors</td><td>Generation completed. Some formulas have errors due to configuration differences from base model.</td><td>Normal and expected. Review error logs — most errors are resolvable.</td></tr><tr><td>Generated Successfully</td><td>Generation completed with no formula errors detected.</td><td>Proceed to post-generation steps.</td></tr><tr><td>Generation Failed</td><td>Generation did not complete due to a platform error.</td><td>Contact Anaplan support. Do not attempt another generation without diagnosis.</td></tr></tbody></table></div><div class="callout-important"><span class="callout-label">🚨 'Generated with Errors' Does Not Mean Broken</span><p>'Generated with Errors' is normal and expected, especially in training and early implementations. It means some formulas reference items that differ from the base model template — usually caused by hierarchy renaming, geography removal, or configuration choices that differ from the template assumptions. The model is functional. You will work through the error list systematically in the Error Log Review section.</p></div>
 
       <h2>IFP Model Pages After Generation</h2>
 <figure class="screenshot"><img src="../img/generation/gen-0265.jpg" alt="IFP model pages list — 43 pages across ADMIN, SYS, DAT, INP, CALC, OUT modules" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">IFP model pages list — 43 pages across ADMIN, SYS, DAT, INP, CALC, OUT modules</figcaption></figure>
 
       <h2>Generation With Errors — Activity Panel</h2>
-<figure class="screenshot"><img src="../img/generation/gen-d2-0235.jpg" alt="App Framework generation with errors — Activity panel showing model data sources and error count" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">App Framework generation with errors — Activity panel showing model data sources and error count</figcaption></figure>
+<figure class="screenshot"><img src="../img/generation/gen-d2-0235.jpg" alt="Application Framework generation with errors — Activity panel showing model data sources and error count" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Application Framework generation with errors — Activity panel showing model data sources and error count</figcaption></figure>
 
       <h2>Default Financial Planning Modules after Generation</h2>
 <figure class="screenshot"><img src="../img/v2.1-screenshots/modules-list.png" alt="Default modules list in IFP v2.1 showing ADMIN, SYS, DAT, INP, CALC, OUT modules with functional areas, line items, and properties" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Default Financial Planning Modules (v2.1) — showing ADMIN, SYS, DAT, INP, CALC, OUT module structure with functional areas and metadata</figcaption></figure>
@@ -117,7 +100,7 @@
 <figure class="screenshot"><img src="../img/v2.1-screenshots/ux-navigation-structure.png" alt="AW_FIN - Integrated Financial Planning v2.1.0 UX navigation showing Quick Access, Categories (Home, Reporting &amp; Analysis, Top Down Planning, Revenue &amp; COGS, Operating Expense, Headcount, CapEx Planning, Balance Sheet &amp; Cash Flow, Administration categories), and sub-pages under each." style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">AW_FIN (v2.1.0) UX Navigation Structure — Categories and pages organized by business function and planning type</figcaption></figure>
 
       <h2>Generation Steps</h2>
-<div class="step"><div class="step-badge">1</div><div class="step-content"><h3>Trigger Generation</h3><p>From the Application Framework Configurator, after completing all sections, click Generate. Confirm any prompts. Note the start time.</p></div></div><div class="step"><div class="step-badge">2</div><div class="step-content"><h3>Monitor Status</h3><p>The App Framework overview page shows generation status. Refresh periodically. Do not close the browser or trigger another generation while in progress.</p></div></div><div class="step"><div class="step-badge">3</div><div class="step-content"><h3>First Look at Generated Model</h3><p>Once complete, navigate to your workspace. You should see the four IFP models listed. Open the Financial Planning model and verify the planning sub-processes are present — including Revenue &amp; COGS, Operating Expense, Headcount, CapEx Planning, and Balance Sheet &amp; Cash Flow (based on your configuration).</p></div></div><div class="step"><div class="step-badge">4</div><div class="step-content"><h3>Check Error Logs</h3><p>Return to the App Framework. In the bottom-right of the overview page, find the error log count. Click to expand the log. Note: more than 0 errors is normal. Proceed to Error Log Review.</p></div></div>
+<div class="step"><div class="step-badge">1</div><div class="step-content"><h3>Trigger Generation</h3><p>From the Application Framework Configurator, after completing all sections, click Generate. Confirm any prompts. Note the start time.</p></div></div><div class="step"><div class="step-badge">2</div><div class="step-content"><h3>Monitor Status</h3><p>The Application Framework overview page shows generation status. Refresh periodically. Do not close the browser or trigger another generation while in progress.</p></div></div><div class="step"><div class="step-badge">3</div><div class="step-content"><h3>First Look at Generated Model</h3><p>Once complete, navigate to your workspace. You should see the four IFP models listed. Open the Financial Planning model and verify the planning sub-processes are present — including Revenue &amp; COGS, Operating Expense, Headcount, CapEx Planning, and Balance Sheet &amp; Cash Flow (based on your configuration).</p></div></div><div class="step"><div class="step-badge">4</div><div class="step-content"><h3>Check Error Logs</h3><p>Return to the Application Framework. In the bottom-right of the overview page, find the error log count. Click to expand the log. Note: more than 0 errors is normal. Proceed to Error Log Review.</p></div></div>
 
       <div class="prevnext-nav"><a class="prevnext-btn" href="./06-exercise-3.html">← Previous</a><a class="prevnext-btn" href="./08-post-gen.html">Next →</a></div>
     </div>

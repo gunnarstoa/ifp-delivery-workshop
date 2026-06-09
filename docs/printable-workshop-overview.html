@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<title>IFP Delivery Partner Workshop — Overview</title>
+<style>
+  @page {
+    size: letter portrait;
+    margin: 0.55in;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: #1f2937;
+    font-size: 10pt;
+    line-height: 1.4;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page {
+    page-break-after: always;
+  }
+  .page:last-child { page-break-after: auto; }
+
+  /* PAGE 1 */
+  .hero {
+    background: linear-gradient(135deg, #0066cc 0%, #1e3a5f 100%);
+    color: white;
+    padding: 0.3in 0.4in 0.28in 0.4in;
+    margin: 0 0 0.18in 0;
+    border-radius: 6px;
+    page-break-inside: avoid;
+  }
+  .hero .eyebrow {
+    font-size: 8.5pt;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.85;
+    margin-bottom: 0.2rem;
+  }
+  .hero h1 {
+    font-size: 22pt;
+    margin: 0 0 0.3rem 0;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+  .hero .tagline {
+    font-size: 11pt;
+    opacity: 0.95;
+    margin: 0;
+    max-width: 6.5in;
+  }
+
+  h2 {
+    color: #1e3a5f;
+    font-size: 12pt;
+    margin: 0.35rem 0 0.2rem 0;
+    border-bottom: 2px solid #0066cc;
+    padding-bottom: 0.15rem;
+    page-break-after: avoid;
+  }
+  h3 {
+    color: #1e3a5f;
+    font-size: 10.5pt;
+    margin: 0.4rem 0 0.2rem 0;
+    page-break-after: avoid;
+  }
+  p { margin: 0.22rem 0; }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.18in;
+    margin-top: 0.18rem;
+    page-break-inside: avoid;
+  }
+  .card {
+    background: #f8fafc;
+    border-left: 3px solid #0066cc;
+    padding: 0.18rem 0.35rem 0.22rem 0.35rem;
+    page-break-inside: avoid;
+  }
+  .card h3 { margin-top: 0; margin-bottom: 0.15rem; }
+  .card ul { margin: 0.15rem 0 0.15rem 0.85rem; padding: 0; }
+  .card li { margin: 0.1rem 0; font-size: 9.5pt; }
+
+  ul.outcomes {
+    margin: 0.2rem 0 0.3rem 0;
+    padding: 0;
+    list-style: none;
+  }
+  ul.outcomes li {
+    padding: 0.13rem 0 0.13rem 1.3rem;
+    position: relative;
+  }
+  ul.outcomes li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #16a34a;
+    font-weight: 700;
+  }
+
+  .who-strip {
+    background: #eff6ff;
+    border-left: 3px solid #3b82f6;
+    padding: 0.3rem 0.5rem;
+    margin: 0.25rem 0 0 0;
+    font-size: 9.8pt;
+    page-break-inside: avoid;
+  }
+  .who-strip strong { color: #1e3a5f; }
+
+  /* PAGE 2 */
+  .schedule {
+    background: #f0f7ff;
+    border: 1px solid #cbd5e1;
+    padding: 0.4rem 0.5rem;
+    border-radius: 4px;
+    margin: 0.3rem 0;
+  }
+  .schedule h3 { margin: 0 0 0.25rem 0; }
+  .session-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.25rem 0;
+    border-bottom: 1px dashed #cbd5e1;
+    font-size: 10pt;
+  }
+  .session-row:last-child { border-bottom: none; }
+  .session-row .date { font-weight: 600; color: #1e3a5f; }
+  .session-row .capacity { color: #6b7280; font-size: 9.5pt; }
+
+  .checklist {
+    margin: 0.3rem 0 0.4rem 0;
+    padding: 0;
+    list-style: none;
+  }
+  .checklist li {
+    padding: 0.2rem 0 0.2rem 1.3rem;
+    position: relative;
+    font-size: 10pt;
+  }
+  .checklist li::before {
+    content: "☐";
+    position: absolute;
+    left: 0;
+    color: #6b7280;
+    font-size: 11pt;
+  }
+
+  .cta {
+    background: #0066cc;
+    color: white;
+    text-align: center;
+    padding: 0.5rem 0.5rem;
+    border-radius: 4px;
+    margin: 0.4rem 0;
+    font-size: 11pt;
+  }
+  .cta strong { font-size: 12pt; }
+
+  .faq {
+    margin-top: 0.35rem;
+  }
+  .faq .q {
+    font-weight: 600;
+    color: #1e3a5f;
+    margin: 0.35rem 0 0.1rem 0;
+    font-size: 10pt;
+  }
+  .faq .a {
+    margin: 0 0 0.2rem 0;
+    font-size: 9.8pt;
+    color: #374151;
+  }
+
+  .footer {
+    margin-top: 0.35rem;
+    padding-top: 0.3rem;
+    border-top: 1px solid #cbd5e1;
+    font-size: 8.5pt;
+    color: #6b7280;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1 -->
+<div class="page">
+
+  <div class="hero">
+    <div class="eyebrow">Anaplan Partner Enablement</div>
+    <h1>IFP Delivery Partner Workshop</h1>
+    <p class="tagline">A hands-on, fully self-paced virtual program that takes you from knowing about IFP to delivering it for real customers.</p>
+  </div>
+
+  <h2>What This Workshop Is</h2>
+  <p>The IFP Delivery Partner Workshop covers the complete IFP 2.1 delivery workflow — Application Framework configuration, model generation, error log resolution, and building real customer-specific extensions from scratch. Every lab happens in your own dedicated training tenant with pre-staged IFP models and real planning scenarios (OpEx/Headcount, Insurance 3-Statement, Nuclear Plant OpEx).</p>
+  <p style="margin-top: 0.4rem;"><strong>If you've ever generated an IFP model, hit an error log, and weren't sure whether to escalate or fix it yourself — this workshop is built to close that gap.</strong></p>
+
+  <h2>What You'll Be Able To Do</h2>
+  <ul class="outcomes">
+    <li>Configure the Application Framework end-to-end and generate a functional IFP model</li>
+    <li>Read and resolve generation error logs without escalating basic formula errors</li>
+    <li>Build a direct-input extension with adjustment layers</li>
+    <li>Build a headcount-driven rate planning method</li>
+    <li>Apply Configure-vs-Extend-vs-Modify discipline and data-tag every change you make</li>
+  </ul>
+
+  <h2>How the Workshop Is Structured</h2>
+  <div class="grid-2">
+    <div class="card">
+      <h3>🧭 Getting Started</h3>
+      <ul>
+        <li>Workshop Overview</li>
+        <li>Tenant Access (3-step check)</li>
+        <li>IFP &amp; Application Framework Overview</li>
+        <li>Anaplan Way for Applications</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🔧 Configuration</h3>
+      <ul>
+        <li>All 44 configuration questions</li>
+        <li>3 hands-on exercises</li>
+        <li>Model generation</li>
+        <li>Post-generation verification</li>
+        <li>Error log review &amp; resolution</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>⚡ Extensions</h3>
+      <ul>
+        <li>Configure vs. Extend vs. Modify framing</li>
+        <li>Extension Exercise 1: Manual Adjustments</li>
+        <li>Extension Exercise 2: Channel Revenue Planning (Headcount × Rate)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>📚 Reference</h3>
+      <ul>
+        <li>What's Coming on the IFP roadmap</li>
+        <li>Q&amp;A from prior sessions</li>
+        <li>Workshop wrap-up checklist</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>Who It's For</h2>
+  <div class="who-strip">
+    <strong>Anaplan delivery consultants at partner firms</strong> who are implementing IFP for customers — or expect to in the next 12 months. This is a practitioner workshop, not a product overview session.
+  </div>
+
+</div>
+
+<!-- PAGE 2 -->
+<div class="page">
+
+  <h2>Format &amp; Time Commitment</h2>
+  <p><strong>Virtual. Fully self-paced.</strong> Each participant receives their own dedicated training tenant for the week of their session. Most participants finish the workshop, labs, and supporting videos in <strong>an hour or two a day</strong>.</p>
+  <p style="margin-top: 0.35rem;">Optional live kickoff session at <strong>12:00 PM Eastern on opening day</strong> — recording posted same day for anyone who can't attend live.</p>
+
+  <h2>Upcoming Sessions</h2>
+  <div class="schedule">
+    <div class="session-row">
+      <div>
+        <span class="date">June 9, 2026</span> — IFP Virtual Workshop
+      </div>
+      <span class="capacity">50 seats</span>
+    </div>
+    <div class="session-row">
+      <div>
+        <span class="date">June 15, 2026</span> — IFP Virtual Workshop
+      </div>
+      <span class="capacity">50 seats</span>
+    </div>
+  </div>
+
+  <h2>Prerequisites</h2>
+  <ul class="checklist">
+    <li>Anaplan Model Builder (MB), Solution Architect (SA), or Master Anaplanner certification</li>
+    <li>Prior experience building or configuring Anaplan models</li>
+    <li>Familiarity with financial planning concepts (P&amp;L, balance sheet, headcount)</li>
+    <li>Registered via the Anaplan Academy session link</li>
+  </ul>
+
+  <div class="cta">
+    <strong>Register at the Anaplan Academy</strong><br>
+    academy.anaplan.com/learn/courses/558
+  </div>
+
+  <h2>Frequently Asked</h2>
+  <div class="faq">
+    <p class="q">Do I have to attend the live kickoff session?</p>
+    <p class="a">No. It's optional. The workshop is fully self-paced and the recording is posted the same day.</p>
+
+    <p class="q">How long is my tenant active?</p>
+    <p class="a">One week — the week of your registered session. Plan to complete the workshop within that window.</p>
+
+    <p class="q">What if I get stuck during the workshop?</p>
+    <p class="a">A dedicated Slack channel is staffed by IFP product experts throughout the workshop week. The lab guide has the channel link and email-into-channel fallback.</p>
+
+    <p class="q">Are the materials available in languages other than English?</p>
+    <p class="a">Yes — German, Japanese, Spanish, French, and Portuguese versions are available. The in-page language switcher lets participants change languages at any time.</p>
+
+    <p class="q">Will the lab guide stay available after the workshop?</p>
+    <p class="a">Yes. The lab guide stays online. The Slack channel also stays open for ongoing questions when you hit real customer engagements.</p>
+  </div>
+
+  <div class="footer">
+    IFP Delivery Partner Workshop · Anaplan Partner Enablement · v2.1
+  </div>
+
+</div>
+
+</body>
+</html>

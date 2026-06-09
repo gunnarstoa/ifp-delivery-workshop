@@ -1,6 +1,8 @@
 # IFP Delivery Workshop — search engine directives
-# Facilitator guide is private; do not index.
+# Facilitator-internal pages are private; do not index.
 
 User-agent: *
 Disallow: /docs/15-facilitator-r9k2x7.html
 Disallow: /docs/15-facilitator.html
+Disallow: /docs/16-facilitator-toolkit-k7p2nx.html
+Disallow: /docs/printable-workshop-overview.html
