@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ワークショップまとめ — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+      <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">はじめに</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">ワークショップ概要</a></li>
+      <li><a class="nav-link" href="./02-tenant-access.html">テナントアクセス</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">IFP概要</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for Applications</a></li>
+    </ul>
+    <li class="nav-section-title">構成</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">構成演習1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">構成演習2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">構成演習3</a></li>
+      <li><a class="nav-link" href="./07-generation.html">モデル生成</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">生成後のステップ</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Error Logレビュー</a></li>
+    </ul>
+    <li class="nav-section-title">拡張機能</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">拡張機能概要</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">演習1</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">演習2</a></li>
+    </ul>
+    <li class="nav-section-title">リファレンス</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">今後の予定</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">セッションのQ&amp;A</a></li>
+      <li><a class="nav-link active" href="./15-workshop-wrap-up.html">ワークショップまとめ</a></li>
+    </ul>
+  </ul>
+  <div class="lang-switcher">
+    <span class="lang-switcher-label">🌐 言語</span>
+    <select id="lang-select" class="lang-select">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja" selected>🇯🇵 日本語</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+  </div>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>ワークショップまとめ</h1>
+      <p class="subtitle">ご参加ありがとうございました——次のコホートのために、トレーニング用テナントをクリーンな状態に戻すご協力をお願いします</p>
+      <div class="badge-row"><span class="content-badge">リファレンス</span><span class="content-badge">10分</span><span class="content-badge">要対応</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="callout-info" style="background:#eff6ff;border-left:4px solid #3b82f6;">
+        <span class="callout-label">🌐 翻訳に関するご案内</span>
+        <p>これは英語原版の自動翻訳です。正確かつ最新のバージョンについては、<a href="../15-workshop-wrap-up.html">英語版</a>をご確認ください。翻訳の問題はAnaplanパートナー担当者までご報告ください。</p>
+      </div>
+
+      <h2>ありがとうございました</h2>
+      <p>IFP Delivery Workshopを最後まで完走いただき、ありがとうございました。本ワークショップに割いていただいた時間、ご集中、そして数々のご質問に心より感謝いたします。</p>
+      <p>ログアウトする前に、最後にひとつだけお願いがあります——次のコホートのためにトレーニング用テナントをリセットするご協力をお願いします。</p>
+
+      <h2>テナントクリーンアップ チェックリスト</h2>
+      <p>このトレーニング用テナントは複数のコホートで共有されています。退出前に以下の5つのステップを実施していただくことで、次の参加者グループにとってクリーンな状態が保たれ、本ワークショップを継続的に運営することが可能になります。</p>
+
+      <div class="callout-warning">
+        <span class="callout-label">⚠ TRAINモデル・アプリは削除しないでください</span>
+        <p>事前準備済みの<strong>TRAIN</strong>モデルおよびアプリケーション（<code>TRAIN</code>プレフィックスが付いたもの、例：<code>IFPv2.0.0-train-base-financial-planning</code>）は全参加者の共有資産であり、そのまま残してください。削除するのは<strong>演習中にご自身で作成された</strong>アプリ・モデル・オブジェクトのみです。</p>
+      </div>
+
+      <ul class="checklist">
+        <li>演習中に構成したアプリケーション（<code>TRAIN</code>プレフィックスが<em>付いていない</em>もの）を削除する</li>
+        <li>構成したアプリケーションから生成されたモデル（<code>TRAIN</code>プレフィックスが<em>付いていない</em>もの）を削除する</li>
+        <li>演習中に割り当てられたDataspaceに追加したオブジェクトを削除する</li>
+        <li>Application Framework Configurator上で、ヒエラルキーと構成質問をデフォルトにリセットする（一括リセット機能はないため、1つずつ実施）</li>
+        <li>Financial Planningモデルを拡張前のIDに戻す
+          <ul style="margin-top:0.5rem;">
+            <li><strong>Application Training tenants 00～60</strong>の場合、拡張前のIDは<code>2064565</code></li>
+            <li><strong>EMEAワークショップ</strong>で使用されたテナントの場合はIDが異なる可能性があるため、復元前にEMEAテナント管理者にご確認ください</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h2>もうひとつだけ</h2>
+      <p>まだの場合は、5分ほどお時間をいただき<strong>ワークショップ事後アンケート</strong>へのご回答をお願いします。いただいた回答は、価値が薄かった内容を削り、効果のあった内容を強化するために直接活用しています。皆さまのフィードバックは、次のコホートが受講する内容を形づくる最も直接的な手段です。</p>
+
+      <div class="callout-tip">
+        <span class="callout-label">💬 Slackチャンネルは引き続き開放しています</span>
+        <p>ワークショップは終了しましたが、IFPプロダクトエキスパートは引き続き<a href="https://anaplan.enterprise.slack.com/archives/C0B96145RKJ" target="_blank" rel="noopener">#ext-delivery-workshop-ifp-anaplan</a>に常駐しています。フォローアップのご質問や、実案件で詰まった際のセカンドオピニオンが必要なときに、いつでもお立ち寄りください。</p>
+      </div>
+
+      <p style="text-align:center;font-style:italic;margin-top:2.5rem;color:#6b7280;">またお会いできる日まで。改めまして、ありがとうございました。</p>
+
+      <div class="prevnext-nav">
+        <a class="prevnext-btn" href="./14-qanda.html">← 前へ</a>
+        <span></span>
+      </div>
+    </div>
+  </main>
+  <script src="../../js/nav.js"></script>
+</body>
+</html>

@@ -44,6 +44,7 @@
     <ul class="nav-submenu">
       <li><a class="nav-link" href="./13-whats-coming.html">À venir</a></li>
       <li><a class="nav-link active" href="./14-qanda.html">Questions et réponses des sessions</a></li>
+      <li><a class="nav-link" href="./15-workshop-wrap-up.html">Clôture de l'atelier</a></li>
     </ul>
   </ul>
   <div class="lang-switcher">
@@ -82,7 +83,7 @@
 
       <div class="qa-item">
         <div class="question">Q : Quelles sont les différences les plus importantes entre IFP v1.x et IFP v2 ?</div>
-        <div class="answer">R : Le changement principal est l'Application Framework — un moteur de génération piloté par l'Application Framework Configurator qui remplace la mise en place manuelle du modèle. Vous répondez aux questions de configuration, et le framework génère automatiquement les quatre modèles (Financial Planning, Headcount, Admin, Data Orchestrator) — environ 500 actions en arrière-plan, prenant 20 à 40 minutes. IFP v2 est également basé sur Polaris (suppression de la sparsity, amélioration des performances), inclut une intégration native d'ADO avec des pipelines pré-configurés, fait passer la planification headcount du niveau employé au niveau rôle/job, et prend en charge l'upgradability — les versions futures peuvent être appliquées sans repartir de zéro. Le document d'application overview sur le site SharePoint couvre l'intégralité des différences.</div>
+        <div class="answer">R : Le changement principal est l'Application Framework — un moteur de génération piloté par l'Application Framework Configurator qui remplace la mise en place manuelle du modèle. Vous répondez aux questions de configuration, et le framework génère automatiquement les quatre modèles (Financial Planning, Headcount, Admin, CapEx) — environ 500 actions en arrière-plan, prenant 20 à 40 minutes. IFP v2 est également basé sur Polaris (suppression de la sparsity, amélioration des performances), inclut une intégration native d'ADO avec des pipelines pré-configurés, fait passer la planification headcount du niveau employé au niveau rôle/job, et prend en charge l'upgradability — les versions futures peuvent être appliquées sans repartir de zéro. Le document d'application overview sur le site SharePoint couvre l'intégralité des différences.</div>
       </div>
 
       <div class="qa-item">
@@ -125,18 +126,18 @@
       <h2>Provisioning et exigences du Tenant</h2>
 
       <div class="qa-item">
-        <div class="question">Q : Que doit mettre en place le client avant que nous puissions commencer à utiliser l'App Framework ?</div>
+        <div class="question">Q : Que doit mettre en place le client avant que nous puissions commencer à utiliser l'Application Framework ?</div>
         <div class="answer">R : Le Customer Success Business Partner doit ouvrir un ticket de provisioning auprès du support Anaplan pour créer un Workspace dans le tenant client (minimum 100 Go). Pour des environnements ALM (dev/QA/prod), plusieurs Workspaces doivent être provisionnés. L'équipe Anaplan déploie l'application dans le tenant client après traitement du ticket — cela prend environ 10 minutes. Les partenaires sont ensuite notifiés et peuvent commencer à travailler.</div>
       </div>
 
       <div class="qa-item">
         <div class="question">Q : Quels rôles avons-nous besoin dans le tenant client pour générer l'application ?</div>
-        <div class="answer">R : Pour générer l'application, vous avez besoin des rôles suivants : Application Owner, Workspace Admin, Page Builder et Integration Admin. Élément critique : l'App Framework ne peut générer que depuis votre tenant par défaut. Cela signifie que si vous vous connectez avec l'adresse e-mail de votre cabinet partenaire (par exemple, john@partnerfirm.com), vous NE pourrez PAS générer — le tenant client n'est pas votre tenant par défaut. Pour contourner cela : soit obtenez une adresse e-mail dans le domaine du client afin que le tenant client devienne votre tenant par défaut, soit demandez à l'admin tenant du client de générer lui-même l'application pendant que vous le guidez. Une fois l'app générée, vous pouvez travailler dessus en utilisant votre identifiant partenaire normal.</div>
+        <div class="answer">R : Pour générer l'application, vous avez besoin des rôles suivants : Application Owner, Workspace Admin, Page Builder et Integration Admin. Élément critique : l'Application Framework ne peut générer que depuis votre tenant par défaut. Cela signifie que si vous vous connectez avec l'adresse e-mail de votre cabinet partenaire (par exemple, john@partnerfirm.com), vous NE pourrez PAS générer — le tenant client n'est pas votre tenant par défaut. Pour contourner cela : soit obtenez une adresse e-mail dans le domaine du client afin que le tenant client devienne votre tenant par défaut, soit demandez à l'admin tenant du client de générer lui-même l'application pendant que vous le guidez. Une fois l'app générée, vous pouvez travailler dessus en utilisant votre identifiant partenaire normal.</div>
       </div>
 
       <div class="qa-item">
         <div class="question">Q : L'application peut-elle être déployée sur plusieurs Workspaces (dev, QA, prod) simultanément ?</div>
-        <div class="answer">R : Pas actuellement — l'App Framework ne peut déployer une application générée que vers un Workspace à la fois. Pour obtenir dev/QA/prod, vous utilisez la fonctionnalité ALM normale pour transférer les modèles entre Workspaces après la génération initiale vers dev. Les mises à niveau sont déployées sur la dernière version générée (dev), et vous les propagez à travers QA/prod via ALM. Cette limitation est sur la roadmap pour être résolue.</div>
+        <div class="answer">R : Pas actuellement — l'Application Framework ne peut déployer une application générée que vers un Workspace à la fois. Pour obtenir dev/QA/prod, vous utilisez la fonctionnalité ALM normale pour transférer les modèles entre Workspaces après la génération initiale vers dev. Les mises à niveau sont déployées sur la dernière version générée (dev), et vous les propagez à travers QA/prod via ALM. Cette limitation est sur la roadmap pour être résolue.</div>
       </div>
 
       <h2>Application Framework et génération</h2>
@@ -222,116 +223,108 @@
 
       <h2>Génération du modèle</h2>
 
-      <div class="callout-note">
-  <p><strong>Q : Nous avons généré avec des erreurs — le modèle est-il utilisable ?</strong></p>
-  <p><strong>R :</strong> « Generated with errors » est normal, surtout en formation et lors des premières implémentations. Les erreurs indiquent des références de formule qui diffèrent du template de modèle de base à cause de choix de configuration ou du renommage de hiérarchie. Le modèle est fonctionnel pour la plupart des usages pendant que vous parcourez la liste d'erreurs systématiquement. Ne laissez pas le statut d'erreur vous arrêter — catégorisez les erreurs, corrigez celles qui le peuvent être, et avancez.</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q : Nous avons généré avec des erreurs — le modèle est-il utilisable ?</div>
+        <div class="answer">R : « Generated with errors » est normal, surtout en formation et lors des premières implémentations. Les erreurs indiquent des références de formule qui diffèrent du template de modèle de base à cause de choix de configuration ou du renommage de hiérarchie. Le modèle est fonctionnel pour la plupart des usages pendant que vous parcourez la liste d'erreurs systématiquement. Ne laissez pas le statut d'erreur vous arrêter — catégorisez les erreurs, corrigez celles qui le peuvent être, et avancez.</div>
+      </div>
 
-      <div class="callout-note">
-  <p><strong>Q : Puis-je exporter les Error Logs vers Excel ?</strong></p>
-  <p><strong>R :</strong> Oui. Depuis l'App Framework, vous pouvez exporter l'Error Log vers Excel. Cela est recommandé quand vous avez plus de 10 erreurs — filtrer et catégoriser par type d'erreur est nettement plus rapide dans Excel que dans la vue log in-app. Triez d'abord par Error Type, puis par Model, pour regrouper les erreurs liées.</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q : Puis-je exporter les Error Logs vers Excel ?</div>
+        <div class="answer">R : Oui. Depuis l'Application Framework, vous pouvez exporter l'Error Log vers Excel. Cela est recommandé quand vous avez plus de 10 erreurs — filtrer et catégoriser par type d'erreur est nettement plus rapide dans Excel que dans la vue log in-app. Triez d'abord par Error Type, puis par Model, pour regrouper les erreurs liées.</div>
+      </div>
 
-      <div class="callout-note">
-  <p><strong>Q : Combien de temps prend la génération ?</strong></p>
-  <p><strong>R :</strong> Typiquement 10 à 20 minutes selon la complexité de la configuration. Dans les environnements de formation où plusieurs participants génèrent simultanément, cela peut prendre plus de temps car la plateforme gère des jobs concurrents. Ne déclenchez pas une seconde génération si la première est encore en cours — surveillez le statut et attendez qu'elle se termine.</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q : Combien de temps prend la génération ?</div>
+        <div class="answer">R : Typiquement 20 à 40 minutes selon la complexité de la configuration. Dans les environnements de formation où plusieurs participants génèrent simultanément, cela peut prendre plus de temps car la plateforme gère des jobs concurrents. Ne déclenchez pas une seconde génération si la première est encore en cours — surveillez le statut et attendez qu'elle se termine.</div>
+      </div>
 
-      <div class="callout-note">
-  <p><strong>Q : Pouvons-nous regénérer après avoir corrigé les erreurs de configuration ?</strong></p>
-  <p><strong>R :</strong> Oui, vous pouvez regénérer. Toutefois, la regénération écrase le modèle généré — toutes les extensions ou modifications manuelles effectuées après la génération précédente devront être ré-appliquées. C'est pourquoi il est critique de verrouiller les décisions de hiérarchie et de Dimension avant la première génération. Traitez la regénération comme une action exceptionnelle, pas comme une étape de routine.</p>
-</div>
-
-      <hr>
+      <div class="qa-item">
+        <div class="question">Q : Pouvons-nous regénérer après avoir corrigé les erreurs de configuration ?</div>
+        <div class="answer">R : Oui, vous pouvez regénérer. Toutefois, la regénération écrase le modèle généré — toutes les extensions ou modifications manuelles effectuées après la génération précédente devront être ré-appliquées. C'est pourquoi il est critique de verrouiller les décisions de hiérarchie et de Dimension avant la première génération. Traitez la regénération comme une action exceptionnelle, pas comme une étape de routine.</div>
+      </div>
 
       <h2>Error Logs et dépannage</h2>
 
-      <div class="callout-note">
-  <p><strong>Q : Comment trouver un Line Item à partir d'un code d'erreur ?</strong></p>
-  <p><strong>R :</strong> Les codes d'erreur utilisent un préfixe souligné (par exemple, <code>_FINALAMOUNTEXCEPTION</code>). Allez dans le modèle concerné, naviguez vers Line Items et recherchez le code. La recherche vous amènera directement au Module et au Line Item qui contient l'erreur. Comparez la formule générée à la formule du modèle de base pour identifier ce qui a changé — généralement un renommage de hiérarchie, une suppression de géographie ou une différence de Dimension.</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q : Comment trouver un Line Item à partir d'un code d'erreur ?</div>
+        <div class="answer">R : Les codes d'erreur utilisent un préfixe souligné (par exemple, <code>_FINALAMOUNTEXCEPTION</code>). Allez dans le modèle concerné, naviguez vers Line Items et recherchez le code. La recherche vous amènera directement au Module et au Line Item qui contient l'erreur. Comparez la formule générée à la formule du modèle de base pour identifier ce qui a changé — généralement un renommage de hiérarchie, une suppression de géographie ou une différence de Dimension.</div>
+      </div>
 
-      <div class="callout-note">
-  <p><strong>Q : Il y avait deux Line Items avec des noms similaires — comment savoir lequel a l'erreur ?</strong></p>
-  <p><strong>R :</strong> Utilisez le code, pas le nom d'affichage. Les codes avec le préfixe souligné sont des identifiants uniques pour les cibles d'erreur. Si la recherche par nom renvoie plusieurs résultats, recherchez spécifiquement le code à préfixe souligné et vous trouverez exactement le bon élément. L'entrée d'Error Log inclut toujours le code — c'est cela qu'il faut rechercher.</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q : Il y avait deux Line Items avec des noms similaires — comment savoir lequel a l'erreur ?</div>
+        <div class="answer">R : Utilisez le code, pas le nom d'affichage. Les codes avec le préfixe souligné sont des identifiants uniques pour les cibles d'erreur. Si la recherche par nom renvoie plusieurs résultats, recherchez spécifiquement le code à préfixe souligné et vous trouverez exactement le bon élément. L'entrée d'Error Log inclut toujours le code — c'est cela qu'il faut rechercher.</div>
+      </div>
 
-      <div class="callout-note">
-  <p><strong>Q : Certaines erreurs semblent impossibles à corriger localement — que faisons-nous ?</strong></p>
-  <p><strong>R :</strong> Si l'erreur semble être un problème au niveau plateforme (non causé par vos choix de configuration ou changements de hiérarchie), enregistrez le code d'erreur et les symptômes, puis contactez le support Anaplan ou votre contact de livraison Anaplan. Ne passez pas de temps lors d'une mission client à essayer de corriger les erreurs plateforme — elles sont traitées dans les futures releases IFP. L'animateur de l'atelier a noté : « Nous ne voulons pas que vous perdiez du temps sur des choses qui sont vraiment des problèmes de plateforme. »</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q : Certaines erreurs semblent impossibles à corriger localement — que faisons-nous ?</div>
+        <div class="answer">R : Si l'erreur semble être un problème au niveau plateforme (non causé par vos choix de configuration ou changements de hiérarchie), enregistrez le code d'erreur et les symptômes, puis contactez le support Anaplan ou votre contact de livraison Anaplan. Ne passez pas de temps lors d'une mission client à essayer de corriger les erreurs plateforme — elles sont traitées dans les futures releases IFP. Une note de l'atelier : « Nous ne voulons pas que vous perdiez du temps sur des choses qui sont vraiment des problèmes de plateforme. »</div>
+      </div>
 
-      <div class="callout-note">
-  <p><strong>Q : Est-il possible que la même erreur apparaisse dans différents modèles ?</strong></p>
-  <p><strong>R :</strong> Oui. Un choix de configuration ou un changement de hiérarchie qui affecte une Liste partagée ou un schéma de formule peut produire le même type d'erreur dans plusieurs modèles. L'Error Log précise dans quel modèle se trouve chaque erreur — revoyez chaque modèle indépendamment. La cause racine est souvent la même, et la corriger dans un modèle vous donne le schéma pour les autres.</p>
-</div>
-
-      <hr>
+      <div class="qa-item">
+        <div class="question">Q : Est-il possible que la même erreur apparaisse dans différents modèles ?</div>
+        <div class="answer">R : Oui. Un choix de configuration ou un changement de hiérarchie qui affecte une Liste partagée ou un schéma de formule peut produire le même type d'erreur dans plusieurs modèles. L'Error Log précise dans quel modèle se trouve chaque erreur — revoyez chaque modèle indépendamment. La cause racine est souvent la même, et la corriger dans un modèle vous donne le schéma pour les autres.</div>
+      </div>
 
       <h2>Extensions</h2>
 
-      <div class="callout-note">
-  <p><strong>Q : Comment savoir si un changement est un configure, extend ou modify ?</strong></p>
-  <p><strong>R :</strong> Configure = vérifiez d'abord l'Application Framework Configurator. S'il y a un paramètre pour l'exigence du client, utilisez-le — ne construisez pas d'extension quand la configuration suffit. Extend = ajoutez de nouveaux Line Items, Modules ou Listes sans toucher aux formules existantes du modèle de base. C'est un faible risque pour la mise à niveau. Modify = changez une formule ou une structure existante du modèle de base. Cela comporte le plus haut risque de mise à niveau. En cas de doute, demandez-vous : « Suis-je en train de changer quelque chose qui a été généré, ou d'ajouter quelque chose de nouveau ? » Si vous changez, c'est un Modify.</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q : Comment savoir si un changement est un configure, extend ou modify ?</div>
+        <div class="answer">R : Configure = vérifiez d'abord l'Application Framework Configurator. S'il y a un paramètre pour l'exigence du client, utilisez-le — ne construisez pas d'extension quand la configuration suffit. Extend = ajoutez de nouveaux Line Items, Modules ou Listes sans toucher aux formules existantes du modèle de base. C'est un faible risque pour la mise à niveau. Modify = changez une formule ou une structure existante du modèle de base. Cela comporte le plus haut risque de mise à niveau. En cas de doute, demandez-vous : « Suis-je en train de changer quelque chose qui a été généré, ou d'ajouter quelque chose de nouveau ? » Si vous changez, c'est un Modify.</div>
+      </div>
 
-      <div class="callout-note">
-  <p><strong>Q : Qu'arrive-t-il aux overrides de formule quand IFP est mis à niveau ?</strong></p>
-  <p><strong>R :</strong> Les overrides de formule sur les Line Items du modèle de base peuvent être perdus ou cassés quand Anaplan publie une mise à jour IFP, selon que la mise à jour affecte ce Module. C'est pourquoi taguer les overrides de formule avec le data tag Formula Override est critique — quand une mise à niveau arrive, filtrez par ce tag pour obtenir votre liste de revue complète. Maintenez aussi une documentation externe de chaque override.</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q : Qu'arrive-t-il aux overrides de formule quand IFP est mis à niveau ?</div>
+        <div class="answer">R : Les overrides de formule sur les Line Items du modèle de base peuvent être perdus ou cassés quand Anaplan publie une mise à jour IFP, selon que la mise à jour affecte ce Module. C'est pourquoi taguer les overrides de formule avec le data tag Formula Override est critique — quand une mise à niveau arrive, filtrez par ce tag pour obtenir votre liste de revue complète. Maintenez aussi une documentation externe de chaque override.</div>
+      </div>
 
-      <div class="callout-note">
-  <p><strong>Q : Pouvons-nous ajouter plus de deux ajustements ?</strong></p>
-  <p><strong>R :</strong> Oui — le schéma est le même. Ajoutez des Line Items d'ajustement supplémentaires, appliquez le même access driver, mettez à jour le subset de filtre et mettez à jour la formule Final Amount pour inclure les ajustements supplémentaires. Il n'y a pas de limite imposée par la plateforme sur le nombre d'ajustements. Toutefois, documentez clairement et tenez compte de l'expérience UX — une grille de planification avec 6 champs d'ajustement commence à perdre les utilisateurs finaux.</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q : Pouvons-nous ajouter plus de deux ajustements ?</div>
+        <div class="answer">R : Oui — le schéma est le même. Ajoutez des Line Items d'ajustement supplémentaires, appliquez le même access driver, mettez à jour le subset de filtre et mettez à jour la formule Final Amount pour inclure les ajustements supplémentaires. Il n'y a pas de limite imposée par la plateforme sur le nombre d'ajustements. Toutefois, documentez clairement et tenez compte de l'expérience UX — une grille de planification avec 6 champs d'ajustement commence à perdre les utilisateurs finaux.</div>
+      </div>
 
-      <div class="callout-note">
-  <p><strong>Q : Quand devrions-nous utiliser le data tag Extension vs le tag Formula Override ?</strong></p>
-  <p><strong>R :</strong> Utilisez <strong>Extension</strong> sur chaque Line Item que vous ajoutez et qui est nouveau (ne fait pas partie du modèle de base). Utilisez <strong>Formula Override</strong> sur tout Line Item du modèle de base dont vous avez changé la formule. Un Line Item peut avoir les deux tags — par exemple, si vous ajoutez un nouveau Line Item et que vous le référencez aussi dans une formule modifiée du modèle de base, le Line Item du modèle de base reçoit les deux tags.</p>
-</div>
-
-      <hr>
+      <div class="qa-item">
+        <div class="question">Q : Quand devrions-nous utiliser le data tag Extension vs le tag Formula Override ?</div>
+        <div class="answer">R : Utilisez <strong>Extension</strong> sur chaque Line Item que vous ajoutez et qui est nouveau (ne fait pas partie du modèle de base). Utilisez <strong>Formula Override</strong> sur tout Line Item du modèle de base dont vous avez changé la formule. Un Line Item peut avoir les deux tags — par exemple, si vous ajoutez un nouveau Line Item et que vous le référencez aussi dans une formule modifiée du modèle de base, le Line Item du modèle de base reçoit les deux tags.</div>
+      </div>
 
       <h2>Planning Methods</h2>
 
-      <div class="callout-note">
-  <p><strong>Q : Une Planning Method peut-elle s'appliquer à certains comptes GL mais pas à d'autres ?</strong></p>
-  <p><strong>R :</strong> Oui — c'est l'objet du Module de mapping compte-vers-planning-method. Chaque ligne de compte GL spécifie quelle Planning Method s'applique. Le Line Item Booléen dans le Module INP (dérivé du mapping) contrôle si la méthode est active pour chaque compte. Réglez la méthode par ligne de compte dans le Module de mapping.</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q : Une Planning Method peut-elle s'appliquer à certains comptes GL mais pas à d'autres ?</div>
+        <div class="answer">R : Oui — c'est l'objet du Module de mapping compte-vers-planning-method. Chaque ligne de compte GL spécifie quelle Planning Method s'applique. Le Line Item Booléen dans le Module INP (dérivé du mapping) contrôle si la méthode est active pour chaque compte. Réglez la méthode par ligne de compte dans le Module de mapping.</div>
+      </div>
 
-      <div class="callout-note">
-  <p><strong>Q : Pourquoi utiliser un access driver (DCA) sur les Line Items spécifiques à une méthode plutôt que de simplement les masquer dans l'UX ?</strong></p>
-  <p><strong>R :</strong> L'access driver (DCA) empêche à la fois le calcul et la saisie de données quand la méthode ne s'applique pas à un compte GL. Les règles de visibilité UX seules laissent encore la formule s'exécuter (consommant des ressources de calcul) et autorisent l'entrée de données via des import actions (causant des problèmes d'intégrité des données). L'access driver est le bon pattern pour les Line Items spécifiques à une méthode — il applique la règle au niveau du modèle, pas seulement au niveau de l'affichage.</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q : Pourquoi utiliser un access driver (DCA) sur les Line Items spécifiques à une méthode plutôt que de simplement les masquer dans l'UX ?</div>
+        <div class="answer">R : L'access driver (DCA) empêche à la fois le calcul et la saisie de données quand la méthode ne s'applique pas à un compte GL. Les règles de visibilité UX seules laissent encore la formule s'exécuter (consommant des ressources de calcul) et autorisent l'entrée de données via des import actions (causant des problèmes d'intégrité des données). L'access driver est le bon pattern pour les Line Items spécifiques à une méthode — il applique la règle au niveau du modèle, pas seulement au niveau de l'affichage.</div>
+      </div>
 
-      <div class="callout-note">
-  <p><strong>Q : Quelle est la différence entre mettre à jour le subset de filtre vs le subset admin ?</strong></p>
-  <p><strong>R :</strong> Le subset de filtre (Line Item Subset du filtre OPEX) contrôle quels Line Items sont visibles aux utilisateurs finaux dans la grille de planification. Le subset admin contrôle quels Line Items apparaissent dans la page de configuration admin de premier niveau. Les deux doivent être mis à jour pour qu'une nouvelle Planning Method fonctionne correctement de bout en bout — le subset de filtre pour l'expérience utilisateur, et le subset admin pour la vue de configuration admin.</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q : Quelle est la différence entre mettre à jour le subset de filtre vs le subset admin ?</div>
+        <div class="answer">R : Le subset de filtre (Line Item Subset du filtre OPEX) contrôle quels Line Items sont visibles aux utilisateurs finaux dans la grille de planification. Le subset admin contrôle quels Line Items apparaissent dans la page de configuration admin de premier niveau. Les deux doivent être mis à jour pour qu'une nouvelle Planning Method fonctionne correctement de bout en bout — le subset de filtre pour l'expérience utilisateur, et le subset admin pour la vue de configuration admin.</div>
+      </div>
 
-      <div class="callout-note">
-  <p><strong>Q : Une Planning Method doit-elle être reconfigurée si nous regénérons le modèle ?</strong></p>
-  <p><strong>R :</strong> Si la Planning Method a été ajoutée en tant qu'extension (et non en tant que paramètre du Configurator), oui — elle devra être reconstruite après la regénération. C'est une autre raison pour laquelle la regénération doit être traitée comme exceptionnelle. Les extensions ajoutées après la génération ne sont pas capturées par l'Application Framework Configurator et ne survivront pas à une regénération.</p>
-</div>
-
-      <hr>
+      <div class="qa-item">
+        <div class="question">Q : Une Planning Method doit-elle être reconfigurée si nous regénérons le modèle ?</div>
+        <div class="answer">R : Si la Planning Method a été ajoutée en tant qu'extension (et non en tant que paramètre du Configurator), oui — elle devra être reconstruite après la regénération. C'est une autre raison pour laquelle la regénération doit être traitée comme exceptionnelle. Les extensions ajoutées après la génération ne sont pas capturées par l'Application Framework Configurator et ne survivront pas à une regénération.</div>
+      </div>
 
       <h2>Méthode Headcount × Rate</h2>
 
-      <div class="callout-note">
-  <p><strong>Q : D'où viennent les données de Headcount dans la formule Rate ?</strong></p>
-  <p><strong>R :</strong> Pour les périodes d'actuals : du Module DAT qui stocke les actuals de Headcount issus du GL ou de la source headcount. Pour les périodes de forecast : du modèle Headcount Planning via l'intégration entre les modèles Headcount et Financial Planning. La formule du Line Item Rate utilise une restriction de portée de formule (version actuals uniquement) pour mettre une formule sur les actuals et autoriser la saisie utilisateur sur les périodes de forecast.</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q : D'où viennent les données de Headcount dans la formule Rate ?</div>
+        <div class="answer">R : Pour les périodes d'actuals : du Module DAT qui stocke les actuals de Headcount issus du GL ou de la source headcount. Pour les périodes de forecast : du modèle Headcount Planning via l'intégration entre les modèles Headcount et Financial Planning. La formule du Line Item Rate utilise une restriction de portée de formule (version actuals uniquement) pour mettre une formule sur les actuals et autoriser la saisie utilisateur sur les périodes de forecast.</div>
+      </div>
 
-      <div class="callout-note">
-  <p><strong>Q : Que faire si les données de Headcount ne sont pas chargées pour une période de forecast ?</strong></p>
-  <p><strong>R :</strong> Si les données de Headcount ne sont pas présentes pour une période, le Line Item HC Amount renverra 0 pour cette période. Cela produira un Final Amount de 0 (ou simplement la valeur d'Adjustment), qui apparaîtra incorrect pour les utilisateurs. Assurez-vous que le modèle Headcount est rempli et intégré avant que les utilisateurs ne commencent la saisie forecast. C'est une dépendance de chargement de données — documentez-la dans la checklist UAT.</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q : Que faire si les données de Headcount ne sont pas chargées pour une période de forecast ?</div>
+        <div class="answer">R : Si les données de Headcount ne sont pas présentes pour une période, le Line Item HC Amount renverra 0 pour cette période. Cela produira un Final Amount de 0 (ou simplement la valeur d'Adjustment), qui apparaîtra incorrect pour les utilisateurs. Assurez-vous que le modèle Headcount est rempli et intégré avant que les utilisateurs ne commencent la saisie forecast. C'est une dépendance de chargement de données — documentez-la dans la checklist UAT.</div>
+      </div>
 
-      <div class="callout-note">
-  <p><strong>Q : Pourquoi avons-nous besoin du Line Item Booléen ?</strong></p>
-  <p><strong>R :</strong> Le Booléen (HC Boolean) détermine si la méthode Headcount × Rate est active pour un compte GL donné. Sans lui, chaque formule s'exécuterait pour chaque compte indépendamment de l'attribution de Planning Method — causant des calculs incorrects et des computations inutiles. Le Booléen contrôle tous les calculs spécifiques à la méthode, et l'access driver l'utilise pour contrôler la visibilité des Line Items.</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q : Pourquoi avons-nous besoin du Line Item Booléen ?</div>
+        <div class="answer">R : Le Booléen (HC Boolean) détermine si la méthode Headcount × Rate est active pour un compte GL donné. Sans lui, chaque formule s'exécuterait pour chaque compte indépendamment de l'attribution de Planning Method — causant des calculs incorrects et des computations inutiles. Le Booléen contrôle tous les calculs spécifiques à la méthode, et l'access driver l'utilise pour contrôler la visibilité des Line Items.</div>
+      </div>
 
 <div class="prevnext-nav"><a class="prevnext-btn" href="./13-whats-coming.html">← Précédent</a><span></span></div>
     </div>

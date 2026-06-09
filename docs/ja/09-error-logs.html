@@ -44,6 +44,7 @@
     <ul class="nav-submenu">
       <li><a class="nav-link" href="./13-whats-coming.html">今後の予定</a></li>
       <li><a class="nav-link" href="./14-qanda.html">セッションのQ&amp;A</a></li>
+      <li><a class="nav-link" href="./15-workshop-wrap-up.html">ワークショップまとめ</a></li>
     </ul>
   </ul>
   <div class="lang-switcher">
@@ -65,7 +66,7 @@
     <div class="content-header">
       <h1>Error Logレビュー</h1>
       <p class="subtitle">生成のError Logを読み、分類し、解決する方法</p>
-      <div class="badge-row"><span class="content-badge">Day 1</span><span class="content-badge">30分</span><span class="content-badge">ハンズオン</span></div>
+      <div class="badge-row"><span class="content-badge">30分</span><span class="content-badge">ハンズオン</span></div>
     </div>
     <div class="content-body">
 
@@ -74,19 +75,29 @@
         <p>これは英語原版の自動翻訳です。正確かつ最新のバージョンについては、<a href="../09-error-logs.html">英語版</a>をご確認ください。翻訳の問題はAnaplanパートナー担当者までご報告ください。</p>
       </div>
 
+      <h2>Error Log概要とナビゲーション</h2>
+      <div class="callout-tip">
+        <span class="callout-label">▶ 動画で見る：Error Log Review</span>
+        <p>Error Logのナビゲーションを概観する短い動画です。</p>
+        <p style="margin-top:0.5rem;">
+          <a href="https://anaplan-my.sharepoint.com/:v:/r/personal/ben_wilson_anaplan_com/Documents/IFPv2.1%20Workshop%20Materials/Error%20Log%20Review.mp4?csf=1&amp;web=1&amp;nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&amp;e=evyHa2" target="_blank" rel="noopener" style="display:inline-block;padding:0.5rem 1rem;background:#0066cc;color:white;border-radius:4px;text-decoration:none;font-weight:600;font-size:0.9rem;">▶ SharePointで開く</a>
+          <span style="font-size:0.8rem;color:#6b7280;margin-left:0.5rem;">新しいタブで開きます · Anaplanへのサインインが必要です</span>
+        </p>
+      </div>
+
 <h2>Error Logとは</h2>
       <p>Error Logは、モデル生成後にApplication Frameworkによって生成されます。生成されたモデルがベースモデルテンプレートと異なる場合に発生する数式および構成の問題を一覧表示します。Error LogはApplication Frameworkの概要ページの右下からアクセスでき、Excelにエクスポートできます。</p>
       <p>Error LogはIFP 2.0で導入された新しい機能です——それ以前のIFPバージョンには、こうした体系的なエラー報告機能はありませんでした。これを効率よく読みこなせるようになることは、実務者として身につけるべき重要なスキルです。</p>
 
       <h2>エラータイプ リファレンス</h2>
-<div class="table-wrap"><table><thead><tr><th>エラータイプ</th><th>意味</th><th>対応</th></tr></thead><tbody><tr><td><code>LINE_ITEM_FORMULA</code></td><td>数式が、生成モデル内に存在しない、または名前が変更されたラインアイテムを参照している — 多くの場合、階層名の変更や構成上の選択が原因</td><td>コード（アンダースコアプレフィックス）でラインアイテムを検索し、数式をベースモデルと比較し、修正またはベースモデルからコピー調整する</td></tr><tr><td><code>LIST_PROPERTY_FORMULA</code></td><td>数式が、存在しないか名前が変更されたリストプロパティを参照している</td><td>コードでラインアイテムを検索し、数式をベースモデルと比較し、リストプロパティの参照を更新する</td></tr><tr><td><code>IMPORT_ACTION</code></td><td>インポートアクションが、変更されたソースモジュールまたはリストを参照している</td><td>該当モデル内のインポートマッピングを更新する</td></tr><tr><td><code>MODEL_DATA_SOURCE</code></td><td>データソースの接続が壊れている（ADOパイプライン参照）</td><td>ADO内で接続を再確立するか、データソース参照を更新する</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>エラータイプ</th><th>意味</th><th>対応</th></tr></thead><tbody><tr><td><code>LINE_ITEM_FORMULA</code></td><td>数式が、生成モデル内に存在しない、または名前が変更されたラインアイテムを参照している — 多くの場合、階層名の変更や構成上の選択が原因</td><td>コード（アンダースコアプレフィックス）でラインアイテムを検索し、数式をベースモデルと比較し、修正またはベースモデルからコピー調整する</td></tr><tr><td><code>LIST_PROPERTY_FORMULA</code></td><td>数式が、存在しないか名前が変更されたリストプロパティを参照している</td><td>コードでラインアイテムを検索し、数式をベースモデルと比較し、リストプロパティの参照を更新する</td></tr><tr><td><code>IMPORT_ACTION</code></td><td>インポートアクションが、変更されたソースモジュールまたはリストを参照している</td><td>該当モデル内のインポートマッピングを更新する</td></tr><tr><td><code>MODEL_DATA_SOURCE</code></td><td>データソースの接続が壊れている（ADOパイプライン参照）。外部モデルのデータソースも認識されません。</td><td>ADO内で接続を再確立するか、データソース参照を更新する</td></tr></tbody></table></div>
 
       <h2>数式エラーの見つけ方</h2>
       <p>最も一般的なエラータイプは<code>LINE_ITEM_FORMULA</code>です。診断のワークフローは以下のとおりです：</p>
 
       <blockquote style="border-left:4px solid #0066cc;padding:0.75rem 1rem;background:#f0f7ff;border-radius:0 6px 6px 0;margin:1rem 0;font-style:italic;">
         「通常、頭にアンダースコアが付いたラインアイテムをお伝えします——それがエラーのラインアイテムコードです。モデルに入ってそのコードを検索すると、該当のアイテムに直接辿り着けます。」
-        <footer style="font-size:0.8rem;color:#6b7280;margin-top:0.25rem;">— ワークショップFacilitator、Day 1</footer>
+        <footer style="font-size:0.8rem;color:#6b7280;margin-top:0.25rem;">— ワークショップガイダンス</footer>
       </blockquote>
 <div class="step"><div class="step-badge">1</div><div class="step-content"><h3>Error Logを開く</h3><p>Application Frameworkの概要から、右下のError Logパネルをクリックします。数式エラーのみにフィルタします。エラーが10件以上ある場合は、まずExcelにエクスポートします。</p></div></div><div class="step"><div class="step-badge">2</div><div class="step-content"><h3>コードを記録する</h3><p>各エラーには<code>_LINEITEMNAMEEXCEPTION</code>形式（アンダースコアプレフィックス）のラインアイテムコードが含まれます。このコードは一意のものです——モデル検索では、表示名ではなくこのコードを使用してください。</p></div></div><div class="step"><div class="step-badge">3</div><div class="step-content"><h3>該当ラインアイテムを見つける</h3><p>該当のモデルに移動します（Error Logにどのモデルかが記載されています）。Line Itemsを開きます。アンダースコアプレフィックス付きのコードで検索します。検索結果から該当のモジュールとラインアイテムへ直接遷移します。</p></div></div><div class="step"><div class="step-badge">4</div><div class="step-content"><h3>ベースモデルと比較する</h3><p>ベースモデルを開きます（Facilitatorがアクセスを提供します）。同じラインアイテムを探します。生成された数式とベースモデルの数式を比較します。何が変わったか（階層名の変更、地域の削除、ディメンションの変更）を特定します。</p></div></div><div class="step"><div class="step-badge">5</div><div class="step-content"><h3>修正またはコピー調整</h3><p>オプションA：数式を直接修正する——参照をご自身の構成に合わせて更新します。オプションB：ベースモデルの数式をご自身のモデルにコピーし、ディメンション参照を調整します。ほとんどのLINE_ITEM_FORMULAエラーには、オプションBの方が安全かつ高速です。</p></div></div><div class="step"><div class="step-badge">6</div><div class="step-content"><h3>検証する</h3><p>修正後、数式が解決されているか確認します（赤色の数式エラー表示が出ていないこと）。Error Logに戻り、該当のエラーを解決済みにマークします。次のエラーに進みます。</p></div></div><div class="step"><div class="step-badge">7</div><div class="step-content"><h3>詰まったらエスカレーション</h3><p>エラーがプラットフォームレベルの問題と思われる場合（構成が原因ではない場合）、エラーコードを記録してAnaplanサポートに連絡します。デリバリー案件中にプラットフォーム由来のエラーに時間を費やさないでください。</p></div></div>
 

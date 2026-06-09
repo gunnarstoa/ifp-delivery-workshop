@@ -44,6 +44,7 @@
     <ul class="nav-submenu">
       <li><a class="nav-link" href="./13-whats-coming.html">Em breve</a></li>
       <li><a class="nav-link" href="./14-qanda.html">Perguntas e respostas das sessões</a></li>
+      <li><a class="nav-link" href="./15-workshop-wrap-up.html">Encerramento do workshop</a></li>
     </ul>
   </ul>
   <div class="lang-switcher">
@@ -65,7 +66,7 @@
     <div class="content-header">
       <h1>Etapas pós-geração</h1>
       <p class="subtitle">A lista de verificação a executar após cada Geração antes de qualquer outro trabalho</p>
-      <div class="badge-row"><span class="content-badge">Dia 1</span><span class="content-badge">20 min</span><span class="content-badge">Walkthrough</span></div>
+      <div class="badge-row"><span class="content-badge">20 min</span><span class="content-badge">Walkthrough</span></div>
     </div>
     <div class="content-body">
 
@@ -95,13 +96,14 @@
 
       <ul class="checklist">
         <li>Verifique se os 4 modelos existem no Workspace (Financial Planning, Headcount, Admin, CapEx)</li>
-        <li>Confira a contagem de objetos de aplicação — a visão geral do App Framework mostra: modelos, UX apps, assets, objetos do data orchestrator</li>
+        <li>Confira a contagem de objetos de aplicação — a visão geral do Application Framework mostra: modelos, UX apps, assets, objetos do data orchestrator</li>
         <li>Abra os Error Logs e anote a contagem total de erros — registre isso como sua baseline</li>
         <li>Revise o Error Log para verificar se todos os Módulos foram gerados corretamente — quaisquer Módulos ausentes aparecerão aqui como erros. Veja a seção <a href="./09-error-logs.html">Revisão do Error Log</a> para detalhes.</li>
         <li>Verifique se Line Items-chave de Módulos SYS estão populados: a Lista Planning Methods virá pré-populada. Todas as Listas de dados de produção (entity, department, accounts) virão não populadas e são populadas pelo push de dados do Data Orchestrator.</li>
         <li>Confirme se as Listas de Hierarquia foram carregadas com os membros esperados. Todos os membros de Lista de Hierarquia são populados via ADO — alguns via CSV ou fonte externa conectada. Hierarquias como entity, department, IS Accounts e BS Accounts requerem uma etapa adicional de mapeamento no Admin Model para mapear membros da Lista de origem para seus equivalentes de planejamento antes de fazer push para outros modelos spoke.</li>
         <li>Confira se os membros da Lista Planning Method estão populados — esse é o único item verificável neste estágio. Os Módulos SYS e ADMIN ligados aos Planning Methods são populados depois; consulte o Apêndice A3 do Configuration Guide para completar esta etapa.</li>
         <li>Faça uma verificação por amostragem em um Line Item calculado em um Módulo CALC — confirme que a fórmula não está em branco</li>
+        <li>▶ Assista: <a href="https://anaplan-my.sharepoint.com/:v:/r/personal/ben_wilson_anaplan_com/Documents/IFPv2.1%20Workshop%20Materials/IFPv2%20Models%20Post%20Generation.mp4?csf=1&amp;web=1&amp;nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&amp;e=DBdmoQ" target="_blank" rel="noopener"><strong>IFPv2 Models — walkthrough pós-geração</strong></a> — vídeo curto cobrindo as etapas de verificação pós-geração acima. <span style="font-size:0.85rem;color:#6b7280;">(Abre no SharePoint · login Anaplan necessário)</span></li>
       </ul>
 
 <div class="callout-warning"><span class="callout-label">⚠ Fórmulas em branco? Verifique o Error Log primeiro</span><p>A melhor forma de verificar se uma fórmula deveria estar lá mas aparece em branco é revisar o Error Log. Todos os erros de fórmula farão a fórmula ficar <strong>EM BRANCO</strong> — falham por uma referência inválida, seja por mudanças de nome de Line Item não reconhecidas ou mudanças de estrutura. Sempre verifique o Error Log antes de assumir que uma fórmula está faltando.</p></div>
@@ -118,7 +120,7 @@
     <div class="mini-lab-objective"><strong>Objetivo</strong> Trabalhar pelo checklist pós-geração. Identificar a contagem baseline de erros e confirmar que a estrutura do modelo está completa.</div>
     <ol class="mini-lab-steps">
       <li><span class="mini-lab-step-num">1</span>No seu Workspace, confirme que <strong>4 modelos</strong> estão listados. Nomeie-os em suas notas.</li>
-      <li><span class="mini-lab-step-num">2</span>Abra a página de visão geral do <strong>App Framework</strong>. Registre: contagem de modelos, contagem de UX apps, contagem de assets, contagem de erros.</li>
+      <li><span class="mini-lab-step-num">2</span>Abra a página de visão geral do <strong>Application Framework</strong>. Registre: contagem de modelos, contagem de UX apps, contagem de assets, contagem de erros.</li>
       <li><span class="mini-lab-step-num">3</span>Clique em <strong>Error Logs</strong> (canto inferior direito). Registre a contagem total de erros — esta é sua baseline.</li>
       <li><span class="mini-lab-step-num">4</span>Abra o modelo <strong>Financial Planning</strong>. Navegue até <strong>Modules</strong>. Verifique se existe ao menos um Módulo para cada prefixo: ADMIN, SYS, DAT, INP, CALC, OUT.</li>
       <li><span class="mini-lab-step-num">5</span>Abra um <strong>Módulo SYS</strong>. Encontre a Lista Planning Methods. Verifique se os métodos que você habilitou no Application Framework Configurator estão presentes.</li>
