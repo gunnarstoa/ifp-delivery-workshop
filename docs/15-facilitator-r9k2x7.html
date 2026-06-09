@@ -178,15 +178,21 @@
 
   <main class="main-content">
     <div class="content-header">
-      <h1>Facilitator Guide</h1>
-      <p class="subtitle">Full run-of-show for both days — scripts, click paths, timing, and debrief answer keys</p>
-      <div class="badge-row"><span class="content-badge">Facilitator</span><span class="content-badge">Internal Use</span></div>
+      <h1>Facilitator Run-of-Show — Live Cohorts</h1>
+      <p class="subtitle">Session-by-session scripts, click paths, durations, and debrief answer keys for a guided live cohort</p>
+      <div class="badge-row"><span class="content-badge">Facilitator</span><span class="content-badge">Internal Use</span><span class="content-badge">Live Cohorts</span></div>
     </div>
     <div class="content-body">
 
+      <div class="callout-warning">
+        <span class="callout-label">⚠ Scope of This Run-of-Show</span>
+        <p>This document applies when a facilitator runs a <strong>guided live cohort</strong> — in person or over Zoom, walking participants through the workshop in sessions. Most participants today take the workshop fully self-paced; for that path, the <a href="./16-facilitator-toolkit-k7p2nx.html"><strong>Facilitator Launch Toolkit</strong></a> covers the entire workflow (invitations, kickoff email, Slack welcome, mid-week nudge, wrap-up email). Use this Run-of-Show only when you're delivering a guided session.</p>
+        <p>The two sessions below can run as a single intensive day, two half-days, or split across weeks — whatever fits the cohort. Durations are guidance; cut for time by skipping the optional debrief discussions, not the labs.</p>
+      </div>
+
       <div class="callout-info">
-        <span class="callout-label">📦 Looking for invitations, emails, scripts?</span>
-        <p>The companion <a href="./16-facilitator-toolkit-k7p2nx.html"><strong>Facilitator Launch Toolkit</strong></a> has every email, social post, kickoff script, Slack welcome, mid-week nudge, wrap-up email, and the printable PDF overview — all copy-paste ready. This Run-of-Show covers session execution; the Toolkit covers promotion, kickoff, and follow-up.</p>
+        <span class="callout-label">📦 Companion: Launch Toolkit</span>
+        <p>For all the <em>non-session</em> assets (invitations, registration confirmation, day-before welcome, tenant credentials email, Slack channel welcome, mid-week check-in, thank-you email, common-Q&amp;A cheat sheet, printable PDF overview), see the <a href="./16-facilitator-toolkit-k7p2nx.html"><strong>Facilitator Launch Toolkit</strong></a>.</p>
       </div>
 
       <div class="legend">
@@ -197,49 +203,60 @@
 
       <h2>Pre-Workshop Checklist</h2>
       <ul class="checklist">
-        <li>Training tenant credentials confirmed for all participants (test login before Day 1 starts)</li>
-        <li>Workspace admin access confirmed for each participant in the training workspace</li>
-        <li>Training models pre-staged: IFPv2.0.0-train-base-financial-planning available to all participants</li>
-        <li>App Framework available to all participants — not just the facilitator</li>
+        <li>Training tenant credentials confirmed for all participants — test login before the first session</li>
+        <li>All four required roles assigned to each participant: <strong>Application Owner, Workspace Admin, Page Builder, Integration Admin</strong></li>
+        <li>Dataspace assigned to each participant in the training tenant</li>
+        <li>TRAIN models pre-staged and accessible to all participants (e.g., <code>IFPv2.0.0-train-base-financial-planning</code>)</li>
+        <li>Application Framework available to all participants — not just the facilitator</li>
         <li>Dataset files distributed for customer context</li>
-        <li>Known generation error confirmed: at least one LINE_ITEM_FORMULA error expected in training model</li>
-        <li>Extension examples prepared — reference implementations ready to review</li>
-        <li>Micro-lesson video accessible (Headcount × Rate method — SharePoint link confirmed working)</li>
-        <li>Participant list → assign breakout pairs for lab exercises</li>
-        <li>Screen share tested — participants can see your screen clearly (resolution, font size)</li>
+        <li>Known generation error confirmed — at least one <code>LINE_ITEM_FORMULA</code> error expected in training model so participants see error log triage</li>
+        <li>Extension reference implementations prepared and ready to review</li>
+        <li>Micro-lesson video links confirmed working (SharePoint links for Dimensionality, Configuration Overview, Editing Hierarchy Levels, Post-Generation, Error Log Review)</li>
+        <li>Workshop Slack channel (<code>#ext-delivery-workshop-ifp-anaplan</code>) confirmed accessible to participants for follow-up questions during and after the session</li>
+        <li>Zoom screen share tested — participants can read your screen clearly (resolution, font size)</li>
       </ul>
 
       <hr class="section-divider">
 
-      <div class="day-banner">📅 Day 1 — Configuration</div>
+      <div class="day-banner">📚 Session 1 — Configuration &amp; Generation</div>
 
-      <h3>Opening <span class="timing-badge">9:00 — 15 min</span></h3>
+      <h3>Opening <span class="timing-badge">15 min</span></h3>
       <div class="script-block">
-        <p>Welcome everyone. Today and tomorrow we are going to go deep on IFP 2.0 delivery — not the overview, but the hands-on practitioner workflow you need to actually deliver this for a customer.</p>
-        <p>Day 1 is all about configuration and generation. We will walk through the Application Framework Configurator together, then participants will configure it for their own customer scenario. After that, we will generate a model, deal with errors, and review the error logs systematically.</p>
-        <p>Day 2 is extensions. We will build two real extensions from scratch — the kind of things customers ask for in almost every IFP engagement.</p>
-        <p>Quick logistics: please confirm you can log into the training tenant. Raise your hand if you are having trouble accessing the workspace.</p>
+        <p>Welcome everyone. In this session and the next we are going to go deep on IFP 2.1 delivery — not the overview, but the hands-on practitioner workflow you need to actually deliver this for a customer.</p>
+        <p>Session 1 is all about configuration and generation. We will walk through the Application Framework Configurator together, then participants will configure it for their own customer scenario. After that, we will generate a model, deal with errors, and review the error logs systematically.</p>
+        <p>Session 2 is extensions. We will build two real extensions from scratch — the kind of things customers ask for in almost every IFP engagement.</p>
+        <p>Quick logistics: please confirm you can log into the training tenant. Drop a message in the Slack channel if you can't access the workspace, and we'll resolve before moving on.</p>
       </div>
       <div class="facilitator-note">Check: everyone has workspace access before moving on. Do not proceed if more than 2 people are locked out — resolve access first.</div>
 
       <hr class="section-divider">
 
-      <h3>IFP Overview <span class="timing-badge">9:15 — 20 min</span></h3>
+      <h3>Tenant Access Verification <span class="timing-badge">10 min</span></h3>
       <div class="script-block">
-        <p>Let me set the context. IFP 2.0 is a significant re-architecture. Three major changes: App Framework, ADO, and Headcount Planning 2.0. Of these, the App Framework is the one that changes how you deliver — everything else is incremental.</p>
-        <p>The App Framework is a configurator. You answer 43 questions, hit generate, and it produces a fully structured model. The generated model has errors — that is expected and normal. We will see this today and we will learn to deal with it.</p>
+        <p>Before we touch the Application Framework, let's confirm everyone's tenant is set up correctly. This is the single biggest reason participants get stuck mid-engagement — they discover a missing role or unassigned Dataspace right when they hit Generate.</p>
+        <p>Open the Tenant Access page in the lab guide and follow the three checks: confirm the correct tenant, verify your roles, and verify your Dataspace assignment.</p>
       </div>
-      <div class="click-instruction"><strong>Click:</strong> Open App Framework → Overview page. Show the object counts: 43 configurations, 4 models, 17 assets, generation status.</div>
+      <div class="click-instruction"><strong>Click:</strong> Lab guide → Tenant Access. Walk through the three checks live: login → correct tenant → Administration section showing the four roles (Application Owner, Workspace Admin, Page Builder, Integration Admin) and the Dataspace.</div>
+      <div class="facilitator-note">Verify every participant confirms all four roles AND a Dataspace before moving on. If anyone is missing a role or Dataspace, escalate to the Anaplan team in Slack — do not proceed to configuration without this resolved.</div>
+
+      <hr class="section-divider">
+
+      <h3>IFP Overview <span class="timing-badge">20 min</span></h3>
+      <div class="script-block">
+        <p>Let me set the context. IFP 2.1 is a significant re-architecture. Three major changes: Application Framework, ADO, and Headcount Planning 2.0. Of these, the Application Framework is the one that changes how you deliver — everything else is incremental.</p>
+        <p>The Application Framework is a configurator. You answer 44 questions, hit generate, and it produces a fully structured model. The generated model has errors — that is expected and normal. We will see this today and we will learn to deal with it.</p>
+      </div>
+      <div class="click-instruction"><strong>Click:</strong> Open Application Framework → Overview page. Show the object counts: 44 configurations, 4 models, 17 assets, generation status.</div>
       <div class="facilitator-note">Point out "Generated with Errors" on the overview — normalize it early. This is the number-one source of participant anxiety and it is completely unfounded.</div>
 
       <hr class="section-divider">
 
-      <h3>Configurator Walkthrough <span class="timing-badge">9:35 — 45 min</span></h3>
+      <h3>Configurator Walkthrough <span class="timing-badge">45 min</span></h3>
       <div class="script-block">
         <p>Let me take you through The Application Framework Configurator section by section. Follow along in your own workspace — you are not configuring yet, just watching.</p>
         <p>The Application Framework Configurator has three main sections: Hierarchies, Data Structure, and Configurations. Hierarchies is the most critical — these decisions are irreversible after generation.</p>
       </div>
-      <div class="click-instruction"><strong>Click:</strong> App Framework → Configurator → Hierarchies. Show entity levels, geography levels, functional area checkboxes.</div>
+      <div class="click-instruction"><strong>Click:</strong> Application Framework → Configurator → Hierarchies. Show entity levels, geography levels, functional area checkboxes.</div>
       <div class="script-block">
         <p>See these hierarchy choices? Entity levels, geography levels, functional areas. These drive the dimension structure of every module that gets generated. If you change your mind after generation, you regenerate — which means rebuilding any extensions you added.</p>
         <p>Session Zero with your customer is about locking these decisions. Get hierarchy wrong at Session Zero and you are regenerating during Test &amp; Deploy.</p>
@@ -249,9 +266,9 @@
 
       <hr class="section-divider">
 
-      <h3>Lab A: Configurator Exercise <span class="timing-badge">10:20 — 60 min</span></h3>
+      <h3>Lab: Configurator Exercise <span class="timing-badge">60 min</span></h3>
       <div class="script-block">
-        <p>Now it is your turn. Configure the App Framework for a customer scenario. Consider: how many entity levels, geography structure, functional areas in scope, and any special configurations. Configure and trigger generation.</p>
+        <p>Now it is your turn. Configure the Application Framework for a customer scenario. Consider: how many entity levels, geography structure, functional areas in scope, and any special configurations. Configure and trigger generation.</p>
         <p>This is a decision exercise. There is no step-by-step answer guide. You are making real configuration choices — the same ones you would make with an actual customer. Document your decisions and your reasoning.</p>
         <p>You have 60 minutes. When everyone has triggered generation, we will take a break and then I will walk through the reference configuration during debrief.</p>
       </div>
@@ -260,13 +277,9 @@
 
       <hr class="section-divider">
 
-      <h3>Break <span class="timing-badge">11:20 — 10 min</span></h3>
-
-      <hr class="section-divider">
-
-      <h3>Model Generation <span class="timing-badge">11:30 — 30 min</span></h3>
+      <h3>Model Generation <span class="timing-badge">30 min</span></h3>
       <div class="script-block">
-        <p>Let me walk through what just happened when you hit Generate. The App Framework read all 43 of your answers and provisioned four models: Financial Planning, Headcount, Admin, and Data Orchestrator. It applied your configuration to the module template and wired the formulas.</p>
+        <p>Let me walk through what just happened when you hit Generate. The Application Framework read all 43 of your answers and provisioned four models: Financial Planning, Headcount, Admin, and Data Orchestrator. It applied your configuration to the module template and wired the formulas.</p>
         <p>Most of you will see "Generated with Errors." That is fine — say it with me: that is fine. It does not mean the model is broken. It means some formulas hit references that differ from the base template because of your configuration choices.</p>
       </div>
       <div class="click-instruction"><strong>Click:</strong> Workspace → show 4 generated models. Open Financial Planning model → Modules → show ADMIN, SYS, DAT, INP, CALC, OUT prefixes.</div>
@@ -276,27 +289,23 @@
 
       <hr class="section-divider">
 
-      <h3>Post-Generation Steps <span class="timing-badge">12:00 — 20 min</span></h3>
+      <h3>Post-Generation Steps <span class="timing-badge">20 min</span></h3>
       <div class="script-block">
         <p>Before you do anything else after generation, run through this checklist. Every time. On every customer project. I am going to demonstrate each step now and then you will do it on your own model.</p>
       </div>
-      <div class="click-instruction"><strong>Click:</strong> App Framework overview — point out model count, UX app count, asset count. Click Error Logs — show error count and log format.</div>
+      <div class="click-instruction"><strong>Click:</strong> Application Framework overview — point out model count, UX app count, asset count. Click Error Logs — show error count and log format.</div>
       <div class="click-instruction"><strong>Click:</strong> Financial Planning model → a SYS module → find Planning Methods list → verify enabled methods are present.</div>
       <div class="click-instruction"><strong>Click:</strong> a CALC module → open a line item in blueprint → show the formula is populated (not blank).</div>
       <div class="facilitator-note">Tip for participants: export error log to Excel before the error review session. Filter by Error Type to group similar errors. This is much faster than working through them one at a time in-app.</div>
 
       <hr class="section-divider">
 
-      <h3>Lunch <span class="timing-badge">12:20 — 55 min</span></h3>
-
-      <hr class="section-divider">
-
-      <h3>Error Log Review <span class="timing-badge">13:15 — 30 min</span></h3>
+      <h3>Error Log Review <span class="timing-badge">30 min</span></h3>
       <div class="script-block">
-        <p>Welcome back. Now we get into the error logs. This is new content — IFP 2.0 introduced systematic error reporting that prior versions did not have. Learning to read these efficiently is one of the key skills you will take out of today.</p>
+        <p>Welcome back. Now we get into the error logs. This is new content — IFP 2.1 introduced systematic error reporting that prior versions did not have. Learning to read these efficiently is one of the key skills you will take out of today.</p>
         <p>The four error types you will see: LINE_ITEM_FORMULA, LIST_PROPERTY_FORMULA, IMPORT_ACTION, and MODEL_DATA_SOURCE. The most common is LINE_ITEM_FORMULA. Let me show you how to track one down.</p>
       </div>
-      <div class="click-instruction"><strong>Click:</strong> App Framework → Error Logs. Filter to LINE_ITEM_FORMULA. Pick the first error. Note the code (underscore prefix).</div>
+      <div class="click-instruction"><strong>Click:</strong> Application Framework → Error Logs. Filter to LINE_ITEM_FORMULA. Pick the first error. Note the code (underscore prefix).</div>
       <div class="script-block">
         <p>See this code — the underscore at the beginning? That is the error line item code. Go into the model, search for that code in Line Items, and it takes you directly to the problem.</p>
       </div>
@@ -308,7 +317,7 @@
 
       <hr class="section-divider">
 
-      <h3>Error Log Lab <span class="timing-badge">13:45 — 30 min</span></h3>
+      <h3>Error Log Lab <span class="timing-badge">30 min</span></h3>
       <div class="script-block">
         <p>Now you do it. Open the error log, export to Excel if you have more than 10 errors, and categorize every error by type. Find at least one LINE_ITEM_FORMULA error, track it to the line item, compare to the base model, and either fix it or document why you cannot.</p>
       </div>
@@ -316,31 +325,52 @@
 
       <hr class="section-divider">
 
-      <h3>Day 1 Wrap <span class="timing-badge">14:15 — 15 min</span></h3>
+      <h3>Session 1 Wrap <span class="timing-badge">15 min</span></h3>
       <div class="script-block">
-        <p>Good work today. Let me summarize what you have covered: App Framework configuration, model generation, post-generation verification, and error log triage. These are the core skills for Phase 1 and Phase 2 of an IFP delivery.</p>
+        <p>Good work today. Let me summarize what you have covered: Application Framework configuration, model generation, post-generation verification, and error log triage. These are the core skills for Phase 1 and Phase 2 of an IFP delivery.</p>
         <p>Tomorrow we do extensions. You will build two real extensions that you can take directly into a customer engagement. See you at 9 AM.</p>
       </div>
 
       <hr class="section-divider">
 
-      <div class="day-banner">📅 Day 2 — Extensions</div>
+      <div class="day-banner">📚 Session 2 — Extensions</div>
 
-      <h3>Day 2 Opening &amp; Recap <span class="timing-badge">9:00 — 15 min</span></h3>
+      <h3>Session 2 Opening &amp; Recap <span class="timing-badge">15 min</span></h3>
       <div class="script-block">
-        <p>Good morning. Quick recap of yesterday: we configured the Application Framework Configurator, generated the model, verified it, and worked through the error logs. Today is extensions — adding customer-specific capabilities on top of the generated base model.</p>
+        <p>Welcome back. Quick recap of Session 1: we configured the Application Framework Configurator, generated the model, verified it, and worked through the error logs. This session is extensions — adding customer-specific capabilities on top of the generated base model.</p>
         <p>We are going to cover the extension framework, then build two extensions hands-on: direct input with adjustment layers, and a headcount-driven rate planning method. Both of these come up in almost every IFP engagement.</p>
       </div>
       <div class="facilitator-note">Confirm: everyone can access the training base model (IFPv2.0.0-train-base-financial-planning). If anyone cannot access it, resolve before proceeding to Extensions.</div>
 
       <hr class="section-divider">
 
-      <h3>Extensions Overview <span class="timing-badge">9:15 — 30 min</span></h3>
+      <h3>Extensions Overview <span class="timing-badge">30 min</span></h3>
       <div class="script-block">
         <p>Three types of extensions: Configure, Extend, Modify. Configure is always first — use The Application Framework Configurator if it has a setting. Extend adds new things without touching base model formulas — low upgrade risk. Modify changes existing base model formulas — highest upgrade risk.</p>
         <p>Before I touch any extension in an IFP model, I create two data tags: Extension and Formula Override. These are the only in-model records of what I changed. Without them, the next consultant on the project — or you, six months later — has no way to know what is base model and what is custom.</p>
       </div>
       <div class="click-instruction"><strong>Click:</strong> Show the OpEx planning UX — demonstrate what Direct Input looks like now (single value, no adjustments). This is what you are extending in Extensions.</div>
+
+      <hr class="section-divider">
+
+      <h3>Extension Exercises 1 &amp; 2 <span class="timing-badge">90 min</span></h3>
+      <div class="script-block">
+        <p>The two extension exercises in the lab guide walk through the builds end-to-end. Have participants work through Exercise 1 (Manual Adjustments) first, then Exercise 2 (Channel Revenue Planning). Both are run against the pre-populated TRAIN models — not the configured models from Session 1 — because extensions need data to demonstrate behavior end-to-end.</p>
+      </div>
+      <div class="click-instruction"><strong>Click:</strong> Lab guide → Extension Exercise 1, then Extension Exercise 2. Walk through one or two steps to demonstrate the format, then turn participants loose.</div>
+      <div class="facilitator-note">Float during this block. Participants will hit blockers (formula references, dimension mismatches, data tag confusion). The two most common issues: (1) forgetting to tag the change as an Extension or Formula Override; (2) building against their configured model instead of the TRAIN base. Catch both early.</div>
+
+      <hr class="section-divider">
+
+      <h3>Workshop Wrap-up <span class="timing-badge">15 min</span></h3>
+      <div class="script-block">
+        <p>That's a wrap. Three things before we close out.</p>
+        <p>First, please run through the Workshop Wrap-up checklist in the lab guide — five tenant cleanup tasks so the next cohort gets a clean slate. Most important: delete the configured (non-TRAIN) apps and models, clear your Dataspace, restore hierarchies and configuration questions to default, and restore the Financial Planning model to its pre-extension ID. The wrap-up page has the exact ID for Application Training tenants 00–60.</p>
+        <p>Second, the post-workshop survey. Five minutes. We read every response and use them to cut what didn't help and reinforce what did. Honest feedback shapes the next cohort.</p>
+        <p>Third, the Slack channel stays open. Drop in any time you hit something on a real engagement and want a second opinion. Our IFP product experts are still there.</p>
+      </div>
+      <div class="click-instruction"><strong>Click:</strong> Lab guide → Workshop Wrap-up. Walk through the 5-item cleanup checklist on screen so participants know exactly what to do.</div>
+      <div class="facilitator-note">Send the post-workshop survey link in Slack and via email immediately after the session — response rates drop fast once people move on. The thank-you email template is in the Facilitator Launch Toolkit.</div>
 
       <hr class="section-divider">
 

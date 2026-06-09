@@ -218,116 +218,108 @@
 
       <h2>Model Generation</h2>
 
-      <div class="callout-note">
-  <p><strong>Q: We generated with errors — is the model usable?</strong></p>
-  <p><strong>A:</strong> 'Generated with errors' is normal, especially in training and early implementations. Errors indicate formula references that differ from the base model template due to configuration choices or hierarchy renaming. The model is functional for most purposes while you work through the error list systematically. Do not let the error status stop you from proceeding — categorize the errors, fix the resolvable ones, and move on.</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q: We generated with errors — is the model usable?</div>
+        <div class="answer">A: 'Generated with errors' is normal, especially in training and early implementations. Errors indicate formula references that differ from the base model template due to configuration choices or hierarchy renaming. The model is functional for most purposes while you work through the error list systematically. Do not let the error status stop you from proceeding — categorize the errors, fix the resolvable ones, and move on.</div>
+      </div>
 
-      <div class="callout-note">
-  <p><strong>Q: Can I export error logs to Excel?</strong></p>
-  <p><strong>A:</strong> Yes. From the Application Framework, you can export the error log to Excel. This is recommended when you have more than 10 errors — filtering and categorizing by error type is significantly faster in Excel than in the in-app log view. Sort by Error Type first, then by Model, to group related errors together.</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q: Can I export error logs to Excel?</div>
+        <div class="answer">A: Yes. From the Application Framework, you can export the error log to Excel. This is recommended when you have more than 10 errors — filtering and categorizing by error type is significantly faster in Excel than in the in-app log view. Sort by Error Type first, then by Model, to group related errors together.</div>
+      </div>
 
-      <div class="callout-note">
-  <p><strong>Q: How long does generation take?</strong></p>
-  <p><strong>A:</strong> Typically 10–20 minutes depending on configuration complexity. In training environments where multiple participants are generating simultaneously, it may take longer as the platform handles concurrent jobs. Do not trigger a second generation if the first is still running — monitor the status and wait for it to complete.</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q: How long does generation take?</div>
+        <div class="answer">A: Typically 20–40 minutes depending on configuration complexity. In training environments where multiple participants are generating simultaneously, it may take longer as the platform handles concurrent jobs. Do not trigger a second generation if the first is still running — monitor the status and wait for it to complete.</div>
+      </div>
 
-      <div class="callout-note">
-  <p><strong>Q: Can we regenerate after fixing configuration errors?</strong></p>
-  <p><strong>A:</strong> Yes, you can regenerate. However, regeneration overwrites the generated model — any extensions or manual changes made after the previous generation will need to be reapplied. This is why it is critical to lock hierarchy and dimension decisions before the first generation. Treat regeneration as an exceptional action, not a routine step.</p>
-</div>
-
-      <hr>
+      <div class="qa-item">
+        <div class="question">Q: Can we regenerate after fixing configuration errors?</div>
+        <div class="answer">A: Yes, you can regenerate. However, regeneration overwrites the generated model — any extensions or manual changes made after the previous generation will need to be reapplied. This is why it is critical to lock hierarchy and dimension decisions before the first generation. Treat regeneration as an exceptional action, not a routine step.</div>
+      </div>
 
       <h2>Error Logs &amp; Troubleshooting</h2>
 
-      <div class="callout-note">
-  <p><strong>Q: How do I find a line item from an error code?</strong></p>
-  <p><strong>A:</strong> Error codes use an underscore prefix (e.g., <code>_FINALAMOUNTEXCEPTION</code>). Go to the affected model, navigate to Line Items, and search for the code. The search will take you directly to the module and line item that contains the error. Compare the generated formula to the base model formula to identify what changed — usually a hierarchy rename, geography removal, or dimension difference.</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q: How do I find a line item from an error code?</div>
+        <div class="answer">A: Error codes use an underscore prefix (e.g., <code>_FINALAMOUNTEXCEPTION</code>). Go to the affected model, navigate to Line Items, and search for the code. The search will take you directly to the module and line item that contains the error. Compare the generated formula to the base model formula to identify what changed — usually a hierarchy rename, geography removal, or dimension difference.</div>
+      </div>
 
-      <div class="callout-note">
-  <p><strong>Q: There were two line items with similar names — how do I know which one has the error?</strong></p>
-  <p><strong>A:</strong> Use the code, not the display name. Codes with the underscore prefix are unique identifiers for error targets. If the name search returns multiple results, search specifically for the underscore-prefixed code and you will find exactly the right item. The error log entry always includes the code — that is what to search for.</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q: There were two line items with similar names — how do I know which one has the error?</div>
+        <div class="answer">A: Use the code, not the display name. Codes with the underscore prefix are unique identifiers for error targets. If the name search returns multiple results, search specifically for the underscore-prefixed code and you will find exactly the right item. The error log entry always includes the code — that is what to search for.</div>
+      </div>
 
-      <div class="callout-note">
-  <p><strong>Q: Some errors seem impossible to fix locally — what do we do?</strong></p>
-  <p><strong>A:</strong> If the error appears to be a platform-level issue (not caused by your configuration choices or hierarchy changes), log the error code and the symptoms, then contact Anaplan support or your Anaplan delivery contact. Do not spend time during a customer engagement trying to fix platform errors — those get addressed in future IFP releases. A workshop guidance note: 'We don't want you wasting time on things that are really issues in the platform.'</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q: Some errors seem impossible to fix locally — what do we do?</div>
+        <div class="answer">A: If the error appears to be a platform-level issue (not caused by your configuration choices or hierarchy changes), log the error code and the symptoms, then contact Anaplan support or your Anaplan delivery contact. Do not spend time during a customer engagement trying to fix platform errors — those get addressed in future IFP releases. A workshop guidance note: 'We don't want you wasting time on things that are really issues in the platform.'</div>
+      </div>
 
-      <div class="callout-note">
-  <p><strong>Q: Is it possible for the same error to appear in different models?</strong></p>
-  <p><strong>A:</strong> Yes. A configuration choice or hierarchy change that affects a shared list or formula pattern can produce the same type of error across multiple models. The error log specifies which model each error is in — review each model independently. The root cause is often the same, and fixing it in one model shows you the pattern for the others.</p>
-</div>
-
-      <hr>
+      <div class="qa-item">
+        <div class="question">Q: Is it possible for the same error to appear in different models?</div>
+        <div class="answer">A: Yes. A configuration choice or hierarchy change that affects a shared list or formula pattern can produce the same type of error across multiple models. The error log specifies which model each error is in — review each model independently. The root cause is often the same, and fixing it in one model shows you the pattern for the others.</div>
+      </div>
 
       <h2>Extensions</h2>
 
-      <div class="callout-note">
-  <p><strong>Q: How do I know if a change is a configure, extend, or modify?</strong></p>
-  <p><strong>A:</strong> Configure = check the Application Framework Configurator first. If there is a setting for the customer's requirement, use it — do not build an extension when configuration handles it. Extend = add new line items, modules, or lists without touching existing base model formulas. This is low upgrade risk. Modify = change an existing base model formula or structure. This carries the highest upgrade risk. When in doubt, ask: 'Am I changing something that was generated, or adding something new?' If changing, it is a Modify.</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q: How do I know if a change is a configure, extend, or modify?</div>
+        <div class="answer">A: Configure = check the Application Framework Configurator first. If there is a setting for the customer's requirement, use it — do not build an extension when configuration handles it. Extend = add new line items, modules, or lists without touching existing base model formulas. This is low upgrade risk. Modify = change an existing base model formula or structure. This carries the highest upgrade risk. When in doubt, ask: 'Am I changing something that was generated, or adding something new?' If changing, it is a Modify.</div>
+      </div>
 
-      <div class="callout-note">
-  <p><strong>Q: What happens to formula overrides when IFP gets upgraded?</strong></p>
-  <p><strong>A:</strong> Formula overrides on base model line items may be lost or broken when Anaplan releases an IFP update, depending on whether the update affects that module. This is why tagging formula overrides with the Formula Override data tag is critical — when an upgrade arrives, filter by that tag to get your complete review list. Also maintain external documentation of every override.</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q: What happens to formula overrides when IFP gets upgraded?</div>
+        <div class="answer">A: Formula overrides on base model line items may be lost or broken when Anaplan releases an IFP update, depending on whether the update affects that module. This is why tagging formula overrides with the Formula Override data tag is critical — when an upgrade arrives, filter by that tag to get your complete review list. Also maintain external documentation of every override.</div>
+      </div>
 
-      <div class="callout-note">
-  <p><strong>Q: Can we add more than two adjustments?</strong></p>
-  <p><strong>A:</strong> Yes — the pattern is the same. Add additional adjustment line items, apply the same access driver, update the filter subset, and update the final amount formula to include the additional adjustments. There is no platform-imposed limit on the number of adjustments. However, document clearly and consider the UX experience — a planning grid with 6 adjustment fields starts to confuse end users.</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q: Can we add more than two adjustments?</div>
+        <div class="answer">A: Yes — the pattern is the same. Add additional adjustment line items, apply the same access driver, update the filter subset, and update the final amount formula to include the additional adjustments. There is no platform-imposed limit on the number of adjustments. However, document clearly and consider the UX experience — a planning grid with 6 adjustment fields starts to confuse end users.</div>
+      </div>
 
-      <div class="callout-note">
-  <p><strong>Q: When should we use the Extension data tag vs. the Formula Override tag?</strong></p>
-  <p><strong>A:</strong> Use <strong>Extension</strong> on every line item you add that is new (not part of the base model). Use <strong>Formula Override</strong> on any base model line item whose formula you changed. A line item can have both tags — for example, if you add a new line item and also reference it in a modified base model formula, the base model line item gets both tags.</p>
-</div>
-
-      <hr>
+      <div class="qa-item">
+        <div class="question">Q: When should we use the Extension data tag vs. the Formula Override tag?</div>
+        <div class="answer">A: Use <strong>Extension</strong> on every line item you add that is new (not part of the base model). Use <strong>Formula Override</strong> on any base model line item whose formula you changed. A line item can have both tags — for example, if you add a new line item and also reference it in a modified base model formula, the base model line item gets both tags.</div>
+      </div>
 
       <h2>Planning Methods</h2>
 
-      <div class="callout-note">
-  <p><strong>Q: Can a planning method apply to some GL accounts but not others?</strong></p>
-  <p><strong>A:</strong> Yes — that is the purpose of the account-to-planning-method mapping module. Each GL account row specifies which planning method applies to it. The Boolean line item in the INP module (derived from the mapping) controls whether the method is active for each account. Set the method per account row in the mapping module.</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q: Can a planning method apply to some GL accounts but not others?</div>
+        <div class="answer">A: Yes — that is the purpose of the account-to-planning-method mapping module. Each GL account row specifies which planning method applies to it. The Boolean line item in the INP module (derived from the mapping) controls whether the method is active for each account. Set the method per account row in the mapping module.</div>
+      </div>
 
-      <div class="callout-note">
-  <p><strong>Q: Why use an access driver (DCA) on method-specific line items instead of just hiding them in the UX?</strong></p>
-  <p><strong>A:</strong> Access driver (DCA) prevents both calculation and data entry when the method does not apply to a GL account. UX visibility rules alone still allow the formula to run (consuming calculation resources) and allow data to be entered via import actions (causing data integrity issues). The access driver is the correct pattern for method-specific line items — it enforces the rule at the model level, not just the display level.</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q: Why use an access driver (DCA) on method-specific line items instead of just hiding them in the UX?</div>
+        <div class="answer">A: Access driver (DCA) prevents both calculation and data entry when the method does not apply to a GL account. UX visibility rules alone still allow the formula to run (consuming calculation resources) and allow data to be entered via import actions (causing data integrity issues). The access driver is the correct pattern for method-specific line items — it enforces the rule at the model level, not just the display level.</div>
+      </div>
 
-      <div class="callout-note">
-  <p><strong>Q: What is the difference between updating the filter subset vs. the admin subset?</strong></p>
-  <p><strong>A:</strong> The filter subset (OPEX filter line item subset) controls which line items are visible to end users in the planning grid. The admin subset controls which line items appear in the top-level admin configuration page. Both need to be updated for a new planning method to work correctly end to end — the filter subset for the user experience, and the admin subset for the admin configuration view.</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q: What is the difference between updating the filter subset vs. the admin subset?</div>
+        <div class="answer">A: The filter subset (OPEX filter line item subset) controls which line items are visible to end users in the planning grid. The admin subset controls which line items appear in the top-level admin configuration page. Both need to be updated for a new planning method to work correctly end to end — the filter subset for the user experience, and the admin subset for the admin configuration view.</div>
+      </div>
 
-      <div class="callout-note">
-  <p><strong>Q: Does a planning method need to be re-configured if we regenerate the model?</strong></p>
-  <p><strong>A:</strong> If the planning method was added as an extension (not a configurator setting), yes — it will need to be rebuilt after regeneration. This is another reason why regeneration should be treated as exceptional. Extensions added post-generation are not captured by the Application Framework Configurator and will not survive a regeneration.</p>
-</div>
-
-      <hr>
+      <div class="qa-item">
+        <div class="question">Q: Does a planning method need to be re-configured if we regenerate the model?</div>
+        <div class="answer">A: If the planning method was added as an extension (not a configurator setting), yes — it will need to be rebuilt after regeneration. This is another reason why regeneration should be treated as exceptional. Extensions added post-generation are not captured by the Application Framework Configurator and will not survive a regeneration.</div>
+      </div>
 
       <h2>Headcount × Rate Method</h2>
 
-      <div class="callout-note">
-  <p><strong>Q: Where does the headcount data come from in the Rate formula?</strong></p>
-  <p><strong>A:</strong> For actuals periods: from the DAT module that stores actuals headcount from the GL or headcount source. For forecast periods: from the Headcount Planning model via the integration between the Headcount and Financial Planning models. The Rate line item formula uses a formula scope restriction (actuals version only) to put a formula on actuals and allow user input on forecast periods.</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q: Where does the headcount data come from in the Rate formula?</div>
+        <div class="answer">A: For actuals periods: from the DAT module that stores actuals headcount from the GL or headcount source. For forecast periods: from the Headcount Planning model via the integration between the Headcount and Financial Planning models. The Rate line item formula uses a formula scope restriction (actuals version only) to put a formula on actuals and allow user input on forecast periods.</div>
+      </div>
 
-      <div class="callout-note">
-  <p><strong>Q: What if the headcount data is not loaded for a forecast period?</strong></p>
-  <p><strong>A:</strong> If headcount data is not present for a period, the HC Amount line item will return 0 for that period. This will produce a Final Amount of 0 (or just the Adjustment value), which will appear incorrect to users. Ensure the headcount model is populated and integrated before users begin forecast entry. This is a data loading dependency — document it in the UAT checklist.</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q: What if the headcount data is not loaded for a forecast period?</div>
+        <div class="answer">A: If headcount data is not present for a period, the HC Amount line item will return 0 for that period. This will produce a Final Amount of 0 (or just the Adjustment value), which will appear incorrect to users. Ensure the headcount model is populated and integrated before users begin forecast entry. This is a data loading dependency — document it in the UAT checklist.</div>
+      </div>
 
-      <div class="callout-note">
-  <p><strong>Q: Why do we need the Boolean line item?</strong></p>
-  <p><strong>A:</strong> The Boolean (HC Boolean) determines whether the Headcount × Rate method is active for a given GL account. Without it, every formula would run for every account regardless of the planning method assignment — causing incorrect calculations and unnecessary computation. The Boolean gates all the method-specific calculations, and the access driver uses it to control line item visibility.</p>
-</div>
+      <div class="qa-item">
+        <div class="question">Q: Why do we need the Boolean line item?</div>
+        <div class="answer">A: The Boolean (HC Boolean) determines whether the Headcount × Rate method is active for a given GL account. Without it, every formula would run for every account regardless of the planning method assignment — causing incorrect calculations and unnecessary computation. The Boolean gates all the method-specific calculations, and the access driver uses it to control line item visibility.</div>
+      </div>
 
 <div class="prevnext-nav"><a class="prevnext-btn" href="./13-whats-coming.html">← Previous</a><a class="prevnext-btn" href="./15-workshop-wrap-up.html">Next →</a></div>
     </div>
