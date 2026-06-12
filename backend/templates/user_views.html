@@ -2,12 +2,9 @@
 {% block title %}{{ target.username }} — activity{% endblock %}
 {% block body %}
 <div class="admin-shell">
-  <div class="admin-header">
-    <h1>{{ target.username }} — activity (last 200 views)</h1>
-    <div class="meta">
-      <a href="/admin" class="secondary-btn" style="text-decoration:none;">Back to admin</a>
-    </div>
-  </div>
+  {% set page_title = target.username + ' — activity (last 200 views)' %}
+  {% set breadcrumbs = [{'label': 'Users & activity', 'url': url_for('admin_users_screen')}, {'label': target.username}] %}
+  {% include "_admin_header.html" %}
   <div class="card">
     {% if not views %}
     <p style="color:#6b7280;font-size:0.9rem;">No page views recorded yet.</p>

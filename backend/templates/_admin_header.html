@@ -1,0 +1,21 @@
+{# Shared admin page header. Sub-pages set `page_title` and optional `breadcrumbs`. #}
+<div class="admin-header">
+  <div>
+    <h1>{{ page_title }}</h1>
+    {% if breadcrumbs %}
+      <div class="breadcrumbs">
+        <a href="{{ url_for('admin_dashboard') }}">Admin</a>
+        {% for crumb in breadcrumbs %}
+          <span class="sep">›</span>
+          {% if crumb.url %}<a href="{{ crumb.url }}">{{ crumb.label }}</a>{% else %}<span>{{ crumb.label }}</span>{% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+  <div class="meta">
+    Signed in as <strong>{{ user.username }}</strong>
+    <a class="secondary-btn" href="{{ url_for('admin_users_screen') }}" style="text-decoration:none;">Users &amp; activity</a>
+    <a class="secondary-btn" href="/docs/01-overview.html" style="text-decoration:none;">Workshop site</a>
+    <form method="post" action="{{ url_for('logout') }}" style="display:inline;"><button type="submit">Sign out</button></form>
+  </div>
+</div>

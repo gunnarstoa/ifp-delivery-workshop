@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}New workshop — Admin{% endblock %}
+{% block body %}
+<div class="admin-shell">
+  {% set page_title = 'New workshop' %}
+  {% set breadcrumbs = [{'label': 'New workshop'}] %}
+  {% include "_admin_header.html" %}
+
+  <div class="card" style="max-width:600px;">
+    <form method="post" action="{{ url_for('admin_workshop_new') }}">
+      <div class="form-row" style="margin-bottom:1rem;">
+        <label for="slug">Slug</label>
+        <input id="slug" name="slug" value="{{ form.slug }}" required placeholder="ifp" pattern="[a-z0-9]([a-z0-9-]{1,38}[a-z0-9])?">
+        <div class="help-note" style="margin-top:0.3rem;">URL-safe identifier. 3-40 chars, lowercase letters/digits/hyphen. Used in the workshop's URL path (e.g. <code>/w/ifp/</code>).</div>
+        {% if errors.slug %}<div class="auth-error" style="margin-top:0.4rem;">{{ errors.slug }}</div>{% endif %}
+      </div>
+
+      <div class="form-row" style="margin-bottom:1rem;">
+        <label for="name">Name</label>
+        <input id="name" name="name" value="{{ form.name }}" required placeholder="IFP Delivery Partner Workshop">
+        {% if errors.name %}<div class="auth-error" style="margin-top:0.4rem;">{{ errors.name }}</div>{% endif %}
+      </div>
+
+      <div class="form-row" style="margin-bottom:1rem;">
+        <label for="short_description">Short description</label>
+        <input id="short_description" name="short_description" value="{{ form.short_description }}" placeholder="Hands-on self-paced workshop for IFP delivery consultants.">
+      </div>
+
+      <div class="form-row" style="margin-bottom:1rem;">
+        <label for="contact_email">Contact email</label>
+        <input id="contact_email" name="contact_email" type="email" value="{{ form.contact_email }}" placeholder="ifp-workshop@anaplan.com">
+      </div>
+
+      <div style="display:flex;gap:0.5rem;margin-top:1.5rem;">
+        <button class="primary-btn" type="submit">Create workshop</button>
+        <a class="secondary-btn" href="{{ url_for('admin_dashboard') }}" style="text-decoration:none;line-height:1.4;">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

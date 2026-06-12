@@ -35,3 +35,19 @@ CREATE TABLE IF NOT EXISTS login_events (
 );
 
 CREATE INDEX IF NOT EXISTS idx_login_events_time ON login_events(occurred_at);
+
+CREATE TABLE IF NOT EXISTS workshops (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  slug TEXT UNIQUE NOT NULL COLLATE NOCASE,
+  name TEXT NOT NULL,
+  short_description TEXT,
+  content_root TEXT,
+  contact_email TEXT,
+  status TEXT NOT NULL DEFAULT 'active',
+  created_by INTEGER,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  archived_at TIMESTAMP,
+  FOREIGN KEY (created_by) REFERENCES users(id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_workshops_status ON workshops(status);

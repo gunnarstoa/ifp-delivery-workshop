@@ -1,15 +1,10 @@
 {% extends "base.html" %}
-{% block title %}Admin — IFP Delivery Partner Workshop{% endblock %}
+{% block title %}Users &amp; activity — Admin{% endblock %}
 {% block body %}
 <div class="admin-shell">
-  <div class="admin-header">
-    <h1>Admin — Users &amp; Activity</h1>
-    <div class="meta">
-      Signed in as <strong>{{ user.username }}</strong>
-      <a href="/docs/01-overview.html" class="secondary-btn" style="text-decoration:none;">Back to workshop</a>
-      <form method="post" action="{{ url_for('logout') }}" style="display:inline;"><button type="submit">Sign out</button></form>
-    </div>
-  </div>
+  {% set page_title = 'Users & activity' %}
+  {% set breadcrumbs = [{'label': 'Users & activity'}] %}
+  {% include "_admin_header.html" %}
 
   <div class="card">
     <h2>Create user</h2>

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Admin — Workshops{% endblock %}
+{% block body %}
+<div class="admin-shell">
+  {% set page_title = 'Workshops' %}
+  {% include "_admin_header.html" %}
+
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+      <h2 style="margin:0;">{{ workshops|length }} workshop{{ '' if workshops|length == 1 else 's' }}</h2>
+      <a class="primary-btn" href="{{ url_for('admin_workshop_new') }}" style="text-decoration:none;">＋ New workshop</a>
+    </div>
+
+    {% if not workshops %}
+      <p class="help-note" style="margin-top:1rem;">No workshops yet. <a href="{{ url_for('admin_workshop_new') }}">Create your first one</a> — for example IFP, FCR, RPM, or OWP.</p>
+    {% else %}
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>Slug</th>
+            <th>Name</th>
+            <th>Contact</th>
+            <th>Created by</th>
+            <th>Created</th>
+            <th style="text-align:right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for w in workshops %}
+          <tr>
+            <td><code>{{ w.slug }}</code></td>
+            <td>
+              <a href="{{ url_for('admin_workshop_detail', slug=w.slug) }}"><strong>{{ w.name }}</strong></a>
+              {% if w.short_description %}<div style="font-size:0.78rem;color:#6b7280;">{{ w.short_description }}</div>{% endif %}
+            </td>
+            <td>{{ w.contact_email or '—' }}</td>
+            <td>{{ w.created_by_username or '—' }}</td>
+            <td>{{ w.created_at }}</td>
+            <td style="text-align:right;">
+              <a class="secondary-btn" href="{{ url_for('admin_workshop_detail', slug=w.slug) }}" style="text-decoration:none;">Open</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  </div>
+
+  <div class="card" style="background:#f8fafc;">
+    <h2 style="margin-top:0;">Coming next</h2>
+    <p class="help-note" style="margin:0;">Cohorts — open a workshop and you'll be able to create cohorts, paste in participant emails, and run the existing reports against the cohort.</p>
+  </div>
+</div>
+{% endblock %}

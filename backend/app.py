@@ -163,7 +163,7 @@ def home():
     if user is None:
         return redirect(url_for("login"))
     if user["is_facilitator"]:
-        return redirect(url_for("admin_home"))
+        return redirect(url_for("admin_dashboard"))
     return redirect("/docs/01-overview.html")
 
 
@@ -260,13 +260,99 @@ def healthz():
 
 # ---------------------------- Routes: admin ----------------------------
 
-@app.route("/admin")
-def admin_home():
+def _require_facilitator():
     user = current_user()
     if user is None:
-        return redirect(url_for("login", next="/admin"))
+        return None, redirect(url_for("login", next=request.path))
     if not user["is_facilitator"]:
         abort(403)
+    return user, None
+
+
+@app.route("/admin")
+def admin_dashboard():
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    workshops = get_db().execute(
+        "SELECT w.id, w.slug, w.name, w.short_description, w.contact_email, w.status, w.created_at, "
+        "       u.username AS created_by_username "
+        "FROM workshops w LEFT JOIN users u ON u.id = w.created_by "
+        "WHERE w.status != 'archived' "
+        "ORDER BY w.created_at DESC"
+    ).fetchall()
+    return render_template("admin_dashboard.html", user=user, workshops=workshops)
+
+
+SLUG_RE = re.compile(r"^[a-z0-9]([a-z0-9-]{1,38}[a-z0-9])?$")
+
+
+@app.route("/admin/workshops/new", methods=["GET", "POST"])
+def admin_workshop_new():
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    errors = {}
+    form = {"slug": "", "name": "", "short_description": "", "contact_email": ""}
+    if request.method == "POST":
+        form["slug"] = (request.form.get("slug") or "").strip().lower()
+        form["name"] = (request.form.get("name") or "").strip()
+        form["short_description"] = (request.form.get("short_description") or "").strip()
+        form["contact_email"] = (request.form.get("contact_email") or "").strip()
+        if not SLUG_RE.fullmatch(form["slug"]):
+            errors["slug"] = "3-40 chars, lowercase letters/digits/hyphen, no leading/trailing hyphen"
+        if not form["name"]:
+            errors["name"] = "required"
+        if not errors:
+            try:
+                cur = get_db().execute(
+                    "INSERT INTO workshops (slug, name, short_description, contact_email, created_by) "
+                    "VALUES (?, ?, ?, ?, ?)",
+                    (form["slug"], form["name"], form["short_description"] or None, form["contact_email"] or None, user["id"]),
+                )
+                get_db().commit()
+                return redirect(url_for("admin_workshop_detail", slug=form["slug"]))
+            except sqlite3.IntegrityError:
+                errors["slug"] = f"workshop '{form['slug']}' already exists"
+    return render_template("admin_workshop_new.html", user=user, form=form, errors=errors)
+
+
+@app.route("/admin/workshops/<slug>")
+def admin_workshop_detail(slug):
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    workshop = get_db().execute(
+        "SELECT w.*, u.username AS created_by_username "
+        "FROM workshops w LEFT JOIN users u ON u.id = w.created_by "
+        "WHERE w.slug = ?",
+        (slug,),
+    ).fetchone()
+    if workshop is None:
+        abort(404)
+    return render_template("admin_workshop_detail.html", user=user, workshop=workshop)
+
+
+@app.route("/admin/workshops/<slug>/archive", methods=["POST"])
+def admin_workshop_archive(slug):
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    cur = get_db().execute(
+        "UPDATE workshops SET status = 'archived', archived_at = CURRENT_TIMESTAMP WHERE slug = ? AND status != 'archived'",
+        (slug,),
+    )
+    get_db().commit()
+    if cur.rowcount == 0:
+        abort(404)
+    return redirect(url_for("admin_dashboard"))
+
+
+@app.route("/admin/users-screen")
+def admin_users_screen():
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
     users = get_db().execute(
         "SELECT id, username, display_name, email, is_facilitator, is_active, created_at, last_login_at "
         "FROM users ORDER BY created_at DESC"

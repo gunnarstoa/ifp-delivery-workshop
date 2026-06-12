@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}{{ workshop.name }} — Admin{% endblock %}
+{% block body %}
+<div class="admin-shell">
+  {% set page_title = workshop.name %}
+  {% set breadcrumbs = [{'label': workshop.name}] %}
+  {% include "_admin_header.html" %}
+
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div style="font-size:0.75rem;text-transform:uppercase;color:#6b7280;letter-spacing:0.05em;">Slug</div>
+        <code style="font-size:1rem;">{{ workshop.slug }}</code>
+      </div>
+      <div>
+        <form method="post" action="{{ url_for('admin_workshop_archive', slug=workshop.slug) }}" onsubmit="return confirm('Archive {{ workshop.name }}? You can re-create later under the same slug only after recovering it manually.');" style="display:inline;">
+          <button class="danger-btn" type="submit">Archive workshop</button>
+        </form>
+      </div>
+    </div>
+    {% if workshop.short_description %}
+      <p style="margin:1rem 0 0 0;color:#374151;">{{ workshop.short_description }}</p>
+    {% endif %}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0.75rem;margin-top:1.25rem;">
+      <div><div style="font-size:0.72rem;text-transform:uppercase;color:#6b7280;">Contact</div><div>{{ workshop.contact_email or '—' }}</div></div>
+      <div><div style="font-size:0.72rem;text-transform:uppercase;color:#6b7280;">Status</div><div>{{ workshop.status }}</div></div>
+      <div><div style="font-size:0.72rem;text-transform:uppercase;color:#6b7280;">Created by</div><div>{{ workshop.created_by_username or '—' }}</div></div>
+      <div><div style="font-size:0.72rem;text-transform:uppercase;color:#6b7280;">Created</div><div>{{ workshop.created_at }}</div></div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-bottom:1.5rem;">
+    <div class="card">
+      <h2>Cohorts</h2>
+      <p class="help-note">Coming in the next PR: create cohorts, paste in participant emails, auto-create participant accounts with hand-deliverable initial passwords.</p>
+    </div>
+    <div class="card">
+      <h2>Content</h2>
+      <p class="help-note">Workshop pages will move under <code>/w/{{ workshop.slug }}/...</code> when content migration ships. Today the existing IFP pages still serve at <code>/docs/...</code>.</p>
+    </div>
+    <div class="card">
+      <h2>Promotion toolkit</h2>
+      <p class="help-note">Email templates, social posts, kickoff scripts, Slack messages. Coming as a workshop-scoped tab once we move the existing toolkit content into the DB.</p>
+    </div>
+    <div class="card">
+      <h2>Reports</h2>
+      <p class="help-note">Exec summary, partner sponsor reports, Slack celebration post, anonymous-survey aggregate. Will live under each cohort once cohort CRUD lands.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
