@@ -283,6 +283,80 @@
       border-radius: 4px;
       margin: 0.5rem 0;
     }
+    .create-cohort-panel {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .create-cohort-panel summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: #075985;
+      font-size: 0.95rem;
+    }
+    .create-cohort-panel summary:hover { color: #0066cc; }
+    .create-cohort-panel[open] summary { margin-bottom: 0.75rem; }
+    .create-cohort-panel .toolbar { background: white; }
+    .create-cohort-panel input[type="text"], .create-cohort-panel input[type="date"] {
+      font-size: 0.9rem;
+      padding: 0.35rem 0.5rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      background: white;
+    }
+    .create-cohort-panel textarea {
+      width: 100%;
+      min-height: 150px;
+      padding: 0.5rem;
+      font-family: ui-monospace, Menlo, monospace;
+      font-size: 0.85rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      box-sizing: border-box;
+      resize: vertical;
+    }
+    .create-cohort-panel pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 0.75rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      overflow-x: auto;
+      margin: 0.4rem 0;
+    }
+    .partner-summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+      margin: 0.5rem 0;
+    }
+    .partner-summary-table th, .partner-summary-table td {
+      padding: 0.4rem 0.75rem;
+      border-bottom: 1px solid #f3f4f6;
+      text-align: left;
+    }
+    .partner-summary-table th {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      color: #6b7280;
+      background: #f8fafc;
+    }
+    .partner-summary-table tr.unknown td { color: #b91c1c; font-weight: 500; }
+    .partner-summary-table tr.excluded td { color: #6b7280; font-style: italic; }
+    .unmapped-warning {
+      background: #fee2e2;
+      border-left: 4px solid #b91c1c;
+      padding: 0.6rem 1rem;
+      border-radius: 0 4px 4px 0;
+      font-size: 0.85rem;
+      color: #7f1d1d;
+      margin: 0.5rem 0;
+    }
   </style>
 </head>
 <body>
@@ -345,6 +419,41 @@
         <span class="callout-label">📦 Related</span>
         <p>For email templates, promotion copy, and kickoff scripts, see the <a href="./16-facilitator-toolkit-k7p2nx.html"><strong>Facilitator Launch Toolkit</strong></a>. For session run-of-show, see the <a href="./15-facilitator-r9k2x7.html"><strong>Facilitator Run-of-Show</strong></a>.</p>
       </div>
+
+      <details class="create-cohort-panel">
+        <summary>＋ Import a new cohort from a participant list</summary>
+        <p class="help-note" style="margin-top:0.5rem;">Paste in an email list or upload an XLSX/CSV. Each email is auto-mapped to a partner via its domain (using <code>_partners.json</code>) and Anaplan internal staff are auto-excluded. Outputs a downloadable <code>{cohort-id}.json</code> ready to commit to <code>data/cohorts/</code>, plus the snippet to add to <code>_index.json</code>.</p>
+
+        <div class="toolbar">
+          <label for="new-cohort-id">Cohort ID:</label>
+          <input type="text" id="new-cohort-id" placeholder="2026-06-16" style="width: 130px;">
+          <label for="new-cohort-name">Display name:</label>
+          <input type="text" id="new-cohort-name" placeholder="June 16, 2026 Cohort" style="width: 200px;">
+        </div>
+        <div class="toolbar">
+          <label for="new-cohort-start">Start date:</label>
+          <input type="date" id="new-cohort-start">
+          <label for="new-cohort-end">End date:</label>
+          <input type="date" id="new-cohort-end">
+        </div>
+
+        <div class="toolbar">
+          <label for="new-cohort-upload">Upload XLSX/CSV:</label>
+          <input type="file" id="new-cohort-upload" accept=".xlsx,.xls,.csv">
+          <span class="help-note" style="margin-left:0.5rem;">first column = email</span>
+        </div>
+
+        <p class="help-note">Or paste emails — one per line. Accepts plain <code>user@domain</code>, <code>Name &lt;user@domain&gt;</code>, or <code>"Name" &lt;user@domain&gt;</code>:</p>
+        <textarea id="new-cohort-emails" placeholder="first.last@genpact.com&#10;jane.doe@accenture.com&#10;Jordan Smith &lt;jordan.smith@pwc.com&gt;&#10;..."></textarea>
+
+        <div class="toolbar">
+          <button id="preview-new-cohort-btn">Preview Mapping</button>
+          <button id="download-new-cohort-btn" class="secondary">Download Cohort JSON</button>
+          <button id="copy-index-line-btn" class="secondary" style="display:none;">Copy _index.json Line</button>
+        </div>
+
+        <div id="new-cohort-preview" style="display:none;"></div>
+      </details>
 
       <h2>1. Select Cohort</h2>
       <div class="toolbar">
@@ -1521,6 +1630,183 @@ Next cohort opens [DATE]. If you have delivery consultants on your team who'd be
           downloadHtmlFile(generatePartnerReportHtml(p.name), `${cohort.id}-${partnerSlug(p.name)}-report.html`, `${p.name} — IFP Delivery Workshop ${cohort.name}`);
         }, i * 250);
       });
+    });
+
+    // ===================== Import New Cohort =====================
+    function parseEmailList(text) {
+      const out = [];
+      text.split(/\r?\n/).forEach(raw => {
+        const line = raw.trim();
+        if (!line) return;
+        const m = line.match(/[\w.+-]+@[\w-]+(?:\.[\w-]+)+/);
+        if (m) out.push(m[0].toLowerCase());
+      });
+      return out;
+    }
+
+    function lookupPartnerForEmail(email) {
+      if (!state.partners || !state.partners.partners) return null;
+      const at = email.lastIndexOf('@');
+      if (at < 0) return null;
+      const domain = email.slice(at + 1).toLowerCase();
+      const hit = state.partners.partners.find(p =>
+        p.domains.some(d => d.toLowerCase() === domain)
+      );
+      return hit ? hit.name : null;
+    }
+
+    function buildNewCohortFromEmails(emails, opts) {
+      const seen = new Set();
+      const participants = [];
+      const unmapped = [];
+      emails.forEach(email => {
+        if (seen.has(email)) return;
+        seen.add(email);
+        const partner = lookupPartnerForEmail(email);
+        if (!partner) unmapped.push(email);
+        participants.push({
+          email,
+          partner: partner || 'Unknown',
+          excluded: partner ? state.excludeSet.has(partner) : false,
+          completion: { preSurvey: false, postSurvey: false, knowledgeCheck: false },
+          preSurveyScore: null,
+          postSurveyScore: null,
+          knowledgeCheckResult: null
+        });
+      });
+      return {
+        cohort: {
+          id: opts.id,
+          name: opts.name,
+          startDate: opts.startDate || null,
+          endDate: opts.endDate || null,
+          participants
+        },
+        unmapped
+      };
+    }
+
+    function readNewCohortFormFields() {
+      const id = document.getElementById('new-cohort-id').value.trim();
+      const name = document.getElementById('new-cohort-name').value.trim();
+      const startDate = document.getElementById('new-cohort-start').value;
+      const endDate = document.getElementById('new-cohort-end').value;
+      const errs = [];
+      if (!id) errs.push('Cohort ID is required (e.g. 2026-06-16)');
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(id)) errs.push('Cohort ID should be ISO date format YYYY-MM-DD');
+      if (!name) errs.push('Display name is required');
+      if (!startDate) errs.push('Start date is required');
+      if (!endDate) errs.push('End date is required');
+      return { opts: { id, name, startDate, endDate }, errs };
+    }
+
+    function renderNewCohortPreview(result) {
+      const target = document.getElementById('new-cohort-preview');
+      const byPartner = new Map();
+      result.cohort.participants.forEach(p => {
+        if (!byPartner.has(p.partner)) byPartner.set(p.partner, []);
+        byPartner.get(p.partner).push(p);
+      });
+      const ranked = [...byPartner.entries()].sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
+      const includedCount = result.cohort.participants.filter(p => !p.excluded).length;
+      const excludedCount = result.cohort.participants.length - includedCount;
+      const rows = ranked.map(([partner, people]) => {
+        const isUnknown = partner === 'Unknown';
+        const isExcluded = state.excludeSet.has(partner);
+        const cls = isUnknown ? 'unknown' : (isExcluded ? 'excluded' : '');
+        const note = isUnknown ? 'no matching domain in _partners.json' : (isExcluded ? 'excluded from stats' : '');
+        return `
+          <tr class="${cls}">
+            <td>${escapeHtml(partner)}</td>
+            <td style="text-align:right;">${people.length}</td>
+            <td style="font-size:0.78rem;color:#6b7280;">${escapeHtml(note)}</td>
+          </tr>
+        `;
+      }).join('');
+      const warning = result.unmapped.length
+        ? `<div class="unmapped-warning"><strong>⚠ ${result.unmapped.length} email${result.unmapped.length === 1 ? '' : 's'} did not map to a known partner.</strong> Either add the domain to <code>data/cohorts/_partners.json</code> or fix the typo before committing.<br><br><strong>Unmapped:</strong> ${result.unmapped.map(e => escapeHtml(e)).join(', ')}</div>`
+        : '';
+      const indexLine = JSON.stringify({ id: result.cohort.id, name: result.cohort.name, file: `${result.cohort.id}.json` });
+      target.innerHTML = `
+        <h3 style="margin: 1rem 0 0.5rem 0; color: #1e3a5f; font-size: 1rem;">Preview — ${result.cohort.participants.length} total · ${includedCount} counted · ${excludedCount} excluded · ${byPartner.size} partner bucket${byPartner.size === 1 ? '' : 's'}</h3>
+        ${warning}
+        <table class="partner-summary-table">
+          <thead><tr><th>Partner</th><th style="text-align:right;">Count</th><th>Note</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+        <p class="help-note" style="margin-top:0.75rem;">After downloading <code>${escapeHtml(result.cohort.id)}.json</code> to <code>data/cohorts/</code>, add this line inside the <code>cohorts</code> array in <code>data/cohorts/_index.json</code>:</p>
+        <pre id="new-cohort-index-line">${escapeHtml(indexLine)}</pre>
+      `;
+      target.style.display = 'block';
+      document.getElementById('copy-index-line-btn').style.display = '';
+      document.getElementById('copy-index-line-btn').dataset.line = indexLine;
+    }
+
+    function getNewCohortEmailsOrAlert() {
+      const text = document.getElementById('new-cohort-emails').value;
+      const emails = parseEmailList(text);
+      if (!emails.length) {
+        alert('No emails found. Paste a list (one per line) or upload an XLSX/CSV.');
+        return null;
+      }
+      return emails;
+    }
+
+    document.getElementById('new-cohort-upload').addEventListener('change', async e => {
+      const file = e.target.files[0]; if (!file) return;
+      const parsed = await readXlsxFile(file);
+      const headers = parsed.headers || [];
+      const emailIdx = headers.findIndex(h => /e-?mail/i.test(h));
+      const idx = emailIdx >= 0 ? emailIdx : 0;
+      const emails = [];
+      parsed.data.forEach(row => {
+        const cell = row[idx];
+        if (cell == null || cell === '') return;
+        const m = String(cell).match(/[\w.+-]+@[\w-]+(?:\.[\w-]+)+/);
+        if (m) emails.push(m[0].toLowerCase());
+      });
+      // Append to textarea (don't clobber existing paste content)
+      const ta = document.getElementById('new-cohort-emails');
+      const existing = ta.value.trim();
+      ta.value = (existing ? existing + '\n' : '') + emails.join('\n');
+    });
+
+    document.getElementById('preview-new-cohort-btn').addEventListener('click', () => {
+      const emails = getNewCohortEmailsOrAlert();
+      if (!emails) return;
+      const { opts, errs } = readNewCohortFormFields();
+      if (errs.length) { alert(errs.join('\n')); return; }
+      const result = buildNewCohortFromEmails(emails, opts);
+      renderNewCohortPreview(result);
+    });
+
+    document.getElementById('download-new-cohort-btn').addEventListener('click', () => {
+      const emails = getNewCohortEmailsOrAlert();
+      if (!emails) return;
+      const { opts, errs } = readNewCohortFormFields();
+      if (errs.length) { alert(errs.join('\n')); return; }
+      const result = buildNewCohortFromEmails(emails, opts);
+      renderNewCohortPreview(result);
+      const blob = new Blob([JSON.stringify(result.cohort, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${result.cohort.id}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById('copy-index-line-btn').addEventListener('click', async () => {
+      const line = document.getElementById('copy-index-line-btn').dataset.line || '';
+      if (!line) return;
+      try {
+        await navigator.clipboard.writeText(line);
+        alert('Index line copied. Paste it inside the cohorts array in data/cohorts/_index.json.');
+      } catch (e) {
+        alert('Clipboard write failed — copy this manually:\n\n' + line);
+      }
     });
 
     // ===================== Export Updated JSON =====================
