@@ -1,0 +1,25 @@
+[Unit]
+Description=IFP Delivery Workshop (Flask + gunicorn)
+After=network.target
+
+[Service]
+Type=simple
+User=workshop
+Group=workshop
+WorkingDirectory=/srv/workshop/app
+EnvironmentFile=/etc/workshop/app.env
+ExecStart=/srv/workshop/app/.venv/bin/gunicorn -w 2 -k sync -b 127.0.0.1:8000 --access-logfile - --error-logfile - backend.app:app
+Restart=always
+RestartSec=3
+StandardOutput=journal
+StandardError=journal
+
+# Hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ReadWritePaths=/srv/workshop/app /var/lib/workshop
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target

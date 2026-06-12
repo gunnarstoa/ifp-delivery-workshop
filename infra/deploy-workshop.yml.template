@@ -1,0 +1,69 @@
+name: Deploy to Lightsail
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - 'docs/**'
+      - 'data/**'
+      - 'css/**'
+      - 'js/**'
+      - 'images/**'
+      - 'infra/**'
+      - '.github/workflows/deploy-workshop.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-workshop
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check required secrets
+        env:
+          INSTANCE_IP: ${{ secrets.INSTANCE_IP }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          if [ -z "$INSTANCE_IP" ] || [ -z "$SSH_PRIVATE_KEY" ]; then
+            echo "::warning::INSTANCE_IP or SSH_PRIVATE_KEY not set. Skipping deploy. Add them at /settings/secrets/actions to enable."
+            exit 0
+          fi
+          echo "ok=1" >> "$GITHUB_ENV"
+
+      - name: Set up SSH
+        if: env.ok == '1'
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_workshop
+          chmod 600 ~/.ssh/id_workshop
+          ssh-keyscan -H "${{ secrets.INSTANCE_IP }}" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Deploy via SSH
+        if: env.ok == '1'
+        env:
+          INSTANCE_IP: ${{ secrets.INSTANCE_IP }}
+        run: |
+          ssh -i ~/.ssh/id_workshop ubuntu@"$INSTANCE_IP" bash -s <<'REMOTE'
+          set -euxo pipefail
+          APP=/srv/workshop/app
+          sudo -u workshop git -C "$APP" fetch --quiet origin main
+          sudo -u workshop git -C "$APP" reset --hard origin/main
+          sudo -u workshop "$APP/.venv/bin/pip" install --quiet -r "$APP/backend/requirements.txt"
+          sudo systemctl restart workshop
+          sleep 2
+          sudo systemctl is-active workshop
+          curl --silent --show-error --fail --max-time 10 http://127.0.0.1:8000/healthz
+          REMOTE
+
+      - name: Smoke-test public URL
+        if: env.ok == '1'
+        run: |
+          for _ in $(seq 1 5); do
+            CODE=$(curl --silent -o /dev/null -w '%{http_code}' --max-time 15 https://anaplan-workshops.com/healthz || echo 000)
+            [ "$CODE" = "200" ] && { echo "✓ https://anaplan-workshops.com healthy"; exit 0; }
+            sleep 3
+          done
+          echo "::warning::public health check did not return 200; check Caddy logs on the instance"

@@ -1,0 +1,37 @@
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT UNIQUE NOT NULL COLLATE NOCASE,
+  password_hash TEXT NOT NULL,
+  email TEXT,
+  display_name TEXT,
+  is_facilitator INTEGER NOT NULL DEFAULT 0,
+  is_active INTEGER NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  last_login_at TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS page_views (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  path TEXT NOT NULL,
+  query TEXT,
+  status INTEGER NOT NULL,
+  viewed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  referer TEXT,
+  user_agent TEXT,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_page_views_user_time ON page_views(user_id, viewed_at);
+CREATE INDEX IF NOT EXISTS idx_page_views_path_time ON page_views(path, viewed_at);
+
+CREATE TABLE IF NOT EXISTS login_events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username_attempted TEXT NOT NULL,
+  succeeded INTEGER NOT NULL,
+  ip TEXT,
+  user_agent TEXT,
+  occurred_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_login_events_time ON login_events(occurred_at);
