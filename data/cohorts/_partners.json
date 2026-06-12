@@ -1,0 +1,25 @@
+{
+  "description": "Partner directory for the cohort tracker. Each entry maps a partner name to one or more email domains. Logical aliases (e.g., genpact.com + genpact.digital) are grouped under one partner. excludePartners are filtered out of completion stats — typically internal Anaplan staff/observers.",
+  "excludePartners": ["Anaplan (internal)"],
+  "partners": [
+    { "name": "Genpact", "domains": ["genpact.com", "genpact.digital"] },
+    { "name": "Anavate Partners", "domains": ["anavatepartners.com"] },
+    { "name": "Twelve CG", "domains": ["twelvecg.com"] },
+    { "name": "PwC", "domains": ["pwc.com"] },
+    { "name": "Argano", "domains": ["argano.com"] },
+    { "name": "Accenture", "domains": ["accenture.com"] },
+    { "name": "Mavens Cloud", "domains": ["mavenscloud.com"] },
+    { "name": "Cervello", "domains": ["mycervello.com"] },
+    { "name": "Peloton", "domains": ["pelotongroup.com"] },
+    { "name": "Karta CG", "domains": ["kartacg.com"] },
+    { "name": "Keyrus", "domains": ["keyrus.com"] },
+    { "name": "Trued Consulting", "domains": ["truedconsulting.com"] },
+    { "name": "Deloitte", "domains": ["deloitte.com"] },
+    { "name": "TCS", "domains": ["tcs.com"] },
+    { "name": "Bluecrux", "domains": ["bluecrux.com"] },
+    { "name": "KPMG", "domains": ["kpmg.com"] },
+    { "name": "Viseo", "domains": ["viseo.com"] },
+    { "name": "Auxo AI", "domains": ["auxoai.com"] },
+    { "name": "Anaplan (internal)", "domains": ["anaplan.com"] }
+  ]
+}

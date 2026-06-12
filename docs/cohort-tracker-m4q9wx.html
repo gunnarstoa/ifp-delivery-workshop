@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="googlebot" content="noindex, nofollow">
+  <title>Cohort Tracker — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .privacy-banner {
+      background: #fef9c3;
+      border-left: 4px solid #ca8a04;
+      padding: 0.75rem 1rem;
+      border-radius: 0 6px 6px 0;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      margin-bottom: 1.5rem;
+    }
+    .toolbar label { font-weight: 600; font-size: 0.9rem; color: #1e3a5f; }
+    .toolbar select, .toolbar input[type="file"] {
+      font-size: 0.9rem;
+      padding: 0.35rem 0.5rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      background: white;
+    }
+    .toolbar button {
+      padding: 0.4rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: #0066cc;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .toolbar button:hover { background: #0052a3; }
+    .toolbar button.secondary { background: #6b7280; }
+    .toolbar button.secondary:hover { background: #4b5563; }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0.75rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .summary-card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 0.85rem 1rem;
+    }
+    .summary-card .label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #6b7280;
+      margin-bottom: 0.25rem;
+    }
+    .summary-card .value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1e3a5f;
+      line-height: 1.1;
+    }
+    .summary-card .sub {
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-top: 0.25rem;
+    }
+    .partner-block {
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      margin-bottom: 0.85rem;
+      background: white;
+      overflow: hidden;
+    }
+    .partner-block-header {
+      background: #f8fafc;
+      padding: 0.65rem 1rem;
+      font-weight: 600;
+      color: #1e3a5f;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .partner-block-header .count {
+      font-size: 0.8rem;
+      color: #6b7280;
+      font-weight: 500;
+    }
+    .partner-block-header .completion-mini {
+      font-size: 0.8rem;
+      color: #374151;
+      font-weight: 500;
+      display: flex;
+      gap: 0.5rem;
+    }
+    .partner-block-header .completion-mini span {
+      padding: 0.1rem 0.45rem;
+      background: #eff6ff;
+      border-radius: 10px;
+      color: #1e3a5f;
+    }
+    .participants-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    .participants-table th {
+      text-align: left;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #6b7280;
+      background: #fafafa;
+      border-bottom: 1px solid #e2e8f0;
+      font-weight: 600;
+    }
+    .participants-table td {
+      padding: 0.4rem 0.75rem;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .participants-table tr:last-child td { border-bottom: none; }
+    .participants-table input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+    .participants-table .email-cell {
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      font-size: 0.85rem;
+    }
+    .participants-table .score-cell {
+      font-variant-numeric: tabular-nums;
+      color: #374151;
+    }
+    .chart-area {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+    .chart-area h3 {
+      margin: 0 0 0.75rem 0;
+      color: #1e3a5f;
+      font-size: 1rem;
+    }
+    .bar-row {
+      display: grid;
+      grid-template-columns: 130px 1fr 70px;
+      gap: 0.5rem;
+      align-items: center;
+      margin: 0.35rem 0;
+      font-size: 0.85rem;
+    }
+    .bar-row .label-cell { color: #374151; }
+    .bar-row .bar-track {
+      background: #eff6ff;
+      border-radius: 3px;
+      height: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+    .bar-row .bar-fill {
+      background: linear-gradient(90deg, #0066cc, #1e3a5f);
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.3s;
+    }
+    .bar-row .value-cell {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      color: #1e3a5f;
+      font-weight: 600;
+    }
+    .double-bar-row {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 0.75rem;
+      align-items: center;
+      margin: 0.6rem 0;
+      font-size: 0.85rem;
+    }
+    .double-bar-row .question-cell { color: #374151; line-height: 1.3; }
+    .double-bar-row .bars {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .double-bar-row .single-bar {
+      display: grid;
+      grid-template-columns: 40px 1fr 50px;
+      gap: 0.4rem;
+      align-items: center;
+      font-size: 0.75rem;
+    }
+    .double-bar-row .tag-pre { color: #6b7280; font-weight: 600; }
+    .double-bar-row .tag-post { color: #1e3a5f; font-weight: 600; }
+    .double-bar-row .bar-track-mini {
+      background: #f3f4f6;
+      height: 14px;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .double-bar-row .bar-fill-pre {
+      background: #94a3b8;
+      height: 100%;
+    }
+    .double-bar-row .bar-fill-post {
+      background: #0066cc;
+      height: 100%;
+    }
+    .double-bar-row .delta {
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+    }
+    .double-bar-row .delta.positive { color: #15803d; }
+    .double-bar-row .delta.negative { color: #b91c1c; }
+    .report-output-box {
+      background: #fafafa;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      padding: 1rem;
+      max-height: 500px;
+      overflow-y: auto;
+      margin-top: 0.75rem;
+    }
+    .file-state {
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-left: 0.5rem;
+    }
+    .file-state.loaded { color: #15803d; font-weight: 600; }
+    .help-note {
+      font-size: 0.85rem;
+      color: #6b7280;
+      line-height: 1.55;
+      margin: 0.5rem 0;
+    }
+    .completion-pill {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      background: #f3f4f6;
+      color: #374151;
+      border-radius: 10px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      margin-right: 0.3rem;
+    }
+    .completion-pill.high { background: #dcfce7; color: #15803d; }
+    .completion-pill.mid { background: #fef9c3; color: #854d0e; }
+    .completion-pill.low { background: #fee2e2; color: #b91c1c; }
+    .status-text {
+      font-size: 0.85rem;
+      color: #6b7280;
+      padding: 0.5rem 0.75rem;
+      background: #f8fafc;
+      border-radius: 4px;
+      margin: 0.5rem 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-header">
+    <button id="hamburger">☰</button>
+    <span>IFP Delivery Partner Workshop</span>
+  </div>
+
+      <nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">IFP Delivery Partner Workshop</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section-title">Getting Started</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./01-overview.html">Workshop Overview</a></li>
+      <li><a class="nav-link" href="./02-tenant-access.html">Tenant Access</a></li>
+      <li><a class="nav-link" href="./03-ifp-overview.html">IFP Overview</a></li>
+      <li><a class="nav-link" href="./04-anaplan-way.html">Anaplan Way for Applications</a></li>
+    </ul>
+    <li class="nav-section-title">Configuration</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
+      <li><a class="nav-link" href="./06-exercise-1.html">Configuration Exercise 1</a></li>
+      <li><a class="nav-link" href="./06-exercise-2.html">Configuration Exercise 2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">Configuration Exercise 3</a></li>
+      <li><a class="nav-link" href="./07-generation.html">Model Generation</a></li>
+      <li><a class="nav-link" href="./08-post-gen.html">Post-Generation Steps</a></li>
+      <li><a class="nav-link" href="./09-error-logs.html">Error Log Review</a></li>
+    </ul>
+    <li class="nav-section-title">Extensions</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./10-extensions-overview.html">Extensions Overview</a></li>
+      <li><a class="nav-link" href="./11-extension-exercise-1.html">Exercise 1</a></li>
+      <li><a class="nav-link" href="./12-extension-exercise-2.html">Exercise 2</a></li>
+    </ul>
+    <li class="nav-section-title">Reference</li>
+    <ul class="nav-submenu">
+      <li><a class="nav-link" href="./13-whats-coming.html">What's Coming</a></li>
+      <li><a class="nav-link" href="./14-qanda.html">Q&A from Sessions</a></li>
+      <li><a class="nav-link" href="./15-workshop-wrap-up.html">Workshop Wrap-up</a></li>
+    </ul>
+  </ul>
+</nav>
+
+  <main class="main-content">
+    <div class="content-header">
+      <h1>Cohort Tracker</h1>
+      <p class="subtitle">Per-cohort participation, partner breakdown, and pre→post survey deltas</p>
+      <div class="badge-row"><span class="content-badge">Facilitator Only</span><span class="content-badge">Internal Use</span></div>
+    </div>
+    <div class="content-body">
+
+      <div class="privacy-banner">
+        <strong>🔒 Private — Do Not Share This URL Publicly.</strong>
+        Participant emails and survey responses are visible here. Reachable only via a non-guessable URL and excluded from search engines. Share with co-facilitators directly, not in public partner channels.
+      </div>
+
+      <div class="callout-info">
+        <span class="callout-label">📦 Related</span>
+        <p>For email templates, promotion copy, and kickoff scripts, see the <a href="./16-facilitator-toolkit-k7p2nx.html"><strong>Facilitator Launch Toolkit</strong></a>. For session run-of-show, see the <a href="./15-facilitator-r9k2x7.html"><strong>Facilitator Run-of-Show</strong></a>.</p>
+      </div>
+
+      <h2>1. Select Cohort</h2>
+      <div class="toolbar">
+        <label for="cohort-select">Cohort:</label>
+        <select id="cohort-select"></select>
+        <button id="reload-btn" class="secondary" title="Reload cohort from JSON (discards local checkbox changes)">↻ Reload</button>
+      </div>
+
+      <h2 id="summary-heading">2. Summary</h2>
+      <div id="summary-grid" class="summary-grid"></div>
+
+      <h2>3. Survey &amp; Knowledge Check Data</h2>
+      <p class="help-note">Upload the XLSX export from your survey tool. Expected format: first column is participant email, subsequent columns are question responses (numeric or text). Pre and post surveys should have the <strong>same column headers</strong> so the page can compute per-question deltas.</p>
+      <div class="toolbar">
+        <label for="pre-upload">Pre-survey:</label>
+        <input type="file" id="pre-upload" accept=".xlsx,.xls,.csv">
+        <span id="pre-state" class="file-state">no file loaded</span>
+      </div>
+      <div class="toolbar">
+        <label for="post-upload">Post-survey:</label>
+        <input type="file" id="post-upload" accept=".xlsx,.xls,.csv">
+        <span id="post-state" class="file-state">no file loaded</span>
+      </div>
+      <div class="toolbar">
+        <label for="quiz-upload">Knowledge check:</label>
+        <input type="file" id="quiz-upload" accept=".xlsx,.xls,.csv">
+        <span id="quiz-state" class="file-state">no file loaded</span>
+        <span class="help-note" style="margin-left: 0.75rem;">first column email, second column score (numeric)</span>
+      </div>
+
+      <h2>4. Partner Completion Rates</h2>
+      <div id="partner-chart" class="chart-area"></div>
+
+      <h2>5. Pre vs Post Survey Comparison</h2>
+      <div id="survey-comparison" class="chart-area"><p class="status-text">Upload both pre and post surveys to see this comparison.</p></div>
+
+      <h2>6. Participants by Partner</h2>
+      <p class="help-note">Click checkboxes to mark completion. Changes save locally in your browser and are reflected in the summary cards above. Use "Export updated JSON" below to checkpoint changes for committing to the repo.</p>
+      <div id="participants-section"></div>
+
+      <h2>7. Generate Email Report</h2>
+      <p class="help-note">Produces a copy-paste ready HTML block with embedded styles and charts. Paste into your email client — renders inline without external assets.</p>
+      <div class="toolbar">
+        <button id="generate-report-btn">Generate Report</button>
+        <button id="copy-report-btn" class="secondary">Copy HTML to Clipboard</button>
+      </div>
+      <div id="report-output" class="report-output-box" style="display:none;"></div>
+
+      <h2>8. Export Updated Cohort JSON</h2>
+      <p class="help-note">Downloads the cohort JSON with your local checkbox changes + uploaded survey scores merged in. Replace the file at <code>data/cohorts/{cohort-id}.json</code> and commit to checkpoint progress for other facilitators.</p>
+      <div class="toolbar">
+        <button id="export-json-btn">Download Updated Cohort JSON</button>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+  <script>
+    // ===================== State & Constants =====================
+    const STORAGE_KEY = 'ifp-cohort-tracker-state-v1';
+    const PARTNERS_URL = '../data/cohorts/_partners.json';
+    const INDEX_URL = '../data/cohorts/_index.json';
+
+    const state = {
+      partners: null,
+      excludeSet: new Set(),
+      cohortIndex: null,
+      cohorts: {},           // id -> cohort data (with merged overrides)
+      currentCohortId: null,
+      preSurvey: null,       // { headers: [...], rows: { email: {q1: val, q2: val, ...} } }
+      postSurvey: null,
+      quizScores: null       // { email: score }
+    };
+
+    function loadCache() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+      catch (e) { return {}; }
+    }
+
+    function saveCache(updates) {
+      const cache = loadCache();
+      Object.assign(cache, updates);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cache));
+    }
+
+    function saveCohortOverrides(cohortId, overrides) {
+      const cache = loadCache();
+      cache.overrides = cache.overrides || {};
+      cache.overrides[cohortId] = overrides;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cache));
+    }
+
+    // ===================== Init =====================
+    async function init() {
+      try {
+        state.partners = await fetch(PARTNERS_URL).then(r => r.json());
+        state.excludeSet = new Set(state.partners.excludePartners || []);
+        state.cohortIndex = await fetch(INDEX_URL).then(r => r.json());
+        populateCohortSelector();
+
+        const cache = loadCache();
+        const initialId = cache.lastCohortId || state.cohortIndex.cohorts[0]?.id;
+        if (initialId) {
+          document.getElementById('cohort-select').value = initialId;
+          await loadCohort(initialId);
+        }
+      } catch (e) {
+        console.error(e);
+        document.querySelector('.content-body').insertAdjacentHTML(
+          'afterbegin',
+          `<div class="callout-warning"><span class="callout-label">⚠ Failed to load data</span><p>${e.message}</p><p>Make sure you're loading the page via a web server (not file://), and that <code>data/cohorts/_partners.json</code> and <code>_index.json</code> exist.</p></div>`
+        );
+      }
+    }
+
+    function populateCohortSelector() {
+      const sel = document.getElementById('cohort-select');
+      sel.innerHTML = '';
+      state.cohortIndex.cohorts.forEach(c => {
+        const o = document.createElement('option');
+        o.value = c.id;
+        o.textContent = c.name;
+        sel.appendChild(o);
+      });
+      sel.addEventListener('change', e => loadCohort(e.target.value));
+    }
+
+    async function loadCohort(cohortId) {
+      const meta = state.cohortIndex.cohorts.find(c => c.id === cohortId);
+      if (!meta) return;
+      let cohort = state.cohorts[cohortId];
+      if (!cohort) {
+        cohort = await fetch(`../data/cohorts/${meta.file}`).then(r => r.json());
+        state.cohorts[cohortId] = cohort;
+      }
+      // Merge cached overrides
+      const cache = loadCache();
+      const overrides = cache.overrides?.[cohortId] || {};
+      cohort.participants.forEach(p => {
+        if (overrides[p.email]) {
+          Object.assign(p.completion, overrides[p.email].completion || {});
+          if (overrides[p.email].preSurveyScore != null) p.preSurveyScore = overrides[p.email].preSurveyScore;
+          if (overrides[p.email].postSurveyScore != null) p.postSurveyScore = overrides[p.email].postSurveyScore;
+          if (overrides[p.email].knowledgeCheckScore != null) p.knowledgeCheckScore = overrides[p.email].knowledgeCheckScore;
+        }
+      });
+      state.currentCohortId = cohortId;
+      saveCache({ lastCohortId: cohortId });
+      renderAll();
+    }
+
+    function getCurrentCohort() {
+      return state.cohorts[state.currentCohortId];
+    }
+
+    // ===================== Rendering =====================
+    function renderAll() {
+      const c = getCurrentCohort();
+      if (!c) return;
+      document.getElementById('summary-heading').textContent = `2. Summary — ${c.name}`;
+      renderSummary(c);
+      renderPartnerChart(c);
+      renderParticipants(c);
+      renderSurveyComparison();
+    }
+
+    function includedParticipants(cohort) {
+      return cohort.participants.filter(p => !p.excluded);
+    }
+
+    function partnerBreakdown(cohort) {
+      const map = new Map();
+      includedParticipants(cohort).forEach(p => {
+        if (!map.has(p.partner)) map.set(p.partner, []);
+        map.get(p.partner).push(p);
+      });
+      return [...map.entries()]
+        .map(([name, people]) => ({ name, people }))
+        .sort((a, b) => b.people.length - a.people.length || a.name.localeCompare(b.name));
+    }
+
+    function completionRate(people, key) {
+      if (!people.length) return 0;
+      return people.filter(p => p.completion[key]).length / people.length;
+    }
+
+    function allCompleted(people) {
+      if (!people.length) return 0;
+      return people.filter(p => p.completion.preSurvey && p.completion.postSurvey && p.completion.knowledgeCheck).length / people.length;
+    }
+
+    function renderSummary(cohort) {
+      const included = includedParticipants(cohort);
+      const partners = partnerBreakdown(cohort);
+      const preRate = completionRate(included, 'preSurvey');
+      const postRate = completionRate(included, 'postSurvey');
+      const quizRate = completionRate(included, 'knowledgeCheck');
+      const allRate = allCompleted(included);
+
+      const cards = [
+        { label: 'Total Registered', value: cohort.participants.length, sub: `${cohort.participants.length - included.length} excluded (internal)` },
+        { label: 'Counted Participants', value: included.length, sub: `${partners.length} partner${partners.length === 1 ? '' : 's'}` },
+        { label: 'Pre-Survey', value: `${Math.round(preRate * 100)}%`, sub: `${included.filter(p => p.completion.preSurvey).length} of ${included.length}` },
+        { label: 'Post-Survey', value: `${Math.round(postRate * 100)}%`, sub: `${included.filter(p => p.completion.postSurvey).length} of ${included.length}` },
+        { label: 'Knowledge Check', value: `${Math.round(quizRate * 100)}%`, sub: `${included.filter(p => p.completion.knowledgeCheck).length} of ${included.length}` },
+        { label: 'All Three Completed', value: `${Math.round(allRate * 100)}%`, sub: `${included.filter(p => p.completion.preSurvey && p.completion.postSurvey && p.completion.knowledgeCheck).length} of ${included.length}` }
+      ];
+
+      document.getElementById('summary-grid').innerHTML = cards.map(c => `
+        <div class="summary-card">
+          <div class="label">${c.label}</div>
+          <div class="value">${c.value}</div>
+          <div class="sub">${c.sub}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderPartnerChart(cohort) {
+      const partners = partnerBreakdown(cohort);
+      const html = partners.map(p => {
+        const rate = allCompleted(p.people);
+        const pct = Math.round(rate * 100);
+        const sentCount = p.people.length;
+        return `
+          <div class="bar-row">
+            <div class="label-cell" title="${p.name}">${p.name} <span style="color:#6b7280;font-size:0.78rem;">(${sentCount})</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:${pct}%;"></div></div>
+            <div class="value-cell">${pct}%</div>
+          </div>
+        `;
+      }).join('');
+      document.getElementById('partner-chart').innerHTML = `
+        <h3>All-Three Completion Rate by Partner</h3>
+        <p class="help-note">Percentage of each partner's participants who completed all three: pre-survey, post-survey, and knowledge check.</p>
+        ${html || '<p class="status-text">No participants in this cohort.</p>'}
+      `;
+    }
+
+    function renderParticipants(cohort) {
+      const partners = partnerBreakdown(cohort);
+      const html = partners.map(p => {
+        const completion = {
+          pre: p.people.filter(x => x.completion.preSurvey).length,
+          post: p.people.filter(x => x.completion.postSurvey).length,
+          quiz: p.people.filter(x => x.completion.knowledgeCheck).length
+        };
+        const rows = p.people.map(person => `
+          <tr>
+            <td class="email-cell">${escapeHtml(person.email)}</td>
+            <td><input type="checkbox" data-email="${escapeHtml(person.email)}" data-key="preSurvey" ${person.completion.preSurvey ? 'checked' : ''}></td>
+            <td><input type="checkbox" data-email="${escapeHtml(person.email)}" data-key="postSurvey" ${person.completion.postSurvey ? 'checked' : ''}></td>
+            <td><input type="checkbox" data-email="${escapeHtml(person.email)}" data-key="knowledgeCheck" ${person.completion.knowledgeCheck ? 'checked' : ''}></td>
+            <td class="score-cell">${person.preSurveyScore != null ? formatScore(person.preSurveyScore) : '—'}</td>
+            <td class="score-cell">${person.postSurveyScore != null ? formatScore(person.postSurveyScore) : '—'}</td>
+            <td class="score-cell">${person.knowledgeCheckScore != null ? formatScore(person.knowledgeCheckScore) : '—'}</td>
+          </tr>
+        `).join('');
+        return `
+          <div class="partner-block">
+            <div class="partner-block-header">
+              <span>${p.name}</span>
+              <span class="completion-mini">
+                <span>Pre ${completion.pre}/${p.people.length}</span>
+                <span>Post ${completion.post}/${p.people.length}</span>
+                <span>Quiz ${completion.quiz}/${p.people.length}</span>
+              </span>
+            </div>
+            <table class="participants-table">
+              <thead>
+                <tr>
+                  <th>Email</th>
+                  <th>Pre</th>
+                  <th>Post</th>
+                  <th>Quiz</th>
+                  <th>Pre Score</th>
+                  <th>Post Score</th>
+                  <th>Quiz Score</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        `;
+      }).join('');
+      const section = document.getElementById('participants-section');
+      section.innerHTML = html || '<p class="status-text">No participants.</p>';
+      section.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', onCheckboxChange);
+      });
+    }
+
+    function onCheckboxChange(e) {
+      const email = e.target.getAttribute('data-email');
+      const key = e.target.getAttribute('data-key');
+      const cohort = getCurrentCohort();
+      const person = cohort.participants.find(p => p.email === email);
+      if (!person) return;
+      person.completion[key] = e.target.checked;
+      // Persist override
+      const cache = loadCache();
+      cache.overrides = cache.overrides || {};
+      cache.overrides[cohort.id] = cache.overrides[cohort.id] || {};
+      cache.overrides[cohort.id][email] = cache.overrides[cohort.id][email] || { completion: {} };
+      cache.overrides[cohort.id][email].completion = { ...person.completion };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cache));
+      // Re-render the summary stats and partner chart (cheap)
+      renderSummary(cohort);
+      renderPartnerChart(cohort);
+      // Update the partner-block-header mini-stats by re-rendering this block's header only
+      const block = e.target.closest('.partner-block');
+      if (block) {
+        const partner = person.partner;
+        const partnerPeople = includedParticipants(cohort).filter(x => x.partner === partner);
+        const c = {
+          pre: partnerPeople.filter(x => x.completion.preSurvey).length,
+          post: partnerPeople.filter(x => x.completion.postSurvey).length,
+          quiz: partnerPeople.filter(x => x.completion.knowledgeCheck).length
+        };
+        const mini = block.querySelector('.completion-mini');
+        if (mini) mini.innerHTML = `<span>Pre ${c.pre}/${partnerPeople.length}</span><span>Post ${c.post}/${partnerPeople.length}</span><span>Quiz ${c.quiz}/${partnerPeople.length}</span>`;
+      }
+    }
+
+    // ===================== Survey XLSX Parsing =====================
+    async function readXlsxFile(file) {
+      const buf = await file.arrayBuffer();
+      const wb = XLSX.read(buf, { type: 'array' });
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+      if (!rows.length) return { headers: [], rows: [] };
+      const headers = rows[0].map(h => String(h).trim());
+      const data = rows.slice(1).filter(r => r.some(cell => cell !== '' && cell != null));
+      return { headers, data };
+    }
+
+    function indexSurveyByEmail(parsed) {
+      const { headers, data } = parsed;
+      const emailIdx = headers.findIndex(h => /e-?mail/i.test(h)) >= 0 ? headers.findIndex(h => /e-?mail/i.test(h)) : 0;
+      const byEmail = {};
+      data.forEach(row => {
+        const email = String(row[emailIdx] || '').trim().toLowerCase();
+        if (!email || !email.includes('@')) return;
+        const responses = {};
+        headers.forEach((h, i) => {
+          if (i === emailIdx) return;
+          responses[h] = row[i];
+        });
+        byEmail[email] = responses;
+      });
+      return { headers: headers.filter((_, i) => i !== emailIdx), byEmail };
+    }
+
+    function computeAverageScore(responses) {
+      // Average numeric values across all questions; ignore non-numeric
+      const nums = Object.values(responses).map(v => {
+        if (typeof v === 'number') return v;
+        if (typeof v === 'string') {
+          const m = v.match(/-?\d+(\.\d+)?/);
+          if (m) return parseFloat(m[0]);
+        }
+        return null;
+      }).filter(v => v != null);
+      if (!nums.length) return null;
+      return nums.reduce((a, b) => a + b, 0) / nums.length;
+    }
+
+    function attachSurveyToParticipants(survey, key) {
+      const cohort = getCurrentCohort();
+      if (!cohort) return;
+      const scoreKey = key === 'preSurvey' ? 'preSurveyScore' : 'postSurveyScore';
+      const cache = loadCache();
+      cache.overrides = cache.overrides || {};
+      cache.overrides[cohort.id] = cache.overrides[cohort.id] || {};
+      let matched = 0;
+      cohort.participants.forEach(p => {
+        const responses = survey.byEmail[p.email];
+        if (responses) {
+          p.completion[key] = true;
+          p[scoreKey] = computeAverageScore(responses);
+          matched++;
+          cache.overrides[cohort.id][p.email] = cache.overrides[cohort.id][p.email] || { completion: {} };
+          cache.overrides[cohort.id][p.email].completion[key] = true;
+          cache.overrides[cohort.id][p.email][scoreKey] = p[scoreKey];
+        }
+      });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cache));
+      return matched;
+    }
+
+    function attachQuizToParticipants(parsed) {
+      const cohort = getCurrentCohort();
+      if (!cohort) return 0;
+      const { headers, data } = parsed;
+      const emailIdx = headers.findIndex(h => /e-?mail/i.test(h)) >= 0 ? headers.findIndex(h => /e-?mail/i.test(h)) : 0;
+      const scoreIdx = headers.findIndex(h => /score/i.test(h)) >= 0 ? headers.findIndex(h => /score/i.test(h)) : 1;
+      const cache = loadCache();
+      cache.overrides = cache.overrides || {};
+      cache.overrides[cohort.id] = cache.overrides[cohort.id] || {};
+      let matched = 0;
+      data.forEach(row => {
+        const email = String(row[emailIdx] || '').trim().toLowerCase();
+        const scoreRaw = row[scoreIdx];
+        const score = typeof scoreRaw === 'number' ? scoreRaw : parseFloat(String(scoreRaw).replace(/[^\d.\-]/g, ''));
+        if (!email || isNaN(score)) return;
+        const person = cohort.participants.find(p => p.email === email);
+        if (person) {
+          person.completion.knowledgeCheck = true;
+          person.knowledgeCheckScore = score;
+          matched++;
+          cache.overrides[cohort.id][email] = cache.overrides[cohort.id][email] || { completion: {} };
+          cache.overrides[cohort.id][email].completion.knowledgeCheck = true;
+          cache.overrides[cohort.id][email].knowledgeCheckScore = score;
+        }
+      });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cache));
+      return matched;
+    }
+
+    document.getElementById('pre-upload').addEventListener('change', async e => {
+      const file = e.target.files[0]; if (!file) return;
+      const parsed = await readXlsxFile(file);
+      state.preSurvey = indexSurveyByEmail(parsed);
+      const n = attachSurveyToParticipants(state.preSurvey, 'preSurvey');
+      document.getElementById('pre-state').textContent = `${file.name} — matched ${n} participants`;
+      document.getElementById('pre-state').classList.add('loaded');
+      renderAll();
+    });
+    document.getElementById('post-upload').addEventListener('change', async e => {
+      const file = e.target.files[0]; if (!file) return;
+      const parsed = await readXlsxFile(file);
+      state.postSurvey = indexSurveyByEmail(parsed);
+      const n = attachSurveyToParticipants(state.postSurvey, 'postSurvey');
+      document.getElementById('post-state').textContent = `${file.name} — matched ${n} participants`;
+      document.getElementById('post-state').classList.add('loaded');
+      renderAll();
+    });
+    document.getElementById('quiz-upload').addEventListener('change', async e => {
+      const file = e.target.files[0]; if (!file) return;
+      const parsed = await readXlsxFile(file);
+      const n = attachQuizToParticipants(parsed);
+      document.getElementById('quiz-state').textContent = `${file.name} — matched ${n} participants`;
+      document.getElementById('quiz-state').classList.add('loaded');
+      renderAll();
+    });
+
+    // ===================== Pre vs Post Comparison =====================
+    function renderSurveyComparison() {
+      const target = document.getElementById('survey-comparison');
+      if (!state.preSurvey || !state.postSurvey) {
+        target.innerHTML = '<p class="status-text">Upload both pre and post surveys to see this comparison.</p>';
+        return;
+      }
+      // Find common headers (questions present in both)
+      const commonQs = state.preSurvey.headers.filter(h => state.postSurvey.headers.includes(h));
+      if (!commonQs.length) {
+        target.innerHTML = '<p class="status-text">Pre and post surveys have no common question headers. Make sure both files use identical column names for matched questions.</p>';
+        return;
+      }
+      const cohort = getCurrentCohort();
+      const included = includedParticipants(cohort);
+      const includedEmails = new Set(included.map(p => p.email));
+
+      const rows = commonQs.map(q => {
+        const preNums = [], postNums = [];
+        Object.entries(state.preSurvey.byEmail).forEach(([email, resp]) => {
+          if (!includedEmails.has(email)) return;
+          const v = numericValue(resp[q]);
+          if (v != null) preNums.push(v);
+        });
+        Object.entries(state.postSurvey.byEmail).forEach(([email, resp]) => {
+          if (!includedEmails.has(email)) return;
+          const v = numericValue(resp[q]);
+          if (v != null) postNums.push(v);
+        });
+        const preAvg = preNums.length ? preNums.reduce((a, b) => a + b, 0) / preNums.length : null;
+        const postAvg = postNums.length ? postNums.reduce((a, b) => a + b, 0) / postNums.length : null;
+        return { q, preAvg, postAvg, preN: preNums.length, postN: postNums.length };
+      }).filter(r => r.preAvg != null || r.postAvg != null);
+
+      if (!rows.length) {
+        target.innerHTML = '<p class="status-text">No numeric responses found in matched columns. The page can only chart numeric values.</p>';
+        return;
+      }
+
+      const maxVal = Math.max(...rows.flatMap(r => [r.preAvg || 0, r.postAvg || 0]));
+      const html = rows.map(r => {
+        const prePct = r.preAvg != null ? (r.preAvg / maxVal * 100) : 0;
+        const postPct = r.postAvg != null ? (r.postAvg / maxVal * 100) : 0;
+        const delta = (r.preAvg != null && r.postAvg != null) ? r.postAvg - r.preAvg : null;
+        const deltaText = delta != null ? (delta >= 0 ? '+' : '') + delta.toFixed(2) : '—';
+        const deltaClass = delta != null ? (delta >= 0 ? 'positive' : 'negative') : '';
+        return `
+          <div class="double-bar-row">
+            <div class="question-cell">${escapeHtml(r.q)}</div>
+            <div class="bars">
+              <div class="single-bar">
+                <span class="tag-pre">PRE</span>
+                <div class="bar-track-mini"><div class="bar-fill-pre" style="width:${prePct}%;"></div></div>
+                <span>${r.preAvg != null ? r.preAvg.toFixed(2) : '—'}</span>
+              </div>
+              <div class="single-bar">
+                <span class="tag-post">POST</span>
+                <div class="bar-track-mini"><div class="bar-fill-post" style="width:${postPct}%;"></div></div>
+                <span>${r.postAvg != null ? r.postAvg.toFixed(2) : '—'}</span>
+              </div>
+              <div class="single-bar">
+                <span></span>
+                <span style="font-size:0.78rem;color:#6b7280;">Δ ${deltaText} (n=${r.preN}/${r.postN})</span>
+                <span class="delta ${deltaClass}"></span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      target.innerHTML = `
+        <h3>Pre vs Post Survey — Question Averages</h3>
+        <p class="help-note">Per-question average across all included participants who answered. Only questions with the same header in both files are matched. Δ shows the post-pre delta.</p>
+        ${html}
+      `;
+    }
+
+    function numericValue(v) {
+      if (typeof v === 'number') return v;
+      if (typeof v === 'string') {
+        const m = v.match(/-?\d+(\.\d+)?/);
+        if (m) return parseFloat(m[0]);
+      }
+      return null;
+    }
+
+    // ===================== Report Generator =====================
+    function generateReportHtml() {
+      const cohort = getCurrentCohort();
+      if (!cohort) return '';
+      const included = includedParticipants(cohort);
+      const partners = partnerBreakdown(cohort);
+      const preRate = completionRate(included, 'preSurvey');
+      const postRate = completionRate(included, 'postSurvey');
+      const quizRate = completionRate(included, 'knowledgeCheck');
+      const allRate = allCompleted(included);
+
+      const partnerRows = partners.map(p => {
+        const sent = p.people.length;
+        const all = p.people.filter(x => x.completion.preSurvey && x.completion.postSurvey && x.completion.knowledgeCheck).length;
+        const pct = Math.round(all / sent * 100);
+        const barW = Math.round(pct * 2);
+        return `
+          <tr>
+            <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;">${escapeHtml(p.name)}</td>
+            <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;text-align:right;">${sent}</td>
+            <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;text-align:right;">${all}</td>
+            <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;">
+              <div style="display:inline-block;width:200px;background:#eff6ff;border-radius:3px;overflow:hidden;vertical-align:middle;">
+                <div style="background:#0066cc;height:14px;width:${barW}px;"></div>
+              </div>
+              <span style="margin-left:8px;font-weight:600;color:#1e3a5f;">${pct}%</span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      let surveyHtml = '';
+      if (state.preSurvey && state.postSurvey) {
+        const commonQs = state.preSurvey.headers.filter(h => state.postSurvey.headers.includes(h));
+        const includedEmails = new Set(included.map(p => p.email));
+        const surveyRows = commonQs.map(q => {
+          const preNums = [], postNums = [];
+          Object.entries(state.preSurvey.byEmail).forEach(([email, resp]) => {
+            if (!includedEmails.has(email)) return;
+            const v = numericValue(resp[q]);
+            if (v != null) preNums.push(v);
+          });
+          Object.entries(state.postSurvey.byEmail).forEach(([email, resp]) => {
+            if (!includedEmails.has(email)) return;
+            const v = numericValue(resp[q]);
+            if (v != null) postNums.push(v);
+          });
+          const preAvg = preNums.length ? preNums.reduce((a, b) => a + b, 0) / preNums.length : null;
+          const postAvg = postNums.length ? postNums.reduce((a, b) => a + b, 0) / postNums.length : null;
+          if (preAvg == null && postAvg == null) return '';
+          const delta = (preAvg != null && postAvg != null) ? postAvg - preAvg : null;
+          const deltaText = delta != null ? (delta >= 0 ? '+' : '') + delta.toFixed(2) : '—';
+          const deltaColor = delta != null ? (delta >= 0 ? '#15803d' : '#b91c1c') : '#6b7280';
+          return `
+            <tr>
+              <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;">${escapeHtml(q)}</td>
+              <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;text-align:right;">${preAvg != null ? preAvg.toFixed(2) : '—'}</td>
+              <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;text-align:right;">${postAvg != null ? postAvg.toFixed(2) : '—'}</td>
+              <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;text-align:right;color:${deltaColor};font-weight:600;">${deltaText}</td>
+            </tr>
+          `;
+        }).filter(Boolean).join('');
+        if (surveyRows) {
+          surveyHtml = `
+            <h3 style="margin-top:24px;color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:16px;">Pre → Post Survey Comparison</h3>
+            <table style="width:100%;border-collapse:collapse;margin-top:10px;font-size:14px;font-family:Arial,sans-serif;">
+              <thead><tr style="background:#f8fafc;">
+                <th style="padding:8px 10px;text-align:left;font-size:12px;text-transform:uppercase;color:#6b7280;">Question</th>
+                <th style="padding:8px 10px;text-align:right;font-size:12px;text-transform:uppercase;color:#6b7280;">Pre Avg</th>
+                <th style="padding:8px 10px;text-align:right;font-size:12px;text-transform:uppercase;color:#6b7280;">Post Avg</th>
+                <th style="padding:8px 10px;text-align:right;font-size:12px;text-transform:uppercase;color:#6b7280;">Δ</th>
+              </tr></thead>
+              <tbody>${surveyRows}</tbody>
+            </table>
+          `;
+        }
+      }
+
+      return `
+        <div style="font-family:Arial,Helvetica,sans-serif;max-width:720px;color:#374151;font-size:14px;line-height:1.55;">
+          <h2 style="color:#1e3a5f;font-size:20px;margin:0 0 8px 0;">IFP Delivery Workshop — ${escapeHtml(cohort.name)} Report</h2>
+          <p style="color:#6b7280;font-size:13px;margin:0 0 20px 0;">${cohort.startDate} → ${cohort.endDate}</p>
+
+          <h3 style="color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:16px;">Participation Summary</h3>
+          <table style="width:100%;border-collapse:collapse;margin-top:10px;font-size:14px;">
+            <tbody>
+              <tr><td style="padding:6px 10px;color:#6b7280;">Total registered</td><td style="padding:6px 10px;text-align:right;font-weight:600;">${cohort.participants.length}</td></tr>
+              <tr><td style="padding:6px 10px;color:#6b7280;">Counted participants (excludes internal)</td><td style="padding:6px 10px;text-align:right;font-weight:600;">${included.length}</td></tr>
+              <tr><td style="padding:6px 10px;color:#6b7280;">Partners represented</td><td style="padding:6px 10px;text-align:right;font-weight:600;">${partners.length}</td></tr>
+              <tr><td style="padding:6px 10px;color:#6b7280;">Pre-survey completion</td><td style="padding:6px 10px;text-align:right;font-weight:600;color:#0066cc;">${Math.round(preRate * 100)}%</td></tr>
+              <tr><td style="padding:6px 10px;color:#6b7280;">Post-survey completion</td><td style="padding:6px 10px;text-align:right;font-weight:600;color:#0066cc;">${Math.round(postRate * 100)}%</td></tr>
+              <tr><td style="padding:6px 10px;color:#6b7280;">Knowledge check completion</td><td style="padding:6px 10px;text-align:right;font-weight:600;color:#0066cc;">${Math.round(quizRate * 100)}%</td></tr>
+              <tr><td style="padding:6px 10px;color:#6b7280;border-top:2px solid #0066cc;"><strong>All three completed</strong></td><td style="padding:6px 10px;text-align:right;font-weight:700;color:#15803d;border-top:2px solid #0066cc;font-size:16px;">${Math.round(allRate * 100)}%</td></tr>
+            </tbody>
+          </table>
+
+          <h3 style="margin-top:24px;color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:16px;">Completion by Partner</h3>
+          <p style="color:#6b7280;font-size:13px;margin:8px 0;">Bar shows the share of each partner's participants who completed all three (pre-survey + post-survey + knowledge check).</p>
+          <table style="width:100%;border-collapse:collapse;margin-top:10px;font-size:14px;">
+            <thead><tr style="background:#f8fafc;">
+              <th style="padding:8px 10px;text-align:left;font-size:12px;text-transform:uppercase;color:#6b7280;">Partner</th>
+              <th style="padding:8px 10px;text-align:right;font-size:12px;text-transform:uppercase;color:#6b7280;">Sent</th>
+              <th style="padding:8px 10px;text-align:right;font-size:12px;text-transform:uppercase;color:#6b7280;">All 3 Done</th>
+              <th style="padding:8px 10px;text-align:left;font-size:12px;text-transform:uppercase;color:#6b7280;">Completion</th>
+            </tr></thead>
+            <tbody>${partnerRows}</tbody>
+          </table>
+
+          ${surveyHtml}
+
+          <p style="margin-top:20px;color:#6b7280;font-size:12px;font-style:italic;">Generated ${new Date().toISOString().split('T')[0]} from the IFP Workshop Cohort Tracker.</p>
+        </div>
+      `;
+    }
+
+    document.getElementById('generate-report-btn').addEventListener('click', () => {
+      const html = generateReportHtml();
+      const out = document.getElementById('report-output');
+      out.innerHTML = html;
+      out.style.display = 'block';
+    });
+
+    document.getElementById('copy-report-btn').addEventListener('click', async () => {
+      const html = generateReportHtml();
+      try {
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            'text/html': new Blob([html], { type: 'text/html' }),
+            'text/plain': new Blob([html.replace(/<[^>]+>/g, '')], { type: 'text/plain' })
+          })
+        ]);
+        alert('Report HTML copied to clipboard. Paste into your email client.');
+      } catch (e) {
+        // Fallback: copy as text
+        await navigator.clipboard.writeText(html);
+        alert('Report HTML copied as text (your browser may not support rich-text clipboard).');
+      }
+    });
+
+    // ===================== Export Updated JSON =====================
+    document.getElementById('export-json-btn').addEventListener('click', () => {
+      const cohort = getCurrentCohort();
+      if (!cohort) return;
+      const blob = new Blob([JSON.stringify(cohort, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${cohort.id}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    });
+
+    // Reload button
+    document.getElementById('reload-btn').addEventListener('click', async () => {
+      if (!confirm('Discard local checkbox / survey changes and reload from the committed JSON?')) return;
+      const cache = loadCache();
+      if (cache.overrides) delete cache.overrides[state.currentCohortId];
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cache));
+      delete state.cohorts[state.currentCohortId];
+      state.preSurvey = null;
+      state.postSurvey = null;
+      document.getElementById('pre-state').textContent = 'no file loaded';
+      document.getElementById('pre-state').classList.remove('loaded');
+      document.getElementById('post-state').textContent = 'no file loaded';
+      document.getElementById('post-state').classList.remove('loaded');
+      document.getElementById('quiz-state').textContent = 'no file loaded';
+      document.getElementById('quiz-state').classList.remove('loaded');
+      await loadCohort(state.currentCohortId);
+    });
+
+    // ===================== Utilities =====================
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+    function formatScore(v) {
+      if (typeof v !== 'number') return v;
+      return v.toFixed(2);
+    }
+
+    // ===================== Boot =====================
+    init();
+  </script>
+</body>
+</html>

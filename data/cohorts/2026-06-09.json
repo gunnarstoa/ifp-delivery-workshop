@@ -1,0 +1,660 @@
+{
+  "id": "2026-06-09",
+  "name": "June 9, 2026 Cohort",
+  "startDate": "2026-06-09",
+  "endDate": "2026-06-13",
+  "totalRegistered": 50,
+  "totalIncluded": 48,
+  "participants": [
+    {
+      "email": "adriana@twelvecg.com",
+      "partner": "Twelve CG",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "akashmukeshbhai.kalaria@genpact.com",
+      "partner": "Genpact",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "alex@twelvecg.com",
+      "partner": "Twelve CG",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "andrew.bladen@keyrus.com",
+      "partner": "Keyrus",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "aneet@truedconsulting.com",
+      "partner": "Trued Consulting",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "anthony.bonfiglio@anavatepartners.com",
+      "partner": "Anavate Partners",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "antony.francis@anavatepartners.com",
+      "partner": "Anavate Partners",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "anubhav.d.jain@pwc.com",
+      "partner": "PwC",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "aravind.m@genpact.com",
+      "partner": "Genpact",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "ason@pelotongroup.com",
+      "partner": "Peloton",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "ben.wilson@anaplan.com",
+      "partner": "Anaplan (internal)",
+      "excluded": true,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "bgauer@deloitte.com",
+      "partner": "Deloitte",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "bill.wrobleski@argano.com",
+      "partner": "Argano",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "charlie@mavenscloud.com",
+      "partner": "Mavens Cloud",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "claudelle@twelvecg.com",
+      "partner": "Twelve CG",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "cynthia.behrends@accenture.com",
+      "partner": "Accenture",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "dana.izbassarova@anavatepartners.com",
+      "partner": "Anavate Partners",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "daulet.kanay@anavatepartners.com",
+      "partner": "Anavate Partners",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "david.blogg@mavenscloud.com",
+      "partner": "Mavens Cloud",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "dbanga@mycervello.com",
+      "partner": "Cervello",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "dipanshu.sehgal@genpact.com",
+      "partner": "Genpact",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "esanders@mycervello.com",
+      "partner": "Cervello",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "guillermo.calderon@anavatepartners.com",
+      "partner": "Anavate Partners",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "haresh.jagdishtekchandani@genpact.com",
+      "partner": "Genpact",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "jonathan.grubb@tcs.com",
+      "partner": "TCS",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "julian.lopez@anavatepartners.com",
+      "partner": "Anavate Partners",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "julian.merello@accenture.com",
+      "partner": "Accenture",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "kdraeger@kartacg.com",
+      "partner": "Karta CG",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "kndia.davis@bluecrux.com",
+      "partner": "Bluecrux",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "kosterhout@pelotongroup.com",
+      "partner": "Peloton",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "lazzat.amangeldi@argano.com",
+      "partner": "Argano",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "mafara@kpmg.com",
+      "partner": "KPMG",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "manish.goel3@genpact.com",
+      "partner": "Genpact",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "mari.wilson@pwc.com",
+      "partner": "PwC",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "mickn@twelvecg.com",
+      "partner": "Twelve CG",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "mikhil.agarwal@viseo.com",
+      "partner": "Viseo",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "moreilly@kartacg.com",
+      "partner": "Karta CG",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "nagarwal@pelotongroup.com",
+      "partner": "Peloton",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "noel.rocher@anaplan.com",
+      "partner": "Anaplan (internal)",
+      "excluded": true,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "paris.elton@argano.com",
+      "partner": "Argano",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "pdesmond@mycervello.com",
+      "partner": "Cervello",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "prashanth.munirajappa@auxoai.com",
+      "partner": "Auxo AI",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "richie.chang@pwc.com",
+      "partner": "PwC",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "rola.losco@accenture.com",
+      "partner": "Accenture",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "ruben.loza@pwc.com",
+      "partner": "PwC",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "sarahschmitz@twelvecg.com",
+      "partner": "Twelve CG",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "shivani.rathore@genpact.digital",
+      "partner": "Genpact",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "susanna@mavenscloud.com",
+      "partner": "Mavens Cloud",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "veeresh.sabanna@genpact.com",
+      "partner": "Genpact",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    },
+    {
+      "email": "vijayteja.pasumarthy@genpact.digital",
+      "partner": "Genpact",
+      "excluded": false,
+      "completion": {
+        "preSurvey": false,
+        "postSurvey": false,
+        "knowledgeCheck": false
+      },
+      "preSurveyScore": null,
+      "postSurveyScore": null,
+      "knowledgeCheckScore": null
+    }
+  ]
+}
