@@ -7,6 +7,12 @@
 #   __DOMAIN__   → anaplan-workshops.com
 #   __REPO_URL__ → https://github.com/gunnarstoa/ifp-delivery-workshop.git
 #   __BRANCH__   → main
+#
+# Lightsail prepends a `#!/bin/sh` SSH-CA snippet to user-data, so the
+# combined script runs under dash. Re-exec under bash before using
+# bash-only features (set -o pipefail, process substitution).
+[ -z "${BASH_VERSION:-}" ] && exec /bin/bash "$0" "$@"
+
 set -euxo pipefail
 exec > >(tee -a /var/log/workshop-bootstrap.log) 2>&1
 echo "=== workshop bootstrap @ $(date -u +%FT%TZ) ==="
