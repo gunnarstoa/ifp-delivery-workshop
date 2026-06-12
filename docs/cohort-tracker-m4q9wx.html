@@ -822,38 +822,45 @@
 
     function indexSurveyByEmail(parsed) {
       const { headers, data } = parsed;
-      const emailIdx = headers.findIndex(h => /e-?mail/i.test(h)) >= 0 ? headers.findIndex(h => /e-?mail/i.test(h)) : 0;
+      let emailIdx = headers.findIndex(h => /e-?mail/i.test(h));
+      if (emailIdx < 0) emailIdx = 0;
       const byEmail = {};
+      const responses = [];
       data.forEach(row => {
-        const email = String(row[emailIdx] || '').trim().toLowerCase();
-        if (!email || !email.includes('@')) return;
-        const responses = {};
+        const responseObj = {};
         headers.forEach((h, i) => {
           if (i === emailIdx) return;
-          responses[h] = row[i];
+          responseObj[h] = row[i];
         });
-        byEmail[email] = responses;
+        responses.push(responseObj);
+        const email = String(row[emailIdx] || '').trim().toLowerCase();
+        if (!email || !email.includes('@') || email === 'anonymous') return;
+        byEmail[email] = responseObj;
       });
-      return { headers: headers.filter((_, i) => i !== emailIdx), byEmail };
+      const validEmails = Object.keys(byEmail).length;
+      const anonymous = validEmails === 0 && responses.length > 0;
+      return {
+        headers: headers.filter((_, i) => i !== emailIdx),
+        byEmail,
+        responses,
+        anonymous,
+        totalRows: responses.length,
+        validEmails
+      };
     }
 
     function computeAverageScore(responses) {
-      // Average numeric values across all questions; ignore non-numeric
-      const nums = Object.values(responses).map(v => {
-        if (typeof v === 'number') return v;
-        if (typeof v === 'string') {
-          const m = v.match(/-?\d+(\.\d+)?/);
-          if (m) return parseFloat(m[0]);
-        }
-        return null;
-      }).filter(v => v != null);
+      const nums = Object.values(responses).map(v => numericValue(v)).filter(v => v != null);
       if (!nums.length) return null;
       return nums.reduce((a, b) => a + b, 0) / nums.length;
     }
 
     function attachSurveyToParticipants(survey, key) {
       const cohort = getCurrentCohort();
-      if (!cohort) return;
+      if (!cohort) return { matched: 0, anonymous: false };
+      if (survey.anonymous) {
+        return { matched: 0, anonymous: true, totalRows: survey.totalRows };
+      }
       const scoreKey = key === 'preSurvey' ? 'preSurveyScore' : 'postSurveyScore';
       const cache = loadCache();
       cache.overrides = cache.overrides || {};
@@ -871,7 +878,7 @@
         }
       });
       localStorage.setItem(STORAGE_KEY, JSON.stringify(cache));
-      return matched;
+      return { matched, anonymous: false };
     }
 
     function normalizePassFail(raw) {
@@ -912,12 +919,18 @@
       return matched;
     }
 
+    function surveyStateLabel(file, result) {
+      if (result.anonymous) {
+        return `${file.name} — ${result.totalRows} anonymous responses (aggregate-only)`;
+      }
+      return `${file.name} — matched ${result.matched} participants`;
+    }
     document.getElementById('pre-upload').addEventListener('change', async e => {
       const file = e.target.files[0]; if (!file) return;
       const parsed = await readXlsxFile(file);
       state.preSurvey = indexSurveyByEmail(parsed);
-      const n = attachSurveyToParticipants(state.preSurvey, 'preSurvey');
-      document.getElementById('pre-state').textContent = `${file.name} — matched ${n} participants`;
+      const result = attachSurveyToParticipants(state.preSurvey, 'preSurvey');
+      document.getElementById('pre-state').textContent = surveyStateLabel(file, result);
       document.getElementById('pre-state').classList.add('loaded');
       renderAll();
     });
@@ -925,8 +938,8 @@
       const file = e.target.files[0]; if (!file) return;
       const parsed = await readXlsxFile(file);
       state.postSurvey = indexSurveyByEmail(parsed);
-      const n = attachSurveyToParticipants(state.postSurvey, 'postSurvey');
-      document.getElementById('post-state').textContent = `${file.name} — matched ${n} participants`;
+      const result = attachSurveyToParticipants(state.postSurvey, 'postSurvey');
+      document.getElementById('post-state').textContent = surveyStateLabel(file, result);
       document.getElementById('post-state').classList.add('loaded');
       renderAll();
     });
@@ -940,6 +953,23 @@
     });
 
     // ===================== Pre vs Post Comparison =====================
+    function collectQuestionNums(survey, q, includedEmails) {
+      const nums = [];
+      if (survey.anonymous) {
+        survey.responses.forEach(resp => {
+          const v = numericValue(resp[q]);
+          if (v != null) nums.push(v);
+        });
+      } else {
+        Object.entries(survey.byEmail).forEach(([email, resp]) => {
+          if (includedEmails && !includedEmails.has(email)) return;
+          const v = numericValue(resp[q]);
+          if (v != null) nums.push(v);
+        });
+      }
+      return nums;
+    }
+
     function renderSurveyComparison() {
       const target = document.getElementById('survey-comparison');
       if (!state.preSurvey || !state.postSurvey) {
@@ -955,26 +985,18 @@
       const cohort = getCurrentCohort();
       const included = includedParticipants(cohort);
       const includedEmails = new Set(included.map(p => p.email));
+      const anonymous = state.preSurvey.anonymous || state.postSurvey.anonymous;
 
       const rows = commonQs.map(q => {
-        const preNums = [], postNums = [];
-        Object.entries(state.preSurvey.byEmail).forEach(([email, resp]) => {
-          if (!includedEmails.has(email)) return;
-          const v = numericValue(resp[q]);
-          if (v != null) preNums.push(v);
-        });
-        Object.entries(state.postSurvey.byEmail).forEach(([email, resp]) => {
-          if (!includedEmails.has(email)) return;
-          const v = numericValue(resp[q]);
-          if (v != null) postNums.push(v);
-        });
+        const preNums = collectQuestionNums(state.preSurvey, q, includedEmails);
+        const postNums = collectQuestionNums(state.postSurvey, q, includedEmails);
         const preAvg = preNums.length ? preNums.reduce((a, b) => a + b, 0) / preNums.length : null;
         const postAvg = postNums.length ? postNums.reduce((a, b) => a + b, 0) / postNums.length : null;
         return { q, preAvg, postAvg, preN: preNums.length, postN: postNums.length };
       }).filter(r => r.preAvg != null || r.postAvg != null);
 
       if (!rows.length) {
-        target.innerHTML = '<p class="status-text">No numeric responses found in matched columns. The page can only chart numeric values.</p>';
+        target.innerHTML = '<p class="status-text">No numeric or Likert responses found in matched columns. The page can chart numeric values or recognized Likert phrases (Very comfortable / Comfortable / Neutral / Uncomfortable / Very uncomfortable, plus the Agree/Disagree equivalents).</p>';
         return;
       }
 
@@ -1008,17 +1030,44 @@
           </div>
         `;
       }).join('');
+      const banner = anonymous ? `
+        <div style="background:#fef9c3;border-left:4px solid #ca8a04;padding:0.6rem 0.9rem;border-radius:0 4px 4px 0;font-size:0.85rem;color:#854d0e;margin-bottom:0.75rem;">
+          <strong>Anonymous survey mode.</strong> No email field in the upload, so per-person matching, completion checkboxes, and per-partner breakdowns are unavailable. Aggregate cohort-wide pre→post deltas shown below. PRE n=${state.preSurvey.totalRows}, POST n=${state.postSurvey.totalRows}.
+        </div>
+      ` : '';
       target.innerHTML = `
+        ${banner}
         <h3>Pre vs Post Survey — Question Averages</h3>
-        <p class="help-note">Per-question average across all included participants who answered. Only questions with the same header in both files are matched. Δ shows the post-pre delta.</p>
+        <p class="help-note">Per-question average. Only questions with the same header in both files are matched. Δ shows the post-pre delta. Likert phrases auto-convert to 1–5.</p>
         ${html}
       `;
     }
 
+    const LIKERT_MAP = {
+      'very comfortable': 5,
+      'comfortable': 4,
+      'somewhat comfortable': 4,
+      'neutral': 3,
+      'somewhat uncomfortable': 2,
+      'uncomfortable': 2,
+      'very uncomfortable': 1,
+      'not at all comfortable': 1,
+      'strongly agree': 5,
+      'agree': 4,
+      'somewhat agree': 4,
+      'neither agree nor disagree': 3,
+      'somewhat disagree': 2,
+      'disagree': 2,
+      'strongly disagree': 1
+    };
+
     function numericValue(v) {
       if (typeof v === 'number') return v;
       if (typeof v === 'string') {
-        const m = v.match(/-?\d+(\.\d+)?/);
+        const trimmed = v.trim();
+        const likert = LIKERT_MAP[trimmed.toLowerCase()];
+        if (likert != null) return likert;
+        const m = trimmed.match(/^-?\d+(\.\d+)?$/);
         if (m) return parseFloat(m[0]);
       }
       return null;
@@ -1174,34 +1223,22 @@
 
       const preScores = included.map(p => p.preSurveyScore).filter(v => typeof v === 'number');
       const postScores = included.map(p => p.postSurveyScore).filter(v => typeof v === 'number');
-      const preAvg = preScores.length ? preScores.reduce((a, b) => a + b, 0) / preScores.length : null;
-      const postAvg = postScores.length ? postScores.reduce((a, b) => a + b, 0) / postScores.length : null;
-      const netImprovement = (preAvg != null && postAvg != null) ? postAvg - preAvg : null;
-
-      // Biggest-gains question if both surveys are loaded
-      let biggestGainsQ = null;
-      if (state.preSurvey && state.postSurvey) {
-        const commonQs = state.preSurvey.headers.filter(h => state.postSurvey.headers.includes(h));
-        const includedEmails = new Set(included.map(p => p.email));
-        const deltas = commonQs.map(q => {
-          const preNums = [], postNums = [];
-          Object.entries(state.preSurvey.byEmail).forEach(([email, resp]) => {
-            if (!includedEmails.has(email)) return;
-            const v = numericValue(resp[q]);
-            if (v != null) preNums.push(v);
-          });
-          Object.entries(state.postSurvey.byEmail).forEach(([email, resp]) => {
-            if (!includedEmails.has(email)) return;
-            const v = numericValue(resp[q]);
-            if (v != null) postNums.push(v);
-          });
-          if (!preNums.length || !postNums.length) return null;
-          const preA = preNums.reduce((a, b) => a + b, 0) / preNums.length;
-          const postA = postNums.reduce((a, b) => a + b, 0) / postNums.length;
-          return { q, delta: postA - preA };
-        }).filter(Boolean).sort((a, b) => b.delta - a.delta);
-        if (deltas.length && deltas[0].delta > 0) biggestGainsQ = deltas[0].q;
+      const anonymous = (state.preSurvey?.anonymous) || (state.postSurvey?.anonymous);
+      let preAvg, postAvg, netImprovement;
+      if (anonymous) {
+        const agg = aggregateProgression();
+        preAvg = agg?.preAvg ?? null;
+        postAvg = agg?.postAvg ?? null;
+        netImprovement = agg?.delta ?? null;
+      } else {
+        preAvg = preScores.length ? preScores.reduce((a, b) => a + b, 0) / preScores.length : null;
+        postAvg = postScores.length ? postScores.reduce((a, b) => a + b, 0) / postScores.length : null;
+        netImprovement = (preAvg != null && postAvg != null) ? postAvg - preAvg : null;
       }
+
+      const includedEmails = new Set(included.map(p => p.email));
+      const biggest = biggestGainQuestion(includedEmails);
+      const biggestGainsQ = biggest ? biggest.q : null;
 
       // Rank partners by all-three completion rate, then by volume
       const ranked = partners.map(p => {
@@ -1292,23 +1329,28 @@ Next cohort opens [DATE]. If you have delivery consultants on your team who'd be
       if (!state.preSurvey || !state.postSurvey) return null;
       const commonQs = state.preSurvey.headers.filter(h => state.postSurvey.headers.includes(h));
       const deltas = commonQs.map(q => {
-        const preNums = [], postNums = [];
-        Object.entries(state.preSurvey.byEmail).forEach(([email, resp]) => {
-          if (!includedEmails.has(email)) return;
-          const v = numericValue(resp[q]);
-          if (v != null) preNums.push(v);
-        });
-        Object.entries(state.postSurvey.byEmail).forEach(([email, resp]) => {
-          if (!includedEmails.has(email)) return;
-          const v = numericValue(resp[q]);
-          if (v != null) postNums.push(v);
-        });
+        const preNums = collectQuestionNums(state.preSurvey, q, includedEmails);
+        const postNums = collectQuestionNums(state.postSurvey, q, includedEmails);
         if (!preNums.length || !postNums.length) return null;
         const preA = preNums.reduce((a, b) => a + b, 0) / preNums.length;
         const postA = postNums.reduce((a, b) => a + b, 0) / postNums.length;
         return { q, delta: postA - preA };
       }).filter(Boolean).sort((a, b) => b.delta - a.delta);
       return (deltas.length && deltas[0].delta > 0) ? deltas[0] : null;
+    }
+
+    function aggregateProgression() {
+      if (!state.preSurvey || !state.postSurvey) return null;
+      const commonQs = state.preSurvey.headers.filter(h => state.postSurvey.headers.includes(h));
+      const preNums = [], postNums = [];
+      commonQs.forEach(q => {
+        preNums.push(...collectQuestionNums(state.preSurvey, q, null));
+        postNums.push(...collectQuestionNums(state.postSurvey, q, null));
+      });
+      const preAvg = preNums.length ? preNums.reduce((a, b) => a + b, 0) / preNums.length : null;
+      const postAvg = postNums.length ? postNums.reduce((a, b) => a + b, 0) / postNums.length : null;
+      const delta = (preAvg != null && postAvg != null) ? postAvg - preAvg : null;
+      return { preAvg, postAvg, delta, preN: state.preSurvey.totalRows, postN: state.postSurvey.totalRows };
     }
 
     function generateExecSummaryHtml() {
@@ -1332,6 +1374,10 @@ Next cohort opens [DATE]. If you have delivery consultants on your team who'd be
 
       const includedEmails = new Set(included.map(p => p.email));
       const biggestGain = biggestGainQuestion(includedEmails);
+      const anonymousSurvey = (state.preSurvey?.anonymous) || (state.postSurvey?.anonymous);
+      const progression = anonymousSurvey
+        ? (aggregateProgression() || { preAvg: stats.preAvg, postAvg: stats.postAvg, delta: stats.delta, preN: null, postN: null })
+        : { preAvg: stats.preAvg, postAvg: stats.postAvg, delta: stats.delta, preN: null, postN: null };
 
       const partnerRows = ranked.map(p => {
         const pct = Math.round(p.rate * 100);
@@ -1368,6 +1414,12 @@ Next cohort opens [DATE]. If you have delivery consultants on your team who'd be
           <div style="border:1px solid #e2e8f0;border-top:none;padding:20px 24px;border-radius:0 0 6px 6px;">
             <p style="margin:0 0 16px 0;">This cohort took ${included.length} delivery consultants from ${partners.length} partner firm${partners.length === 1 ? '' : 's'} through the IFP Delivery Workshop — a self-paced, tenant-hands-on curriculum covering Application Framework configuration, generation, error-log triage, and extension authoring. The intent: shorten the ramp from "trained on Anaplan" to "billable on an IFP customer engagement."</p>
 
+            ${anonymousSurvey ? `
+            <div style="background:#fef9c3;border-left:4px solid #ca8a04;padding:10px 14px;border-radius:0 4px 4px 0;font-size:13px;color:#854d0e;margin-bottom:16px;">
+              <strong>Methodology note:</strong> This cohort's surveys were collected anonymously. Learning-progression numbers below are aggregate cohort-wide averages (Likert phrases mapped to 1–5), not per-person deltas. Pre n=${state.preSurvey.totalRows}, Post n=${state.postSurvey.totalRows}. Per-partner survey breakdowns are unavailable for this cohort. For future cohorts, configure the survey to require Anaplan sign-in to capture emails.
+            </div>
+            ` : ''}
+
             <h3 style="color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Headline Numbers</h3>
             <table style="width:100%;border-collapse:collapse;font-size:14px;">
               <tbody>
@@ -1380,12 +1432,12 @@ Next cohort opens [DATE]. If you have delivery consultants on your team who'd be
               </tbody>
             </table>
 
-            <h3 style="color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Learning Progression</h3>
+            <h3 style="color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Learning Progression${anonymousSurvey ? ' (Aggregate)' : ''}</h3>
             <table style="width:100%;border-collapse:collapse;font-size:14px;">
               <tbody>
-                <tr><td style="padding:5px 10px;color:#6b7280;width:60%;">Pre-workshop survey average</td><td style="padding:5px 10px;text-align:right;font-weight:600;">${stats.preAvg != null ? stats.preAvg.toFixed(2) : '—'}</td></tr>
-                <tr><td style="padding:5px 10px;color:#6b7280;">Post-workshop survey average</td><td style="padding:5px 10px;text-align:right;font-weight:600;">${stats.postAvg != null ? stats.postAvg.toFixed(2) : '—'}</td></tr>
-                <tr><td style="padding:5px 10px;color:#6b7280;">Net improvement</td><td style="padding:5px 10px;text-align:right;font-weight:700;color:${stats.delta != null && stats.delta >= 0 ? '#15803d' : '#b91c1c'};">${stats.delta != null ? (stats.delta >= 0 ? '+' : '') + stats.delta.toFixed(2) : '—'}</td></tr>
+                <tr><td style="padding:5px 10px;color:#6b7280;width:60%;">Pre-workshop survey average${anonymousSurvey && progression.preN ? ` <span style="color:#9ca3af;font-size:12px;">(n=${progression.preN})</span>` : ''}</td><td style="padding:5px 10px;text-align:right;font-weight:600;">${progression.preAvg != null ? progression.preAvg.toFixed(2) : '—'}</td></tr>
+                <tr><td style="padding:5px 10px;color:#6b7280;">Post-workshop survey average${anonymousSurvey && progression.postN ? ` <span style="color:#9ca3af;font-size:12px;">(n=${progression.postN})</span>` : ''}</td><td style="padding:5px 10px;text-align:right;font-weight:600;">${progression.postAvg != null ? progression.postAvg.toFixed(2) : '—'}</td></tr>
+                <tr><td style="padding:5px 10px;color:#6b7280;">Net improvement</td><td style="padding:5px 10px;text-align:right;font-weight:700;color:${progression.delta != null && progression.delta >= 0 ? '#15803d' : '#b91c1c'};">${progression.delta != null ? (progression.delta >= 0 ? '+' : '') + progression.delta.toFixed(2) : '—'}</td></tr>
                 ${biggestGain ? `<tr><td style="padding:5px 10px;color:#6b7280;">Biggest gain — topic</td><td style="padding:5px 10px;text-align:right;font-weight:600;">${escapeHtml(biggestGain.q)} (+${biggestGain.delta.toFixed(2)})</td></tr>` : ''}
               </tbody>
             </table>
@@ -1454,23 +1506,44 @@ Next cohort opens [DATE]. If you have delivery consultants on your team who'd be
         `;
       }).join('');
 
+      const anonymousSurvey = (state.preSurvey?.anonymous) || (state.postSurvey?.anonymous);
       const improvers = people
         .filter(p => typeof p.preSurveyScore === 'number' && typeof p.postSurveyScore === 'number')
         .map(p => ({ email: p.email, delta: p.postSurveyScore - p.preSurveyScore }))
         .sort((a, b) => b.delta - a.delta);
-      const topImprover = (improvers.length && improvers[0].delta > 0) ? improvers[0] : null;
+      const topImprover = (!anonymousSurvey && improvers.length && improvers[0].delta > 0) ? improvers[0] : null;
 
-      const progressionBlock = (stats.preAvg != null && stats.postAvg != null) ? `
-        <h3 style="color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Learning Progression</h3>
-        <p style="color:#6b7280;font-size:13px;margin:8px 0;">Average of per-consultant self-assessed scores across all matched pre/post survey questions.</p>
-        <table style="width:100%;border-collapse:collapse;font-size:14px;">
-          <tbody>
-            <tr><td style="padding:5px 10px;color:#6b7280;width:60%;">Pre-workshop average</td><td style="padding:5px 10px;text-align:right;font-weight:600;">${stats.preAvg.toFixed(2)}</td></tr>
-            <tr><td style="padding:5px 10px;color:#6b7280;">Post-workshop average</td><td style="padding:5px 10px;text-align:right;font-weight:600;">${stats.postAvg.toFixed(2)}</td></tr>
-            <tr><td style="padding:5px 10px;color:#6b7280;">Net improvement</td><td style="padding:5px 10px;text-align:right;font-weight:700;color:${stats.delta >= 0 ? '#15803d' : '#b91c1c'};">${(stats.delta >= 0 ? '+' : '') + stats.delta.toFixed(2)}</td></tr>
-          </tbody>
-        </table>
-      ` : '';
+      let progressionBlock = '';
+      if (anonymousSurvey) {
+        const agg = aggregateProgression();
+        progressionBlock = `
+          <h3 style="color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Learning Progression — Cohort Aggregate</h3>
+          <div style="background:#fef9c3;border-left:4px solid #ca8a04;padding:10px 14px;border-radius:0 4px 4px 0;font-size:13px;color:#854d0e;margin:8px 0;">
+            This cohort's surveys were collected anonymously, so per-team deltas for ${escapeHtml(partnerName)} aren't available. The figures below reflect the entire cohort — included here as program-level context for the conversation with your consultants.
+          </div>
+          ${agg && agg.preAvg != null && agg.postAvg != null ? `
+          <table style="width:100%;border-collapse:collapse;font-size:14px;">
+            <tbody>
+              <tr><td style="padding:5px 10px;color:#6b7280;width:60%;">Cohort-wide pre-workshop average ${agg.preN ? `<span style="color:#9ca3af;font-size:12px;">(n=${agg.preN})</span>` : ''}</td><td style="padding:5px 10px;text-align:right;font-weight:600;">${agg.preAvg.toFixed(2)}</td></tr>
+              <tr><td style="padding:5px 10px;color:#6b7280;">Cohort-wide post-workshop average ${agg.postN ? `<span style="color:#9ca3af;font-size:12px;">(n=${agg.postN})</span>` : ''}</td><td style="padding:5px 10px;text-align:right;font-weight:600;">${agg.postAvg.toFixed(2)}</td></tr>
+              <tr><td style="padding:5px 10px;color:#6b7280;">Cohort-wide net improvement</td><td style="padding:5px 10px;text-align:right;font-weight:700;color:${agg.delta >= 0 ? '#15803d' : '#b91c1c'};">${(agg.delta >= 0 ? '+' : '') + agg.delta.toFixed(2)}</td></tr>
+            </tbody>
+          </table>
+          ` : ''}
+        `;
+      } else if (stats.preAvg != null && stats.postAvg != null) {
+        progressionBlock = `
+          <h3 style="color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Learning Progression</h3>
+          <p style="color:#6b7280;font-size:13px;margin:8px 0;">Average of per-consultant self-assessed scores across all matched pre/post survey questions.</p>
+          <table style="width:100%;border-collapse:collapse;font-size:14px;">
+            <tbody>
+              <tr><td style="padding:5px 10px;color:#6b7280;width:60%;">Pre-workshop average</td><td style="padding:5px 10px;text-align:right;font-weight:600;">${stats.preAvg.toFixed(2)}</td></tr>
+              <tr><td style="padding:5px 10px;color:#6b7280;">Post-workshop average</td><td style="padding:5px 10px;text-align:right;font-weight:600;">${stats.postAvg.toFixed(2)}</td></tr>
+              <tr><td style="padding:5px 10px;color:#6b7280;">Net improvement</td><td style="padding:5px 10px;text-align:right;font-weight:700;color:${stats.delta >= 0 ? '#15803d' : '#b91c1c'};">${(stats.delta >= 0 ? '+' : '') + stats.delta.toFixed(2)}</td></tr>
+            </tbody>
+          </table>
+        `;
+      }
 
       const improverBlock = topImprover ? `
         <div style="background:#f0f9ff;border-left:4px solid #0066cc;padding:12px 16px;margin:20px 0;border-radius:0 4px 4px 0;">
