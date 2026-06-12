@@ -31,8 +31,8 @@
 
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-bottom:1.5rem;">
     <div class="card">
-      <h2>Participants</h2>
-      <p class="help-note">Coming in the next PR: paste in participant emails, auto-create participant accounts with hand-deliverable initial passwords, group by enrollment batch for reports.</p>
+      <h2>Sessions</h2>
+      <p class="help-note">Each session is one running of <strong>{{ workshop.name }}</strong> (e.g. a specific week's cohort). Coming in the next PR: create a session, paste in participant emails, auto-create participant accounts with hand-deliverable initial passwords. Reports run per-session.</p>
     </div>
     <div class="card">
       <h2>Content</h2>
@@ -44,7 +44,7 @@
     </div>
     <div class="card">
       <h2>Reports</h2>
-      <p class="help-note">Exec summary, partner sponsor reports, Slack celebration post, anonymous-survey aggregate. Will live under each participant batch once participant CRUD lands.</p>
+      <p class="help-note">Exec summary, partner sponsor reports, Slack celebration post, anonymous-survey aggregate. Run per-session once sessions land; workshop-level rollups across sessions come after.</p>
     </div>
   </div>
 </div>
