@@ -51,3 +51,24 @@ CREATE TABLE IF NOT EXISTS workshops (
 );
 
 CREATE INDEX IF NOT EXISTS idx_workshops_status ON workshops(status);
+
+CREATE TABLE IF NOT EXISTS sessions (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  workshop_id INTEGER NOT NULL,
+  slug TEXT NOT NULL COLLATE NOCASE,
+  name TEXT NOT NULL,
+  start_date DATE NOT NULL,
+  end_date DATE NOT NULL,
+  status TEXT NOT NULL DEFAULT 'upcoming',
+  notes TEXT,
+  created_by INTEGER,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  archived_at TIMESTAMP,
+  FOREIGN KEY (workshop_id) REFERENCES workshops(id) ON DELETE CASCADE,
+  FOREIGN KEY (created_by) REFERENCES users(id),
+  UNIQUE (workshop_id, slug)
+);
+
+CREATE INDEX IF NOT EXISTS idx_sessions_dates ON sessions(start_date, end_date);
+CREATE INDEX IF NOT EXISTS idx_sessions_workshop ON sessions(workshop_id);
+CREATE INDEX IF NOT EXISTS idx_sessions_status ON sessions(status);

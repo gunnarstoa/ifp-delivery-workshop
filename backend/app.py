@@ -4,12 +4,13 @@ Serves the existing docs/, css/, data/ trees behind username/password auth.
 Logs every authenticated request to page_views for later analysis.
 Facilitator-only pages additionally require users.is_facilitator = 1.
 """
+import calendar as calmod
 import os
 import re
 import secrets
 import sqlite3
 import time
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 import bcrypt
@@ -269,6 +270,84 @@ def _require_facilitator():
     return user, None
 
 
+CAL_COLORS = ["blue", "green", "purple", "orange", "teal", "pink", "amber", "indigo"]
+
+
+def _parse_month_param(raw):
+    """Parse a ?month=YYYY-MM query param; fall back to current month."""
+    if raw:
+        m = re.fullmatch(r"(\d{4})-(\d{2})", raw)
+        if m:
+            y, mo = int(m.group(1)), int(m.group(2))
+            if 1 <= mo <= 12 and 2000 <= y <= 2100:
+                return y, mo
+    today = date.today()
+    return today.year, today.month
+
+
+def _month_grid(year, month, sessions_with_workshops):
+    """Build a list of weeks; each week is a list of day dicts. Week starts Sunday."""
+    today = date.today()
+    cal = calmod.Calendar(firstweekday=calmod.SUNDAY)
+    weeks = []
+    for week in cal.monthdatescalendar(year, month):
+        wrow = []
+        for d in week:
+            day_sessions = []
+            for s in sessions_with_workshops:
+                if s["_start"] <= d <= s["_end"]:
+                    day_sessions.append({
+                        "slug": s["slug"],
+                        "name": s["name"],
+                        "workshop_slug": s["workshop_slug"],
+                        "workshop_name": s["workshop_name"],
+                        "color": CAL_COLORS[(s["workshop_id"] - 1) % len(CAL_COLORS)],
+                        "is_start": d == s["_start"],
+                        "is_end": d == s["_end"],
+                    })
+            wrow.append({
+                "date": d,
+                "in_month": d.month == month,
+                "is_today": d == today,
+                "sessions": day_sessions,
+            })
+        weeks.append(wrow)
+    prev_month = date(year, month, 1) - timedelta(days=1)
+    next_month = (date(year, month, 28) + timedelta(days=10)).replace(day=1)
+    return {
+        "weeks": weeks,
+        "year": year,
+        "month": month,
+        "month_name": calmod.month_name[month],
+        "prev_param": f"{prev_month.year:04d}-{prev_month.month:02d}",
+        "next_param": f"{next_month.year:04d}-{next_month.month:02d}",
+        "today_param": f"{today.year:04d}-{today.month:02d}",
+    }
+
+
+def _sessions_overlapping_month(year, month):
+    """All non-archived sessions that touch the given month, joined to workshop info."""
+    first = date(year, month, 1)
+    last_day = calmod.monthrange(year, month)[1]
+    last = date(year, month, last_day)
+    rows = get_db().execute(
+        "SELECT s.id, s.slug, s.name, s.start_date, s.end_date, s.status, "
+        "       w.id AS workshop_id, w.slug AS workshop_slug, w.name AS workshop_name "
+        "FROM sessions s JOIN workshops w ON w.id = s.workshop_id "
+        "WHERE s.status != 'archived' AND w.status != 'archived' "
+        "  AND s.end_date >= ? AND s.start_date <= ? "
+        "ORDER BY s.start_date ASC",
+        (first.isoformat(), last.isoformat()),
+    ).fetchall()
+    out = []
+    for r in rows:
+        d = dict(r)
+        d["_start"] = date.fromisoformat(d["start_date"])
+        d["_end"] = date.fromisoformat(d["end_date"])
+        out.append(d)
+    return out
+
+
 @app.route("/admin")
 def admin_dashboard():
     user, redir = _require_facilitator()
@@ -276,12 +355,27 @@ def admin_dashboard():
         return redir
     workshops = get_db().execute(
         "SELECT w.id, w.slug, w.name, w.short_description, w.contact_email, w.status, w.created_at, "
-        "       u.username AS created_by_username "
+        "       u.username AS created_by_username, "
+        "       (SELECT COUNT(*) FROM sessions s WHERE s.workshop_id = w.id AND s.status != 'archived') AS session_count "
         "FROM workshops w LEFT JOIN users u ON u.id = w.created_by "
         "WHERE w.status != 'archived' "
         "ORDER BY w.created_at DESC"
     ).fetchall()
-    return render_template("admin_dashboard.html", user=user, workshops=workshops)
+    # Color per workshop for the legend; matches CAL_COLORS cycle
+    workshops_for_legend = [
+        {"slug": w["slug"], "name": w["name"], "color": CAL_COLORS[(w["id"] - 1) % len(CAL_COLORS)]}
+        for w in workshops
+    ]
+    year, month = _parse_month_param(request.args.get("month"))
+    sessions = _sessions_overlapping_month(year, month)
+    grid = _month_grid(year, month, sessions)
+    return render_template(
+        "admin_dashboard.html",
+        user=user,
+        workshops=workshops,
+        legend=workshops_for_legend,
+        grid=grid,
+    )
 
 
 SLUG_RE = re.compile(r"^[a-z0-9]([a-z0-9-]{1,38}[a-z0-9])?$")
@@ -330,7 +424,93 @@ def admin_workshop_detail(slug):
     ).fetchone()
     if workshop is None:
         abort(404)
-    return render_template("admin_workshop_detail.html", user=user, workshop=workshop)
+    sessions = get_db().execute(
+        "SELECT s.slug, s.name, s.start_date, s.end_date, s.status, s.created_at "
+        "FROM sessions s WHERE s.workshop_id = ? AND s.status != 'archived' "
+        "ORDER BY s.start_date DESC",
+        (workshop["id"],),
+    ).fetchall()
+    return render_template("admin_workshop_detail.html", user=user, workshop=workshop, sessions=sessions)
+
+
+@app.route("/admin/workshops/<slug>/sessions/new", methods=["GET", "POST"])
+def admin_session_new(slug):
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    workshop = get_db().execute("SELECT * FROM workshops WHERE slug = ?", (slug,)).fetchone()
+    if workshop is None:
+        abort(404)
+    errors = {}
+    today = date.today()
+    default_end = (today + timedelta(days=4)).isoformat()
+    form = {
+        "slug": request.form.get("slug", "").strip().lower() if request.method == "POST" else today.isoformat(),
+        "name": request.form.get("name", "").strip() if request.method == "POST" else f"{today.strftime('%B %-d, %Y')} Session",
+        "start_date": request.form.get("start_date", today.isoformat()) if request.method == "POST" else today.isoformat(),
+        "end_date": request.form.get("end_date", default_end) if request.method == "POST" else default_end,
+        "notes": request.form.get("notes", "").strip() if request.method == "POST" else "",
+    }
+    if request.method == "POST":
+        if not SLUG_RE.fullmatch(form["slug"]):
+            errors["slug"] = "3-40 chars, lowercase letters/digits/hyphen, no leading/trailing hyphen"
+        if not form["name"]:
+            errors["name"] = "required"
+        try:
+            sd = date.fromisoformat(form["start_date"])
+            ed = date.fromisoformat(form["end_date"])
+            if ed < sd:
+                errors["end_date"] = "end date must be on or after start date"
+        except ValueError:
+            errors["start_date"] = "invalid date"
+        if not errors:
+            try:
+                get_db().execute(
+                    "INSERT INTO sessions (workshop_id, slug, name, start_date, end_date, notes, created_by) "
+                    "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    (workshop["id"], form["slug"], form["name"], form["start_date"], form["end_date"], form["notes"] or None, user["id"]),
+                )
+                get_db().commit()
+                return redirect(url_for("admin_session_detail", slug=slug, session_slug=form["slug"]))
+            except sqlite3.IntegrityError:
+                errors["slug"] = f"a session with slug '{form['slug']}' already exists in this workshop"
+    return render_template("admin_session_new.html", user=user, workshop=workshop, form=form, errors=errors)
+
+
+@app.route("/admin/workshops/<slug>/sessions/<session_slug>")
+def admin_session_detail(slug, session_slug):
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    row = get_db().execute(
+        "SELECT s.*, w.slug AS workshop_slug, w.name AS workshop_name, u.username AS created_by_username "
+        "FROM sessions s JOIN workshops w ON w.id = s.workshop_id "
+        "LEFT JOIN users u ON u.id = s.created_by "
+        "WHERE w.slug = ? AND s.slug = ?",
+        (slug, session_slug),
+    ).fetchone()
+    if row is None:
+        abort(404)
+    return render_template("admin_session_detail.html", user=user, session=row)
+
+
+@app.route("/admin/workshops/<slug>/sessions/<session_slug>/archive", methods=["POST"])
+def admin_session_archive(slug, session_slug):
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    workshop = get_db().execute("SELECT id FROM workshops WHERE slug = ?", (slug,)).fetchone()
+    if workshop is None:
+        abort(404)
+    cur = get_db().execute(
+        "UPDATE sessions SET status = 'archived', archived_at = CURRENT_TIMESTAMP "
+        "WHERE workshop_id = ? AND slug = ? AND status != 'archived'",
+        (workshop["id"], session_slug),
+    )
+    get_db().commit()
+    if cur.rowcount == 0:
+        abort(404)
+    return redirect(url_for("admin_workshop_detail", slug=slug))
 
 
 @app.route("/admin/workshops/<slug>/archive", methods=["POST"])

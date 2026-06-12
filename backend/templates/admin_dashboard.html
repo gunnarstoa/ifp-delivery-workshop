@@ -6,6 +6,51 @@
   {% include "_admin_header.html" %}
 
   <div class="card">
+    <div class="cal-toolbar">
+      <h2 style="margin:0;">{{ grid.month_name }} {{ grid.year }}</h2>
+      <div class="nav">
+        <a href="?month={{ grid.prev_param }}">← {{ grid.prev_param }}</a>
+        <a href="?month={{ grid.today_param }}">Today</a>
+        <a href="?month={{ grid.next_param }}">{{ grid.next_param }} →</a>
+      </div>
+    </div>
+
+    {% if legend %}
+    <div class="legend">
+      {% for w in legend %}
+      <span class="chip"><span class="swatch col-{{ w.color }}"></span>{{ w.name }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <table class="calendar">
+      <thead>
+        <tr>
+          <th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for week in grid.weeks %}
+        <tr>
+          {% for day in week %}
+          <td class="{% if not day.in_month %}out-of-month{% endif %} {% if day.is_today %}is-today{% endif %}">
+            <div class="day-num">{{ day.date.day }}</div>
+            {% for s in day.sessions %}
+              <a class="session-pill col-{{ s.color }}"
+                 href="{{ url_for('admin_session_detail', slug=s.workshop_slug, session_slug=s.slug) }}"
+                 title="{{ s.workshop_name }} — {{ s.name }}">
+                {{ s.workshop_slug }}: {{ s.name }}
+              </a>
+            {% endfor %}
+          </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
       <h2 style="margin:0;">{{ workshops|length }} workshop{{ '' if workshops|length == 1 else 's' }}</h2>
       <a class="primary-btn" href="{{ url_for('admin_workshop_new') }}" style="text-decoration:none;">＋ New workshop</a>
@@ -19,9 +64,9 @@
           <tr>
             <th>Slug</th>
             <th>Name</th>
+            <th>Sessions</th>
             <th>Contact</th>
             <th>Created by</th>
-            <th>Created</th>
             <th style="text-align:right;">Actions</th>
           </tr>
         </thead>
@@ -33,9 +78,9 @@
               <a href="{{ url_for('admin_workshop_detail', slug=w.slug) }}"><strong>{{ w.name }}</strong></a>
               {% if w.short_description %}<div style="font-size:0.78rem;color:#6b7280;">{{ w.short_description }}</div>{% endif %}
             </td>
+            <td>{{ w.session_count }}</td>
             <td>{{ w.contact_email or '—' }}</td>
             <td>{{ w.created_by_username or '—' }}</td>
-            <td>{{ w.created_at }}</td>
             <td style="text-align:right;">
               <a class="secondary-btn" href="{{ url_for('admin_workshop_detail', slug=w.slug) }}" style="text-decoration:none;">Open</a>
             </td>
@@ -44,11 +89,6 @@
         </tbody>
       </table>
     {% endif %}
-  </div>
-
-  <div class="card" style="background:#f8fafc;">
-    <h2 style="margin-top:0;">Coming next</h2>
-    <p class="help-note" style="margin:0;">Sessions — open a workshop and you'll be able to create a session (one running of the workshop), paste in participant emails, auto-create participant accounts, and run reports per session.</p>
   </div>
 </div>
 {% endblock %}

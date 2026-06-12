@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}{{ session.name }} — {{ session.workshop_name }}{% endblock %}
+{% block body %}
+<div class="admin-shell">
+  {% set page_title = session.name %}
+  {% set breadcrumbs = [{'label': session.workshop_name, 'url': url_for('admin_workshop_detail', slug=session.workshop_slug)}, {'label': session.name}] %}
+  {% include "_admin_header.html" %}
+
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div style="font-size:0.75rem;text-transform:uppercase;color:#6b7280;letter-spacing:0.05em;">Slug</div>
+        <code style="font-size:1rem;">{{ session.slug }}</code>
+      </div>
+      <div>
+        <form method="post" action="{{ url_for('admin_session_archive', slug=session.workshop_slug, session_slug=session.slug) }}" onsubmit="return confirm('Archive {{ session.name }}?');" style="display:inline;">
+          <button class="danger-btn" type="submit">Archive session</button>
+        </form>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0.75rem;margin-top:1.25rem;">
+      <div><div style="font-size:0.72rem;text-transform:uppercase;color:#6b7280;">Start</div><div>{{ session.start_date }}</div></div>
+      <div><div style="font-size:0.72rem;text-transform:uppercase;color:#6b7280;">End</div><div>{{ session.end_date }}</div></div>
+      <div><div style="font-size:0.72rem;text-transform:uppercase;color:#6b7280;">Status</div><div>{{ session.status }}</div></div>
+      <div><div style="font-size:0.72rem;text-transform:uppercase;color:#6b7280;">Created by</div><div>{{ session.created_by_username or '—' }}</div></div>
+      <div><div style="font-size:0.72rem;text-transform:uppercase;color:#6b7280;">Created</div><div>{{ session.created_at }}</div></div>
+    </div>
+    {% if session.notes %}
+      <p style="margin:1rem 0 0 0;color:#374151;font-size:0.9rem;"><strong>Notes:</strong> {{ session.notes }}</p>
+    {% endif %}
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-bottom:1.5rem;">
+    <div class="card">
+      <h2>Participants</h2>
+      <p class="help-note">Coming in the next PR: paste in participant emails, auto-create participant accounts with hand-deliverable initial passwords, see per-participant completion at a glance.</p>
+    </div>
+    <div class="card">
+      <h2>Surveys &amp; Knowledge Check</h2>
+      <p class="help-note">Upload pre-survey, post-survey, and knowledge-check XLSX files. Anonymous-Likert support is built into the existing tracker and will move here.</p>
+    </div>
+    <div class="card">
+      <h2>Reports</h2>
+      <p class="help-note">Exec summary, partner sponsor reports, Slack celebration post, anonymous-survey aggregate — all per-session, generated from this session's data.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

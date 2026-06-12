@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}New session — {{ workshop.name }}{% endblock %}
+{% block body %}
+<div class="admin-shell">
+  {% set page_title = 'New session' %}
+  {% set breadcrumbs = [{'label': workshop.name, 'url': url_for('admin_workshop_detail', slug=workshop.slug)}, {'label': 'New session'}] %}
+  {% include "_admin_header.html" %}
+
+  <div class="card" style="max-width:640px;">
+    <p class="help-note" style="margin-top:0;">Creating a session for <strong>{{ workshop.name }}</strong>.</p>
+    <form method="post" action="{{ url_for('admin_session_new', slug=workshop.slug) }}">
+      <div class="grid" style="grid-template-columns: 1fr 1fr;">
+        <div class="form-row">
+          <label for="slug">Slug</label>
+          <input id="slug" name="slug" value="{{ form.slug }}" required pattern="[a-z0-9]([a-z0-9-]{1,38}[a-z0-9])?">
+          <div class="help-note" style="margin-top:0.3rem;">URL fragment. e.g. <code>2026-06-09</code>.</div>
+          {% if errors.slug %}<div class="auth-error" style="margin-top:0.4rem;">{{ errors.slug }}</div>{% endif %}
+        </div>
+        <div class="form-row">
+          <label for="name">Display name</label>
+          <input id="name" name="name" value="{{ form.name }}" required placeholder="June 9, 2026 Session">
+          {% if errors.name %}<div class="auth-error" style="margin-top:0.4rem;">{{ errors.name }}</div>{% endif %}
+        </div>
+      </div>
+
+      <div class="grid" style="grid-template-columns: 1fr 1fr; margin-top:1rem;">
+        <div class="form-row">
+          <label for="start_date">Start date</label>
+          <input id="start_date" name="start_date" type="date" value="{{ form.start_date }}" required>
+          {% if errors.start_date %}<div class="auth-error" style="margin-top:0.4rem;">{{ errors.start_date }}</div>{% endif %}
+        </div>
+        <div class="form-row">
+          <label for="end_date">End date</label>
+          <input id="end_date" name="end_date" type="date" value="{{ form.end_date }}" required>
+          {% if errors.end_date %}<div class="auth-error" style="margin-top:0.4rem;">{{ errors.end_date }}</div>{% endif %}
+        </div>
+      </div>
+
+      <div class="form-row" style="margin-top:1rem;">
+        <label for="notes">Notes (optional)</label>
+        <input id="notes" name="notes" value="{{ form.notes }}" placeholder="Internal note: tenant ID, regional cohort, partner-specific run, etc.">
+      </div>
+
+      <div style="display:flex;gap:0.5rem;margin-top:1.5rem;">
+        <button class="primary-btn" type="submit">Create session</button>
+        <a class="secondary-btn" href="{{ url_for('admin_workshop_detail', slug=workshop.slug) }}" style="text-decoration:none;line-height:1.4;">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

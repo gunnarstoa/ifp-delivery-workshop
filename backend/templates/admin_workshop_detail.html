@@ -30,9 +30,33 @@
   </div>
 
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-bottom:1.5rem;">
-    <div class="card">
-      <h2>Sessions</h2>
-      <p class="help-note">Each session is one running of <strong>{{ workshop.name }}</strong> (e.g. a specific week's cohort). Coming in the next PR: create a session, paste in participant emails, auto-create participant accounts with hand-deliverable initial passwords. Reports run per-session.</p>
+    <div class="card" style="grid-column: 1 / -1;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+        <h2 style="margin:0;">Sessions</h2>
+        <a class="primary-btn" href="{{ url_for('admin_session_new', slug=workshop.slug) }}" style="text-decoration:none;">＋ New session</a>
+      </div>
+      <p class="help-note" style="margin:0 0 0.75rem 0;">Each session is one running of <strong>{{ workshop.name }}</strong> with its own dates, participants, and reports.</p>
+      {% if not sessions %}
+        <p class="help-note" style="margin-top:1rem;">No sessions yet. <a href="{{ url_for('admin_session_new', slug=workshop.slug) }}">Create the first session</a>.</p>
+      {% else %}
+        <table class="users-table">
+          <thead><tr><th>Slug</th><th>Name</th><th>Start</th><th>End</th><th>Status</th><th style="text-align:right;">Actions</th></tr></thead>
+          <tbody>
+            {% for s in sessions %}
+            <tr>
+              <td><code>{{ s.slug }}</code></td>
+              <td><a href="{{ url_for('admin_session_detail', slug=workshop.slug, session_slug=s.slug) }}"><strong>{{ s.name }}</strong></a></td>
+              <td>{{ s.start_date }}</td>
+              <td>{{ s.end_date }}</td>
+              <td><span class="badge">{{ s.status }}</span></td>
+              <td style="text-align:right;">
+                <a class="secondary-btn" href="{{ url_for('admin_session_detail', slug=workshop.slug, session_slug=s.slug) }}" style="text-decoration:none;">Open</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
     </div>
     <div class="card">
       <h2>Content</h2>
