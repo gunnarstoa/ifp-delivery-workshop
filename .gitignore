@@ -1,0 +1,16 @@
+# AWS deploy artifacts
+.aws-workshop-key.pem
+*.pem
+
+# Local dev
+backend/__pycache__/
+backend/*.pyc
+backend/.venv/
+.venv/
+workshop.db
+workshop.db-wal
+workshop.db-shm
+workshop-backup-*.db
+
+# OS
+.DS_Store

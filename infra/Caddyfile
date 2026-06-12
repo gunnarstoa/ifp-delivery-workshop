@@ -1,0 +1,30 @@
+# Auto-HTTPS reverse proxy in front of the Flask app on :8000.
+# Caddy provisions and renews a Let's Encrypt cert automatically.
+#
+# Override the domain at runtime via /etc/caddy/site.env:
+#   DOMAIN=anaplan-workshops.com
+
+{
+  email admin@{$DOMAIN}
+}
+
+{$DOMAIN}, www.{$DOMAIN} {
+  encode gzip zstd
+
+  # www → apex redirect
+  @www host www.{$DOMAIN}
+  redir @www https://{$DOMAIN}{uri} 308
+
+  header {
+    Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    X-Content-Type-Options "nosniff"
+    Referrer-Policy "strict-origin-when-cross-origin"
+    -Server
+  }
+
+  reverse_proxy 127.0.0.1:8000 {
+    header_up X-Forwarded-For {remote}
+    header_up X-Forwarded-Proto {scheme}
+    header_up X-Forwarded-Host {host}
+  }
+}

@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Admin — IFP Delivery Partner Workshop{% endblock %}
+{% block body %}
+<div class="admin-shell">
+  <div class="admin-header">
+    <h1>Admin — Users &amp; Activity</h1>
+    <div class="meta">
+      Signed in as <strong>{{ user.username }}</strong>
+      <a href="/docs/01-overview.html" class="secondary-btn" style="text-decoration:none;">Back to workshop</a>
+      <form method="post" action="{{ url_for('logout') }}" style="display:inline;"><button type="submit">Sign out</button></form>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Create user</h2>
+    <form id="create-user-form" onsubmit="return createUser(event)">
+      <div class="grid">
+        <div class="form-row"><label for="username">Username</label><input id="username" name="username" required pattern="[a-z0-9._-]{3,40}" title="3-40 chars, lowercase alphanumeric + . _ -"></div>
+        <div class="form-row"><label for="display_name">Display name</label><input id="display_name" name="display_name"></div>
+        <div class="form-row"><label for="email">Email (optional)</label><input id="email" name="email" type="email"></div>
+        <div class="form-row checkbox-row">
+          <input id="is_facilitator" name="is_facilitator" type="checkbox">
+          <label for="is_facilitator" style="margin:0;">Facilitator (can see facilitator pages and admin)</label>
+        </div>
+      </div>
+      <div style="margin-top:1rem;"><button class="primary-btn" type="submit">Create user &amp; generate initial password</button></div>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>Users ({{ users|length }})</h2>
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Display</th>
+          <th>Role</th>
+          <th>Created</th>
+          <th>Last login</th>
+          <th style="text-align:right;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr class="{{ 'inactive' if not u.is_active else '' }}">
+          <td>{{ u.username }}</td>
+          <td>{{ u.display_name or '—' }}</td>
+          <td>{% if u.is_facilitator %}<span class="badge facilitator">Facilitator</span>{% else %}<span class="badge">Participant</span>{% endif %}{% if not u.is_active %} · disabled{% endif %}</td>
+          <td>{{ u.created_at }}</td>
+          <td>{{ u.last_login_at or '—' }}</td>
+          <td style="text-align:right;">
+            <a class="secondary-btn" href="/admin/views/{{ u.id }}" style="text-decoration:none;">View activity</a>
+            <button class="secondary-btn" onclick="resetPassword({{ u.id }}, '{{ u.username }}')">Reset password</button>
+            <button class="danger-btn" onclick="toggleActive({{ u.id }})">{{ 'Enable' if not u.is_active else 'Disable' }}</button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+async function createUser(e) {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const r = await fetch('/admin/users', { method: 'POST', body: fd });
+  const data = await r.json();
+  if (!r.ok) { toast('Error: ' + data.error); return false; }
+  toast(`Created ${data.username}. Initial password: ${data.initial_password}  (copy now — it is not shown again)`);
+  setTimeout(() => location.reload(), 8000);
+  return false;
+}
+async function resetPassword(uid, uname) {
+  if (!confirm(`Reset password for ${uname}?`)) return;
+  const r = await fetch(`/admin/users/${uid}/reset-password`, { method: 'POST' });
+  const data = await r.json();
+  if (!r.ok) { toast('Error: ' + data.error); return; }
+  toast(`New password for ${uname}: ${data.new_password}  (copy now — it is not shown again)`);
+}
+async function toggleActive(uid) {
+  const r = await fetch(`/admin/users/${uid}/toggle-active`, { method: 'POST' });
+  if (!r.ok) { const data = await r.json(); toast('Error: ' + data.error); return; }
+  location.reload();
+}
+function toast(msg) {
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 12000);
+}
+</script>
+{% endblock %}
