@@ -38,6 +38,7 @@ apt-get install -y caddy
 id -u workshop >/dev/null 2>&1 || useradd --system --create-home --shell /usr/sbin/nologin --home-dir /srv/workshop workshop
 mkdir -p /srv/workshop /var/lib/workshop /etc/workshop
 chown -R workshop:workshop /srv/workshop /var/lib/workshop
+chmod 755 /srv/workshop   # let admin (ubuntu) cd in to run flask CLI
 chmod 750 /etc/workshop
 
 # --- Clone or update repo ---
