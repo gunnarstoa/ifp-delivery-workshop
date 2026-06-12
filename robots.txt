@@ -6,3 +6,5 @@ Disallow: /docs/15-facilitator-r9k2x7.html
 Disallow: /docs/15-facilitator.html
 Disallow: /docs/16-facilitator-toolkit-k7p2nx.html
 Disallow: /docs/printable-workshop-overview.html
+Disallow: /docs/cohort-tracker-m4q9wx.html
+Disallow: /data/
