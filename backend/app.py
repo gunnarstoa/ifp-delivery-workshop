@@ -33,10 +33,10 @@ SECRET_KEY = os.environ.get("WORKSHOP_SECRET_KEY") or secrets.token_hex(32)
 
 # Paths that require an additional is_facilitator check.
 FACILITATOR_PATH_RE = re.compile(
-    r"^/(docs/(15-facilitator|16-facilitator-toolkit|cohort-tracker)|data/|admin)"
+    r"^/(docs/(15-facilitator|16-facilitator-toolkit|cohort-tracker)|data/|admin|w/[a-z0-9-]+/15-facilitator|w/[a-z0-9-]+/16-facilitator-toolkit|w/[a-z0-9-]+/cohort-tracker)"
 )
 # Paths that bypass auth entirely (login form, static assets, health).
-PUBLIC_PREFIXES = ("/login", "/static/", "/css/", "/js/", "/images/", "/favicon", "/healthz", "/robots.txt")
+PUBLIC_PREFIXES = ("/login", "/static/", "/css/", "/js/", "/img/", "/assets/", "/favicon", "/healthz", "/robots.txt")
 
 app = Flask(__name__, static_folder=None)
 app.config.update(
@@ -165,7 +165,7 @@ def home():
         return redirect(url_for("login"))
     if user["is_facilitator"]:
         return redirect(url_for("admin_dashboard"))
-    return redirect("/docs/01-overview.html")
+    return redirect("/w/ifp/01-overview.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -223,7 +223,19 @@ def _serve_repo_file(subdir: str, filename: str):
 
 @app.route("/docs/<path:filename>")
 def serve_docs(filename):
+    # Backward-compat: if a file has been moved to docs/ifp/, 301 to the new path.
+    ifp_path = (REPO_ROOT / "docs" / "ifp" / filename).resolve()
+    if ifp_path.is_file() and str(ifp_path).startswith(str((REPO_ROOT / "docs" / "ifp").resolve())):
+        return redirect(f"/w/ifp/{filename}", code=301)
     return _serve_repo_file("docs", filename)
+
+
+@app.route("/w/<workshop_slug>/<path:filename>")
+def serve_workshop(workshop_slug, filename):
+    # Defense-in-depth: workshop_slug must match SLUG_RE shape; route param itself doesn't enforce it.
+    if not re.fullmatch(r"[a-z0-9-]{1,40}", workshop_slug):
+        abort(404)
+    return _serve_repo_file(f"docs/{workshop_slug}", filename)
 
 
 @app.route("/data/<path:filename>")
@@ -241,9 +253,14 @@ def serve_js(filename):
     return _serve_repo_file("js", filename)
 
 
-@app.route("/images/<path:filename>")
-def serve_images(filename):
-    return _serve_repo_file("images", filename)
+@app.route("/img/<path:filename>")
+def serve_img(filename):
+    return _serve_repo_file("img", filename)
+
+
+@app.route("/assets/<path:filename>")
+def serve_assets(filename):
+    return _serve_repo_file("assets", filename)
 
 
 @app.route("/favicon.ico")
@@ -411,6 +428,23 @@ def admin_workshop_new():
     return render_template("admin_workshop_new.html", user=user, form=form, errors=errors)
 
 
+def _list_workshop_pages(workshop_slug):
+    """Scan docs/<workshop_slug>/ for .html pages. Returns sorted list with mtimes."""
+    base = (REPO_ROOT / "docs" / workshop_slug).resolve()
+    if not base.is_dir():
+        return None
+    pages = []
+    for p in sorted(base.glob("*.html")):
+        st = p.stat()
+        pages.append({
+            "filename": p.name,
+            "size_kb": round(st.st_size / 1024, 1),
+            "modified": datetime.fromtimestamp(st.st_mtime, tz=timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
+            "url": f"/w/{workshop_slug}/{p.name}",
+        })
+    return pages
+
+
 @app.route("/admin/workshops/<slug>")
 def admin_workshop_detail(slug):
     user, redir = _require_facilitator()
@@ -430,7 +464,16 @@ def admin_workshop_detail(slug):
         "ORDER BY s.start_date DESC",
         (workshop["id"],),
     ).fetchall()
-    return render_template("admin_workshop_detail.html", user=user, workshop=workshop, sessions=sessions)
+    pages = _list_workshop_pages(slug)
+    content_root = f"docs/{slug}/"
+    return render_template(
+        "admin_workshop_detail.html",
+        user=user,
+        workshop=workshop,
+        sessions=sessions,
+        pages=pages,
+        content_root=content_root,
+    )
 
 
 @app.route("/admin/workshops/<slug>/sessions/new", methods=["GET", "POST"])

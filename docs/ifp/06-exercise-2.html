@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Configuration Exercise 3 — IFP Delivery Partner Workshop</title>
-  <link rel="stylesheet" href="../css/style.css">
+  <title>Configuration Exercise 2 — IFP Delivery Partner Workshop</title>
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
   <div class="mobile-header">
@@ -28,8 +28,8 @@
     <ul class="nav-submenu">
       <li><a class="nav-link" href="./05-configurator-walkthrough.html">Application Framework Configurator</a></li>
       <li><a class="nav-link" href="./06-exercise-1.html">Configuration Exercise 1</a></li>
-      <li><a class="nav-link" href="./06-exercise-2.html">Configuration Exercise 2</a></li>
-      <li><a class="nav-link active" href="./06-exercise-3.html">Configuration Exercise 3</a></li>
+      <li><a class="nav-link active" href="./06-exercise-2.html">Configuration Exercise 2</a></li>
+      <li><a class="nav-link" href="./06-exercise-3.html">Configuration Exercise 3</a></li>
       <li><a class="nav-link" href="./07-generation.html">Model Generation</a></li>
       <li><a class="nav-link" href="./08-post-gen.html">Post-Generation Steps</a></li>
       <li><a class="nav-link" href="./09-error-logs.html">Error Log Review</a></li>
@@ -64,8 +64,8 @@
 
   <main class="main-content">
     <div class="content-header">
-      <h1>Configuration Exercise 3: Nuclear Plant – OpEx and Headcount</h1>
-      <p class="subtitle">Hands-on exercise to configure IFP for a utilities company</p>
+      <h1>Configuration Exercise 2: Insurance – 3 Statement Planning</h1>
+      <p class="subtitle">Hands-on exercise to configure IFP for an insurance company</p>
       <div class="badge-row"><span class="content-badge">Configuration</span><span class="content-badge">30 min</span><span class="content-badge">Guided Practice</span></div>
     </div>
     <div class="content-body">
@@ -85,18 +85,18 @@
 <h2>Standardized Naming Convention</h2>
       <p>Replace the default model and app names with a standardized format before generating. The recommended pattern is <code>[ModelType]_Exercise ##_YYYYMMDD</code> — this ensures every generation produces uniquely-named artifacts and avoids name-collision generation errors when the same exercise is run more than once in the tenant.</p>
       <figure class="screenshot">
-        <img src="../img/configurator/naming-convention-exercise-3.png" alt="Standardized naming convention for Exercise 3 showing Admin Model, Financial Planning Model, CapEx Model, Headcount Model, and IFP App with example names following the [ModelType]_Exercise 03_YYYYMMDD pattern" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;">
-        <figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Standardized naming convention for Exercise 3 — apply to all four models and the IFP App before generation</figcaption>
+        <img src="/img/configurator/naming-convention-exercise-2.png" alt="Standardized naming convention for Exercise 2 showing Admin Model, Financial Planning Model, CapEx Model, Headcount Model, and IFP App with example names following the [ModelType]_Exercise 02_YYYYMMDD pattern" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;">
+        <figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Standardized naming convention for Exercise 2 — apply to all four models and the IFP App before generation</figcaption>
       </figure>
 
       <h2>Scenario</h2>
-      <p><strong>A utilities company operating a nuclear facility needs operating expense and headcount planning</strong> with a detailed work breakdown structure (WBS) for capital project tracking. No balance sheet, cashflow, or margin planning required.</p>
+      <p><strong>An insurance company requires comprehensive financial planning across income statement, balance sheet, and cash flow.</strong> Multiple products with detailed cost center and vendor tracking.</p>
 
       <h3>Model Setup</h3>
       <ul>
-        <li>Operating Expense and Headcount only</li>
-        <li>Will NOT use: top-down targets, margin planning, CapEx, balance sheet, cashflow, or allocations</li>
-        <li>Will configure extension for CapEx projects &amp; PO tracking</li>
+        <li>Insurance company with multi-product portfolio</li>
+        <li>All use cases in-scope (P&L, Balance Sheet, Cashflow)</li>
+        <li>Will not use top-down targets</li>
         <li>Time strata: Monthly</li>
         <li><strong>Estimated generation time: 20–40 minutes</strong></li>
       </ul>
@@ -108,64 +108,55 @@
             <th>Standard Dimension</th>
             <th>Required?</th>
             <th>Rename To</th>
-            <th>OpEx?</th>
             <th># of Levels</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><strong>Accounts</strong></td>
-            <td>Yes</td>
-            <td>GL Accounts</td>
-            <td>—</td>
-            <td>—</td>
-          </tr>
-          <tr>
             <td><strong>Entity</strong></td>
             <td>Yes</td>
             <td>—</td>
-            <td>Yes</td>
             <td>2</td>
           </tr>
           <tr>
             <td><strong>Department</strong></td>
             <td>Yes</td>
-            <td>CostCenter</td>
+            <td>—</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td><strong>Product</strong></td>
             <td>Yes</td>
-            <td>3</td>
+            <td>Product</td>
+            <td>5</td>
           </tr>
           <tr>
             <td><strong>Job</strong></td>
             <td>Yes</td>
             <td>—</td>
-            <td>—</td>
-            <td>2</td>
+            <td>3</td>
           </tr>
           <tr>
             <td><strong>Vendor</strong></td>
             <td>Yes</td>
-            <td>Supplier</td>
-            <td>—</td>
+            <td>Projects</td>
             <td>2</td>
           </tr>
           <tr>
             <td><strong>Functional Area</strong></td>
             <td>Yes</td>
-            <td>WBS</td>
             <td>—</td>
-            <td>5</td>
+            <td>3</td>
           </tr>
           <tr>
             <td><strong>Customer</strong></td>
             <td>No</td>
             <td>—</td>
             <td>—</td>
-            <td>—</td>
           </tr>
           <tr>
             <td><strong>Location</strong></td>
             <td>No</td>
-            <td>—</td>
             <td>—</td>
             <td>—</td>
           </tr>
@@ -183,82 +174,27 @@
         </thead>
         <tbody>
           <tr>
-            <td><strong>Country</strong></td>
+            <td><strong>CapEx List</strong></td>
             <td>Flat</td>
-            <td>Supporting attribute</td>
-          </tr>
-          <tr>
-            <td><strong>PO Headers</strong></td>
-            <td>Flat</td>
-            <td>For purchase order tracking (extension)</td>
-          </tr>
-          <tr>
-            <td><strong>PO Items</strong></td>
-            <td>Flat</td>
-            <td>For line-item detail (extension)</td>
-          </tr>
-          <tr>
-            <td><strong>Managers</strong></td>
-            <td>Flat</td>
-            <td>For management hierarchy</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h3>Dimension Attributes</h3>
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Parent Dimension</th>
-            <th>Attribute</th>
-            <th>Type</th>
-            <th>Attribute List</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Cost Center</strong></td>
-            <td>Cost Ctr Manager</td>
-            <td>List</td>
-            <td>Managers</td>
-          </tr>
-          <tr>
-            <td><strong>Cost Center</strong></td>
-            <td>Entity</td>
-            <td>List</td>
-            <td>E2 Entity</td>
-          </tr>
-          <tr>
-            <td><strong>Cost Center</strong></td>
-            <td>Profit Center</td>
-            <td>List</td>
-            <td>C3 Cost Ctr</td>
-          </tr>
-          <tr>
-            <td><strong>Cost Center</strong></td>
-            <td>Country</td>
-            <td>List</td>
-            <td>Country</td>
+            <td>For capital project tracking</td>
           </tr>
         </tbody>
       </table>
 
       <h3>Key Configuration Decisions</h3>
       <ul>
-        <li>Functional Area repurposed as <strong>WBS (Work Breakdown Structure)</strong> with 5 levels for detailed project hierarchy</li>
-        <li>Multiple custom dimensions for project and procurement tracking (handled in extension)</li>
-        <li>Rich attribute structure on Cost Center for multi-dimensional analysis</li>
-        <li>Minimal scope: OpEx + Headcount only, keeping configuration simple</li>
+        <li>Balance Sheet: <strong>Yes</strong> (3-statement planning required)</li>
+        <li>Cashflow Reporting: <strong>Yes</strong></li>
+        <li>Product dimension deeply configured (5 levels) for detailed product profitability</li>
+        <li>Will require extension for CapEx project tracking</li>
       </ul>
 
-      <div class="callout-warning">
-        <span class="callout-label">⚠ Custom Dimensions Are Extensions</span>
-        <p>PO Headers, PO Items, and other custom lists for this use case are NOT part of the base generation. They will be added as part of the extension phase, after the model is generated with the core dimensions configured.</p>
-      </div>
+      <h3>Configuration Answers</h3>
+      <div class="table-wrap"><table><thead><tr><th>Question</th><th>Answer</th><th>Notes</th></tr></thead><tbody><tr><td colspan="3" style="background-color:#e8f1f8;font-weight:bold;">Top-Level Questions</td></tr><tr><td>8. Use geography dimension?</td><td>No</td><td>—</td></tr><tr><td>11. Use functional area dimension?</td><td>Yes</td><td>Re-purposed for Projects</td></tr><tr><td colspan="3" style="background-color:#e8f1f8;font-weight:bold;">Financial Planning Questions</td></tr><tr><td>2. Top-down targets?</td><td>No</td><td>—</td></tr><tr><td>15. Dimensionality for expense planning</td><td>Department, Vendor</td><td>—</td></tr><tr><td>16. Dimensionality for itemized expense planning</td><td>Department</td><td>—</td></tr><tr><td>17. Expense allocations?</td><td>No</td><td>—</td></tr></tbody></table></div>
 
-      <div class="prevnext-nav"><a class="prevnext-btn" href="./06-exercise-2.html">← Previous</a><a class="prevnext-btn" href="./07-generation.html">Next →</a></div>
+      <div class="prevnext-nav"><a class="prevnext-btn" href="./06-exercise-1.html">← Previous</a><a class="prevnext-btn" href="./06-exercise-3.html">Next →</a></div>
     </div>
   </main>
-  <script src="../js/nav.js"></script>
+  <script src="/js/nav.js"></script>
 </body>
 </html>

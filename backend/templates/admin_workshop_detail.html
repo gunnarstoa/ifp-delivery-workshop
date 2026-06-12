@@ -58,9 +58,35 @@
         </table>
       {% endif %}
     </div>
-    <div class="card">
-      <h2>Content</h2>
-      <p class="help-note">Workshop pages will move under <code>/w/{{ workshop.slug }}/...</code> when content migration ships. Today the existing IFP pages still serve at <code>/docs/...</code>.</p>
+    <div class="card" style="grid-column: 1 / -1;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+        <h2 style="margin:0;">Content</h2>
+        {% if pages %}<a class="secondary-btn" href="/w/{{ workshop.slug }}/01-overview.html" target="_blank" rel="noopener" style="text-decoration:none;">Open public site ↗</a>{% endif %}
+      </div>
+      <p class="help-note" style="margin:0 0 0.75rem 0;">Files live in the repo at <code>{{ content_root }}</code> and are served at <code>/w/{{ workshop.slug }}/&lt;file&gt;</code>. Add or edit pages by pushing to <code>main</code> on GitHub — the deploy runs in &lt; 5 seconds.</p>
+      {% if pages is none %}
+        <div style="background:#fef9c3;border-left:4px solid #ca8a04;padding:0.6rem 0.9rem;border-radius:0 4px 4px 0;font-size:0.85rem;color:#854d0e;margin:0.5rem 0;">
+          <strong>No content folder yet.</strong> Create <code>{{ content_root }}</code> in the repo and add HTML pages. Easiest start: copy an existing workshop's folder and adapt — e.g. <code>cp -r docs/ifp/ {{ content_root }}</code>, then edit page titles and the sidebar nav.
+        </div>
+      {% elif not pages %}
+        <p class="help-note" style="margin:0.5rem 0;">Folder exists but is empty.</p>
+      {% else %}
+        <table class="users-table">
+          <thead><tr><th>File</th><th>Size</th><th>Last modified</th><th style="text-align:right;">View</th></tr></thead>
+          <tbody>
+            {% for p in pages %}
+            <tr>
+              <td><code>{{ p.filename }}</code></td>
+              <td>{{ p.size_kb }} kB</td>
+              <td>{{ p.modified }}</td>
+              <td style="text-align:right;">
+                <a class="secondary-btn" href="{{ p.url }}" target="_blank" rel="noopener" style="text-decoration:none;">Open ↗</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
     </div>
     <div class="card">
       <h2>Promotion toolkit</h2>
