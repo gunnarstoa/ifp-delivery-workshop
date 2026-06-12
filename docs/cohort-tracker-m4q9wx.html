@@ -393,7 +393,15 @@
       </div>
       <div id="report-output" class="report-output-box" style="display:none;"></div>
 
-      <h2>8. Export Updated Cohort JSON</h2>
+      <h2>8. Slack Celebration Post</h2>
+      <p class="help-note">Pre-fills the <code>amer_partners_alliances</code> celebration template with this cohort's numbers: partner count, participant count, pre→post survey averages, top 3 partners by completion rate, knowledge-check pass rate, and all-three-milestones rate. Bracketed placeholders for the next-cohort date and Slack-question count remain for you to fill in.</p>
+      <div class="toolbar">
+        <button id="generate-slack-btn">Generate Slack Post</button>
+        <button id="copy-slack-btn" class="secondary">Copy to Clipboard</button>
+      </div>
+      <textarea id="slack-output" readonly style="display:none; width:100%; min-height: 360px; padding: 0.75rem; border:1px solid #d1d5db; border-radius:6px; font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.85rem; line-height: 1.5; margin-top: 0.75rem; resize: vertical; background: #fafafa;"></textarea>
+
+      <h2>9. Export Updated Cohort JSON</h2>
       <p class="help-note">Downloads the cohort JSON with your local checkbox changes + uploaded survey scores merged in. Replace the file at <code>data/cohorts/{cohort-id}.json</code> and commit to checkpoint progress for other facilitators.</p>
       <div class="toolbar">
         <button id="export-json-btn">Download Updated Cohort JSON</button>
@@ -1021,6 +1029,116 @@
         // Fallback: copy as text
         await navigator.clipboard.writeText(html);
         alert('Report HTML copied as text (your browser may not support rich-text clipboard).');
+      }
+    });
+
+    // ===================== Slack Celebration Post =====================
+    function generateSlackCelebrationPost() {
+      const cohort = getCurrentCohort();
+      if (!cohort) return '';
+      const included = includedParticipants(cohort);
+      const partners = partnerBreakdown(cohort);
+      const quizRate = completionRate(included, 'knowledgeCheck');
+      const allRate = allCompleted(included);
+
+      const preScores = included.map(p => p.preSurveyScore).filter(v => typeof v === 'number');
+      const postScores = included.map(p => p.postSurveyScore).filter(v => typeof v === 'number');
+      const preAvg = preScores.length ? preScores.reduce((a, b) => a + b, 0) / preScores.length : null;
+      const postAvg = postScores.length ? postScores.reduce((a, b) => a + b, 0) / postScores.length : null;
+      const netImprovement = (preAvg != null && postAvg != null) ? postAvg - preAvg : null;
+
+      // Biggest-gains question if both surveys are loaded
+      let biggestGainsQ = null;
+      if (state.preSurvey && state.postSurvey) {
+        const commonQs = state.preSurvey.headers.filter(h => state.postSurvey.headers.includes(h));
+        const includedEmails = new Set(included.map(p => p.email));
+        const deltas = commonQs.map(q => {
+          const preNums = [], postNums = [];
+          Object.entries(state.preSurvey.byEmail).forEach(([email, resp]) => {
+            if (!includedEmails.has(email)) return;
+            const v = numericValue(resp[q]);
+            if (v != null) preNums.push(v);
+          });
+          Object.entries(state.postSurvey.byEmail).forEach(([email, resp]) => {
+            if (!includedEmails.has(email)) return;
+            const v = numericValue(resp[q]);
+            if (v != null) postNums.push(v);
+          });
+          if (!preNums.length || !postNums.length) return null;
+          const preA = preNums.reduce((a, b) => a + b, 0) / preNums.length;
+          const postA = postNums.reduce((a, b) => a + b, 0) / postNums.length;
+          return { q, delta: postA - preA };
+        }).filter(Boolean).sort((a, b) => b.delta - a.delta);
+        if (deltas.length && deltas[0].delta > 0) biggestGainsQ = deltas[0].q;
+      }
+
+      // Rank partners by all-three completion rate, then by volume
+      const ranked = partners.map(p => {
+        const doneCount = p.people.filter(x => x.completion.preSurvey && x.completion.postSurvey && x.completion.knowledgeCheck).length;
+        return { name: p.name, count: p.people.length, doneCount, rate: p.people.length ? doneCount / p.people.length : 0 };
+      }).sort((a, b) => b.rate - a.rate || b.count - a.count);
+
+      const medals = ['🥇', '🥈', '🥉'];
+      const top3Lines = ranked.slice(0, 3).map((p, i) =>
+        `${medals[i]} ${p.name} — ${p.doneCount}/${p.count} all three milestones (${Math.round(p.rate * 100)}%)`
+      ).join('\n');
+
+      // Standouts: prefer partners at 100% completion; otherwise the top 3 by completion rate
+      const perfect = ranked.filter(p => p.rate === 1 && p.count >= 1).map(p => p.name);
+      let standoutText;
+      if (perfect.length >= 3) {
+        standoutText = perfect.slice(0, 5).join(', ');
+      } else if (ranked.length >= 3) {
+        standoutText = ranked.slice(0, 3).map(p => p.name).join(', ');
+      } else {
+        standoutText = '[list 3–5 partner firms that stood out — by volume, completion, or pre→post improvement]';
+      }
+
+      const fmt = v => v != null ? v.toFixed(2) : '[X.XX]';
+      const netImp = netImprovement != null ? (netImprovement >= 0 ? '+' : '') + netImprovement.toFixed(2) : '[+X.XX]';
+      const biggestGains = biggestGainsQ ? `"${biggestGainsQ}"` : '[TOPIC area, e.g. "error log triage" or "configurator decisions"]';
+
+      return `🎉 IFP Delivery Workshop — ${cohort.name} just wrapped!
+
+${partners.length} delivery partners sent ${included.length} consultants through the workshop this week. Quick highlights:
+
+📈 Learning progression
+• Pre-workshop survey average: ${fmt(preAvg)}
+• Post-workshop survey average: ${fmt(postAvg)}
+• Net improvement: ${netImp} points — biggest gains in ${biggestGains}
+
+🏆 Top completion rates by partner
+${top3Lines}
+
+✅ Knowledge check pass rate: ${Math.round(quizRate * 100)}%
+🎯 ${Math.round(allRate * 100)}% of all participants completed all three milestones (pre-survey + post-survey + passed the knowledge check).
+
+Huge shout-out to ${standoutText} and to every consultant who put in the time. This is the kind of preparation that turns into smoother customer engagements.
+
+🙏 Thanks also to our IFP product team who staffed the Slack channel all week — [count] questions answered, zero left hanging.
+
+Next cohort opens [DATE]. If you have delivery consultants on your team who'd benefit, get them on the list — every session so far has hit capacity, and we're not extending tenant access past the registered week.
+
+[OPTIONAL: link to the Anaplan Academy registration page]`;
+    }
+
+    document.getElementById('generate-slack-btn').addEventListener('click', () => {
+      const out = document.getElementById('slack-output');
+      out.value = generateSlackCelebrationPost();
+      out.style.display = 'block';
+    });
+
+    document.getElementById('copy-slack-btn').addEventListener('click', async () => {
+      const text = generateSlackCelebrationPost();
+      try {
+        await navigator.clipboard.writeText(text);
+        alert('Slack post copied to clipboard.');
+      } catch (e) {
+        const out = document.getElementById('slack-output');
+        out.value = text;
+        out.style.display = 'block';
+        out.select();
+        alert('Clipboard write failed — text is shown below, select and copy manually.');
       }
     });
 
