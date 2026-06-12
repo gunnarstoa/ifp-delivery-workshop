@@ -159,8 +159,11 @@ def log_page_view(resp):
 
 @app.route("/")
 def home():
-    if current_user() is None:
+    user = current_user()
+    if user is None:
         return redirect(url_for("login"))
+    if user["is_facilitator"]:
+        return redirect(url_for("admin_home"))
     return redirect("/docs/01-overview.html")
 
 
