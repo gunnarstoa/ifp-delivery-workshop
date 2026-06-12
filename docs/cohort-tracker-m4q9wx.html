@@ -266,6 +266,15 @@
     .completion-pill.high { background: #dcfce7; color: #15803d; }
     .completion-pill.mid { background: #fef9c3; color: #854d0e; }
     .completion-pill.low { background: #fee2e2; color: #b91c1c; }
+    .result-pill {
+      display: inline-block;
+      padding: 0.1rem 0.5rem;
+      border-radius: 10px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .result-pill.pass { background: #dcfce7; color: #15803d; }
+    .result-pill.fail { background: #fee2e2; color: #b91c1c; }
     .status-text {
       font-size: 0.85rem;
       color: #6b7280;
@@ -363,7 +372,7 @@
         <label for="quiz-upload">Knowledge check:</label>
         <input type="file" id="quiz-upload" accept=".xlsx,.xls,.csv">
         <span id="quiz-state" class="file-state">no file loaded</span>
-        <span class="help-note" style="margin-left: 0.75rem;">first column email, second column score (numeric)</span>
+        <span class="help-note" style="margin-left: 0.75rem;">first column email, second column result (<code>Pass</code> / <code>Fail</code>, or Yes/No/True/False)</span>
       </div>
 
       <h2>4. Partner Completion Rates</h2>
@@ -480,7 +489,7 @@
           Object.assign(p.completion, overrides[p.email].completion || {});
           if (overrides[p.email].preSurveyScore != null) p.preSurveyScore = overrides[p.email].preSurveyScore;
           if (overrides[p.email].postSurveyScore != null) p.postSurveyScore = overrides[p.email].postSurveyScore;
-          if (overrides[p.email].knowledgeCheckScore != null) p.knowledgeCheckScore = overrides[p.email].knowledgeCheckScore;
+          if (overrides[p.email].knowledgeCheckResult != null) p.knowledgeCheckResult = overrides[p.email].knowledgeCheckResult;
         }
       });
       state.currentCohortId = cohortId;
@@ -541,8 +550,8 @@
         { label: 'Counted Participants', value: included.length, sub: `${partners.length} partner${partners.length === 1 ? '' : 's'}` },
         { label: 'Pre-Survey', value: `${Math.round(preRate * 100)}%`, sub: `${included.filter(p => p.completion.preSurvey).length} of ${included.length}` },
         { label: 'Post-Survey', value: `${Math.round(postRate * 100)}%`, sub: `${included.filter(p => p.completion.postSurvey).length} of ${included.length}` },
-        { label: 'Knowledge Check', value: `${Math.round(quizRate * 100)}%`, sub: `${included.filter(p => p.completion.knowledgeCheck).length} of ${included.length}` },
-        { label: 'All Three Completed', value: `${Math.round(allRate * 100)}%`, sub: `${included.filter(p => p.completion.preSurvey && p.completion.postSurvey && p.completion.knowledgeCheck).length} of ${included.length}` }
+        { label: 'Knowledge Check (Passed)', value: `${Math.round(quizRate * 100)}%`, sub: `${included.filter(p => p.completion.knowledgeCheck).length} of ${included.length}` },
+        { label: 'All Three Done', value: `${Math.round(allRate * 100)}%`, sub: `pre + post + pass` }
       ];
 
       document.getElementById('summary-grid').innerHTML = cards.map(c => `
@@ -570,7 +579,7 @@
       }).join('');
       document.getElementById('partner-chart').innerHTML = `
         <h3>All-Three Completion Rate by Partner</h3>
-        <p class="help-note">Percentage of each partner's participants who completed all three: pre-survey, post-survey, and knowledge check.</p>
+        <p class="help-note">Percentage of each partner's participants who completed the pre-survey, the post-survey, and <em>passed</em> the knowledge check.</p>
         ${html || '<p class="status-text">No participants in this cohort.</p>'}
       `;
     }
@@ -591,7 +600,7 @@
             <td><input type="checkbox" data-email="${escapeHtml(person.email)}" data-key="knowledgeCheck" ${person.completion.knowledgeCheck ? 'checked' : ''}></td>
             <td class="score-cell">${person.preSurveyScore != null ? formatScore(person.preSurveyScore) : '—'}</td>
             <td class="score-cell">${person.postSurveyScore != null ? formatScore(person.postSurveyScore) : '—'}</td>
-            <td class="score-cell">${person.knowledgeCheckScore != null ? formatScore(person.knowledgeCheckScore) : '—'}</td>
+            <td class="score-cell">${formatResult(person.knowledgeCheckResult)}</td>
           </tr>
         `).join('');
         return `
@@ -613,7 +622,7 @@
                   <th>Quiz</th>
                   <th>Pre Score</th>
                   <th>Post Score</th>
-                  <th>Quiz Score</th>
+                  <th>Quiz Result</th>
                 </tr>
               </thead>
               <tbody>${rows}</tbody>
@@ -726,29 +735,38 @@
       return matched;
     }
 
+    function normalizePassFail(raw) {
+      if (raw == null || raw === '') return null;
+      const s = String(raw).trim().toLowerCase();
+      if (/^(pass|passed|yes|y|true|1|✓|✔)$/.test(s)) return 'Pass';
+      if (/^(fail|failed|no|n|false|0|✗|✘)$/.test(s)) return 'Fail';
+      return null;
+    }
+
     function attachQuizToParticipants(parsed) {
       const cohort = getCurrentCohort();
       if (!cohort) return 0;
       const { headers, data } = parsed;
       const emailIdx = headers.findIndex(h => /e-?mail/i.test(h)) >= 0 ? headers.findIndex(h => /e-?mail/i.test(h)) : 0;
-      const scoreIdx = headers.findIndex(h => /score/i.test(h)) >= 0 ? headers.findIndex(h => /score/i.test(h)) : 1;
+      // Look for result/pass/status column; fall back to second column
+      let resultIdx = headers.findIndex(h => /result|pass|status|outcome/i.test(h));
+      if (resultIdx < 0) resultIdx = headers.length > 1 ? 1 : 0;
       const cache = loadCache();
       cache.overrides = cache.overrides || {};
       cache.overrides[cohort.id] = cache.overrides[cohort.id] || {};
       let matched = 0;
       data.forEach(row => {
         const email = String(row[emailIdx] || '').trim().toLowerCase();
-        const scoreRaw = row[scoreIdx];
-        const score = typeof scoreRaw === 'number' ? scoreRaw : parseFloat(String(scoreRaw).replace(/[^\d.\-]/g, ''));
-        if (!email || isNaN(score)) return;
+        const result = normalizePassFail(row[resultIdx]);
+        if (!email || result == null) return;
         const person = cohort.participants.find(p => p.email === email);
         if (person) {
-          person.completion.knowledgeCheck = true;
-          person.knowledgeCheckScore = score;
+          person.knowledgeCheckResult = result;
+          person.completion.knowledgeCheck = (result === 'Pass');
           matched++;
           cache.overrides[cohort.id][email] = cache.overrides[cohort.id][email] || { completion: {} };
-          cache.overrides[cohort.id][email].completion.knowledgeCheck = true;
-          cache.overrides[cohort.id][email].knowledgeCheckScore = score;
+          cache.overrides[cohort.id][email].completion.knowledgeCheck = person.completion.knowledgeCheck;
+          cache.overrides[cohort.id][email].knowledgeCheckResult = result;
         }
       });
       localStorage.setItem(STORAGE_KEY, JSON.stringify(cache));
@@ -958,7 +976,7 @@
               <tr><td style="padding:6px 10px;color:#6b7280;">Partners represented</td><td style="padding:6px 10px;text-align:right;font-weight:600;">${partners.length}</td></tr>
               <tr><td style="padding:6px 10px;color:#6b7280;">Pre-survey completion</td><td style="padding:6px 10px;text-align:right;font-weight:600;color:#0066cc;">${Math.round(preRate * 100)}%</td></tr>
               <tr><td style="padding:6px 10px;color:#6b7280;">Post-survey completion</td><td style="padding:6px 10px;text-align:right;font-weight:600;color:#0066cc;">${Math.round(postRate * 100)}%</td></tr>
-              <tr><td style="padding:6px 10px;color:#6b7280;">Knowledge check completion</td><td style="padding:6px 10px;text-align:right;font-weight:600;color:#0066cc;">${Math.round(quizRate * 100)}%</td></tr>
+              <tr><td style="padding:6px 10px;color:#6b7280;">Knowledge check pass rate</td><td style="padding:6px 10px;text-align:right;font-weight:600;color:#0066cc;">${Math.round(quizRate * 100)}%</td></tr>
               <tr><td style="padding:6px 10px;color:#6b7280;border-top:2px solid #0066cc;"><strong>All three completed</strong></td><td style="padding:6px 10px;text-align:right;font-weight:700;color:#15803d;border-top:2px solid #0066cc;font-size:16px;">${Math.round(allRate * 100)}%</td></tr>
             </tbody>
           </table>
@@ -1046,6 +1064,11 @@
     function formatScore(v) {
       if (typeof v !== 'number') return v;
       return v.toFixed(2);
+    }
+    function formatResult(v) {
+      if (v === 'Pass') return '<span class="result-pill pass">Pass</span>';
+      if (v === 'Fail') return '<span class="result-pill fail">Fail</span>';
+      return '—';
     }
 
     // ===================== Boot =====================
