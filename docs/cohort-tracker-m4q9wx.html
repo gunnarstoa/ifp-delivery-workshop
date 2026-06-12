@@ -401,7 +401,28 @@
       </div>
       <textarea id="slack-output" readonly style="display:none; width:100%; min-height: 360px; padding: 0.75rem; border:1px solid #d1d5db; border-radius:6px; font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.85rem; line-height: 1.5; margin-top: 0.75rem; resize: vertical; background: #fafafa;"></textarea>
 
-      <h2>9. Export Updated Cohort JSON</h2>
+      <h2>9. Executive Summary Report (Internal)</h2>
+      <p class="help-note">Polished one-pager for Anaplan internal executives and partner alliances leadership. Includes narrative framing, headline numbers, learning progression, partner mix, standouts, an at-risk callout for partners with zero completion, and program-level recommendations for the next cohort.</p>
+      <div class="toolbar">
+        <button id="generate-exec-btn">Generate Executive Summary</button>
+        <button id="copy-exec-btn" class="secondary">Copy HTML to Clipboard</button>
+        <button id="download-exec-btn" class="secondary">Download HTML File</button>
+      </div>
+      <div id="exec-output" class="report-output-box" style="display:none;"></div>
+
+      <h2>10. Partner Sponsor Reports</h2>
+      <p class="help-note">One report per partner firm, addressed to the partner sponsor. Celebrates their team's participation and learning progression, calls out the biggest pre→post improver on their team, and proposes five concrete next steps to translate workshop completion into delivery activity — including copying the reference IFP model + app into the partner's tenant.</p>
+      <div class="toolbar">
+        <label for="partner-report-select">Partner:</label>
+        <select id="partner-report-select"></select>
+        <button id="generate-partner-btn">Generate Report</button>
+        <button id="copy-partner-btn" class="secondary">Copy HTML to Clipboard</button>
+        <button id="download-partner-btn" class="secondary">Download HTML File</button>
+        <button id="download-all-partners-btn" class="secondary">Download All Partner Reports</button>
+      </div>
+      <div id="partner-report-output" class="report-output-box" style="display:none;"></div>
+
+      <h2>11. Export Updated Cohort JSON</h2>
       <p class="help-note">Downloads the cohort JSON with your local checkbox changes + uploaded survey scores merged in. Replace the file at <code>data/cohorts/{cohort-id}.json</code> and commit to checkpoint progress for other facilitators.</p>
       <div class="toolbar">
         <button id="export-json-btn">Download Updated Cohort JSON</button>
@@ -518,6 +539,7 @@
       renderPartnerChart(c);
       renderParticipants(c);
       renderSurveyComparison();
+      populatePartnerReportSelector();
     }
 
     function includedParticipants(cohort) {
@@ -1140,6 +1162,365 @@ Next cohort opens [DATE]. If you have delivery consultants on your team who'd be
         out.select();
         alert('Clipboard write failed — text is shown below, select and copy manually.');
       }
+    });
+
+    // ===================== Executive Summary & Partner Reports =====================
+    function partnerStats(people) {
+      const sent = people.length;
+      const preDone = people.filter(p => p.completion.preSurvey).length;
+      const postDone = people.filter(p => p.completion.postSurvey).length;
+      const quizDone = people.filter(p => p.completion.knowledgeCheck).length;
+      const allDone = people.filter(p => p.completion.preSurvey && p.completion.postSurvey && p.completion.knowledgeCheck).length;
+      const preScores = people.map(p => p.preSurveyScore).filter(v => typeof v === 'number');
+      const postScores = people.map(p => p.postSurveyScore).filter(v => typeof v === 'number');
+      const preAvg = preScores.length ? preScores.reduce((a, b) => a + b, 0) / preScores.length : null;
+      const postAvg = postScores.length ? postScores.reduce((a, b) => a + b, 0) / postScores.length : null;
+      const delta = (preAvg != null && postAvg != null) ? postAvg - preAvg : null;
+      return { sent, preDone, postDone, quizDone, allDone, preAvg, postAvg, delta };
+    }
+
+    function biggestGainQuestion(includedEmails) {
+      if (!state.preSurvey || !state.postSurvey) return null;
+      const commonQs = state.preSurvey.headers.filter(h => state.postSurvey.headers.includes(h));
+      const deltas = commonQs.map(q => {
+        const preNums = [], postNums = [];
+        Object.entries(state.preSurvey.byEmail).forEach(([email, resp]) => {
+          if (!includedEmails.has(email)) return;
+          const v = numericValue(resp[q]);
+          if (v != null) preNums.push(v);
+        });
+        Object.entries(state.postSurvey.byEmail).forEach(([email, resp]) => {
+          if (!includedEmails.has(email)) return;
+          const v = numericValue(resp[q]);
+          if (v != null) postNums.push(v);
+        });
+        if (!preNums.length || !postNums.length) return null;
+        const preA = preNums.reduce((a, b) => a + b, 0) / preNums.length;
+        const postA = postNums.reduce((a, b) => a + b, 0) / postNums.length;
+        return { q, delta: postA - preA };
+      }).filter(Boolean).sort((a, b) => b.delta - a.delta);
+      return (deltas.length && deltas[0].delta > 0) ? deltas[0] : null;
+    }
+
+    function generateExecSummaryHtml() {
+      const cohort = getCurrentCohort();
+      if (!cohort) return '';
+      const included = includedParticipants(cohort);
+      const partners = partnerBreakdown(cohort);
+      const stats = partnerStats(included);
+      const allRate = included.length ? stats.allDone / included.length : 0;
+      const quizRate = included.length ? stats.quizDone / included.length : 0;
+      const preRate = included.length ? stats.preDone / included.length : 0;
+      const postRate = included.length ? stats.postDone / included.length : 0;
+
+      const ranked = partners.map(p => {
+        const s = partnerStats(p.people);
+        return { name: p.name, ...s, rate: p.people.length ? s.allDone / p.people.length : 0 };
+      }).sort((a, b) => b.rate - a.rate || b.sent - a.sent);
+
+      const standouts = ranked.filter(p => p.rate === 1).map(p => p.name);
+      const atRisk = ranked.filter(p => p.rate === 0 && p.sent >= 1).map(p => p.name);
+
+      const includedEmails = new Set(included.map(p => p.email));
+      const biggestGain = biggestGainQuestion(includedEmails);
+
+      const partnerRows = ranked.map(p => {
+        const pct = Math.round(p.rate * 100);
+        const barW = Math.round(pct * 1.5);
+        return `
+          <tr>
+            <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;">${escapeHtml(p.name)}</td>
+            <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;text-align:right;">${p.sent}</td>
+            <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;text-align:right;">${p.allDone}</td>
+            <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;">
+              <div style="display:inline-block;width:150px;background:#eff6ff;border-radius:3px;overflow:hidden;vertical-align:middle;">
+                <div style="background:#0066cc;height:14px;width:${barW}px;"></div>
+              </div>
+              <span style="margin-left:8px;font-weight:600;color:#1e3a5f;">${pct}%</span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      const recs = [];
+      if (standouts.length) recs.push(`Recognize standout partners: <strong>${standouts.map(s => escapeHtml(s)).join(', ')}</strong> — feature them in partner success comms and lead the next cohort's marketing with their success.`);
+      if (atRisk.length) recs.push(`Re-engage at-risk partners (0% completion this cohort): <strong>${atRisk.map(s => escapeHtml(s)).join(', ')}</strong> — partner alliances to confirm whether timing, framing, or sponsor engagement missed.`);
+      recs.push(`Schedule per-partner tenant-copy working sessions for partners at 75%+ completion so the workshop knowledge translates into customer-tenant work inside the next 30 days.`);
+      recs.push(`Open registration for the next cohort with capacity-led messaging — every cohort to date has filled and we are not extending tenant access past the registered week.`);
+      if (biggestGain) recs.push(`Double down on <em>"${escapeHtml(biggestGain.q)}"</em> content — the largest pre→post improvement signal this cohort (+${biggestGain.delta.toFixed(2)}). Consider it as a standalone office-hours topic for the broader partner community.`);
+
+      return `
+        <div style="font-family:Arial,Helvetica,sans-serif;max-width:760px;color:#374151;font-size:14px;line-height:1.6;">
+          <div style="background:#1e3a5f;color:white;padding:20px 24px;border-radius:6px 6px 0 0;">
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;opacity:0.85;margin-bottom:4px;">Executive Summary — Internal</div>
+            <h1 style="margin:0;font-size:22px;font-weight:600;">IFP Delivery Workshop — ${escapeHtml(cohort.name)}</h1>
+            <div style="font-size:13px;opacity:0.85;margin-top:4px;">${cohort.startDate} → ${cohort.endDate}</div>
+          </div>
+          <div style="border:1px solid #e2e8f0;border-top:none;padding:20px 24px;border-radius:0 0 6px 6px;">
+            <p style="margin:0 0 16px 0;">This cohort took ${included.length} delivery consultants from ${partners.length} partner firm${partners.length === 1 ? '' : 's'} through the IFP Delivery Workshop — a self-paced, tenant-hands-on curriculum covering Application Framework configuration, generation, error-log triage, and extension authoring. The intent: shorten the ramp from "trained on Anaplan" to "billable on an IFP customer engagement."</p>
+
+            <h3 style="color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Headline Numbers</h3>
+            <table style="width:100%;border-collapse:collapse;font-size:14px;">
+              <tbody>
+                <tr><td style="padding:5px 10px;color:#6b7280;width:60%;">Counted participants (excludes Anaplan internal)</td><td style="padding:5px 10px;text-align:right;font-weight:600;">${included.length}</td></tr>
+                <tr><td style="padding:5px 10px;color:#6b7280;">Partner firms represented</td><td style="padding:5px 10px;text-align:right;font-weight:600;">${partners.length}</td></tr>
+                <tr><td style="padding:5px 10px;color:#6b7280;">Pre-survey completion</td><td style="padding:5px 10px;text-align:right;font-weight:600;">${Math.round(preRate * 100)}%</td></tr>
+                <tr><td style="padding:5px 10px;color:#6b7280;">Post-survey completion</td><td style="padding:5px 10px;text-align:right;font-weight:600;">${Math.round(postRate * 100)}%</td></tr>
+                <tr><td style="padding:5px 10px;color:#6b7280;">Knowledge check pass rate</td><td style="padding:5px 10px;text-align:right;font-weight:600;">${Math.round(quizRate * 100)}%</td></tr>
+                <tr><td style="padding:8px 10px;color:#1e3a5f;border-top:2px solid #0066cc;font-weight:600;">All three milestones completed</td><td style="padding:8px 10px;text-align:right;font-weight:700;color:#15803d;border-top:2px solid #0066cc;font-size:16px;">${Math.round(allRate * 100)}%</td></tr>
+              </tbody>
+            </table>
+
+            <h3 style="color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Learning Progression</h3>
+            <table style="width:100%;border-collapse:collapse;font-size:14px;">
+              <tbody>
+                <tr><td style="padding:5px 10px;color:#6b7280;width:60%;">Pre-workshop survey average</td><td style="padding:5px 10px;text-align:right;font-weight:600;">${stats.preAvg != null ? stats.preAvg.toFixed(2) : '—'}</td></tr>
+                <tr><td style="padding:5px 10px;color:#6b7280;">Post-workshop survey average</td><td style="padding:5px 10px;text-align:right;font-weight:600;">${stats.postAvg != null ? stats.postAvg.toFixed(2) : '—'}</td></tr>
+                <tr><td style="padding:5px 10px;color:#6b7280;">Net improvement</td><td style="padding:5px 10px;text-align:right;font-weight:700;color:${stats.delta != null && stats.delta >= 0 ? '#15803d' : '#b91c1c'};">${stats.delta != null ? (stats.delta >= 0 ? '+' : '') + stats.delta.toFixed(2) : '—'}</td></tr>
+                ${biggestGain ? `<tr><td style="padding:5px 10px;color:#6b7280;">Biggest gain — topic</td><td style="padding:5px 10px;text-align:right;font-weight:600;">${escapeHtml(biggestGain.q)} (+${biggestGain.delta.toFixed(2)})</td></tr>` : ''}
+              </tbody>
+            </table>
+
+            <h3 style="color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Partner Mix &amp; Completion</h3>
+            <p style="color:#6b7280;font-size:13px;margin:8px 0;">Sorted by all-three-milestones completion rate, then by participant volume.</p>
+            <table style="width:100%;border-collapse:collapse;font-size:14px;">
+              <thead><tr style="background:#f8fafc;">
+                <th style="padding:8px 10px;text-align:left;font-size:11px;text-transform:uppercase;color:#6b7280;">Partner</th>
+                <th style="padding:8px 10px;text-align:right;font-size:11px;text-transform:uppercase;color:#6b7280;">Sent</th>
+                <th style="padding:8px 10px;text-align:right;font-size:11px;text-transform:uppercase;color:#6b7280;">All 3 Done</th>
+                <th style="padding:8px 10px;text-align:left;font-size:11px;text-transform:uppercase;color:#6b7280;">Completion</th>
+              </tr></thead>
+              <tbody>${partnerRows}</tbody>
+            </table>
+
+            ${standouts.length ? `
+            <h3 style="color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Standout Partners</h3>
+            <p style="margin:0 0 8px 0;">${standouts.map(s => `<strong>${escapeHtml(s)}</strong>`).join(', ')} — 100% of their registered consultants completed all three milestones.</p>
+            ` : ''}
+
+            ${atRisk.length ? `
+            <h3 style="color:#b91c1c;border-bottom:2px solid #b91c1c;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Re-engagement Needed</h3>
+            <p style="margin:0 0 8px 0;">${atRisk.map(s => `<strong>${escapeHtml(s)}</strong>`).join(', ')} — registered consultants but zero milestone completion. Partner alliances to follow up before the next cohort opens.</p>
+            ` : ''}
+
+            <h3 style="color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Recommended Next Steps</h3>
+            <ol style="margin:8px 0 0 0;padding-left:24px;">
+              ${recs.map(r => `<li style="margin-bottom:6px;">${r}</li>`).join('')}
+            </ol>
+
+            <p style="margin-top:28px;color:#6b7280;font-size:12px;font-style:italic;border-top:1px solid #e5e7eb;padding-top:12px;">Generated ${new Date().toISOString().split('T')[0]} from the IFP Workshop Cohort Tracker. Distribution: Anaplan internal partner alliances + IFP product leadership.</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function generatePartnerReportHtml(partnerName) {
+      const cohort = getCurrentCohort();
+      if (!cohort) return '';
+      const people = cohort.participants.filter(p => !p.excluded && p.partner === partnerName);
+      if (!people.length) return `<p>No participants for ${escapeHtml(partnerName)} in this cohort.</p>`;
+
+      const stats = partnerStats(people);
+      const pct = stats.sent ? Math.round(stats.allDone / stats.sent * 100) : 0;
+
+      const personRows = people.map(p => {
+        const preChk = p.completion.preSurvey ? '✓' : '—';
+        const postChk = p.completion.postSurvey ? '✓' : '—';
+        const quizPill = p.knowledgeCheckResult === 'Pass'
+          ? '<span style="background:#dcfce7;color:#15803d;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;">Pass</span>'
+          : p.knowledgeCheckResult === 'Fail'
+            ? '<span style="background:#fee2e2;color:#b91c1c;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;">Fail</span>'
+            : '—';
+        const preScore = typeof p.preSurveyScore === 'number' ? p.preSurveyScore.toFixed(2) : '—';
+        const postScore = typeof p.postSurveyScore === 'number' ? p.postSurveyScore.toFixed(2) : '—';
+        return `
+          <tr>
+            <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;font-family:ui-monospace,Menlo,monospace;font-size:12px;">${escapeHtml(p.email)}</td>
+            <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;text-align:center;">${preChk}</td>
+            <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;text-align:center;">${postChk}</td>
+            <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;text-align:center;">${quizPill}</td>
+            <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;text-align:right;">${preScore}</td>
+            <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;text-align:right;">${postScore}</td>
+          </tr>
+        `;
+      }).join('');
+
+      const improvers = people
+        .filter(p => typeof p.preSurveyScore === 'number' && typeof p.postSurveyScore === 'number')
+        .map(p => ({ email: p.email, delta: p.postSurveyScore - p.preSurveyScore }))
+        .sort((a, b) => b.delta - a.delta);
+      const topImprover = (improvers.length && improvers[0].delta > 0) ? improvers[0] : null;
+
+      const progressionBlock = (stats.preAvg != null && stats.postAvg != null) ? `
+        <h3 style="color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Learning Progression</h3>
+        <p style="color:#6b7280;font-size:13px;margin:8px 0;">Average of per-consultant self-assessed scores across all matched pre/post survey questions.</p>
+        <table style="width:100%;border-collapse:collapse;font-size:14px;">
+          <tbody>
+            <tr><td style="padding:5px 10px;color:#6b7280;width:60%;">Pre-workshop average</td><td style="padding:5px 10px;text-align:right;font-weight:600;">${stats.preAvg.toFixed(2)}</td></tr>
+            <tr><td style="padding:5px 10px;color:#6b7280;">Post-workshop average</td><td style="padding:5px 10px;text-align:right;font-weight:600;">${stats.postAvg.toFixed(2)}</td></tr>
+            <tr><td style="padding:5px 10px;color:#6b7280;">Net improvement</td><td style="padding:5px 10px;text-align:right;font-weight:700;color:${stats.delta >= 0 ? '#15803d' : '#b91c1c'};">${(stats.delta >= 0 ? '+' : '') + stats.delta.toFixed(2)}</td></tr>
+          </tbody>
+        </table>
+      ` : '';
+
+      const improverBlock = topImprover ? `
+        <div style="background:#f0f9ff;border-left:4px solid #0066cc;padding:12px 16px;margin:20px 0;border-radius:0 4px 4px 0;">
+          <strong style="color:#1e3a5f;">Standout consultant:</strong> ${escapeHtml(topImprover.email)} showed the biggest pre→post improvement on your team — a +${topImprover.delta.toFixed(2)} jump in self-assessed confidence.
+        </div>
+      ` : '';
+
+      return `
+        <div style="font-family:Arial,Helvetica,sans-serif;max-width:680px;color:#374151;font-size:14px;line-height:1.6;">
+          <div style="background:#1e3a5f;color:white;padding:20px 24px;border-radius:6px 6px 0 0;">
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;opacity:0.85;margin-bottom:4px;">Partner Sponsor Report</div>
+            <h1 style="margin:0;font-size:22px;font-weight:600;">${escapeHtml(partnerName)} — IFP Delivery Workshop</h1>
+            <div style="font-size:13px;opacity:0.85;margin-top:4px;">${escapeHtml(cohort.name)} · ${cohort.startDate} → ${cohort.endDate}</div>
+          </div>
+          <div style="border:1px solid #e2e8f0;border-top:none;padding:20px 24px;border-radius:0 0 6px 6px;">
+            <p style="margin:0 0 16px 0;">Thank you for sending <strong>${stats.sent} consultant${stats.sent === 1 ? '' : 's'}</strong> through this cohort of the IFP Delivery Workshop. Below is a summary of your team's participation, learning progression, and five concrete next steps to translate workshop completion into delivery activity inside ${escapeHtml(partnerName)}'s tenant.</p>
+
+            <h3 style="color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Your Team's Participation</h3>
+            <table style="width:100%;border-collapse:collapse;font-size:14px;">
+              <tbody>
+                <tr><td style="padding:5px 10px;color:#6b7280;width:60%;">Consultants registered</td><td style="padding:5px 10px;text-align:right;font-weight:600;">${stats.sent}</td></tr>
+                <tr><td style="padding:5px 10px;color:#6b7280;">Pre-survey completed</td><td style="padding:5px 10px;text-align:right;font-weight:600;">${stats.preDone} of ${stats.sent}</td></tr>
+                <tr><td style="padding:5px 10px;color:#6b7280;">Post-survey completed</td><td style="padding:5px 10px;text-align:right;font-weight:600;">${stats.postDone} of ${stats.sent}</td></tr>
+                <tr><td style="padding:5px 10px;color:#6b7280;">Knowledge check passed</td><td style="padding:5px 10px;text-align:right;font-weight:600;">${stats.quizDone} of ${stats.sent}</td></tr>
+                <tr><td style="padding:8px 10px;color:#1e3a5f;border-top:2px solid #0066cc;font-weight:600;">All three milestones completed</td><td style="padding:8px 10px;text-align:right;font-weight:700;color:#15803d;border-top:2px solid #0066cc;font-size:16px;">${stats.allDone} of ${stats.sent} (${pct}%)</td></tr>
+              </tbody>
+            </table>
+
+            ${progressionBlock}
+            ${improverBlock}
+
+            <h3 style="color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Your Consultants</h3>
+            <table style="width:100%;border-collapse:collapse;font-size:13px;">
+              <thead><tr style="background:#f8fafc;">
+                <th style="padding:8px 10px;text-align:left;font-size:11px;text-transform:uppercase;color:#6b7280;">Email</th>
+                <th style="padding:8px 10px;text-align:center;font-size:11px;text-transform:uppercase;color:#6b7280;">Pre</th>
+                <th style="padding:8px 10px;text-align:center;font-size:11px;text-transform:uppercase;color:#6b7280;">Post</th>
+                <th style="padding:8px 10px;text-align:center;font-size:11px;text-transform:uppercase;color:#6b7280;">Quiz</th>
+                <th style="padding:8px 10px;text-align:right;font-size:11px;text-transform:uppercase;color:#6b7280;">Pre Score</th>
+                <th style="padding:8px 10px;text-align:right;font-size:11px;text-transform:uppercase;color:#6b7280;">Post Score</th>
+              </tr></thead>
+              <tbody>${personRows}</tbody>
+            </table>
+
+            <h3 style="color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Next Steps — Convert Training Into Delivery</h3>
+            <ol style="margin:8px 0 0 0;padding-left:24px;">
+              <li style="margin-bottom:10px;"><strong>Copy the reference IFP model + app into ${escapeHtml(partnerName)}'s tenant.</strong> Schedule a 60-minute working session with the Anaplan IFP product team. Your trained consultants pair on the copy and walk away with a tenant-local sandbox to keep iterating in.</li>
+              <li style="margin-bottom:10px;"><strong>Pair newly trained consultants with an active customer engagement within 30 days.</strong> The material decays quickly — put it on a live CapEx, OpEx, or workforce-planning engagement while the muscle memory is fresh.</li>
+              <li style="margin-bottom:10px;"><strong>Use the persistent #ifp-delivery Slack channel for ongoing office hours.</strong> Anaplan IFP product staff the channel; same-day answers. Encourage your team to post real engagement obstacles as they come up.</li>
+              <li style="margin-bottom:10px;"><strong>Schedule a 30-minute delivery checkpoint with the IFP product team next quarter.</strong> Review what is in flight, what is stuck, and where the next round of enablement should focus.</li>
+              <li style="margin-bottom:10px;"><strong>Register your next batch for the upcoming cohort.</strong> If you have consultants who could not make this round, we can hold capacity for ${escapeHtml(partnerName)} in the next session.</li>
+            </ol>
+
+            <p style="margin-top:28px;color:#6b7280;font-size:12px;font-style:italic;border-top:1px solid #e5e7eb;padding-top:12px;">To schedule any of the above, reach out to the Anaplan partner alliances team. Generated ${new Date().toISOString().split('T')[0]} from the IFP Workshop Cohort Tracker.</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function populatePartnerReportSelector() {
+      const sel = document.getElementById('partner-report-select');
+      if (!sel) return;
+      const cohort = getCurrentCohort();
+      const prior = sel.value;
+      sel.innerHTML = '';
+      if (!cohort) return;
+      partnerBreakdown(cohort).forEach(p => {
+        const o = document.createElement('option');
+        o.value = p.name;
+        o.textContent = `${p.name} (${p.people.length})`;
+        sel.appendChild(o);
+      });
+      if (prior && [...sel.options].some(o => o.value === prior)) sel.value = prior;
+    }
+
+    async function copyHtmlToClipboard(html, successMsg) {
+      try {
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            'text/html': new Blob([html], { type: 'text/html' }),
+            'text/plain': new Blob([html.replace(/<[^>]+>/g, '')], { type: 'text/plain' })
+          })
+        ]);
+        alert(successMsg);
+      } catch (e) {
+        await navigator.clipboard.writeText(html);
+        alert(successMsg + ' (Copied as text — your browser may not support rich-text clipboard.)');
+      }
+    }
+
+    function downloadHtmlFile(bodyHtml, filename, title) {
+      const fullHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${escapeHtml(title)}</title>
+<style>body{margin:0;padding:24px;background:#f8fafc;}</style>
+</head>
+<body>${bodyHtml}</body>
+</html>`;
+      const blob = new Blob([fullHtml], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function partnerSlug(name) {
+      return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    }
+
+    document.getElementById('generate-exec-btn').addEventListener('click', () => {
+      const html = generateExecSummaryHtml();
+      const out = document.getElementById('exec-output');
+      out.innerHTML = html;
+      out.style.display = 'block';
+    });
+    document.getElementById('copy-exec-btn').addEventListener('click', async () => {
+      await copyHtmlToClipboard(generateExecSummaryHtml(), 'Executive summary HTML copied to clipboard. Paste into your email client.');
+    });
+    document.getElementById('download-exec-btn').addEventListener('click', () => {
+      const cohort = getCurrentCohort();
+      if (!cohort) return;
+      downloadHtmlFile(generateExecSummaryHtml(), `${cohort.id}-executive-summary.html`, `Executive Summary — ${cohort.name}`);
+    });
+
+    document.getElementById('generate-partner-btn').addEventListener('click', () => {
+      const partnerName = document.getElementById('partner-report-select').value;
+      if (!partnerName) return;
+      const out = document.getElementById('partner-report-output');
+      out.innerHTML = generatePartnerReportHtml(partnerName);
+      out.style.display = 'block';
+    });
+    document.getElementById('copy-partner-btn').addEventListener('click', async () => {
+      const partnerName = document.getElementById('partner-report-select').value;
+      if (!partnerName) return;
+      await copyHtmlToClipboard(generatePartnerReportHtml(partnerName), `${partnerName} report HTML copied to clipboard. Paste into your email client.`);
+    });
+    document.getElementById('download-partner-btn').addEventListener('click', () => {
+      const partnerName = document.getElementById('partner-report-select').value;
+      if (!partnerName) return;
+      const cohort = getCurrentCohort();
+      downloadHtmlFile(generatePartnerReportHtml(partnerName), `${cohort.id}-${partnerSlug(partnerName)}-report.html`, `${partnerName} — IFP Delivery Workshop ${cohort.name}`);
+    });
+    document.getElementById('download-all-partners-btn').addEventListener('click', () => {
+      const cohort = getCurrentCohort();
+      if (!cohort) return;
+      const partners = partnerBreakdown(cohort);
+      if (!confirm(`Trigger ${partners.length} separate downloads, one HTML file per partner?`)) return;
+      partners.forEach((p, i) => {
+        setTimeout(() => {
+          downloadHtmlFile(generatePartnerReportHtml(p.name), `${cohort.id}-${partnerSlug(p.name)}-report.html`, `${p.name} — IFP Delivery Workshop ${cohort.name}`);
+        }, i * 250);
+      });
     });
 
     // ===================== Export Updated JSON =====================
