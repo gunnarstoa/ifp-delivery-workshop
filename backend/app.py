@@ -1049,9 +1049,11 @@ def _recompute_survey_counters(survey_id):
 # ---------------------------- Surveys ----------------------------
 
 def _parse_xlsx_upload(file_storage):
-    """Parse uploaded XLSX into (headers, rows). Rows is list[dict header->value]."""
+    """Parse uploaded XLSX into (headers, rows). Rows is list[dict header->value].
+    Uses non-read-only mode so files with stale max_row/max_column metadata
+    (a Microsoft Forms export quirk) are still parsed correctly."""
     from openpyxl import load_workbook
-    wb = load_workbook(file_storage, data_only=True, read_only=True)
+    wb = load_workbook(file_storage, data_only=True)
     ws = wb[wb.sheetnames[0]]
     all_rows = list(ws.iter_rows(values_only=True))
     if not all_rows:
