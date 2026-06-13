@@ -21,21 +21,46 @@
     </div>
 
     {% if kind == 'knowledge' %}
+    {% set pool_size = (template.questions | length) if template else 0 %}
     <div class="card">
-      <h2 style="margin-top:0;">Scoring</h2>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;align-items:start;">
+      <h2 style="margin-top:0;">Scoring &amp; attempt</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;align-items:start;">
         <div>
           <label style="display:block;font-weight:600;color:#1e3a5f;font-size:0.9rem;margin-bottom:0.25rem;">Minimum passing score</label>
-          <p class="help-note" style="margin:0 0 0.4rem 0;">Percentage of correctly-answered scoreable questions required to pass. Only single-select and multi-select questions with a correct answer are scoreable.</p>
+          <p class="help-note" style="margin:0 0 0.4rem 0;">% of scoreable questions a participant must get right.</p>
           <div><input type="number" name="passing_score" min="0" max="100" value="{{ template.passing_score if template else 70 }}" style="width:100px;padding:0.4rem 0.55rem;border:1px solid #cbd5e1;border-radius:4px;font-size:0.95rem;"> <span style="color:#6b7280;">%</span></div>
         </div>
         <div>
           <label style="display:block;font-weight:600;color:#1e3a5f;font-size:0.9rem;margin-bottom:0.25rem;">Attempt limit</label>
-          <p class="help-note" style="margin:0 0 0.4rem 0;">Leave empty for unlimited retakes (we still count attempts). Set a number to cap retakes — once the participant hits it without passing, they're done.</p>
-          <div><input type="number" name="max_attempts" min="1" value="{{ template.max_attempts if template and template.max_attempts is not none else '' }}" placeholder="empty = unlimited" style="width:200px;padding:0.4rem 0.55rem;border:1px solid #cbd5e1;border-radius:4px;font-size:0.95rem;"> <span style="color:#6b7280;">attempts</span></div>
+          <p class="help-note" style="margin:0 0 0.4rem 0;">Empty = unlimited retakes (still counted).</p>
+          <div><input type="number" name="max_attempts" min="1" value="{{ template.max_attempts if template and template.max_attempts is not none else '' }}" placeholder="empty = unlimited" style="width:140px;padding:0.4rem 0.55rem;border:1px solid #cbd5e1;border-radius:4px;font-size:0.95rem;"> <span style="color:#6b7280;">attempts</span></div>
+        </div>
+        <div>
+          <label style="display:block;font-weight:600;color:#1e3a5f;font-size:0.9rem;margin-bottom:0.25rem;">Questions per attempt</label>
+          <p class="help-note" style="margin:0 0 0.4rem 0;">Empty = use all. Set a number to randomly draw that many from the pool of <strong>{{ pool_size }}</strong>.</p>
+          <div><input type="number" name="questions_per_attempt" min="1" value="{{ template.questions_per_attempt if template and template.questions_per_attempt is not none else '' }}" placeholder="empty = all {{ pool_size }}" style="width:160px;padding:0.4rem 0.55rem;border:1px solid #cbd5e1;border-radius:4px;font-size:0.95rem;"> <span style="color:#6b7280;">questions</span></div>
+        </div>
+        <div>
+          <label style="display:block;font-weight:600;color:#1e3a5f;font-size:0.9rem;margin-bottom:0.25rem;">Shuffle answer options</label>
+          <p class="help-note" style="margin:0 0 0.4rem 0;">Randomize option order per attempt while preserving correctness tracking.</p>
+          <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;cursor:pointer;">
+            <input type="checkbox" name="shuffle_options" {{ 'checked' if not template or template.shuffle_options else '' }}>
+            Shuffle on every attempt
+          </label>
         </div>
       </div>
     </div>
+
+    <details class="card" style="background:#f8fafc;">
+      <summary style="cursor:pointer;font-weight:600;color:#374151;">Bulk import questions (JSON)</summary>
+      <p class="help-note" style="margin-top:0.75rem;">Paste a JSON array of question objects. <strong>Appends</strong> to the existing pool — does not replace. Save the editor below afterwards if you want to also persist edits made above.</p>
+      <pre style="background:#1e293b;color:#e2e8f0;padding:0.75rem;border-radius:4px;font-size:0.78rem;overflow-x:auto;margin:0.5rem 0;">{ "id": "q42", "text": "What is X?", "type": "single_select",
+  "options": ["A", "B", "C", "D"], "correct": "B", "required": true }</pre>
+      <form method="post" action="{{ url_for('admin_survey_template_import', slug=workshop.slug, kind=kind) }}">
+        <textarea name="questions_json" placeholder='[{"text":"...","type":"single_select","options":["A","B"],"correct":"A","required":true}]' style="width:100%;min-height:160px;padding:0.6rem;border:1px solid #cbd5e1;border-radius:4px;font-family:ui-monospace,Menlo,monospace;font-size:0.82rem;"></textarea>
+        <button class="secondary-btn" type="submit" style="margin-top:0.5rem;">Append to pool</button>
+      </form>
+    </details>
     {% endif %}
 
     <div class="card">

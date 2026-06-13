@@ -130,6 +130,8 @@ CREATE TABLE IF NOT EXISTS survey_templates (
   questions_json TEXT NOT NULL,
   passing_score INTEGER NOT NULL DEFAULT 70,
   max_attempts INTEGER,
+  questions_per_attempt INTEGER,
+  shuffle_options INTEGER NOT NULL DEFAULT 1,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_by INTEGER,
   FOREIGN KEY (workshop_id) REFERENCES workshops(id) ON DELETE CASCADE,

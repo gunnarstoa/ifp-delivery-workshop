@@ -80,6 +80,10 @@ def init_db():
             conn.execute("ALTER TABLE survey_templates ADD COLUMN passing_score INTEGER NOT NULL DEFAULT 70")
         if "max_attempts" not in cols("survey_templates"):
             conn.execute("ALTER TABLE survey_templates ADD COLUMN max_attempts INTEGER")
+        if "questions_per_attempt" not in cols("survey_templates"):
+            conn.execute("ALTER TABLE survey_templates ADD COLUMN questions_per_attempt INTEGER")
+        if "shuffle_options" not in cols("survey_templates"):
+            conn.execute("ALTER TABLE survey_templates ADD COLUMN shuffle_options INTEGER NOT NULL DEFAULT 1")
         if "score" not in cols("survey_responses"):
             conn.execute("ALTER TABLE survey_responses ADD COLUMN score INTEGER")
         if "passed" not in cols("survey_responses"):
@@ -1014,22 +1018,53 @@ def _load_template(workshop_id, kind):
         "questions": json.loads(row["questions_json"]),
         "passing_score": row["passing_score"] if "passing_score" in keys else 70,
         "max_attempts": row["max_attempts"] if "max_attempts" in keys else None,
+        "questions_per_attempt": row["questions_per_attempt"] if "questions_per_attempt" in keys else None,
+        "shuffle_options": bool(row["shuffle_options"]) if "shuffle_options" in keys else True,
         "updated_at": row["updated_at"],
     }
 
 
-def _save_template(workshop_id, kind, intro, questions, updated_by, passing_score=70, max_attempts=None):
+def _save_template(workshop_id, kind, intro, questions, updated_by,
+                   passing_score=70, max_attempts=None,
+                   questions_per_attempt=None, shuffle_options=True):
     db = get_db()
     db.execute(
-        "INSERT INTO survey_templates (workshop_id, kind, intro, questions_json, passing_score, max_attempts, updated_by) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?) "
+        "INSERT INTO survey_templates (workshop_id, kind, intro, questions_json, "
+        "passing_score, max_attempts, questions_per_attempt, shuffle_options, updated_by) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) "
         "ON CONFLICT(workshop_id, kind) DO UPDATE SET "
         "intro = excluded.intro, questions_json = excluded.questions_json, "
         "passing_score = excluded.passing_score, max_attempts = excluded.max_attempts, "
+        "questions_per_attempt = excluded.questions_per_attempt, "
+        "shuffle_options = excluded.shuffle_options, "
         "updated_at = CURRENT_TIMESTAMP, updated_by = excluded.updated_by",
-        (workshop_id, kind, intro, json.dumps(questions), passing_score, max_attempts, updated_by),
+        (workshop_id, kind, intro, json.dumps(questions),
+         passing_score, max_attempts, questions_per_attempt, 1 if shuffle_options else 0, updated_by),
     )
     db.commit()
+
+
+def _draw_kc_attempt(template):
+    """Random-select N questions from the pool and optionally shuffle their options.
+    Returns a new template dict with `questions` replaced by the drawn subset.
+    Each question is deep-copied so the pool itself isn't mutated. Correct value
+    is option text, so option shuffle doesn't affect scoring downstream."""
+    import random
+    pool = template.get("questions", [])
+    n = template.get("questions_per_attempt")
+    if n is not None and 0 < n < len(pool):
+        refs = random.sample(pool, n)
+    else:
+        refs = list(pool)
+        random.shuffle(refs)
+    chosen = [dict(q) for q in refs]  # shallow copy each q so option shuffle stays local
+    if template.get("shuffle_options", True):
+        for q in chosen:
+            if q.get("type") in ("single_select", "multi_select") and isinstance(q.get("options"), list):
+                opts = list(q["options"])
+                random.shuffle(opts)
+                q["options"] = opts
+    return {**template, "questions": chosen}
 
 
 def _kc_user_status(session_id, user_id):
@@ -1375,6 +1410,73 @@ def admin_survey_templates(slug):
     )
 
 
+@app.route("/admin/workshops/<slug>/survey-templates/<kind>/import", methods=["POST"])
+def admin_survey_template_import(slug, kind):
+    """Append a JSON-array of questions to the existing pool."""
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    if kind not in ("pre", "post", "knowledge"):
+        abort(404)
+    workshop = get_db().execute("SELECT * FROM workshops WHERE slug = ?", (slug,)).fetchone()
+    if workshop is None:
+        abort(404)
+    template = _load_template(workshop["id"], kind)
+    raw = request.form.get("questions_json", "")
+    try:
+        incoming = json.loads(raw)
+    except json.JSONDecodeError:
+        return redirect(url_for("admin_survey_template_edit", slug=slug, kind=kind))
+    if not isinstance(incoming, list):
+        return redirect(url_for("admin_survey_template_edit", slug=slug, kind=kind))
+    existing = list(template["questions"]) if template else []
+    existing_ids = {q.get("id") for q in existing}
+    next_idx = len(existing) + 1
+    for q in incoming:
+        if not isinstance(q, dict):
+            continue
+        text = str(q.get("text", "")).strip()
+        qtype = q.get("type")
+        if not text or qtype not in ("likert", "multi_select", "single_select", "free_text"):
+            continue
+        qid = str(q.get("id") or "").strip()
+        if not qid or qid in existing_ids:
+            qid = f"q{next_idx}"
+            while qid in existing_ids:
+                next_idx += 1
+                qid = f"q{next_idx}"
+        existing_ids.add(qid)
+        next_idx += 1
+        entry = {"id": qid, "text": text, "type": qtype, "required": bool(q.get("required", False))}
+        if qtype in ("multi_select", "single_select"):
+            opts = q.get("options") or []
+            entry["options"] = [str(o).strip() for o in opts if str(o).strip()]
+            if kind == "knowledge":
+                correct_raw = q.get("correct")
+                if qtype == "single_select":
+                    cstr = str(correct_raw or "").strip()
+                    if cstr:
+                        entry["correct"] = cstr
+                else:
+                    if isinstance(correct_raw, list):
+                        clist = [str(c).strip() for c in correct_raw if str(c).strip()]
+                    else:
+                        clist = [p.strip() for p in str(correct_raw or "").split(";") if p.strip()]
+                    if clist:
+                        entry["correct"] = clist
+        existing.append(entry)
+    _save_template(
+        workshop["id"], kind,
+        template["intro"] if template else "",
+        existing, user["id"],
+        passing_score=template["passing_score"] if template else 70,
+        max_attempts=template["max_attempts"] if template else None,
+        questions_per_attempt=template["questions_per_attempt"] if template else None,
+        shuffle_options=template["shuffle_options"] if template else True,
+    )
+    return redirect(url_for("admin_survey_template_edit", slug=slug, kind=kind))
+
+
 @app.route("/admin/workshops/<slug>/survey-templates/<kind>/edit", methods=["GET", "POST"])
 def admin_survey_template_edit(slug, kind):
     user, redir = _require_facilitator()
@@ -1411,6 +1513,15 @@ def admin_survey_template_edit(slug, kind):
                 max_attempts = max(1, int(max_attempts_raw))
             except ValueError:
                 max_attempts = None
+        qpa_raw = (request.form.get("questions_per_attempt") or "").strip()
+        if qpa_raw == "":
+            questions_per_attempt = None
+        else:
+            try:
+                questions_per_attempt = max(1, int(qpa_raw))
+            except ValueError:
+                questions_per_attempt = None
+        shuffle_options = request.form.get("shuffle_options") == "on"
         try:
             questions = json.loads(request.form.get("questions_json") or "[]")
         except json.JSONDecodeError:
@@ -1448,7 +1559,9 @@ def admin_survey_template_edit(slug, kind):
             error = "At least one question is required."
         if not error:
             _save_template(workshop["id"], kind, intro, questions, user["id"],
-                           passing_score=passing_score, max_attempts=max_attempts)
+                           passing_score=passing_score, max_attempts=max_attempts,
+                           questions_per_attempt=questions_per_attempt,
+                           shuffle_options=shuffle_options if kind == "knowledge" else True)
             return redirect(url_for("admin_survey_templates", slug=slug))
 
     template = _load_template(workshop["id"], kind)
@@ -1512,6 +1625,21 @@ def take_survey(workshop_slug, kind):
                 workshop=workshop, kind=kind, session_name=enrollment["name"],
                 attempts_so_far=attempts_so_far, max_attempts=max_attempts,
             )
+
+    # For knowledge checks, GET draws a fresh random subset from the pool.
+    # POST honors whichever subset was submitted (read from a hidden q_ids field).
+    rendered_template = template
+    if kind == "knowledge":
+        if request.method == "POST":
+            presented_ids = [pid for pid in (request.form.get("q_ids") or "").split(",") if pid]
+            if presented_ids:
+                drawn = [q for q in template["questions"] if q.get("id") in presented_ids]
+                rendered_template = {**template, "questions": drawn}
+            else:
+                rendered_template = _draw_kc_attempt(template)
+        else:
+            rendered_template = _draw_kc_attempt(template)
+    template = rendered_template
 
     error = None
     if request.method == "POST":

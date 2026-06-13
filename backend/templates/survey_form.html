@@ -28,6 +28,9 @@
   {% endif %}
 
   <form method="post" class="survey-form">
+    {% if kind == 'knowledge' %}
+      <input type="hidden" name="q_ids" value="{{ template.questions | map(attribute='id') | join(',') }}">
+    {% endif %}
     {% for q in template.questions %}
       <div class="qblock">
         <label class="qlabel">
