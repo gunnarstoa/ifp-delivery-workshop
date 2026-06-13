@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block title %}Leaderboard — {{ session.name }}{% endblock %}
+{% block body %}
+<meta http-equiv="refresh" content="30">
+<div class="admin-shell">
+  {% set page_title = 'Leaderboard' %}
+  {% set breadcrumbs = [
+    {'label': session.workshop_name, 'url': url_for('admin_workshop_detail', slug=session.workshop_slug)},
+    {'label': session.name, 'url': url_for('admin_session_detail', slug=session.workshop_slug, session_slug=session.slug)},
+    {'label': 'Leaderboard'}
+  ] %}
+  {% include "_admin_header.html" %}
+
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;">
+      <div style="font-size:0.85rem;color:#6b7280;">
+        Auto-refreshes every 30 seconds.
+        <span style="display:inline-flex;align-items:center;gap:0.4rem;margin-left:0.75rem;">
+          <span class="lb-dot lb-dot-done"></span>Done
+        </span>
+        <span style="display:inline-flex;align-items:center;gap:0.4rem;margin-left:0.5rem;">
+          <span class="lb-dot lb-dot-partial"></span>In progress
+        </span>
+        <span style="display:inline-flex;align-items:center;gap:0.4rem;margin-left:0.5rem;">
+          <span class="lb-dot lb-dot-todo"></span>Not started
+        </span>
+      </div>
+      <a class="secondary-btn" href="?reload" style="text-decoration:none;font-size:0.8rem;">↻ Refresh now</a>
+    </div>
+  </div>
+
+  <div class="lb-table-wrap">
+    <table class="lb-table">
+      <thead>
+        <tr>
+          <th class="lb-name-col">Participant</th>
+          <th class="lb-name-col">Partner</th>
+          {% for c in checkpoints %}
+            <th>{{ c.label }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+        <tr class="{{ 'lb-excluded' if r.excluded else '' }}">
+          <td class="lb-name">{{ r.display_name }}{% if r.excluded %} <span class="badge" style="margin-left:0.4rem;">excluded</span>{% endif %}</td>
+          <td class="lb-name">{{ r.partner }}</td>
+          {% for status in r.statuses %}
+            <td class="lb-status">
+              <span class="lb-dot lb-dot-{{ status }}" title="{{ status }}"></span>
+            </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+        {% if not rows %}
+          <tr><td colspan="{{ 2 + checkpoints|length }}" style="text-align:center;color:#6b7280;padding:1rem;">No participants enrolled yet.</td></tr>
+        {% endif %}
+        {% if not checkpoints %}
+          <tr><td colspan="2" style="text-align:center;color:#6b7280;padding:1rem;">No leaderboard checkpoints defined for workshop "{{ session.workshop_slug }}".</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<style>
+  .lb-table-wrap {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    overflow: auto;
+    margin-bottom: 1.5rem;
+  }
+  .lb-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    background: white;
+  }
+  .lb-table thead th {
+    background: #0A2F46;
+    color: white;
+    padding: 10px 12px;
+    text-align: center;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 700;
+    border: 1px solid rgba(255,255,255,0.15);
+    white-space: nowrap;
+  }
+  .lb-table thead th.lb-name-col {
+    text-align: left;
+    width: 1%;
+    white-space: nowrap;
+  }
+  .lb-table tbody td {
+    padding: 8px 12px;
+    border: 1px solid #e8e6e0;
+    text-align: center;
+  }
+  .lb-table tbody td.lb-name {
+    text-align: left;
+    font-weight: 500;
+    color: #0A2F46;
+    white-space: nowrap;
+    font-size: 12px;
+  }
+  .lb-table tbody td.lb-status {
+    padding: 6px 10px;
+  }
+  .lb-table tbody tr:nth-child(even) td { background: #f8f7f4; }
+  .lb-table tbody tr.lb-excluded td { color: #9ca3af; font-style: italic; }
+  .lb-dot {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    vertical-align: middle;
+  }
+  .lb-dot-done    { background: #1A7A47; box-shadow: 0 0 0 1px rgba(26,122,71,0.2); }
+  .lb-dot-partial { background: #C06010; box-shadow: 0 0 0 1px rgba(192,96,16,0.2); }
+  .lb-dot-todo    { background: #cbd5e1; }
+</style>
+{% endblock %}

@@ -1968,6 +1968,98 @@ def admin_workshop_rollup(slug):
     return render_template("admin_workshop_rollup.html", user=user, workshop=workshop, data=rollup)
 
 
+# Per-workshop leaderboard checkpoints. Order matters — defines column order on the leaderboard view.
+WORKSHOP_LEADERBOARD = {
+    "ifp": [
+        {"key": "pre_survey",      "label": "Pre-Workshop Survey",   "type": "survey", "kind": "pre"},
+        {"key": "kickoff",         "label": "View Kickoff",          "type": "page",   "path": "/w/ifp/01-overview.html"},
+        {"key": "lab_1",           "label": "Lab 1",                 "type": "page",   "path": "/w/ifp/06-exercise-1.html"},
+        {"key": "post_gen_1",      "label": "Post-Gen Tasks",        "type": "page",   "path": "/w/ifp/07-generation.html"},
+        {"key": "lab_2",           "label": "Lab 2",                 "type": "page",   "path": "/w/ifp/06-exercise-2.html"},
+        {"key": "post_gen_2",      "label": "Post-Gen Tasks",        "type": "page",   "path": "/w/ifp/08-post-gen.html"},
+        {"key": "lab_3",           "label": "Lab 3",                 "type": "page",   "path": "/w/ifp/06-exercise-3.html"},
+        {"key": "post_gen_3",      "label": "Post-Gen Tasks",        "type": "page",   "path": "/w/ifp/09-error-logs.html"},
+        {"key": "tenant_cleanup",  "label": "Tenant Cleanup",        "type": "page",   "path": "/w/ifp/15-workshop-wrap-up.html"},
+        {"key": "post_survey",     "label": "Post-Workshop Survey",  "type": "survey", "kind": "post"},
+        {"key": "knowledge_check", "label": "Knowledge Check",       "type": "kc"},
+    ],
+}
+
+
+def _session_leaderboard(session_id, workshop_slug):
+    """One row per active participant with a status entry per checkpoint defined in
+    WORKSHOP_LEADERBOARD for this workshop. Status is 'done' / 'partial' / 'todo'."""
+    checkpoints = WORKSHOP_LEADERBOARD.get(workshop_slug, [])
+    db = get_db()
+    participants = db.execute(
+        "SELECT sp.user_id, sp.partner, sp.excluded, u.username "
+        "FROM session_participants sp JOIN users u ON u.id = sp.user_id "
+        "WHERE sp.session_id = ? AND sp.removed_at IS NULL "
+        "ORDER BY sp.partner IS NULL, sp.partner, u.username",
+        (session_id,),
+    ).fetchall()
+
+    page_paths = [c["path"] for c in checkpoints if c["type"] == "page"]
+
+    rows = []
+    for p in participants:
+        if page_paths:
+            ph = ",".join("?" * len(page_paths))
+            visited = {r["path"] for r in db.execute(
+                f"SELECT DISTINCT path FROM page_views WHERE user_id = ? AND path IN ({ph})",
+                [p["user_id"]] + page_paths,
+            ).fetchall()}
+        else:
+            visited = set()
+
+        pre_done = db.execute(
+            "SELECT 1 FROM survey_responses sr JOIN session_surveys ss ON ss.id = sr.survey_id "
+            "WHERE ss.session_id = ? AND ss.kind = 'pre' AND sr.participant_user_id = ? LIMIT 1",
+            (session_id, p["user_id"]),
+        ).fetchone() is not None
+        post_done = db.execute(
+            "SELECT 1 FROM survey_responses sr JOIN session_surveys ss ON ss.id = sr.survey_id "
+            "WHERE ss.session_id = ? AND ss.kind = 'post' AND sr.participant_user_id = ? LIMIT 1",
+            (session_id, p["user_id"]),
+        ).fetchone() is not None
+        kc_attempts, kc_passed = _kc_user_status(session_id, p["user_id"])
+
+        statuses = []
+        for c in checkpoints:
+            if c["type"] == "survey":
+                done = (c["kind"] == "pre" and pre_done) or (c["kind"] == "post" and post_done)
+                statuses.append("done" if done else "todo")
+            elif c["type"] == "page":
+                statuses.append("done" if c["path"] in visited else "todo")
+            elif c["type"] == "kc":
+                if kc_passed:
+                    statuses.append("done")
+                elif kc_attempts:
+                    statuses.append("partial")
+                else:
+                    statuses.append("todo")
+            else:
+                statuses.append("todo")
+
+        # Display name: parse "First Last" from username if username looks like an email,
+        # otherwise just use the username verbatim. Title-case the local part.
+        display = p["username"]
+        if "@" in display:
+            local = display.split("@", 1)[0]
+            parts = re.split(r"[._]", local)
+            display = " ".join(p.title() for p in parts if p)
+
+        rows.append({
+            "user_id": p["user_id"],
+            "username": p["username"],
+            "display_name": display,
+            "partner": p["partner"] or "Unknown",
+            "excluded": bool(p["excluded"]),
+            "statuses": statuses,
+        })
+    return rows, checkpoints
+
+
 def _session_dashboard_rows(session_id, workshop_slug):
     """Per-participant progression snapshot for the live dashboard. One DB pass
     each for participants, then per-user queries for the small data — n usually
@@ -2044,25 +2136,23 @@ def _session_dashboard_rows(session_id, workshop_slug):
     return rows, total_pages, pages_meta
 
 
-@app.route("/admin/workshops/<slug>/sessions/<session_slug>/dashboard")
-def admin_session_dashboard(slug, session_slug):
+@app.route("/admin/workshops/<slug>/sessions/<session_slug>/leaderboard")
+def admin_session_leaderboard(slug, session_slug):
     user, redir = _require_facilitator()
     if redir:
         return redir
     sess = _get_session_or_404(slug, session_slug)
-    rows, total_pages, pages_meta = _session_dashboard_rows(sess["id"], slug)
-    counted = [r for r in rows if not r["excluded"]]
-    active_now = sum(1 for r in counted if r["last_activity"])  # at least one view ever
-    pre_count = sum(1 for r in counted if r["pre_done"])
-    post_count = sum(1 for r in counted if r["post_done"])
-    kc_pass_count = sum(1 for r in counted if r["kc_passed"])
+    rows, checkpoints = _session_leaderboard(sess["id"], slug)
     return render_template(
-        "admin_session_dashboard.html",
-        user=user, session=sess,
-        rows=rows, total_pages=total_pages, pages=pages_meta,
-        counted=len(counted), active_now=active_now,
-        pre_count=pre_count, post_count=post_count, kc_pass_count=kc_pass_count,
+        "admin_session_leaderboard.html",
+        user=user, session=sess, rows=rows, checkpoints=checkpoints,
     )
+
+
+# Backward-compat redirect for the old /dashboard URL
+@app.route("/admin/workshops/<slug>/sessions/<session_slug>/dashboard")
+def admin_session_dashboard(slug, session_slug):
+    return redirect(url_for("admin_session_leaderboard", slug=slug, session_slug=session_slug))
 
 
 @app.route("/admin/workshops/<slug>/sessions/<session_slug>/reports")
