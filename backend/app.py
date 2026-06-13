@@ -499,6 +499,116 @@ def _load_toolkit_asset(workshop_slug: str, asset_slug: str):
     return _parse_toolkit_file(path)
 
 
+def _likert_avg_across_responses(responses):
+    """Mean Likert value across every Likert-classifiable cell of every response."""
+    nums = []
+    for r in responses:
+        for k, v in r["responses"].items():
+            if _is_metadata_header(k) or v is None:
+                continue
+            n = LIKERT_MAP.get(str(v).strip().lower())
+            if n is not None:
+                nums.append(n)
+    return (round(sum(nums) / len(nums), 2), len(nums)) if nums else (None, 0)
+
+
+def _kc_pass_rate(responses):
+    """Pass-rate from a knowledge-check survey: scan any pass/fail-shaped column."""
+    if not responses:
+        return None, 0
+    total = passed = 0
+    for r in responses:
+        for k, v in r["responses"].items():
+            if _is_metadata_header(k) or v is None:
+                continue
+            s = str(v).strip()
+            if PASS_FAIL_RE.match(s):
+                total += 1
+                passed += 1
+            elif FAIL_RE.match(s):
+                total += 1
+    if total == 0:
+        return None, 0
+    return round(passed / total * 100, 1), total
+
+
+def _workshop_summary(workshop_id):
+    """Aggregate metrics across all non-archived sessions for a workshop."""
+    from collections import Counter
+    db = get_db()
+    sessions = db.execute(
+        "SELECT id, slug, name, start_date, end_date "
+        "FROM sessions WHERE workshop_id = ? AND status != 'archived' "
+        "ORDER BY start_date",
+        (workshop_id,),
+    ).fetchall()
+    if not sessions:
+        return None
+    session_ids = [s["id"] for s in sessions]
+    ph = ",".join("?" * len(session_ids))
+    participants = db.execute(
+        f"SELECT sp.partner, sp.excluded, sp.session_id "
+        f"FROM session_participants sp "
+        f"WHERE sp.session_id IN ({ph}) AND sp.removed_at IS NULL",
+        session_ids,
+    ).fetchall()
+    counted = [p for p in participants if not p["excluded"]]
+    partner_counts = Counter(p["partner"] or "Unknown" for p in counted)
+    top_partners = partner_counts.most_common(10)
+    by_session_participants = Counter(p["session_id"] for p in counted)
+
+    pre_nums, post_nums = [], []
+    session_summaries = []
+    for s in sessions:
+        surveys = _load_session_surveys(s["id"])
+        pre = surveys.get("pre")
+        post = surveys.get("post")
+        kc = surveys.get("knowledge")
+        pre_avg, pre_n = (None, 0)
+        post_avg, post_n = (None, 0)
+        kc_rate, kc_total = (None, 0)
+        if pre:
+            pre_resp = _load_survey_responses(pre["id"])
+            pre_avg, pre_n = _likert_avg_across_responses(pre_resp)
+            if pre_avg is not None:
+                pre_nums.extend([pre_avg] * pre_n)
+        if post:
+            post_resp = _load_survey_responses(post["id"])
+            post_avg, post_n = _likert_avg_across_responses(post_resp)
+            if post_avg is not None:
+                post_nums.extend([post_avg] * post_n)
+        if kc:
+            kc_resp = _load_survey_responses(kc["id"])
+            kc_rate, kc_total = _kc_pass_rate(kc_resp)
+        delta = round(post_avg - pre_avg, 2) if (pre_avg is not None and post_avg is not None) else None
+        session_summaries.append({
+            "slug": s["slug"], "name": s["name"],
+            "start_date": s["start_date"], "end_date": s["end_date"],
+            "participants": by_session_participants.get(s["id"], 0),
+            "pre_avg": pre_avg, "post_avg": post_avg, "delta": delta,
+            "pre_n": pre_n, "post_n": post_n,
+            "kc_pass_rate": kc_rate, "kc_n": kc_total,
+        })
+
+    workshop_pre_avg = round(sum(pre_nums) / len(pre_nums), 2) if pre_nums else None
+    workshop_post_avg = round(sum(post_nums) / len(post_nums), 2) if post_nums else None
+    workshop_delta = (round(workshop_post_avg - workshop_pre_avg, 2)
+                      if workshop_pre_avg is not None and workshop_post_avg is not None else None)
+
+    return {
+        "session_count": len(sessions),
+        "total_counted": len(counted),
+        "total_partners": len(partner_counts),
+        "first_date": sessions[0]["start_date"],
+        "last_date": sessions[-1]["end_date"],
+        "top_partners": top_partners,
+        "session_summaries": session_summaries,
+        "workshop_pre_avg": workshop_pre_avg,
+        "workshop_post_avg": workshop_post_avg,
+        "workshop_delta": workshop_delta,
+    }
+
+
 def _list_workshop_pages(workshop_slug):
     """Scan docs/<workshop_slug>/ for .html pages. Returns sorted list with mtimes."""
     base = (REPO_ROOT / "docs" / workshop_slug).resolve()
@@ -539,6 +649,7 @@ def admin_workshop_detail(slug):
     content_root = f"docs/{slug}/"
     toolkit_assets = _list_toolkit_assets(slug)
     toolkit_root = f"toolkit/{slug}/"
+    summary = _workshop_summary(workshop["id"])
     return render_template(
         "admin_workshop_detail.html",
         user=user,
@@ -548,6 +659,7 @@ def admin_workshop_detail(slug):
         content_root=content_root,
         toolkit_assets=toolkit_assets,
         toolkit_root=toolkit_root,
+        summary=summary,
     )
 
 

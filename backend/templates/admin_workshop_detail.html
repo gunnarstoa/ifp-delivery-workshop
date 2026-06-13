@@ -29,6 +29,87 @@
     </div>
   </div>
 
+  {% if summary %}
+  <div class="card">
+    <h2 style="margin-top:0;">Workshop summary</h2>
+    <p class="help-note" style="margin-top:0.25rem;">Rolled up across the {{ summary.session_count }} non-archived session{{ '' if summary.session_count == 1 else 's' }} from {{ summary.first_date }} to {{ summary.last_date }}.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0.75rem;margin:1rem 0;">
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:0.75rem;">
+        <div style="font-size:0.72rem;text-transform:uppercase;color:#6b7280;letter-spacing:0.05em;">Sessions</div>
+        <div style="font-size:1.6rem;font-weight:700;color:#1e3a5f;line-height:1.1;">{{ summary.session_count }}</div>
+      </div>
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:0.75rem;">
+        <div style="font-size:0.72rem;text-transform:uppercase;color:#6b7280;letter-spacing:0.05em;">Counted participants</div>
+        <div style="font-size:1.6rem;font-weight:700;color:#1e3a5f;line-height:1.1;">{{ summary.total_counted }}</div>
+      </div>
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:0.75rem;">
+        <div style="font-size:0.72rem;text-transform:uppercase;color:#6b7280;letter-spacing:0.05em;">Partner firms</div>
+        <div style="font-size:1.6rem;font-weight:700;color:#1e3a5f;line-height:1.1;">{{ summary.total_partners }}</div>
+      </div>
+      {% if summary.workshop_pre_avg is not none or summary.workshop_post_avg is not none %}
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:0.75rem;">
+        <div style="font-size:0.72rem;text-transform:uppercase;color:#6b7280;letter-spacing:0.05em;">Pre / Post avg</div>
+        <div style="font-size:1.1rem;font-weight:700;color:#1e3a5f;line-height:1.2;">
+          {{ summary.workshop_pre_avg if summary.workshop_pre_avg is not none else '—' }}
+          → {{ summary.workshop_post_avg if summary.workshop_post_avg is not none else '—' }}
+        </div>
+        {% if summary.workshop_delta is not none %}
+          <div style="font-size:0.85rem;font-weight:600;color:{{ '#15803d' if summary.workshop_delta >= 0 else '#b91c1c' }};">
+            {{ '+' if summary.workshop_delta >= 0 else '' }}{{ summary.workshop_delta }} Δ
+          </div>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+
+    {% if summary.session_summaries %}
+    <h3 style="font-size:0.95rem;margin:1.25rem 0 0.5rem 0;color:#1e3a5f;">Per-session progression</h3>
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>Session</th>
+          <th>Dates</th>
+          <th style="text-align:right;">Participants</th>
+          <th style="text-align:right;">Pre avg</th>
+          <th style="text-align:right;">Post avg</th>
+          <th style="text-align:right;">Δ</th>
+          <th style="text-align:right;">KC pass</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in summary.session_summaries %}
+        <tr>
+          <td><a href="{{ url_for('admin_session_detail', slug=workshop.slug, session_slug=s.slug) }}">{{ s.name }}</a></td>
+          <td style="font-size:0.85rem;color:#6b7280;">{{ s.start_date }} → {{ s.end_date }}</td>
+          <td style="text-align:right;font-variant-numeric:tabular-nums;">{{ s.participants }}</td>
+          <td style="text-align:right;font-variant-numeric:tabular-nums;">{{ s.pre_avg if s.pre_avg is not none else '—' }}</td>
+          <td style="text-align:right;font-variant-numeric:tabular-nums;">{{ s.post_avg if s.post_avg is not none else '—' }}</td>
+          <td style="text-align:right;font-variant-numeric:tabular-nums;font-weight:600;color:{{ '#15803d' if s.delta is not none and s.delta >= 0 else ('#b91c1c' if s.delta is not none else '#6b7280') }};">
+            {% if s.delta is not none %}{{ '+' if s.delta >= 0 else '' }}{{ s.delta }}{% else %}—{% endif %}
+          </td>
+          <td style="text-align:right;font-variant-numeric:tabular-nums;">{% if s.kc_pass_rate is not none %}{{ s.kc_pass_rate }}%{% else %}—{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+
+    {% if summary.top_partners %}
+    <h3 style="font-size:0.95rem;margin:1.5rem 0 0.5rem 0;color:#1e3a5f;">Top partners by participant volume</h3>
+    {% set max_count = summary.top_partners[0][1] %}
+    {% for partner, count in summary.top_partners %}
+      <div style="display:grid;grid-template-columns:200px 1fr 80px;gap:0.5rem;align-items:center;font-size:0.85rem;margin:0.2rem 0;">
+        <div>{{ partner }}</div>
+        <div style="background:#eff6ff;border-radius:3px;height:14px;overflow:hidden;">
+          <div style="background:#0066cc;height:100%;width:{{ (count / max_count * 100) | round(1) }}%;"></div>
+        </div>
+        <div style="text-align:right;font-variant-numeric:tabular-nums;color:#374151;">{{ count }}</div>
+      </div>
+    {% endfor %}
+    {% endif %}
+  </div>
+  {% endif %}
+
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-bottom:1.5rem;">
     <div class="card" style="grid-column: 1 / -1;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
