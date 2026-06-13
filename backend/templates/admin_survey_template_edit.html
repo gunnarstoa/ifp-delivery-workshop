@@ -132,7 +132,7 @@ function render() {
         optsBlock += `<div style="margin-top:0.5rem;font-size:0.78rem;color:#1e3a5f;font-weight:600;">Correct answer${q.type === 'multi_select' ? '(s)' : ''}</div><textarea placeholder="${placeholder}" oninput="setCorrect(${i}, this.value)" style="background:#f0fdf4;border-color:#86efac;">${escapeHtml(correctValue(q))}</textarea>`;
       }
     } else if (q.type === 'likert') {
-      optsBlock = `<div style="font-size:0.78rem;color:#6b7280;margin-top:0.4rem;">Fixed 5-point scale: Very comfortable → Very uncomfortable.${KIND === 'knowledge' ? ' Likert isn\\'t scoreable in a knowledge check — use single-select instead.' : ''}</div>`;
+      optsBlock = `<div style="font-size:0.78rem;color:#6b7280;margin-top:0.4rem;">Fixed 5-point scale: Very comfortable → Very uncomfortable.${KIND === 'knowledge' ? " Likert is not scoreable in a knowledge check — use single-select instead." : ''}</div>`;
     } else if (q.type === 'free_text' && KIND === 'knowledge') {
       optsBlock = `<div style="font-size:0.78rem;color:#6b7280;margin-top:0.4rem;">Free text isn't scoreable in a knowledge check.</div>`;
     }
