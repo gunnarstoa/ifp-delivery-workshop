@@ -17,9 +17,16 @@
     { "name": "Deloitte", "domains": ["deloitte.com"] },
     { "name": "TCS", "domains": ["tcs.com"] },
     { "name": "Bluecrux", "domains": ["bluecrux.com"] },
-    { "name": "KPMG", "domains": ["kpmg.com"] },
+    { "name": "KPMG", "domains": ["kpmg.com", "kpmg.ca"] },
     { "name": "Viseo", "domains": ["viseo.com"] },
     { "name": "Auxo AI", "domains": ["auxoai.com"] },
+    { "name": "Polestar", "domains": ["polestarllp.com", "polestaranalytics.com"] },
+    { "name": "Accordion", "domains": ["accordion.com"] },
+    { "name": "Slalom", "domains": ["slalom.com"] },
+    { "name": "Platform Specialists", "domains": ["platformspecialists.com"] },
+    { "name": "Allitix", "domains": ["allitix.com"] },
+    { "name": "Valizant", "domains": ["valizant.com"] },
+    { "name": "Fadmoor", "domains": ["fadmoor.com"] },
     { "name": "Anaplan (internal)", "domains": ["anaplan.com"] }
   ]
 }
