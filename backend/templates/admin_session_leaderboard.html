@@ -31,6 +31,11 @@
 
   <div class="lb-table-wrap">
     <table class="lb-table">
+      <colgroup>
+        <col class="lb-col-name">
+        <col class="lb-col-partner">
+        {% for c in checkpoints %}<col class="lb-col-status">{% endfor %}
+      </colgroup>
       <thead>
         <tr>
           <th class="lb-name-col">Participant</th>
@@ -64,51 +69,59 @@
 </div>
 
 <style>
+  /* Leaderboard page widens the admin shell so all 13 columns fit without scrolling */
+  .admin-shell { max-width: none; padding: 1.5rem; }
   .lb-table-wrap {
     background: white;
     border: 1px solid #e2e8f0;
     border-radius: 6px;
-    overflow: auto;
     margin-bottom: 1.5rem;
   }
   .lb-table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
     font-size: 12px;
     background: white;
   }
+  /* Columns: name and partner get fixed left widths; every status column shares equal remaining width */
+  .lb-col-name    { width: 160px; }
+  .lb-col-partner { width: 130px; }
+  .lb-col-status  { width: auto; }
   .lb-table thead th {
     background: #0A2F46;
     color: white;
-    padding: 10px 12px;
+    padding: 8px 4px;
     text-align: center;
     font-size: 10px;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     font-weight: 700;
     border: 1px solid rgba(255,255,255,0.15);
-    white-space: nowrap;
+    line-height: 1.25;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
   .lb-table thead th.lb-name-col {
     text-align: left;
-    width: 1%;
-    white-space: nowrap;
+    padding-left: 12px;
   }
   .lb-table tbody td {
-    padding: 8px 12px;
+    padding: 8px 6px;
     border: 1px solid #e8e6e0;
     text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .lb-table tbody td.lb-name {
     text-align: left;
     font-weight: 500;
     color: #0A2F46;
-    white-space: nowrap;
     font-size: 12px;
+    padding-left: 12px;
+    white-space: nowrap;
   }
-  .lb-table tbody td.lb-status {
-    padding: 6px 10px;
-  }
+  .lb-table tbody td.lb-status { padding: 6px 4px; }
   .lb-table tbody tr:nth-child(even) td { background: #f8f7f4; }
   .lb-table tbody tr.lb-excluded td { color: #9ca3af; font-style: italic; }
   .lb-dot {
