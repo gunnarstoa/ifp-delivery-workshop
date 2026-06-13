@@ -90,3 +90,30 @@ CREATE TABLE IF NOT EXISTS session_participants (
 
 CREATE INDEX IF NOT EXISTS idx_sp_session_active ON session_participants(session_id) WHERE removed_at IS NULL;
 CREATE INDEX IF NOT EXISTS idx_sp_user ON session_participants(user_id);
+
+CREATE TABLE IF NOT EXISTS session_surveys (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  session_id INTEGER NOT NULL,
+  kind TEXT NOT NULL,
+  filename TEXT,
+  uploaded_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  uploaded_by INTEGER,
+  total_rows INTEGER NOT NULL DEFAULT 0,
+  is_anonymous INTEGER NOT NULL DEFAULT 0,
+  headers_json TEXT,
+  FOREIGN KEY (session_id) REFERENCES sessions(id) ON DELETE CASCADE,
+  FOREIGN KEY (uploaded_by) REFERENCES users(id),
+  UNIQUE (session_id, kind)
+);
+
+CREATE TABLE IF NOT EXISTS survey_responses (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  survey_id INTEGER NOT NULL,
+  participant_user_id INTEGER,
+  raw_email TEXT,
+  responses_json TEXT NOT NULL,
+  FOREIGN KEY (survey_id) REFERENCES session_surveys(id) ON DELETE CASCADE,
+  FOREIGN KEY (participant_user_id) REFERENCES users(id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_survey_responses_survey ON survey_responses(survey_id);

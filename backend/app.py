@@ -658,6 +658,35 @@ def admin_session_detail(slug, session_slug):
 EMAIL_RE = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
 PARTNERS_FILE = REPO_ROOT / "data" / "cohorts" / "_partners.json"
 
+LIKERT_MAP = {
+    "very comfortable": 5,
+    "comfortable": 4,
+    "somewhat comfortable": 4,
+    "neither comfortable nor uncomfortable": 3,
+    "neutral": 3,
+    "somewhat uncomfortable": 2,
+    "uncomfortable": 2,
+    "very uncomfortable": 1,
+    "not at all comfortable": 1,
+    "strongly agree": 5,
+    "agree": 4,
+    "somewhat agree": 4,
+    "neither agree nor disagree": 3,
+    "somewhat disagree": 2,
+    "disagree": 2,
+    "strongly disagree": 1,
+}
+
+LIKERT_ORDER = ["Very comfortable", "Somewhat comfortable", "Neither comfortable nor uncomfortable", "Somewhat uncomfortable", "Very uncomfortable"]
+
+CATEGORICAL_ALIASES = {
+    "master anaplanner": "Certified Master Anaplanner",
+}
+
+SURVEY_METADATA_HEADERS = {"id", "start time", "completion time", "email", "name", "last modified time"}
+PASS_FAIL_RE = re.compile(r"^(pass|passed|yes|y|true|1)$", re.IGNORECASE)
+FAIL_RE = re.compile(r"^(fail|failed|no|n|false|0)$", re.IGNORECASE)
+
 
 def _load_partners():
     """Load partner directory and build a domain→partner_name lookup. Cached on app.config."""
@@ -794,6 +823,267 @@ def admin_session_participants(slug, session_slug):
         total=len(participants), included=included,
         added_results=added_results,
     )
+
+
+# ---------------------------- Surveys ----------------------------
+
+def _parse_xlsx_upload(file_storage):
+    """Parse uploaded XLSX into (headers, rows). Rows is list[dict header->value]."""
+    from openpyxl import load_workbook
+    wb = load_workbook(file_storage, data_only=True, read_only=True)
+    ws = wb[wb.sheetnames[0]]
+    all_rows = list(ws.iter_rows(values_only=True))
+    if not all_rows:
+        return [], []
+    headers = []
+    seen_h = set()
+    for i, h in enumerate(all_rows[0] or []):
+        name = str(h).strip() if h is not None else f"col_{i}"
+        if name in seen_h:
+            name = f"{name}_{i}"
+        seen_h.add(name)
+        headers.append(name)
+    rows = []
+    for row in all_rows[1:]:
+        if not row or not any(c not in (None, "") for c in row):
+            continue
+        rows.append({headers[i]: row[i] for i in range(min(len(headers), len(row)))})
+    return headers, rows
+
+
+def _is_metadata_header(h):
+    return str(h).strip().lower() in SURVEY_METADATA_HEADERS
+
+
+def _detect_question_type(values):
+    """Given non-empty values, return 'likert' | 'multi_select' | 'single_select' | 'pass_fail' | 'free_text'."""
+    cleaned = [str(v).strip() for v in values if v is not None and str(v).strip()]
+    if not cleaned:
+        return "free_text"
+    if any(";" in v for v in cleaned):
+        return "multi_select"
+    lower = [v.lower() for v in cleaned]
+    if all(v in LIKERT_MAP for v in lower):
+        return "likert"
+    if all(PASS_FAIL_RE.match(v) or FAIL_RE.match(v) for v in cleaned):
+        return "pass_fail"
+    unique = set(lower)
+    if len(unique) <= 8 and all(len(v) <= 50 for v in cleaned):
+        return "single_select"
+    return "free_text"
+
+
+def _normalize_categorical(v):
+    s = str(v).strip()
+    return CATEGORICAL_ALIASES.get(s.lower(), s)
+
+
+def _split_multi(v):
+    return [_normalize_categorical(p) for p in str(v).split(";") if p.strip()]
+
+
+def _detect_anonymous(rows):
+    has_email = any(str(r.get("Email", "") or "").strip().lower() not in ("", "anonymous") and "@" in str(r.get("Email", "") or "") for r in rows)
+    return not has_email and len(rows) > 0
+
+
+def _aggregate_question(qheader, qtype, rows):
+    """Compute aggregate stats for one question across rows."""
+    values = []
+    for r in rows:
+        v = r["responses"].get(qheader)
+        if v is None or str(v).strip() == "":
+            continue
+        values.append(v)
+    if qtype == "likert":
+        nums = []
+        dist = {label: 0 for label in LIKERT_ORDER}
+        for v in values:
+            label_key = str(v).strip().lower()
+            n = LIKERT_MAP.get(label_key)
+            if n is None:
+                continue
+            nums.append(n)
+            display_label = str(v).strip()
+            if display_label not in dist:
+                dist[display_label] = 0
+            dist[display_label] += 1
+        avg = round(sum(nums) / len(nums), 2) if nums else None
+        ordered = [{"label": k, "count": v, "pct": round(v / len(nums) * 100, 1) if nums else 0} for k, v in dist.items()]
+        return {"type": "likert", "n": len(nums), "avg": avg, "distribution": ordered}
+    if qtype == "multi_select":
+        counts = {}
+        for v in values:
+            for opt in _split_multi(v):
+                counts[opt] = counts.get(opt, 0) + 1
+        n_respondents = len(values)
+        items = sorted(counts.items(), key=lambda x: -x[1])
+        return {
+            "type": "multi_select",
+            "n": n_respondents,
+            "items": [{"label": k, "count": v, "pct": round(v / n_respondents * 100, 1) if n_respondents else 0} for k, v in items],
+        }
+    if qtype == "single_select":
+        counts = {}
+        for v in values:
+            opt = _normalize_categorical(v)
+            counts[opt] = counts.get(opt, 0) + 1
+        items = sorted(counts.items(), key=lambda x: -x[1])
+        return {
+            "type": "single_select",
+            "n": len(values),
+            "items": [{"label": k, "count": v, "pct": round(v / len(values) * 100, 1)} for k, v in items],
+        }
+    if qtype == "pass_fail":
+        passed = sum(1 for v in values if PASS_FAIL_RE.match(str(v).strip()))
+        failed = len(values) - passed
+        return {"type": "pass_fail", "n": len(values), "passed": passed, "failed": failed, "pass_rate": round(passed / len(values) * 100, 1) if values else 0}
+    samples = [str(v) for v in values[:200]]
+    return {"type": "free_text", "n": len(values), "samples": samples}
+
+
+def _store_survey_upload(session_id, kind, filename, uploaded_by, headers, rows):
+    """Persist the parsed survey. Replaces any existing same-kind survey for this session."""
+    db = get_db()
+    is_anon = _detect_anonymous(rows)
+    db.execute("DELETE FROM session_surveys WHERE session_id = ? AND kind = ?", (session_id, kind))
+    cur = db.execute(
+        "INSERT INTO session_surveys (session_id, kind, filename, uploaded_by, total_rows, is_anonymous, headers_json) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?)",
+        (session_id, kind, filename, uploaded_by, len(rows), 1 if is_anon else 0, json.dumps(headers)),
+    )
+    survey_id = cur.lastrowid
+    for r in rows:
+        email = str(r.get("Email", "") or "").strip().lower()
+        if not email or email == "anonymous" or "@" not in email:
+            email_to_store = None
+            user_id = None
+        else:
+            email_to_store = email
+            u = db.execute("SELECT id FROM users WHERE username = ?", (email,)).fetchone()
+            user_id = u["id"] if u else None
+        db.execute(
+            "INSERT INTO survey_responses (survey_id, participant_user_id, raw_email, responses_json) "
+            "VALUES (?, ?, ?, ?)",
+            (survey_id, user_id, email_to_store, json.dumps(r)),
+        )
+    db.commit()
+    return survey_id, is_anon
+
+
+def _load_session_surveys(session_id):
+    """Return dict {kind: survey_row} for this session."""
+    rows = get_db().execute(
+        "SELECT * FROM session_surveys WHERE session_id = ?", (session_id,)
+    ).fetchall()
+    return {r["kind"]: dict(r) for r in rows}
+
+
+def _load_survey_responses(survey_id):
+    rows = get_db().execute(
+        "SELECT participant_user_id, raw_email, responses_json FROM survey_responses WHERE survey_id = ?",
+        (survey_id,),
+    ).fetchall()
+    out = []
+    for r in rows:
+        out.append({
+            "user_id": r["participant_user_id"],
+            "raw_email": r["raw_email"],
+            "responses": json.loads(r["responses_json"]),
+        })
+    return out
+
+
+def _classify_columns(headers, responses):
+    """Return list of {header, qtype} for non-metadata columns."""
+    out = []
+    for h in headers:
+        if _is_metadata_header(h):
+            continue
+        vals = [r["responses"].get(h) for r in responses]
+        out.append({"header": h, "qtype": _detect_question_type(vals)})
+    return out
+
+
+@app.route("/admin/workshops/<slug>/sessions/<session_slug>/surveys", methods=["GET"])
+def admin_session_surveys(slug, session_slug):
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    sess = _get_session_or_404(slug, session_slug)
+    surveys = _load_session_surveys(sess["id"])
+    sections = []
+    for kind in ("pre", "post", "knowledge"):
+        s = surveys.get(kind)
+        if not s:
+            sections.append({"kind": kind, "survey": None})
+            continue
+        responses = _load_survey_responses(s["id"])
+        headers = json.loads(s["headers_json"]) if s["headers_json"] else []
+        cols = _classify_columns(headers, responses)
+        aggregates = []
+        for c in cols:
+            agg = _aggregate_question(c["header"], c["qtype"], responses)
+            agg["header"] = c["header"]
+            aggregates.append(agg)
+        sections.append({
+            "kind": kind, "survey": s, "responses_count": len(responses),
+            "is_anonymous": bool(s["is_anonymous"]), "aggregates": aggregates,
+        })
+    # Pre vs post Likert matching
+    pre_aggs = next((s["aggregates"] for s in sections if s["kind"] == "pre" and s.get("aggregates")), [])
+    post_aggs = next((s["aggregates"] for s in sections if s["kind"] == "post" and s.get("aggregates")), [])
+    pre_by_h = {a["header"]: a for a in pre_aggs if a["type"] == "likert"}
+    matched_likert = []
+    for a in post_aggs:
+        if a["type"] != "likert":
+            continue
+        pre = pre_by_h.get(a["header"])
+        if not pre:
+            continue
+        delta = (a["avg"] - pre["avg"]) if (a["avg"] is not None and pre["avg"] is not None) else None
+        matched_likert.append({
+            "header": a["header"], "pre_avg": pre["avg"], "post_avg": a["avg"],
+            "delta": round(delta, 2) if delta is not None else None,
+            "pre_n": pre["n"], "post_n": a["n"],
+        })
+    return render_template(
+        "admin_session_surveys.html",
+        user=user, session=sess, sections=sections, matched_likert=matched_likert,
+    )
+
+
+@app.route("/admin/workshops/<slug>/sessions/<session_slug>/surveys/upload", methods=["POST"])
+def admin_session_survey_upload(slug, session_slug):
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    sess = _get_session_or_404(slug, session_slug)
+    kind = (request.form.get("kind") or "").strip().lower()
+    if kind not in ("pre", "post", "knowledge"):
+        abort(400)
+    file = request.files.get("file")
+    if not file or not file.filename:
+        return redirect(url_for("admin_session_surveys", slug=slug, session_slug=session_slug))
+    try:
+        headers, rows = _parse_xlsx_upload(file)
+    except Exception as e:
+        return f"Failed to parse: {e}", 400
+    _store_survey_upload(sess["id"], kind, file.filename, user["id"], headers, rows)
+    return redirect(url_for("admin_session_surveys", slug=slug, session_slug=session_slug))
+
+
+@app.route("/admin/workshops/<slug>/sessions/<session_slug>/surveys/<kind>/remove", methods=["POST"])
+def admin_session_survey_remove(slug, session_slug, kind):
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    if kind not in ("pre", "post", "knowledge"):
+        abort(400)
+    sess = _get_session_or_404(slug, session_slug)
+    get_db().execute("DELETE FROM session_surveys WHERE session_id = ? AND kind = ?", (sess["id"], kind))
+    get_db().commit()
+    return redirect(url_for("admin_session_surveys", slug=slug, session_slug=session_slug))
 
 
 @app.route("/admin/workshops/<slug>/sessions/<session_slug>/participants/<int:user_id>/remove", methods=["POST"])

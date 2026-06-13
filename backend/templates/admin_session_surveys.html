@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block title %}Surveys — {{ session.name }}{% endblock %}
+{% block body %}
+<div class="admin-shell">
+  {% set page_title = 'Surveys & Knowledge Check' %}
+  {% set breadcrumbs = [
+    {'label': session.workshop_name, 'url': url_for('admin_workshop_detail', slug=session.workshop_slug)},
+    {'label': session.name, 'url': url_for('admin_session_detail', slug=session.workshop_slug, session_slug=session.slug)},
+    {'label': 'Surveys'}
+  ] %}
+  {% include "_admin_header.html" %}
+
+  <div class="card">
+    <h2 style="margin-top:0;">Upload</h2>
+    <p class="help-note" style="margin-top:0;">Upload the XLSX export from Microsoft Forms. Replacing an existing upload simply re-imports.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0.75rem;">
+      {% for kind_label in [('pre','Pre-workshop survey'), ('post','Post-workshop survey'), ('knowledge','Knowledge check')] %}
+        {% set kind = kind_label[0] %}
+        {% set label = kind_label[1] %}
+        {% set section = sections | selectattr('kind','equalto',kind) | first %}
+        <div style="border:1px solid #e2e8f0;border-radius:6px;padding:0.75rem;background:#fafafa;">
+          <div style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.05em;color:#6b7280;font-weight:600;">{{ label }}</div>
+          {% if section.survey %}
+            <div style="margin:0.4rem 0;font-size:0.85rem;">
+              <strong>{{ section.responses_count }} responses</strong>{% if section.is_anonymous %} <span class="badge">anonymous</span>{% endif %}
+              <div style="font-size:0.78rem;color:#6b7280;margin-top:0.15rem;">{{ section.survey.filename }} · uploaded {{ section.survey.uploaded_at }}</div>
+            </div>
+            <form method="post" action="{{ url_for('admin_session_survey_remove', slug=session.workshop_slug, session_slug=session.slug, kind=kind) }}" onsubmit="return confirm('Remove the {{ label }} upload?');" style="display:inline;">
+              <button class="danger-btn" type="submit">Remove</button>
+            </form>
+          {% else %}
+            <p class="help-note" style="margin:0.3rem 0;">No upload yet.</p>
+          {% endif %}
+          <form method="post" action="{{ url_for('admin_session_survey_upload', slug=session.workshop_slug, session_slug=session.slug) }}" enctype="multipart/form-data" style="margin-top:0.5rem;">
+            <input type="hidden" name="kind" value="{{ kind }}">
+            <input type="file" name="file" accept=".xlsx" required style="font-size:0.8rem;">
+            <button class="primary-btn" type="submit" style="margin-top:0.4rem;">{{ 'Replace' if section.survey else 'Upload' }}</button>
+          </form>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  {% if matched_likert %}
+  <div class="card">
+    <h2 style="margin-top:0;">Pre → Post Likert comparison</h2>
+    <p class="help-note">Matched on identical question header. 5 = Very comfortable, 1 = Very uncomfortable. Δ &gt; 0 = improvement.</p>
+    <table class="users-table">
+      <thead>
+        <tr><th>Question</th><th style="text-align:right;">Pre avg</th><th style="text-align:right;">Post avg</th><th style="text-align:right;">Δ</th><th style="text-align:right;font-size:0.72rem;color:#6b7280;">n (pre / post)</th></tr>
+      </thead>
+      <tbody>
+        {% for m in matched_likert %}
+        <tr>
+          <td>{{ m.header }}</td>
+          <td style="text-align:right;font-variant-numeric:tabular-nums;">{{ m.pre_avg if m.pre_avg is not none else '—' }}</td>
+          <td style="text-align:right;font-variant-numeric:tabular-nums;">{{ m.post_avg if m.post_avg is not none else '—' }}</td>
+          <td style="text-align:right;font-weight:700;color:{{ '#15803d' if m.delta is not none and m.delta >= 0 else '#b91c1c' }};font-variant-numeric:tabular-nums;">
+            {% if m.delta is not none %}{{ '+' if m.delta >= 0 else '' }}{{ m.delta }}{% else %}—{% endif %}
+          </td>
+          <td style="text-align:right;font-size:0.78rem;color:#6b7280;">{{ m.pre_n }} / {{ m.post_n }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  {% for section in sections %}
+    {% if section.survey %}
+    <div class="card">
+      <h2 style="margin-top:0;">
+        {% if section.kind == 'pre' %}Pre-workshop survey
+        {% elif section.kind == 'post' %}Post-workshop survey
+        {% else %}Knowledge check{% endif %}
+        <span style="font-weight:400;color:#6b7280;font-size:0.85rem;">· {{ section.responses_count }} responses</span>
+      </h2>
+      {% for agg in section.aggregates %}
+        <div style="margin:1.25rem 0;padding-top:1rem;border-top:1px solid #f3f4f6;">
+          <div style="display:flex;align-items:center;gap:0.5rem;">
+            <strong style="font-size:0.95rem;">{{ agg.header }}</strong>
+            <span class="badge">{{ agg.type | replace('_', ' ') }}</span>
+            <span style="font-size:0.78rem;color:#6b7280;margin-left:auto;">n = {{ agg.n }}</span>
+          </div>
+          {% if agg.type == 'likert' %}
+            <div style="margin-top:0.5rem;font-size:0.9rem;"><strong>Average: {{ agg.avg if agg.avg is not none else '—' }}</strong> / 5</div>
+            <div style="margin-top:0.5rem;">
+              {% for d in agg.distribution %}
+                {% if d.count > 0 %}
+                <div style="display:grid;grid-template-columns:200px 1fr 60px;gap:0.5rem;align-items:center;font-size:0.85rem;margin:0.2rem 0;">
+                  <div>{{ d.label }}</div>
+                  <div style="background:#eff6ff;border-radius:3px;height:14px;overflow:hidden;">
+                    <div style="background:#0066cc;height:100%;width:{{ d.pct }}%;"></div>
+                  </div>
+                  <div style="text-align:right;font-variant-numeric:tabular-nums;color:#374151;">{{ d.count }} · {{ d.pct }}%</div>
+                </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          {% elif agg.type in ('multi_select', 'single_select') %}
+            {% set total_n = agg.n %}
+            {% for item in agg['items'] %}
+              <div style="display:grid;grid-template-columns:240px 1fr 80px;gap:0.5rem;align-items:center;font-size:0.85rem;margin:0.2rem 0;">
+                <div>{{ item.label }}</div>
+                <div style="background:#eff6ff;border-radius:3px;height:14px;overflow:hidden;">
+                  <div style="background:#0066cc;height:100%;width:{{ item.pct }}%;"></div>
+                </div>
+                <div style="text-align:right;font-variant-numeric:tabular-nums;color:#374151;">{{ item.count }} · {{ item.pct }}%</div>
+              </div>
+            {% endfor %}
+            {% if agg.type == 'multi_select' %}
+              <p class="help-note" style="margin:0.5rem 0 0 0;">Multi-select — percentages don't sum to 100% (a respondent can pick multiple).</p>
+            {% endif %}
+          {% elif agg.type == 'pass_fail' %}
+            <div style="margin-top:0.5rem;">
+              <div style="display:flex;gap:1rem;align-items:center;">
+                <div style="font-size:1.6rem;font-weight:700;color:#15803d;">{{ agg.pass_rate }}%</div>
+                <div style="font-size:0.85rem;color:#6b7280;">
+                  <strong style="color:#15803d;">{{ agg.passed }}</strong> pass · <strong style="color:#b91c1c;">{{ agg.failed }}</strong> fail
+                </div>
+              </div>
+            </div>
+          {% else %}
+            <details style="margin-top:0.5rem;">
+              <summary style="cursor:pointer;font-size:0.85rem;color:#6b7280;">Show {{ agg.samples | length }} responses</summary>
+              <ul style="font-size:0.85rem;line-height:1.5;margin:0.5rem 0 0 1rem;">
+                {% for s in agg.samples %}<li>{{ s }}</li>{% endfor %}
+              </ul>
+            </details>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  {% endfor %}
+</div>
+{% endblock %}

@@ -46,8 +46,11 @@
       {% endif %}
     </div>
     <div class="card">
-      <h2>Surveys &amp; Knowledge Check</h2>
-      <p class="help-note">Upload pre-survey, post-survey, and knowledge-check XLSX files. Anonymous-Likert support is built into the existing tracker and will move here.</p>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+        <h2 style="margin:0;">Surveys &amp; Knowledge Check</h2>
+        <a class="primary-btn" href="{{ url_for('admin_session_surveys', slug=session.workshop_slug, session_slug=session.slug) }}" style="text-decoration:none;">Open →</a>
+      </div>
+      <p class="help-note" style="margin:0;">Upload pre-survey, post-survey, and knowledge-check XLSX exports. Auto-detects question types (Likert, multi-select, single-select, free text). Anonymous-mode handled.</p>
     </div>
     <div class="card">
       <h2>Reports</h2>
