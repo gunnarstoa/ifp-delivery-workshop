@@ -1510,6 +1510,96 @@ def _session_report_data(session_id):
     }
 
 
+def _workshop_rollup_data(workshop_id, workshop_name, workshop_slug):
+    """Aggregate report data across every non-archived session of a workshop."""
+    db = get_db()
+    sessions = db.execute(
+        "SELECT id, slug, name, start_date, end_date "
+        "FROM sessions WHERE workshop_id = ? AND status != 'archived' "
+        "ORDER BY start_date",
+        (workshop_id,),
+    ).fetchall()
+    if not sessions:
+        return None
+    session_data = [_session_report_data(s["id"]) for s in sessions]
+
+    total_registered = sum(s["total_registered"] for s in session_data)
+    total_counted = sum(s["total_counted"] for s in session_data)
+    pre_count = sum(s["pre_count"] for s in session_data)
+    post_count = sum(s["post_count"] for s in session_data)
+    kc_pass_count = sum(s["kc_pass_count"] for s in session_data)
+    all_three = sum(s["all_three"] for s in session_data)
+
+    from collections import defaultdict
+    partner_totals = defaultdict(lambda: {"count": 0, "pre_done": 0, "post_done": 0, "kc_pass": 0, "all_three": 0})
+    for sd in session_data:
+        for b in sd["partners"]:
+            agg = partner_totals[b["name"]]
+            agg["count"] += b["count"]
+            agg["pre_done"] += b["pre_done"]
+            agg["post_done"] += b["post_done"]
+            agg["kc_pass"] += b["kc_pass"]
+            agg["all_three"] += b["all_three"]
+    partners = []
+    for name, agg in partner_totals.items():
+        rate = (agg["all_three"] / agg["count"]) if agg["count"] else 0
+        partners.append({"name": name, "slug": _partner_slug(name),
+                         "count": agg["count"], "all_three": agg["all_three"],
+                         "pre_done": agg["pre_done"], "post_done": agg["post_done"],
+                         "kc_pass": agg["kc_pass"], "rate": rate})
+    partners.sort(key=lambda b: (-b["rate"], -b["count"], b["name"]))
+
+    pre_avgs = [s["pre_likert_avg"] for s in session_data if s["pre_likert_avg"] is not None]
+    post_avgs = [s["post_likert_avg"] for s in session_data if s["post_likert_avg"] is not None]
+    workshop_pre_avg = round(sum(pre_avgs) / len(pre_avgs), 2) if pre_avgs else None
+    workshop_post_avg = round(sum(post_avgs) / len(post_avgs), 2) if post_avgs else None
+    workshop_delta = (round(workshop_post_avg - workshop_pre_avg, 2)
+                      if workshop_pre_avg is not None and workshop_post_avg is not None else None)
+
+    return {
+        "workshop_name": workshop_name,
+        "workshop_slug": workshop_slug,
+        "session_count": len(sessions),
+        "first_date": sessions[0]["start_date"],
+        "last_date": sessions[-1]["end_date"],
+        "total_registered": total_registered,
+        "total_counted": total_counted,
+        "partner_count": len(partner_totals),
+        "pre_count": pre_count, "post_count": post_count,
+        "kc_pass_count": kc_pass_count, "all_three": all_three,
+        "pre_rate": round(pre_count / total_counted * 100) if total_counted else 0,
+        "post_rate": round(post_count / total_counted * 100) if total_counted else 0,
+        "kc_rate": round(kc_pass_count / total_counted * 100) if total_counted else 0,
+        "all_three_rate": round(all_three / total_counted * 100) if total_counted else 0,
+        "partners": partners,
+        "workshop_pre_avg": workshop_pre_avg,
+        "workshop_post_avg": workshop_post_avg,
+        "workshop_delta": workshop_delta,
+        "per_session": [
+            {"slug": s["slug"], "name": s["name"], "start_date": s["start_date"], "end_date": s["end_date"],
+             "counted": sd["total_counted"], "all_three": sd["all_three"], "all_three_rate": sd["all_three_rate"],
+             "pre_avg": sd["pre_likert_avg"], "post_avg": sd["post_likert_avg"], "delta": sd["overall_delta"],
+             "kc_rate": sd["kc_rate"]}
+            for s, sd in zip(sessions, session_data)
+        ],
+        "today": date.today().isoformat(),
+    }
+
+
+@app.route("/admin/workshops/<slug>/rollup")
+def admin_workshop_rollup(slug):
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    workshop = get_db().execute("SELECT * FROM workshops WHERE slug = ?", (slug,)).fetchone()
+    if workshop is None:
+        abort(404)
+    rollup = _workshop_rollup_data(workshop["id"], workshop["name"], workshop["slug"])
+    if rollup is None:
+        return render_template("admin_workshop_rollup_empty.html", user=user, workshop=workshop)
+    return render_template("admin_workshop_rollup.html", user=user, workshop=workshop, data=rollup)
+
+
 @app.route("/admin/workshops/<slug>/sessions/<session_slug>/reports")
 def admin_session_reports(slug, session_slug):
     user, redir = _require_facilitator()

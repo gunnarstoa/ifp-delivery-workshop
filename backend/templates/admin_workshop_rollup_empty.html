@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}All-sessions rollup — {{ workshop.name }}{% endblock %}
+{% block body %}
+<div class="admin-shell">
+  {% set page_title = 'All-sessions rollup' %}
+  {% set breadcrumbs = [
+    {'label': workshop.name, 'url': url_for('admin_workshop_detail', slug=workshop.slug)},
+    {'label': 'All-sessions rollup'}
+  ] %}
+  {% include "_admin_header.html" %}
+  <div class="card">
+    <p class="help-note">No sessions yet. Once you create and run sessions, this page will roll up totals across every non-archived session into a single exec-ready report.</p>
+  </div>
+</div>
+{% endblock %}

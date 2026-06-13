@@ -31,7 +31,10 @@
 
   {% if summary %}
   <div class="card">
-    <h2 style="margin-top:0;">Workshop summary</h2>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.25rem;">
+      <h2 style="margin:0;">Workshop summary</h2>
+      <a class="secondary-btn" href="{{ url_for('admin_workshop_rollup', slug=workshop.slug) }}" style="text-decoration:none;">All-sessions rollup report →</a>
+    </div>
     <p class="help-note" style="margin-top:0.25rem;">Rolled up across the {{ summary.session_count }} non-archived session{{ '' if summary.session_count == 1 else 's' }} from {{ summary.first_date }} to {{ summary.last_date }}.</p>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0.75rem;margin:1rem 0;">
       <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:0.75rem;">

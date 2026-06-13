@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block title %}All-sessions rollup — {{ workshop.name }}{% endblock %}
+{% block body %}
+<div class="admin-shell">
+  {% set page_title = 'All-sessions rollup' %}
+  {% set breadcrumbs = [
+    {'label': workshop.name, 'url': url_for('admin_workshop_detail', slug=workshop.slug)},
+    {'label': 'All-sessions rollup'}
+  ] %}
+  {% include "_admin_header.html" %}
+
+  <div class="card" style="display:flex;align-items:center;gap:0.5rem;">
+    <button class="primary-btn" type="button" onclick="copyHtml('report-html')">Copy HTML to clipboard</button>
+    <button class="secondary-btn" type="button" onclick="downloadHtml('report-html', '{{ workshop.slug }}-all-sessions-rollup.html')">Download HTML file</button>
+    <span id="copy-fb" style="color:#15803d;font-size:0.85rem;display:none;">Copied ✓</span>
+    <span style="font-size:0.78rem;color:#6b7280;margin-left:auto;">Paste directly into email — inline styles are preserved.</span>
+  </div>
+
+  <div class="card" style="padding:0;background:white;">
+    <div id="report-html">
+      <div style="font-family:Arial,Helvetica,sans-serif;max-width:760px;margin:0 auto;color:#374151;font-size:14px;line-height:1.6;">
+        <div style="background:#1e3a5f;color:white;padding:20px 24px;border-radius:6px 6px 0 0;">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;opacity:0.85;margin-bottom:4px;">All-sessions rollup — Internal</div>
+          <h1 style="margin:0;font-size:22px;font-weight:600;">{{ data.workshop_name }}</h1>
+          <div style="font-size:13px;opacity:0.85;margin-top:4px;">{{ data.session_count }} session{{ '' if data.session_count == 1 else 's' }} · {{ data.first_date }} → {{ data.last_date }}</div>
+        </div>
+        <div style="border:1px solid #e2e8f0;border-top:none;padding:20px 24px;border-radius:0 0 6px 6px;">
+          <p style="margin:0 0 16px 0;">Across {{ data.session_count }} session{{ '' if data.session_count == 1 else 's' }}, {{ data.total_counted }} delivery consultants from {{ data.partner_count }} partner firm{{ '' if data.partner_count == 1 else 's' }} completed (or are completing) the {{ data.workshop_name }}. This rollup pulls headline numbers, per-session progression, partner totals, and recommendations from the full program.</p>
+
+          <h3 style="color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Program totals</h3>
+          <table style="width:100%;border-collapse:collapse;font-size:14px;">
+            <tbody>
+              <tr><td style="padding:5px 10px;color:#6b7280;width:60%;">Sessions delivered</td><td style="padding:5px 10px;text-align:right;font-weight:600;">{{ data.session_count }}</td></tr>
+              <tr><td style="padding:5px 10px;color:#6b7280;">Counted participants (excludes internal)</td><td style="padding:5px 10px;text-align:right;font-weight:600;">{{ data.total_counted }}</td></tr>
+              <tr><td style="padding:5px 10px;color:#6b7280;">Partner firms represented</td><td style="padding:5px 10px;text-align:right;font-weight:600;">{{ data.partner_count }}</td></tr>
+              <tr><td style="padding:5px 10px;color:#6b7280;">Pre-survey completion</td><td style="padding:5px 10px;text-align:right;font-weight:600;">{{ data.pre_rate }}%</td></tr>
+              <tr><td style="padding:5px 10px;color:#6b7280;">Post-survey completion</td><td style="padding:5px 10px;text-align:right;font-weight:600;">{{ data.post_rate }}%</td></tr>
+              <tr><td style="padding:5px 10px;color:#6b7280;">Knowledge check pass rate</td><td style="padding:5px 10px;text-align:right;font-weight:600;">{{ data.kc_rate }}%</td></tr>
+              <tr><td style="padding:8px 10px;color:#1e3a5f;border-top:2px solid #0066cc;font-weight:600;">All three milestones completed</td><td style="padding:8px 10px;text-align:right;font-weight:700;color:#15803d;border-top:2px solid #0066cc;font-size:16px;">{{ data.all_three_rate }}%</td></tr>
+            </tbody>
+          </table>
+
+          {% if data.workshop_pre_avg is not none or data.workshop_post_avg is not none %}
+          <h3 style="color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Program-wide learning progression</h3>
+          <p style="color:#6b7280;font-size:13px;margin:8px 0;">Each session's pre/post Likert averages, then averaged across sessions.</p>
+          <table style="width:100%;border-collapse:collapse;font-size:14px;">
+            <tbody>
+              <tr><td style="padding:5px 10px;color:#6b7280;width:60%;">Average pre-workshop comfort</td><td style="padding:5px 10px;text-align:right;font-weight:600;">{{ data.workshop_pre_avg if data.workshop_pre_avg is not none else '—' }}</td></tr>
+              <tr><td style="padding:5px 10px;color:#6b7280;">Average post-workshop comfort</td><td style="padding:5px 10px;text-align:right;font-weight:600;">{{ data.workshop_post_avg if data.workshop_post_avg is not none else '—' }}</td></tr>
+              <tr><td style="padding:5px 10px;color:#6b7280;">Net improvement</td><td style="padding:5px 10px;text-align:right;font-weight:700;color:{{ '#15803d' if data.workshop_delta is not none and data.workshop_delta >= 0 else '#b91c1c' }};">{{ ('+' if data.workshop_delta >= 0 else '') ~ data.workshop_delta if data.workshop_delta is not none else '—' }}</td></tr>
+            </tbody>
+          </table>
+          {% endif %}
+
+          <h3 style="color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Per-session progression</h3>
+          <table style="width:100%;border-collapse:collapse;font-size:14px;">
+            <thead><tr style="background:#f8fafc;">
+              <th style="padding:8px 10px;text-align:left;font-size:11px;text-transform:uppercase;color:#6b7280;">Session</th>
+              <th style="padding:8px 10px;text-align:right;font-size:11px;text-transform:uppercase;color:#6b7280;">Counted</th>
+              <th style="padding:8px 10px;text-align:right;font-size:11px;text-transform:uppercase;color:#6b7280;">All 3</th>
+              <th style="padding:8px 10px;text-align:right;font-size:11px;text-transform:uppercase;color:#6b7280;">Pre avg</th>
+              <th style="padding:8px 10px;text-align:right;font-size:11px;text-transform:uppercase;color:#6b7280;">Post avg</th>
+              <th style="padding:8px 10px;text-align:right;font-size:11px;text-transform:uppercase;color:#6b7280;">Δ</th>
+              <th style="padding:8px 10px;text-align:right;font-size:11px;text-transform:uppercase;color:#6b7280;">KC pass</th>
+            </tr></thead>
+            <tbody>
+            {% for s in data.per_session %}
+              <tr>
+                <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;"><strong>{{ s.name }}</strong><br><span style="font-size:0.78rem;color:#6b7280;">{{ s.start_date }} → {{ s.end_date }}</span></td>
+                <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;text-align:right;">{{ s.counted }}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;text-align:right;">{{ s.all_three_rate }}%</td>
+                <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;text-align:right;">{{ s.pre_avg if s.pre_avg is not none else '—' }}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;text-align:right;">{{ s.post_avg if s.post_avg is not none else '—' }}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;text-align:right;font-weight:600;color:{{ '#15803d' if s.delta is not none and s.delta >= 0 else ('#b91c1c' if s.delta is not none else '#6b7280') }};">{% if s.delta is not none %}{{ '+' if s.delta >= 0 else '' }}{{ s.delta }}{% else %}—{% endif %}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;text-align:right;">{% if s.kc_rate %}{{ s.kc_rate }}%{% else %}—{% endif %}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+
+          <h3 style="color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Partner totals across all sessions</h3>
+          <table style="width:100%;border-collapse:collapse;font-size:14px;">
+            <thead><tr style="background:#f8fafc;">
+              <th style="padding:8px 10px;text-align:left;font-size:11px;text-transform:uppercase;color:#6b7280;">Partner</th>
+              <th style="padding:8px 10px;text-align:right;font-size:11px;text-transform:uppercase;color:#6b7280;">Sent</th>
+              <th style="padding:8px 10px;text-align:right;font-size:11px;text-transform:uppercase;color:#6b7280;">All 3</th>
+              <th style="padding:8px 10px;text-align:left;font-size:11px;text-transform:uppercase;color:#6b7280;">Completion</th>
+            </tr></thead>
+            <tbody>
+            {% for b in data.partners %}
+              {% set pct = (b.rate * 100) | round | int %}
+              <tr>
+                <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;">{{ b.name }}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;text-align:right;">{{ b.count }}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;text-align:right;">{{ b.all_three }}</td>
+                <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;">
+                  <div style="display:inline-block;width:150px;background:#eff6ff;border-radius:3px;overflow:hidden;vertical-align:middle;">
+                    <div style="background:#0066cc;height:14px;width:{{ (pct * 1.5) | round | int }}px;"></div>
+                  </div>
+                  <span style="margin-left:8px;font-weight:600;color:#1e3a5f;">{{ pct }}%</span>
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+
+          <p style="margin-top:28px;color:#6b7280;font-size:12px;font-style:italic;border-top:1px solid #e5e7eb;padding-top:12px;">Generated {{ data.today }} from the {{ data.workshop_name }} cohort tracker. Distribution: Anaplan internal partner alliances + IFP product leadership.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function copyHtml(id) {
+  const html = document.getElementById(id).innerHTML;
+  const fb = document.getElementById('copy-fb');
+  navigator.clipboard.write([new ClipboardItem({
+    'text/html': new Blob([html], {type:'text/html'}),
+    'text/plain': new Blob([html.replace(/<[^>]+>/g,'')], {type:'text/plain'}),
+  })]).then(() => { fb.style.display='inline'; setTimeout(()=>fb.style.display='none', 1500); },
+            () => { navigator.clipboard.writeText(html); fb.style.display='inline'; setTimeout(()=>fb.style.display='none', 1500); });
+}
+function downloadHtml(id, filename) {
+  const html = document.getElementById(id).innerHTML;
+  const full = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${filename}</title></head><body style="background:#f8fafc;margin:0;padding:24px;">${html}</body></html>`;
+  const blob = new Blob([full], {type:'text/html'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+}
+</script>
+{% endblock %}
