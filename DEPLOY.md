@@ -1,14 +1,53 @@
-# Deploying the workshop to AWS Lightsail
+# Anaplan Workshops — Deploy & Operate
 
-End-to-end deployment of the workshop site (auth-gated, with per-user page-view logging) at **https://anaplan-workshops.com**, running on a single Lightsail instance with auto-HTTPS via Caddy.
+End-to-end deployment of the workshops platform at **https://anaplan-workshops.com**.
+A single Lightsail instance running Caddy + Gunicorn/Flask + SQLite,
+auto-HTTPS via Let's Encrypt, fronted by Route 53.
 
-Total cost: **~$5/month** (Lightsail instance) + **$0.50/month** (Route 53 hosted zone).
+**Cost:** ~$5/mo Lightsail + ~$0.50/mo Route 53 zone.
 
 ---
 
-## One-time setup (your part)
+## Architecture
 
-You'll click/type things at five points. Everything else is automated.
+```
+                       anaplan-workshops.com
+                                │
+                 Route 53 A record → static IP
+                                │
+                         ┌──────▼──────┐
+                         │    Caddy    │  :80 :443  auto Let's Encrypt
+                         └──────┬──────┘
+                                │ reverse_proxy
+                         ┌──────▼──────┐
+                         │   gunicorn  │  :8000  (systemd: workshop.service)
+                         └──────┬──────┘
+                         ┌──────▼──────┐
+                         │    Flask    │  backend/app.py
+                         └──────┬──────┘
+                  /var/lib/workshop/workshop.db   (SQLite WAL)
+```
+
+**What the app does:**
+
+| Surface | Path | Audience |
+| --- | --- | --- |
+| Login | `/login` | All users |
+| Workshop content | `/w/<slug>/<page>.html` | Authenticated participants + facilitators |
+| Native survey form | `/w/<slug>/survey/<kind>` | Authenticated participants |
+| Admin dashboard | `/admin` | Facilitators only |
+| Workshops CRUD | `/admin/workshops/...` | Facilitators only |
+| Sessions CRUD | `/admin/workshops/<slug>/sessions/...` | Facilitators only |
+| Survey template editor | `/admin/workshops/<slug>/survey-templates/...` | Facilitators only |
+| Per-session reports | `/admin/workshops/<slug>/sessions/<sess>/reports/...` | Facilitators only |
+| Per-workshop rollup | `/admin/workshops/<slug>/rollup` | Facilitators only |
+| DB backup download | `/admin/backup.db` | Facilitators only |
+
+**Schema:** `users`, `login_events`, `page_views`, `workshops`, `sessions`, `session_participants`, `session_surveys`, `survey_responses`, `survey_templates`. Defined in `backend/schema.sql`; auto-applied at app start; re-runnable with `sqlite3 /var/lib/workshop/workshop.db < backend/schema.sql`.
+
+---
+
+## One-time setup
 
 ### 1. Install AWS CLI and configure credentials
 
@@ -17,25 +56,15 @@ brew install awscli
 aws configure
 ```
 
-Paste in your **Access Key ID**, **Secret Access Key**, and set the default region to `us-east-1`. The IAM user needs these permissions:
-
-- `lightsail:*` (manage the instance, IP, key pair, firewall)
-- `route53:ListHostedZones`, `route53:ChangeResourceRecordSets`, `route53:GetChange`
-- `sts:GetCallerIdentity` (preflight check)
-
-If you don't have an IAM user yet, create one in the AWS console with the policies `AmazonLightsailFullAccess` and `AmazonRoute53FullAccess` attached.
+Paste in your Access Key ID + Secret Access Key. Default region `us-east-1`. The IAM user needs `AmazonLightsailFullAccess` + `AmazonRoute53FullAccess`.
 
 ### 2. Confirm the Route 53 hosted zone exists
-
-`anaplan-workshops.com` needs a Route 53 hosted zone — that's where the deploy script writes the A record.
-
-If you registered through Route 53, the zone exists already. Verify:
 
 ```bash
 aws route53 list-hosted-zones-by-name --dns-name anaplan-workshops.com
 ```
 
-If empty, create one:
+If empty:
 
 ```bash
 aws route53 create-hosted-zone --name anaplan-workshops.com --caller-reference "$(date +%s)"
@@ -48,126 +77,132 @@ cd /Users/gunnarstoa/git-repos/ifp-delivery-workshop
 ./scripts/aws-deploy.sh
 ```
 
-This does:
+Creates SSH key pair (saved as `.aws-workshop-key.pem` — **keep this**), allocates a static IP, creates a 1 GB Ubuntu 22.04 Lightsail instance with cloud-init bootstrap, attaches the static IP, opens HTTP/HTTPS in the firewall, adds Route 53 A records.
 
-- Creates an SSH key pair in Lightsail (saves the private key to `.aws-workshop-key.pem` in the repo — **keep this file**)
-- Allocates a static IP
-- Creates a 1 GB Ubuntu 22.04 Lightsail instance and feeds it the cloud-init bootstrap script
-- Attaches the static IP, opens HTTP/HTTPS in the firewall
-- Adds Route 53 A records for `anaplan-workshops.com` and `www.anaplan-workshops.com` → static IP
-
-Total time: ~3 minutes for the script, plus another ~3–5 minutes for the instance to finish first-boot installation (Caddy, Python, Flask, the repo, the systemd service).
+~3 min for the script, ~3-5 min more for cloud-init.
 
 ### 4. Create the first facilitator account
 
-Once the instance is up and DNS has propagated (5–10 min):
-
 ```bash
-ssh -i .aws-workshop-key.pem ubuntu@<STATIC_IP_FROM_DEPLOY_OUTPUT>
-sudo -u workshop env $(sudo cat /etc/workshop/app.env | xargs) \
-  /srv/workshop/app/.venv/bin/flask --app backend.app add-admin
+ssh -t -i /Users/gunnarstoa/git-repos/ifp-delivery-workshop/.aws-workshop-key.pem ubuntu@<STATIC_IP> \
+  'cd /srv/workshop/app && sudo -u workshop env $(sudo cat /etc/workshop/app.env | xargs) .venv/bin/flask --app backend.app add-admin'
 ```
 
-Enter a username and password at the prompt. That account gets `is_facilitator = 1` and can sign in at https://anaplan-workshops.com/login to access `/admin` and create everyone else.
+Prompts for username, display name, email, password. That account gets `is_facilitator=1` and can sign in at `/login`.
 
 ### 5. Wire up GitHub Actions for push-to-deploy
 
-The workflow file lives in the repo as `infra/deploy-workshop.yml.template` (the PAT used to ship this PR doesn't have `workflow` scope, so the file can't be committed to `.github/workflows/` via API). Move it via the GitHub web UI:
+The CI workflow lives in the repo as `infra/deploy-workshop.yml.template` (the PAT used to push this repo lacks `workflow` scope, so it can't write to `.github/workflows/` via API). Copy it via the GitHub web UI:
 
-1. Open `infra/deploy-workshop.yml.template` on GitHub, click the `...` menu → **Copy raw file**
-2. Click **Add file** → **Create new file** at the repo root
-3. Name it exactly `.github/workflows/deploy-workshop.yml` (GitHub will create the folders)
-4. Paste the contents, commit to `main`
+1. Open `infra/deploy-workshop.yml.template` on GitHub → **Copy raw file**
+2. **Add file** → **Create new file** at the repo root
+3. Name it exactly `.github/workflows/deploy-workshop.yml`
+4. Paste, commit to `main`
 
-Then add two secrets at https://github.com/gunnarstoa/ifp-delivery-workshop/settings/secrets/actions:
+Add two secrets at `/settings/secrets/actions`:
 
-| Secret name        | Value                                                  |
-| ------------------ | ------------------------------------------------------ |
-| `INSTANCE_IP`      | The static IP from the deploy script output            |
-| `SSH_PRIVATE_KEY`  | The full contents of `.aws-workshop-key.pem`           |
+| Secret | Value |
+| --- | --- |
+| `INSTANCE_IP` | The static IP from the deploy script |
+| `SSH_PRIVATE_KEY` | Full contents of `.aws-workshop-key.pem` |
 
-After they're added, every push to `main` redeploys. The workflow logs are at https://github.com/gunnarstoa/ifp-delivery-workshop/actions.
-
----
-
-## After the first deploy
-
-- **Sign in:** https://anaplan-workshops.com/login
-- **Admin (facilitators only):** https://anaplan-workshops.com/admin — create users, see who's logged in, reset passwords, view per-user activity
-- **Workshop content:** the existing `docs/*.html` pages are served as before, behind login
-
-The hidden-URL facilitator pages (e.g. `cohort-tracker-m4q9wx.html`) still work at the same paths — but they now require login *and* the `is_facilitator` flag. The obscure URLs become belt-and-suspenders rather than the only protection.
+After they're added every push to `main` redeploys.
 
 ---
 
-## How it all fits together
+## Day-to-day operations
 
+### Manual redeploy (no CI needed)
+
+```bash
+ssh -i .aws-workshop-key.pem ubuntu@<IP> \
+  'sudo -u workshop git -C /srv/workshop/app pull --quiet && sudo systemctl restart workshop'
 ```
-                                anaplan-workshops.com
-                                         │
-                          Route 53 A record → static IP
-                                         │
-                                    ┌────▼────┐
-                                    │ Caddy   │  :80, :443  (auto Let's Encrypt)
-                                    └────┬────┘
-                                         │ reverse_proxy
-                                    ┌────▼────┐
-                                    │ gunicorn│  :8000     (systemd: workshop.service)
-                                    └────┬────┘
-                                         │
-                                    ┌────▼────┐
-                                    │ Flask   │  backend/app.py
-                                    │  - auth │  (bcrypt + signed session cookies)
-                                    │  - log  │  (page_views table)
-                                    │  - serve│  (docs/, data/, css/, js/, images/)
-                                    │  - admin│  (/admin, /admin/users, ...)
-                                    └────┬────┘
-                                         │
-                                  /var/lib/workshop/workshop.db
-                                    (SQLite, WAL mode)
+
+### Sync schema (re-runnable, no destructive ops)
+
+```bash
+ssh -i .aws-workshop-key.pem ubuntu@<IP> \
+  'sudo sqlite3 /var/lib/workshop/workshop.db < /srv/workshop/app/backend/schema.sql'
+```
+
+### Reload Python deps after a `requirements.txt` change
+
+```bash
+ssh -i .aws-workshop-key.pem ubuntu@<IP> \
+  'sudo -u workshop /srv/workshop/app/.venv/bin/pip install --quiet -r /srv/workshop/app/backend/requirements.txt && sudo systemctl restart workshop'
+```
+
+### Live application logs
+
+```bash
+ssh -i .aws-workshop-key.pem ubuntu@<IP> 'sudo journalctl -u workshop -f'
+```
+
+### Caddy / HTTPS logs
+
+```bash
+ssh -i .aws-workshop-key.pem ubuntu@<IP> 'sudo journalctl -u caddy -f'
 ```
 
 ---
 
-## Common operations
+## Backups
 
-### View live application logs
+The whole production DB is **one SQLite file at `/var/lib/workshop/workshop.db`**. Back it up regularly. Three ways, easiest first:
 
-```bash
-ssh -i .aws-workshop-key.pem ubuntu@<INSTANCE_IP>
-sudo journalctl -u workshop -f
-```
+### Option A — Admin download button
 
-### View Caddy / HTTPS logs
+`/admin` → Users & activity card → **Download backup ↓**. Streams a vacuumed snapshot through the browser. Quick + convenient.
 
-```bash
-sudo journalctl -u caddy -f
-```
-
-### Back up the SQLite database
+### Option B — SSH + scp (script this into your local cron)
 
 ```bash
-ssh -i .aws-workshop-key.pem ubuntu@<INSTANCE_IP> \
+ssh -i .aws-workshop-key.pem ubuntu@<IP> \
   "sudo sqlite3 /var/lib/workshop/workshop.db '.backup /tmp/workshop-backup.db'"
-scp -i .aws-workshop-key.pem ubuntu@<INSTANCE_IP>:/tmp/workshop-backup.db ./workshop-backup-$(date +%F).db
+scp -i .aws-workshop-key.pem ubuntu@<IP>:/tmp/workshop-backup.db ~/Backups/workshop-$(date +%F).db
 ```
 
-Schedule this with cron on your local machine, or follow up to add a Lightsail snapshot policy.
+### Option C — Lightsail snapshot
 
-### Tear it all down
+```bash
+aws lightsail create-instance-snapshot --instance-name workshop --instance-snapshot-name workshop-$(date +%F)
+```
+
+Snapshots include the whole instance disk. Restore via `aws lightsail create-instances-from-snapshot`.
+
+---
+
+## Tear it all down
 
 ```bash
 ./scripts/aws-destroy.sh
 ```
 
-This removes the instance, static IP, key pair, and DNS A records. It leaves the Route 53 hosted zone alone (so you can re-deploy later).
+Removes instance, static IP, key pair, A records. Leaves the Route 53 hosted zone (it's reusable; you'd just pay $0.50/mo for it).
 
 ---
 
-## What's NOT in this deploy (intentional v1 cuts)
+## Adding a new workshop
 
-- **Password reset by email.** SMTP not configured. Facilitators reset passwords in `/admin` and hand the new password to the user.
-- **Bulk user import.** Add users one at a time via `/admin`. Follow-up PR can wire a CSV importer.
-- **Multi-instance / load balancing.** Single Lightsail box is plenty for 1–2 cohorts/week.
-- **Off-instance backups.** Manual `sqlite3 .backup` for now; add a daily cron and S3 sync later.
-- **CloudWatch / external monitoring.** `journalctl -u workshop -f` works for v1.
+1. **DB:** `/admin/workshops` → **+ New workshop** → fill slug (e.g. `fcr`), display name, dates, contact email.
+2. **Content:** create the folder `docs/<slug>/` and copy IFP as a starter (`cp -r docs/ifp/ docs/<slug>/`), then edit page titles + sidebar links per workshop. Push to `main`; CI deploys.
+3. **Toolkit:** create the folder `toolkit/<slug>/` similarly (`cp -r toolkit/ifp/ toolkit/<slug>/`) and edit each asset.
+4. **Survey templates:** `/admin/workshops/<slug>/survey-templates` → **Load IFP starter** on pre and post (then edit), or build from scratch.
+5. **Promote a session:** `/admin/workshops/<slug>` → **+ New session** → paste participant emails → share `/w/<slug>/survey/pre` link in the kickoff email.
+
+---
+
+## Adding a new partner domain
+
+Edit `data/cohorts/_partners.json` to add the entry, push, and (if there are existing participants in the DB with that domain still showing `partner = NULL`) run a one-line SQL backfill — see prior PR backfills in the git log for templates.
+
+---
+
+## Cuts intentionally not in v1
+
+- Password reset by email (facilitator resets manually via the admin password-reset action).
+- Bulk user import (one paste-of-emails at a time per session).
+- Multi-instance / load balancing (single box is plenty for 1–2 cohorts/week).
+- Off-instance backup automation (manual via the three options above for v1; layer in S3 sync next).
+- CloudWatch / external monitoring (`journalctl -u workshop -f` for v1).

@@ -1956,6 +1956,35 @@ def admin_toggle_active(user_id):
     return jsonify(user_id=user_id)
 
 
+@app.route("/admin/backup.db")
+def admin_backup_db():
+    """Stream a vacuumed snapshot of the SQLite DB. WAL-safe — uses .backup()."""
+    import io
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    src = get_db()
+    buf_path = Path("/tmp") / f"workshop-backup-{int(time.time())}.db"
+    try:
+        dest = sqlite3.connect(str(buf_path))
+        with dest:
+            src.backup(dest)
+        dest.close()
+        data = buf_path.read_bytes()
+    finally:
+        try:
+            buf_path.unlink()
+        except OSError:
+            pass
+    from flask import send_file
+    return send_file(
+        io.BytesIO(data),
+        mimetype="application/x-sqlite3",
+        as_attachment=True,
+        download_name=f"workshop-backup-{datetime.now(timezone.utc).strftime('%Y%m%d-%H%M%S')}.db",
+    )
+
+
 @app.route("/admin/views/<int:user_id>")
 def admin_user_views(user_id):
     user = current_user()

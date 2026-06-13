@@ -6,6 +6,14 @@
   {% set breadcrumbs = [{'label': 'Users & activity'}] %}
   {% include "_admin_header.html" %}
 
+  <div class="card" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;">
+    <div>
+      <strong style="color:#1e3a5f;">Database backup</strong>
+      <div class="help-note" style="margin:0.25rem 0 0 0;">Pulls a vacuumed SQLite snapshot (workshop.db). Store it somewhere safe — the production DB is currently a single file on the Lightsail instance.</div>
+    </div>
+    <a class="secondary-btn" href="{{ url_for('admin_backup_db') }}" style="text-decoration:none;">Download backup ↓</a>
+  </div>
+
   <div class="card">
     <h2>Create user</h2>
     <form id="create-user-form" onsubmit="return createUser(event)">
