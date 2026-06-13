@@ -1672,6 +1672,38 @@ def admin_report_partner_landing(slug, session_slug):
     return render_template("report_partner_landing.html", user=user, data=data, session=sess)
 
 
+@app.route("/admin/workshops/<slug>/sessions/<session_slug>/reports/partner-sponsor.zip")
+def admin_report_partner_zip(slug, session_slug):
+    import io
+    import zipfile
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    sess = _get_session_or_404(slug, session_slug)
+    data = _session_report_data(sess["id"])
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zf:
+        for partner in data["partners"]:
+            inner_html = render_template(
+                "report_partner_inner.html",
+                data=data, partner=partner, session=sess,
+            )
+            full = (
+                f"<!DOCTYPE html><html><head><meta charset=\"utf-8\">"
+                f"<title>{partner['name']} — Partner Report</title></head>"
+                f"<body style=\"background:#f8fafc;margin:0;padding:24px;\">{inner_html}</body></html>"
+            )
+            zf.writestr(f"{slug}-{session_slug}-{partner['slug']}-partner-report.html", full)
+    buf.seek(0)
+    from flask import send_file
+    return send_file(
+        buf,
+        mimetype="application/zip",
+        as_attachment=True,
+        download_name=f"{slug}-{session_slug}-partner-reports.zip",
+    )
+
+
 @app.route("/admin/workshops/<slug>/sessions/<session_slug>/reports/partner-sponsor/<partner_slug>")
 def admin_report_partner(slug, session_slug, partner_slug):
     user, redir = _require_facilitator()

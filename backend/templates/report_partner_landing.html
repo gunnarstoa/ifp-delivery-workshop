@@ -12,7 +12,12 @@
   {% include "_admin_header.html" %}
 
   <div class="card">
-    <p class="help-note" style="margin-top:0;">One report per partner with their team's participation and five concrete next-step recommendations (tenant-copy session, pair with active engagement, etc.). Click into each to copy or download.</p>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+      <p class="help-note" style="margin:0;flex:1;">One report per partner with their team's participation and five concrete next-step recommendations (tenant-copy session, pair with active engagement, etc.). Click into each to copy or download.</p>
+      {% if data.partners %}
+        <a class="primary-btn" href="{{ url_for('admin_report_partner_zip', slug=session.workshop_slug, session_slug=session.slug) }}" style="text-decoration:none;margin-left:1rem;">Download all (.zip) ↓</a>
+      {% endif %}
+    </div>
     {% if not data.partners %}
       <p class="help-note">No partners enrolled in this session yet.</p>
     {% else %}
