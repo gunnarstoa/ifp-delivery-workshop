@@ -1128,14 +1128,22 @@ def _is_metadata_header(h):
 
 def _detect_question_type(values):
     """Given non-empty values, return 'likert' | 'multi_select' | 'single_select' | 'pass_fail' | 'free_text'.
-    Heuristic ordered cheapest → most expensive. Single-select requires LOW diversity (low
-    unique-to-total ratio) so verbose questions with mostly-unique answers don't get
-    mis-classified as a category."""
+    Multi-select and single-select both require the underlying options to look curated —
+    a small finite set of short labels. Verbose prose answers (even with semicolons or
+    short repeating phrasing) fall through to free_text."""
     cleaned = [str(v).strip() for v in values if v is not None and str(v).strip()]
     if not cleaned:
         return "free_text"
     if any(";" in v for v in cleaned):
-        return "multi_select"
+        # Split on ; and check the underlying option set is finite and short.
+        parts = []
+        for v in cleaned:
+            parts.extend(p.strip() for p in v.split(";") if p.strip())
+        if parts:
+            unique_parts = {p.lower() for p in parts}
+            max_part_len = max(len(p) for p in parts)
+            if len(unique_parts) <= 8 and max_part_len <= 50:
+                return "multi_select"
     lower = [v.lower() for v in cleaned]
     if all(v in LIKERT_MAP for v in lower):
         return "likert"
