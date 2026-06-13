@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IFP Overview — IFP Delivery Partner Workshop</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="../../css/style.css">
 </head>
 <body>
   <div class="mobile-header">
@@ -61,7 +61,7 @@
     </select>
   </div>
       <div style="padding: 0.75rem 1rem; border-top: 1px solid rgba(255,255,255,0.1); margin-top: auto;">
-        <form method="post" action="/logout" style="margin: 0;">
+        <form method="post" action="https://anaplan-workshops.com/logout" style="margin: 0;">
           <button type="submit" style="background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.5rem 0.75rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; width: 100%; font-family: inherit;">Sign out</button>
         </form>
       </div>
@@ -139,13 +139,13 @@
 <div class="step"><div class="step-badge">1</div><div class="step-content"><h3>Configure</h3><p>Answer all configuration questions in the Application Framework Configurator. These define hierarchy levels, dimensions, planning methods, and scope.</p></div></div><div class="step"><div class="step-badge">2</div><div class="step-content"><h3>Generate</h3><p>Trigger generation. The Application Framework reads your answers and provisions all four IFP models (Financial Planning, Headcount, Admin, CapEx). This takes 20–40 minutes.</p></div></div><div class="step"><div class="step-badge">3</div><div class="step-content"><h3>Review</h3><p>Inspect the generated model and error logs. 'Generated with errors' is normal and expected — it does not mean the model is broken.</p></div></div><div class="step"><div class="step-badge">4</div><div class="step-content"><h3>Extend</h3><p>Add customer-specific extensions on top of the generated base model. Document everything you change.</p></div></div><div class="callout-important"><span class="callout-label">🚨 'Generated with Errors' is Normal</span><p>Every IFP 2.1 generation in a training or early-stage environment produces errors. These are formula errors caused by configuration choices, hierarchy renaming, or geography differences from the base model template. The model is functional. You will learn to read and resolve these errors in the Error Log Review section.</p></div>
 
       <h2>Application Framework — Configuration View</h2>
-<figure class="screenshot"><img src="/img/may7-configurator-overview.jpg" alt="Application Framework Configurator showing hierarchy configuration in v2.1" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Application Framework Configurator — hierarchy configuration view (v2.1)</figcaption></figure>
+<figure class="screenshot"><img src="../../img/may7-configurator-overview.jpg" alt="Application Framework Configurator showing hierarchy configuration in v2.1" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Application Framework Configurator — hierarchy configuration view (v2.1)</figcaption></figure>
 
       <h2>IFP Hierarchy Lists</h2>
-<figure class="screenshot"><img src="/img/v2.1-screenshots/hierarchy-list.png" alt="IFP hierarchy lists showing Entity, Account, Location, Customer, Job with levels" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">IFP hierarchy lists (v2.1) — Entity, Account, Location, Customer, Job with default levels</figcaption></figure>
+<figure class="screenshot"><img src="../../img/v2.1-screenshots/hierarchy-list.png" alt="IFP hierarchy lists showing Entity, Account, Location, Customer, Job with levels" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">IFP hierarchy lists (v2.1) — Entity, Account, Location, Customer, Job with default levels</figcaption></figure>
 
       <h2>SYS Modules After Generation</h2>
-<figure class="screenshot"><img src="/img/v2.1-screenshots/system-modules.png" alt="IFP system modules (SYS prefix) list after v2.1 generation" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">IFP system modules (SYS prefix) list after v2.1 generation</figcaption></figure>
+<figure class="screenshot"><img src="../../img/v2.1-screenshots/system-modules.png" alt="IFP system modules (SYS prefix) list after v2.1 generation" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">IFP system modules (SYS prefix) list after v2.1 generation</figcaption></figure>
 
       <h2>Application Framework Overview</h2>
 
@@ -158,10 +158,10 @@
         </p>
       </div>
 
-<figure class="screenshot"><img src="/img/v2.1-screenshots/app-framework-overview-2026-06.png" alt="IFP Application Framework overview showing 8 hierarchies, 44 configurations, and 22 application objects" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">IFP Application Framework overview (v2.1) — 8 hierarchies, 44 configurations, 22 application objects</figcaption></figure>
+<figure class="screenshot"><img src="../../img/v2.1-screenshots/app-framework-overview-2026-06.png" alt="IFP Application Framework overview showing 8 hierarchies, 44 configurations, and 22 application objects" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">IFP Application Framework overview (v2.1) — 8 hierarchies, 44 configurations, 22 application objects</figcaption></figure>
 <div class="prevnext-nav"><a class="prevnext-btn" href="./02-tenant-access.html">← Previous</a><a class="prevnext-btn" href="./04-anaplan-way.html">Next →</a></div>
     </div>
   </main>
-  <script src="/js/nav.js"></script>
+  <script src="../../js/nav.js"></script>
 </body>
 </html>

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Error Log Review — IFP Delivery Partner Workshop</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="../../css/style.css">
 </head>
 <body>
   <div class="mobile-header">
@@ -61,7 +61,7 @@
     </select>
   </div>
       <div style="padding: 0.75rem 1rem; border-top: 1px solid rgba(255,255,255,0.1); margin-top: auto;">
-        <form method="post" action="/logout" style="margin: 0;">
+        <form method="post" action="https://anaplan-workshops.com/logout" style="margin: 0;">
           <button type="submit" style="background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.5rem 0.75rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; width: 100%; font-family: inherit;">Sign out</button>
         </form>
       </div>
@@ -101,7 +101,7 @@
       </blockquote>
 <div class="step"><div class="step-badge">1</div><div class="step-content"><h3>Open Error Log</h3><p>From the Application Framework overview, click the error log panel (bottom-right). Filter to formula errors only. If more than 10 errors, export to Excel first.</p></div></div><div class="step"><div class="step-badge">2</div><div class="step-content"><h3>Note the Code</h3><p>Each error includes a line item code in the format <code>_LINEITEMNAMEEXCEPTION</code> (underscore prefix). This code is unique — use it for the model search, not the display name.</p></div></div><div class="step"><div class="step-badge">3</div><div class="step-content"><h3>Find the Affected Line Item</h3><p>Go to the affected model (the error log tells you which model). Open Line Items. Search for the code with the underscore prefix. The search result takes you directly to the module and line item.</p></div></div><div class="step"><div class="step-badge">4</div><div class="step-content"><h3>Compare to Base Model</h3><p>Open the base TRAIN model (already provisioned in your tenant). Find the same line item. Compare the generated formula to the base model formula. Identify what changed: hierarchy rename, geography removal, dimension change.</p></div></div><div class="step"><div class="step-badge">5</div><div class="step-content"><h3>Fix or Copy-Adjust</h3><p>Option A: Fix the formula directly — update references to match your configuration. Option B: Copy the base model formula to your model and adjust dimension references. Option B is safer and faster for most LINE_ITEM_FORMULA errors.</p></div></div><div class="step"><div class="step-badge">6</div><div class="step-content"><h3>Validate</h3><p>After fixing, check if the formula resolves (no red formula error indicator). Return to the error log and mark the error resolved. Proceed to the next error.</p></div></div><div class="step"><div class="step-badge">7</div><div class="step-content"><h3>Escalate if Stuck</h3><p>If the error appears to be a platform-level issue (not caused by your configuration), log the error code and contact Anaplan support. Do not spend time on platform errors during a delivery engagement.</p></div></div>
 
-<figure class="screenshot"><img src="/img/error-logs/gen-errors-02-50-00.jpg" alt="Error log review — parsing LINE_ITEM_FORMULA error codes from Application Framework" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Error log review — parsing LINE_ITEM_FORMULA error codes from Application Framework</figcaption></figure>
+<figure class="screenshot"><img src="../../img/error-logs/gen-errors-02-50-00.jpg" alt="Error log review — parsing LINE_ITEM_FORMULA error codes from Application Framework" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Error log review — parsing LINE_ITEM_FORMULA error codes from Application Framework</figcaption></figure>
 
       <h2>The 90% Rule</h2>
 <div class="callout-note"><span class="callout-label">ℹ Expect Errors, Deliver Systematically</span><p>Each customer configuration will produce a different set of errors. The goal is not zero errors before proceeding — it's to get from 0% to 90% quickly. Categorize errors, fix the resolvable ones systematically, and log the remaining ones as a known-issues list. "That last 10% is what you work through methodically" — not a sign that the project is broken.</p></div>
@@ -132,7 +132,7 @@
   </div>
   <div class="mini-lab-completion">
     <div class="mini-lab-completion-label">✅ What it should look like when complete</div>
-    <figure class="screenshot"><img src="/img/error-logs/err-0200.jpg" alt="Application Framework activity panel — LINE_ITEM_FORMULA error highlighted in generation log" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Application Framework activity panel — LINE_ITEM_FORMULA error highlighted in generation log</figcaption></figure><figure class="screenshot"><img src="/img/error-logs/err-0205.jpg" alt="CALC OPX IS Itemized Expense Totals — formula error detail view" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">CALC OPX IS Itemized Expense Totals — formula error detail view</figcaption></figure><figure class="screenshot"><img src="/img/error-logs/err-d2-0165.jpg" alt="IFP Release error log — Activity panel with error type breakdown" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">IFP Release error log — Activity panel with error type breakdown</figcaption></figure>
+    <figure class="screenshot"><img src="../../img/error-logs/err-0200.jpg" alt="Application Framework activity panel — LINE_ITEM_FORMULA error highlighted in generation log" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Application Framework activity panel — LINE_ITEM_FORMULA error highlighted in generation log</figcaption></figure><figure class="screenshot"><img src="../../img/error-logs/err-0205.jpg" alt="CALC OPX IS Itemized Expense Totals — formula error detail view" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">CALC OPX IS Itemized Expense Totals — formula error detail view</figcaption></figure><figure class="screenshot"><img src="../../img/error-logs/err-d2-0165.jpg" alt="IFP Release error log — Activity panel with error type breakdown" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">IFP Release error log — Activity panel with error type breakdown</figcaption></figure>
   </div>
 </div>
 
@@ -147,6 +147,6 @@
 <div class="prevnext-nav"><a class="prevnext-btn" href="./08-post-gen.html">← Previous</a><a class="prevnext-btn" href="./10-extensions-overview.html">Next →</a></div>
     </div>
   </main>
-  <script src="/js/nav.js"></script>
+  <script src="../../js/nav.js"></script>
 </body>
 </html>
