@@ -51,16 +51,6 @@
       </div>
     </div>
 
-    <details class="card" style="background:#f8fafc;">
-      <summary style="cursor:pointer;font-weight:600;color:#374151;">Bulk import questions (JSON)</summary>
-      <p class="help-note" style="margin-top:0.75rem;">Paste a JSON array of question objects. <strong>Appends</strong> to the existing pool — does not replace. Save the editor below afterwards if you want to also persist edits made above.</p>
-      <pre style="background:#1e293b;color:#e2e8f0;padding:0.75rem;border-radius:4px;font-size:0.78rem;overflow-x:auto;margin:0.5rem 0;">{ "id": "q42", "text": "What is X?", "type": "single_select",
-  "options": ["A", "B", "C", "D"], "correct": "B", "required": true }</pre>
-      <form method="post" action="{{ url_for('admin_survey_template_import', slug=workshop.slug, kind=kind) }}">
-        <textarea name="questions_json" placeholder='[{"text":"...","type":"single_select","options":["A","B"],"correct":"A","required":true}]' style="width:100%;min-height:160px;padding:0.6rem;border:1px solid #cbd5e1;border-radius:4px;font-family:ui-monospace,Menlo,monospace;font-size:0.82rem;"></textarea>
-        <button class="secondary-btn" type="submit" style="margin-top:0.5rem;">Append to pool</button>
-      </form>
-    </details>
     {% endif %}
 
     <div class="card">
@@ -83,6 +73,19 @@
       {% endif %}
     </div>
   </form>
+
+  {% if kind == 'knowledge' %}
+  <details class="card" style="background:#f8fafc;">
+    <summary style="cursor:pointer;font-weight:600;color:#374151;">Bulk import questions (JSON)</summary>
+    <p class="help-note" style="margin-top:0.75rem;">Paste a JSON array of question objects. <strong>Appends</strong> to the existing pool — does not replace. This form submits independently; it doesn't save edits you've made above.</p>
+    <pre style="background:#1e293b;color:#e2e8f0;padding:0.75rem;border-radius:4px;font-size:0.78rem;overflow-x:auto;margin:0.5rem 0;">{ "text": "What is X?", "type": "single_select",
+  "options": ["A", "B", "C", "D"], "correct": "B", "required": true }</pre>
+    <form method="post" action="{{ url_for('admin_survey_template_import', slug=workshop.slug, kind=kind) }}">
+      <textarea name="questions_json" placeholder='[{"text":"...","type":"single_select","options":["A","B"],"correct":"A","required":true}]' style="width:100%;min-height:160px;padding:0.6rem;border:1px solid #cbd5e1;border-radius:4px;font-family:ui-monospace,Menlo,monospace;font-size:0.82rem;"></textarea>
+      <button class="secondary-btn" type="submit" style="margin-top:0.5rem;">Append to pool</button>
+    </form>
+  </details>
+  {% endif %}
 </div>
 
 <style>
