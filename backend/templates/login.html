@@ -1,10 +1,10 @@
 {% extends "base.html" %}
-{% block title %}Sign in — IFP Delivery Partner Workshop{% endblock %}
+{% block title %}Sign in — Anaplan Workshops{% endblock %}
 {% block body %}
 <div class="auth-shell">
   <div class="auth-card">
-    <h1>IFP Delivery Partner Workshop</h1>
-    <div class="subtitle">Sign in with the username and password your facilitator sent you.</div>
+    <h1>Welcome to Anaplan Workshops</h1>
+    <div class="subtitle">Hands-on learning for Anaplan delivery partners. Sign in with the credentials your facilitator sent you and we'll take you straight to your workshop.</div>
     {% if error %}<div class="auth-error">{{ error }}</div>{% endif %}
     <form method="post" action="{{ url_for('login') }}{% if next %}?next={{ next }}{% endif %}" autocomplete="on">
       <label for="username">Username</label>
