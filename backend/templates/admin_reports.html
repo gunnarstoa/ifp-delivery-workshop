@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Reports — {{ session.name }}{% endblock %}
+{% block body %}
+<div class="admin-shell">
+  {% set page_title = 'Reports' %}
+  {% set breadcrumbs = [
+    {'label': session.workshop_name, 'url': url_for('admin_workshop_detail', slug=session.workshop_slug)},
+    {'label': session.name, 'url': url_for('admin_session_detail', slug=session.workshop_slug, session_slug=session.slug)},
+    {'label': 'Reports'}
+  ] %}
+  {% include "_admin_header.html" %}
+
+  <div class="card">
+    <h2 style="margin-top:0;">Session snapshot</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.6rem;font-size:0.85rem;">
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:0.6rem;">
+        <div style="font-size:0.7rem;text-transform:uppercase;color:#6b7280;letter-spacing:0.05em;">Counted</div>
+        <div style="font-size:1.3rem;font-weight:700;color:#1e3a5f;">{{ data.total_counted }}</div>
+      </div>
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:0.6rem;">
+        <div style="font-size:0.7rem;text-transform:uppercase;color:#6b7280;letter-spacing:0.05em;">Partners</div>
+        <div style="font-size:1.3rem;font-weight:700;color:#1e3a5f;">{{ data.partner_count }}</div>
+      </div>
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:0.6rem;">
+        <div style="font-size:0.7rem;text-transform:uppercase;color:#6b7280;letter-spacing:0.05em;">All three done</div>
+        <div style="font-size:1.3rem;font-weight:700;color:#15803d;">{{ data.all_three_rate }}%</div>
+      </div>
+      {% if data.overall_delta is not none %}
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:0.6rem;">
+        <div style="font-size:0.7rem;text-transform:uppercase;color:#6b7280;letter-spacing:0.05em;">Pre → Post Δ</div>
+        <div style="font-size:1.3rem;font-weight:700;color:{{ '#15803d' if data.overall_delta >= 0 else '#b91c1c' }};">{{ '+' if data.overall_delta >= 0 else '' }}{{ data.overall_delta }}</div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;">
+    <div class="card">
+      <h2 style="margin-top:0;">Executive Summary</h2>
+      <p class="help-note">Polished HTML one-pager for Anaplan internal partner alliances + IFP product leadership.</p>
+      <a class="primary-btn" href="{{ url_for('admin_report_exec', slug=session.workshop_slug, session_slug=session.slug) }}" style="text-decoration:none;">Open →</a>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0;">Slack Celebration Post</h2>
+      <p class="help-note">Pre-filled <code>amer_partners_alliances</code> post with this session's numbers.</p>
+      <a class="primary-btn" href="{{ url_for('admin_report_slack', slug=session.workshop_slug, session_slug=session.slug) }}" style="text-decoration:none;">Open →</a>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0;">Partner Sponsor Reports</h2>
+      <p class="help-note">One report per partner firm with next-step recommendations. Copy + send to the sponsor.</p>
+      <a class="primary-btn" href="{{ url_for('admin_report_partner_landing', slug=session.workshop_slug, session_slug=session.slug) }}" style="text-decoration:none;">Open →</a>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0;">Export Session JSON</h2>
+      <p class="help-note">Full data dump for archival or follow-on analysis.</p>
+      <a class="primary-btn" href="{{ url_for('admin_report_export_json', slug=session.workshop_slug, session_slug=session.slug) }}" style="text-decoration:none;">Download ↓</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

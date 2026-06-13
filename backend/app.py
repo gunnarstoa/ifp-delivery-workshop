@@ -1383,6 +1383,255 @@ def take_survey(workshop_slug, kind):
     )
 
 
+# ---------------------------- Session reports ----------------------------
+
+def _partner_slug(name):
+    s = re.sub(r"[^a-z0-9]+", "-", (name or "").lower()).strip("-")
+    return s or "unknown"
+
+
+def _matched_likert_table(pre_responses, post_responses):
+    """Pre/post Likert table matched by question text. Reused from session surveys page."""
+    if not pre_responses or not post_responses:
+        return []
+    pre_headers = set()
+    for r in pre_responses:
+        pre_headers.update(r["responses"].keys())
+    cols = []
+    for h in pre_headers:
+        if _is_metadata_header(h):
+            continue
+        vals = [r["responses"].get(h) for r in pre_responses]
+        if _detect_question_type([v for v in vals if v]) != "likert":
+            continue
+        cols.append(h)
+    out = []
+    for h in cols:
+        pre_agg = _aggregate_question(h, "likert", pre_responses)
+        post_agg = _aggregate_question(h, "likert", post_responses)
+        if pre_agg["avg"] is None or post_agg["avg"] is None:
+            continue
+        out.append({
+            "header": h,
+            "pre_avg": pre_agg["avg"], "post_avg": post_agg["avg"],
+            "delta": round(post_agg["avg"] - pre_agg["avg"], 2),
+            "pre_n": pre_agg["n"], "post_n": post_agg["n"],
+        })
+    out.sort(key=lambda x: -x["delta"])
+    return out
+
+
+def _session_report_data(session_id):
+    """Compute every metric the reports need from one query batch."""
+    db = get_db()
+    session = db.execute(
+        "SELECT s.*, w.slug AS workshop_slug, w.name AS workshop_name "
+        "FROM sessions s JOIN workshops w ON w.id = s.workshop_id "
+        "WHERE s.id = ?", (session_id,),
+    ).fetchone()
+    participants = db.execute(
+        "SELECT sp.user_id, sp.partner, sp.excluded, u.username, u.email "
+        "FROM session_participants sp JOIN users u ON u.id = sp.user_id "
+        "WHERE sp.session_id = ? AND sp.removed_at IS NULL "
+        "ORDER BY sp.partner IS NULL, sp.partner, u.username",
+        (session_id,),
+    ).fetchall()
+    surveys = _load_session_surveys(session_id)
+    pre_resp = _load_survey_responses(surveys["pre"]["id"]) if "pre" in surveys else []
+    post_resp = _load_survey_responses(surveys["post"]["id"]) if "post" in surveys else []
+    kc_resp = _load_survey_responses(surveys["knowledge"]["id"]) if "knowledge" in surveys else []
+
+    pre_users = {r["user_id"] for r in pre_resp if r["user_id"]}
+    post_users = {r["user_id"] for r in post_resp if r["user_id"]}
+    kc_pass_users = set()
+    for r in kc_resp:
+        if not r["user_id"]:
+            continue
+        for v in r["responses"].values():
+            if v and PASS_FAIL_RE.match(str(v).strip()):
+                kc_pass_users.add(r["user_id"])
+                break
+
+    counted = [p for p in participants if not p["excluded"]]
+    excluded = [p for p in participants if p["excluded"]]
+    partners = {}
+    for p in counted:
+        name = p["partner"] or "Unknown"
+        bucket = partners.setdefault(name, {
+            "name": name, "slug": _partner_slug(name),
+            "people": [], "pre_done": 0, "post_done": 0, "kc_pass": 0, "all_three": 0,
+        })
+        bucket["people"].append(p)
+        if p["user_id"] in pre_users: bucket["pre_done"] += 1
+        if p["user_id"] in post_users: bucket["post_done"] += 1
+        if p["user_id"] in kc_pass_users: bucket["kc_pass"] += 1
+        if (p["user_id"] in pre_users and p["user_id"] in post_users and p["user_id"] in kc_pass_users):
+            bucket["all_three"] += 1
+    for b in partners.values():
+        b["count"] = len(b["people"])
+        b["rate"] = (b["all_three"] / b["count"]) if b["count"] else 0
+    ranked = sorted(partners.values(), key=lambda b: (-b["rate"], -b["count"], b["name"]))
+
+    standouts = [b for b in ranked if b["count"] >= 1 and b["rate"] == 1.0]
+    at_risk = [b for b in ranked if b["count"] >= 1 and b["rate"] == 0.0
+               and (b["pre_done"] == 0 and b["post_done"] == 0 and b["kc_pass"] == 0)]
+
+    matched_likert = _matched_likert_table(pre_resp, post_resp)
+    biggest_gain = matched_likert[0] if matched_likert and matched_likert[0]["delta"] > 0 else None
+    pre_likert_avg, _ = _likert_avg_across_responses(pre_resp)
+    post_likert_avg, _ = _likert_avg_across_responses(post_resp)
+    overall_delta = round(post_likert_avg - pre_likert_avg, 2) if (pre_likert_avg is not None and post_likert_avg is not None) else None
+
+    pre_count = sum(1 for p in counted if p["user_id"] in pre_users)
+    post_count = sum(1 for p in counted if p["user_id"] in post_users)
+    kc_pass_count = sum(1 for p in counted if p["user_id"] in kc_pass_users)
+    all_three = sum(1 for p in counted
+                    if p["user_id"] in pre_users and p["user_id"] in post_users and p["user_id"] in kc_pass_users)
+    total_counted = len(counted)
+
+    return {
+        "session": dict(session) if session else None,
+        "total_registered": len(participants),
+        "total_counted": total_counted,
+        "total_excluded": len(excluded),
+        "pre_count": pre_count, "post_count": post_count,
+        "kc_pass_count": kc_pass_count, "all_three": all_three,
+        "pre_rate": round(pre_count / total_counted * 100) if total_counted else 0,
+        "post_rate": round(post_count / total_counted * 100) if total_counted else 0,
+        "kc_rate": round(kc_pass_count / total_counted * 100) if total_counted else 0,
+        "all_three_rate": round(all_three / total_counted * 100) if total_counted else 0,
+        "partners": ranked,
+        "partner_count": len(partners),
+        "standouts": standouts, "at_risk": at_risk,
+        "pre_likert_avg": pre_likert_avg, "post_likert_avg": post_likert_avg,
+        "overall_delta": overall_delta,
+        "matched_likert": matched_likert, "biggest_gain": biggest_gain,
+        "today": date.today().isoformat(),
+    }
+
+
+@app.route("/admin/workshops/<slug>/sessions/<session_slug>/reports")
+def admin_session_reports(slug, session_slug):
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    sess = _get_session_or_404(slug, session_slug)
+    data = _session_report_data(sess["id"])
+    return render_template("admin_reports.html", user=user, data=data, session=sess)
+
+
+@app.route("/admin/workshops/<slug>/sessions/<session_slug>/reports/exec-summary")
+def admin_report_exec(slug, session_slug):
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    sess = _get_session_or_404(slug, session_slug)
+    data = _session_report_data(sess["id"])
+    return render_template("report_exec_wrapper.html", user=user, data=data, session=sess)
+
+
+@app.route("/admin/workshops/<slug>/sessions/<session_slug>/reports/slack-post")
+def admin_report_slack(slug, session_slug):
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    sess = _get_session_or_404(slug, session_slug)
+    data = _session_report_data(sess["id"])
+    standout_names = ", ".join([b["name"] for b in data["standouts"][:5]]) if data["standouts"] else "[name 3-5 partner firms that stood out]"
+    top3 = data["partners"][:3]
+    medals = ["🥇", "🥈", "🥉"]
+    top3_lines = "\n".join(
+        f"{medals[i]} {b['name']} — {b['all_three']}/{b['count']} all three milestones ({round(b['rate']*100)}%)"
+        for i, b in enumerate(top3)
+    )
+    next_open_date = "[DATE]"
+    biggest = f'"{data["biggest_gain"]["header"]}"' if data["biggest_gain"] else '[TOPIC area]'
+    net = ("+" if data["overall_delta"] is not None and data["overall_delta"] >= 0 else "") + (f"{data['overall_delta']}" if data["overall_delta"] is not None else "[X.XX]")
+    pre_str = f"{data['pre_likert_avg']}" if data["pre_likert_avg"] is not None else "[X.XX]"
+    post_str = f"{data['post_likert_avg']}" if data["post_likert_avg"] is not None else "[X.XX]"
+    slack_text = f"""🎉 IFP Delivery Workshop — {sess['name']} just wrapped!
+
+{data['partner_count']} delivery partners sent {data['total_counted']} consultants through the workshop this week. Quick highlights:
+
+📈 Learning progression
+• Pre-workshop survey average: {pre_str}
+• Post-workshop survey average: {post_str}
+• Net improvement: {net} points — biggest gains in {biggest}
+
+🏆 Top completion rates by partner
+{top3_lines}
+
+✅ Knowledge check pass rate: {data['kc_rate']}%
+🎯 {data['all_three_rate']}% of all participants completed all three milestones (pre-survey + post-survey + passed the knowledge check).
+
+Huge shout-out to {standout_names} and to every consultant who put in the time. This is the kind of preparation that turns into smoother customer engagements.
+
+🙏 Thanks also to our IFP product team who staffed the Slack channel all week — [count] questions answered, zero left hanging.
+
+Next cohort opens {next_open_date}. If you have delivery consultants on your team who'd benefit, get them on the list — every session so far has hit capacity, and we're not extending tenant access past the registered week."""
+    return render_template("report_slack.html", user=user, slack_text=slack_text, data=data, session=sess)
+
+
+@app.route("/admin/workshops/<slug>/sessions/<session_slug>/reports/partner-sponsor")
+def admin_report_partner_landing(slug, session_slug):
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    sess = _get_session_or_404(slug, session_slug)
+    data = _session_report_data(sess["id"])
+    return render_template("report_partner_landing.html", user=user, data=data, session=sess)
+
+
+@app.route("/admin/workshops/<slug>/sessions/<session_slug>/reports/partner-sponsor/<partner_slug>")
+def admin_report_partner(slug, session_slug, partner_slug):
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    sess = _get_session_or_404(slug, session_slug)
+    data = _session_report_data(sess["id"])
+    partner = next((b for b in data["partners"] if b["slug"] == partner_slug), None)
+    if partner is None:
+        abort(404)
+    return render_template("report_partner_wrapper.html", user=user, data=data, partner=partner, session=sess)
+
+
+@app.route("/admin/workshops/<slug>/sessions/<session_slug>/reports/export.json")
+def admin_report_export_json(slug, session_slug):
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    sess = _get_session_or_404(slug, session_slug)
+    data = _session_report_data(sess["id"])
+    # Add raw response data for archival
+    surveys = _load_session_surveys(sess["id"])
+    out = {
+        "session": data["session"],
+        "summary": {k: data[k] for k in [
+            "total_registered", "total_counted", "total_excluded",
+            "pre_count", "post_count", "kc_pass_count", "all_three",
+            "pre_rate", "post_rate", "kc_rate", "all_three_rate",
+            "pre_likert_avg", "post_likert_avg", "overall_delta",
+        ]},
+        "partners": [{k: v for k, v in p.items() if k != "people"} for p in data["partners"]],
+        "matched_likert": data["matched_likert"],
+        "responses": {
+            kind: [
+                {
+                    "user_id": r["user_id"],
+                    "raw_email": r["raw_email"],
+                    "responses": r["responses"],
+                }
+                for r in _load_survey_responses(surveys[kind]["id"])
+            ]
+            for kind in surveys
+        },
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+    }
+    resp = jsonify(out)
+    resp.headers["Content-Disposition"] = f"attachment; filename={sess['workshop_slug']}-{sess['slug']}-export.json"
+    return resp
+
+
 @app.route("/admin/workshops/<slug>/sessions/<session_slug>/surveys", methods=["GET"])
 def admin_session_surveys(slug, session_slug):
     user, redir = _require_facilitator()

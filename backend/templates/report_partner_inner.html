@@ -1,0 +1,45 @@
+{% set pct = (partner.rate * 100) | round | int %}
+<div style="font-family:Arial,Helvetica,sans-serif;max-width:680px;margin:0 auto;color:#374151;font-size:14px;line-height:1.6;">
+  <div style="background:#1e3a5f;color:white;padding:20px 24px;border-radius:6px 6px 0 0;">
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;opacity:0.85;margin-bottom:4px;">Partner Sponsor Report</div>
+    <h1 style="margin:0;font-size:22px;font-weight:600;">{{ partner.name }} — {{ session.workshop_name }}</h1>
+    <div style="font-size:13px;opacity:0.85;margin-top:4px;">{{ session.name }} · {{ session.start_date }} → {{ session.end_date }}</div>
+  </div>
+  <div style="border:1px solid #e2e8f0;border-top:none;padding:20px 24px;border-radius:0 0 6px 6px;">
+    <p style="margin:0 0 16px 0;">Thank you for sending <strong>{{ partner.count }} consultant{{ '' if partner.count == 1 else 's' }}</strong> through this session of the {{ session.workshop_name }}. Below is a summary of your team's participation and five concrete next steps to translate workshop completion into delivery activity inside {{ partner.name }}'s tenant.</p>
+
+    <h3 style="color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Your team's participation</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:14px;">
+      <tbody>
+        <tr><td style="padding:5px 10px;color:#6b7280;width:60%;">Consultants registered</td><td style="padding:5px 10px;text-align:right;font-weight:600;">{{ partner.count }}</td></tr>
+        <tr><td style="padding:5px 10px;color:#6b7280;">Pre-survey completed</td><td style="padding:5px 10px;text-align:right;font-weight:600;">{{ partner.pre_done }} of {{ partner.count }}</td></tr>
+        <tr><td style="padding:5px 10px;color:#6b7280;">Post-survey completed</td><td style="padding:5px 10px;text-align:right;font-weight:600;">{{ partner.post_done }} of {{ partner.count }}</td></tr>
+        <tr><td style="padding:5px 10px;color:#6b7280;">Knowledge check passed</td><td style="padding:5px 10px;text-align:right;font-weight:600;">{{ partner.kc_pass }} of {{ partner.count }}</td></tr>
+        <tr><td style="padding:8px 10px;color:#1e3a5f;border-top:2px solid #0066cc;font-weight:600;">All three milestones completed</td><td style="padding:8px 10px;text-align:right;font-weight:700;color:#15803d;border-top:2px solid #0066cc;font-size:16px;">{{ partner.all_three }} of {{ partner.count }} ({{ pct }}%)</td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Your consultants</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead><tr style="background:#f8fafc;">
+        <th style="padding:8px 10px;text-align:left;font-size:11px;text-transform:uppercase;color:#6b7280;">Email</th>
+      </tr></thead>
+      <tbody>
+      {% for p in partner.people %}
+        <tr><td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;font-family:ui-monospace,Menlo,monospace;font-size:12px;">{{ p.username }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+    <h3 style="color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Next steps — convert training into delivery</h3>
+    <ol style="margin:8px 0 0 0;padding-left:24px;">
+      <li style="margin-bottom:10px;"><strong>Copy the reference {{ session.workshop_name.split(' ')[0] }} model + app into {{ partner.name }}'s tenant.</strong> Schedule a 60-minute working session with the Anaplan IFP product team. Your trained consultants pair on the copy and walk away with a tenant-local sandbox to keep iterating in.</li>
+      <li style="margin-bottom:10px;"><strong>Pair newly trained consultants with an active customer engagement within 30 days.</strong> The material decays quickly — put it on a live engagement while the muscle memory is fresh.</li>
+      <li style="margin-bottom:10px;"><strong>Use the persistent #ifp-delivery Slack channel for ongoing office hours.</strong> Anaplan IFP product staff the channel; same-day answers. Encourage your team to post real engagement obstacles as they come up.</li>
+      <li style="margin-bottom:10px;"><strong>Schedule a 30-minute delivery checkpoint with the IFP product team next quarter.</strong> Review what's in flight, what's stuck, and where the next round of enablement should focus.</li>
+      <li style="margin-bottom:10px;"><strong>Register your next batch for the upcoming session.</strong> If you have consultants who couldn't make this round, we can hold capacity for {{ partner.name }} in the next session.</li>
+    </ol>
+
+    <p style="margin-top:28px;color:#6b7280;font-size:12px;font-style:italic;border-top:1px solid #e5e7eb;padding-top:12px;">To schedule any of the above, reach out to the Anaplan partner alliances team. Generated {{ data.today }} from the {{ session.workshop_name }} cohort tracker.</p>
+  </div>
+</div>

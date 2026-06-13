@@ -1,0 +1,83 @@
+{# Email-pasteable inline-styled exec summary. Wrapped in a single div so copy/download captures everything cleanly. #}
+<div style="font-family:Arial,Helvetica,sans-serif;max-width:760px;margin:0 auto;color:#374151;font-size:14px;line-height:1.6;">
+  <div style="background:#1e3a5f;color:white;padding:20px 24px;border-radius:6px 6px 0 0;">
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;opacity:0.85;margin-bottom:4px;">Executive Summary — Internal</div>
+    <h1 style="margin:0;font-size:22px;font-weight:600;">{{ session.workshop_name }} — {{ session.name }}</h1>
+    <div style="font-size:13px;opacity:0.85;margin-top:4px;">{{ session.start_date }} → {{ session.end_date }}</div>
+  </div>
+  <div style="border:1px solid #e2e8f0;border-top:none;padding:20px 24px;border-radius:0 0 6px 6px;">
+    <p style="margin:0 0 16px 0;">This session took {{ data.total_counted }} delivery consultants from {{ data.partner_count }} partner firm{{ '' if data.partner_count == 1 else 's' }} through the {{ session.workshop_name }} — a self-paced, tenant-hands-on curriculum. The intent: shorten the ramp from "trained on Anaplan" to "billable on a customer engagement."</p>
+
+    <h3 style="color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Headline numbers</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:14px;">
+      <tbody>
+        <tr><td style="padding:5px 10px;color:#6b7280;width:60%;">Counted participants (excludes internal)</td><td style="padding:5px 10px;text-align:right;font-weight:600;">{{ data.total_counted }}</td></tr>
+        <tr><td style="padding:5px 10px;color:#6b7280;">Partner firms represented</td><td style="padding:5px 10px;text-align:right;font-weight:600;">{{ data.partner_count }}</td></tr>
+        <tr><td style="padding:5px 10px;color:#6b7280;">Pre-survey completion</td><td style="padding:5px 10px;text-align:right;font-weight:600;">{{ data.pre_rate }}%</td></tr>
+        <tr><td style="padding:5px 10px;color:#6b7280;">Post-survey completion</td><td style="padding:5px 10px;text-align:right;font-weight:600;">{{ data.post_rate }}%</td></tr>
+        <tr><td style="padding:5px 10px;color:#6b7280;">Knowledge check pass rate</td><td style="padding:5px 10px;text-align:right;font-weight:600;">{{ data.kc_rate }}%</td></tr>
+        <tr><td style="padding:8px 10px;color:#1e3a5f;border-top:2px solid #0066cc;font-weight:600;">All three milestones completed</td><td style="padding:8px 10px;text-align:right;font-weight:700;color:#15803d;border-top:2px solid #0066cc;font-size:16px;">{{ data.all_three_rate }}%</td></tr>
+      </tbody>
+    </table>
+
+    {% if data.pre_likert_avg is not none or data.post_likert_avg is not none %}
+    <h3 style="color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Learning progression</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:14px;">
+      <tbody>
+        <tr><td style="padding:5px 10px;color:#6b7280;width:60%;">Pre-workshop average</td><td style="padding:5px 10px;text-align:right;font-weight:600;">{{ data.pre_likert_avg if data.pre_likert_avg is not none else '—' }}</td></tr>
+        <tr><td style="padding:5px 10px;color:#6b7280;">Post-workshop average</td><td style="padding:5px 10px;text-align:right;font-weight:600;">{{ data.post_likert_avg if data.post_likert_avg is not none else '—' }}</td></tr>
+        <tr><td style="padding:5px 10px;color:#6b7280;">Net improvement</td><td style="padding:5px 10px;text-align:right;font-weight:700;color:{{ '#15803d' if data.overall_delta is not none and data.overall_delta >= 0 else '#b91c1c' }};">{{ ('+' if data.overall_delta >= 0 else '') ~ data.overall_delta if data.overall_delta is not none else '—' }}</td></tr>
+        {% if data.biggest_gain %}<tr><td style="padding:5px 10px;color:#6b7280;">Biggest gain — topic</td><td style="padding:5px 10px;text-align:right;font-weight:600;">{{ data.biggest_gain.header }} (+{{ data.biggest_gain.delta }})</td></tr>{% endif %}
+      </tbody>
+    </table>
+    {% endif %}
+
+    <h3 style="color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Partner mix &amp; completion</h3>
+    <p style="color:#6b7280;font-size:13px;margin:8px 0;">Sorted by all-three-milestones completion rate, then by volume.</p>
+    <table style="width:100%;border-collapse:collapse;font-size:14px;">
+      <thead><tr style="background:#f8fafc;">
+        <th style="padding:8px 10px;text-align:left;font-size:11px;text-transform:uppercase;color:#6b7280;">Partner</th>
+        <th style="padding:8px 10px;text-align:right;font-size:11px;text-transform:uppercase;color:#6b7280;">Sent</th>
+        <th style="padding:8px 10px;text-align:right;font-size:11px;text-transform:uppercase;color:#6b7280;">All 3 done</th>
+        <th style="padding:8px 10px;text-align:left;font-size:11px;text-transform:uppercase;color:#6b7280;">Completion</th>
+      </tr></thead>
+      <tbody>
+      {% for b in data.partners %}
+        {% set pct = (b.rate * 100) | round | int %}
+        <tr>
+          <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;">{{ b.name }}</td>
+          <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;text-align:right;">{{ b.count }}</td>
+          <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;text-align:right;">{{ b.all_three }}</td>
+          <td style="padding:6px 10px;border-bottom:1px solid #e5e7eb;">
+            <div style="display:inline-block;width:150px;background:#eff6ff;border-radius:3px;overflow:hidden;vertical-align:middle;">
+              <div style="background:#0066cc;height:14px;width:{{ (pct * 1.5) | round | int }}px;"></div>
+            </div>
+            <span style="margin-left:8px;font-weight:600;color:#1e3a5f;">{{ pct }}%</span>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+    {% if data.standouts %}
+    <h3 style="color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Standout partners</h3>
+    <p style="margin:0 0 8px 0;">{% for b in data.standouts %}<strong>{{ b.name }}</strong>{{ ', ' if not loop.last else '' }}{% endfor %} — 100% of their registered consultants completed all three milestones.</p>
+    {% endif %}
+
+    {% if data.at_risk %}
+    <h3 style="color:#b91c1c;border-bottom:2px solid #b91c1c;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Re-engagement needed</h3>
+    <p style="margin:0 0 8px 0;">{% for b in data.at_risk %}<strong>{{ b.name }}</strong>{{ ', ' if not loop.last else '' }}{% endfor %} — registered consultants but zero milestone completion. Partner alliances to follow up before the next session opens.</p>
+    {% endif %}
+
+    <h3 style="color:#1e3a5f;border-bottom:2px solid #0066cc;padding-bottom:6px;font-size:15px;margin:24px 0 12px 0;">Recommended next steps</h3>
+    <ol style="margin:8px 0 0 0;padding-left:24px;">
+      {% if data.standouts %}<li style="margin-bottom:6px;">Recognize standout partners: <strong>{% for b in data.standouts %}{{ b.name }}{{ ', ' if not loop.last else '' }}{% endfor %}</strong> — feature them in partner success comms and lead the next session's marketing with their success.</li>{% endif %}
+      {% if data.at_risk %}<li style="margin-bottom:6px;">Re-engage at-risk partners (0% completion this session): <strong>{% for b in data.at_risk %}{{ b.name }}{{ ', ' if not loop.last else '' }}{% endfor %}</strong> — partner alliances to confirm whether timing, framing, or sponsor engagement missed.</li>{% endif %}
+      <li style="margin-bottom:6px;">Schedule per-partner tenant-copy working sessions for partners at 75%+ completion so the workshop knowledge translates into customer-tenant work inside the next 30 days.</li>
+      <li style="margin-bottom:6px;">Open registration for the next session with capacity-led messaging — every session to date has filled and we are not extending tenant access past the registered week.</li>
+      {% if data.biggest_gain %}<li style="margin-bottom:6px;">Double down on <em>"{{ data.biggest_gain.header }}"</em> content — the largest pre→post improvement signal this session (+{{ data.biggest_gain.delta }}). Consider it as a standalone office-hours topic for the broader partner community.</li>{% endif %}
+    </ol>
+
+    <p style="margin-top:28px;color:#6b7280;font-size:12px;font-style:italic;border-top:1px solid #e5e7eb;padding-top:12px;">Generated {{ data.today }} from the {{ session.workshop_name }} cohort tracker. Distribution: Anaplan internal partner alliances + IFP product leadership.</p>
+  </div>
+</div>

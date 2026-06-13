@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Slack Post — {{ session.name }}{% endblock %}
+{% block body %}
+<div class="admin-shell">
+  {% set page_title = 'Slack Celebration Post' %}
+  {% set breadcrumbs = [
+    {'label': session.workshop_name, 'url': url_for('admin_workshop_detail', slug=session.workshop_slug)},
+    {'label': session.name, 'url': url_for('admin_session_detail', slug=session.workshop_slug, session_slug=session.slug)},
+    {'label': 'Reports', 'url': url_for('admin_session_reports', slug=session.workshop_slug, session_slug=session.slug)},
+    {'label': 'Slack Post'}
+  ] %}
+  {% include "_admin_header.html" %}
+
+  <div class="card">
+    <p class="help-note" style="margin-top:0;">Drop this in the <code>#amer_partners_alliances</code> channel after the session wraps. Numbers pre-filled from this session's data. Update the bracketed placeholders before posting.</p>
+    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">
+      <button class="primary-btn" type="button" onclick="copyText()">Copy to clipboard</button>
+      <span id="copy-fb" style="color:#15803d;font-size:0.85rem;display:none;">Copied ✓</span>
+    </div>
+    <textarea id="slack-text" readonly style="width:100%;min-height:420px;padding:0.85rem 1rem;border:1px solid #d1d5db;border-radius:6px;font-family:ui-monospace,Menlo,monospace;font-size:0.88rem;line-height:1.55;background:#f8fafc;resize:vertical;">{{ slack_text }}</textarea>
+  </div>
+</div>
+<script>
+function copyText() {
+  const ta = document.getElementById('slack-text');
+  ta.select();
+  const fb = document.getElementById('copy-fb');
+  navigator.clipboard.writeText(ta.value).then(
+    () => { fb.style.display='inline'; setTimeout(()=>fb.style.display='none', 1500); },
+    () => { document.execCommand('copy'); fb.style.display='inline'; setTimeout(()=>fb.style.display='none', 1500); }
+  );
+}
+</script>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Partner Reports — {{ session.name }}{% endblock %}
+{% block body %}
+<div class="admin-shell">
+  {% set page_title = 'Partner sponsor reports' %}
+  {% set breadcrumbs = [
+    {'label': session.workshop_name, 'url': url_for('admin_workshop_detail', slug=session.workshop_slug)},
+    {'label': session.name, 'url': url_for('admin_session_detail', slug=session.workshop_slug, session_slug=session.slug)},
+    {'label': 'Reports', 'url': url_for('admin_session_reports', slug=session.workshop_slug, session_slug=session.slug)},
+    {'label': 'Partner reports'}
+  ] %}
+  {% include "_admin_header.html" %}
+
+  <div class="card">
+    <p class="help-note" style="margin-top:0;">One report per partner with their team's participation and five concrete next-step recommendations (tenant-copy session, pair with active engagement, etc.). Click into each to copy or download.</p>
+    {% if not data.partners %}
+      <p class="help-note">No partners enrolled in this session yet.</p>
+    {% else %}
+    <table class="users-table">
+      <thead><tr><th>Partner</th><th style="text-align:right;">Sent</th><th style="text-align:right;">All 3 done</th><th style="text-align:right;">Completion</th><th style="text-align:right;">Open</th></tr></thead>
+      <tbody>
+      {% for b in data.partners %}
+        {% set pct = (b.rate * 100) | round | int %}
+        <tr>
+          <td><strong>{{ b.name }}</strong></td>
+          <td style="text-align:right;font-variant-numeric:tabular-nums;">{{ b.count }}</td>
+          <td style="text-align:right;font-variant-numeric:tabular-nums;">{{ b.all_three }}</td>
+          <td style="text-align:right;font-variant-numeric:tabular-nums;font-weight:600;color:{{ '#15803d' if pct >= 75 else ('#b45309' if pct >= 25 else '#b91c1c') }};">{{ pct }}%</td>
+          <td style="text-align:right;">
+            <a class="secondary-btn" href="{{ url_for('admin_report_partner', slug=session.workshop_slug, session_slug=session.slug, partner_slug=b.slug) }}" style="text-decoration:none;">Open</a>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -53,8 +53,11 @@
       <p class="help-note" style="margin:0;">Upload pre-survey, post-survey, and knowledge-check XLSX exports. Auto-detects question types (Likert, multi-select, single-select, free text). Anonymous-mode handled.</p>
     </div>
     <div class="card">
-      <h2>Reports</h2>
-      <p class="help-note">Exec summary, partner sponsor reports, Slack celebration post, anonymous-survey aggregate — all per-session, generated from this session's data.</p>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+        <h2 style="margin:0;">Reports</h2>
+        <a class="primary-btn" href="{{ url_for('admin_session_reports', slug=session.workshop_slug, session_slug=session.slug) }}" style="text-decoration:none;">Open →</a>
+      </div>
+      <p class="help-note" style="margin:0;">Executive summary, Slack celebration post, per-partner sponsor reports, JSON export — all rendered from this session's participants and survey responses.</p>
     </div>
   </div>
 </div>

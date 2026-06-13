@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Executive Summary — {{ session.name }}{% endblock %}
+{% block body %}
+<div class="admin-shell">
+  {% set page_title = 'Executive Summary' %}
+  {% set breadcrumbs = [
+    {'label': session.workshop_name, 'url': url_for('admin_workshop_detail', slug=session.workshop_slug)},
+    {'label': session.name, 'url': url_for('admin_session_detail', slug=session.workshop_slug, session_slug=session.slug)},
+    {'label': 'Reports', 'url': url_for('admin_session_reports', slug=session.workshop_slug, session_slug=session.slug)},
+    {'label': 'Executive Summary'}
+  ] %}
+  {% include "_admin_header.html" %}
+
+  <div class="card" style="display:flex;align-items:center;gap:0.5rem;">
+    <button class="primary-btn" type="button" onclick="copyHtml('report-html')">Copy HTML to clipboard</button>
+    <button class="secondary-btn" type="button" onclick="downloadHtml('report-html', '{{ session.workshop_slug }}-{{ session.slug }}-exec-summary.html')">Download HTML file</button>
+    <span id="copy-fb" style="color:#15803d;font-size:0.85rem;display:none;">Copied ✓</span>
+    <span style="font-size:0.78rem;color:#6b7280;margin-left:auto;">Paste directly into email — inline styles are preserved.</span>
+  </div>
+
+  <div class="card" style="padding:0;background:white;">
+    <div id="report-html">
+      {% include "report_exec_inner.html" %}
+    </div>
+  </div>
+</div>
+<script>
+function copyHtml(id) {
+  const html = document.getElementById(id).innerHTML;
+  const fb = document.getElementById('copy-fb');
+  navigator.clipboard.write([new ClipboardItem({
+    'text/html': new Blob([html], {type:'text/html'}),
+    'text/plain': new Blob([html.replace(/<[^>]+>/g,'')], {type:'text/plain'}),
+  })]).then(() => { fb.style.display='inline'; setTimeout(()=>fb.style.display='none', 1500); },
+            () => { navigator.clipboard.writeText(html); fb.style.display='inline'; setTimeout(()=>fb.style.display='none', 1500); });
+}
+function downloadHtml(id, filename) {
+  const html = document.getElementById(id).innerHTML;
+  const full = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${filename}</title></head><body style="background:#f8fafc;margin:0;padding:24px;">${html}</body></html>`;
+  const blob = new Blob([full], {type:'text/html'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+}
+</script>
+{% endblock %}
