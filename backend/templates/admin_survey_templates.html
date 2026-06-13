@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Survey templates — {{ workshop.name }}{% endblock %}
+{% block body %}
+<div class="admin-shell">
+  {% set page_title = 'Survey templates' %}
+  {% set breadcrumbs = [
+    {'label': workshop.name, 'url': url_for('admin_workshop_detail', slug=workshop.slug)},
+    {'label': 'Survey templates'}
+  ] %}
+  {% include "_admin_header.html" %}
+
+  <div class="card">
+    <p class="help-note" style="margin-top:0;">One template per kind. Participants fill out the form at <code>/w/{{ workshop.slug }}/survey/&lt;kind&gt;</code> from inside the workshop site. Responses attach to their most recent session enrollment.</p>
+    <table class="users-table" style="margin-top:0.5rem;">
+      <thead><tr><th>Kind</th><th>Status</th><th>Questions</th><th>Updated</th><th>Participant URL</th><th style="text-align:right;">Edit</th></tr></thead>
+      <tbody>
+      {% for kind_label in [('pre','Pre-workshop'), ('post','Post-workshop'), ('knowledge','Knowledge check')] %}
+        {% set kind = kind_label[0] %}
+        {% set tpl = templates[kind] %}
+        <tr>
+          <td><strong>{{ kind_label[1] }}</strong></td>
+          <td>{% if tpl %}<span class="badge facilitator">published</span>{% else %}<span class="badge">not yet</span>{% endif %}</td>
+          <td>{% if tpl %}{{ tpl.questions|length }}{% else %}—{% endif %}</td>
+          <td>{% if tpl %}{{ tpl.updated_at }}{% else %}—{% endif %}</td>
+          <td>{% if tpl %}<code style="font-size:0.78rem;">/w/{{ workshop.slug }}/survey/{{ kind }}</code>{% else %}—{% endif %}</td>
+          <td style="text-align:right;">
+            <a class="secondary-btn" href="{{ url_for('admin_survey_template_edit', slug=workshop.slug, kind=kind) }}" style="text-decoration:none;">{{ 'Edit' if tpl else 'Create' }}</a>
+            {% if tpl %}
+              <a class="secondary-btn" href="{{ url_for('take_survey', workshop_slug=workshop.slug, kind=kind) }}" target="_blank" rel="noopener" style="text-decoration:none;">Preview ↗</a>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

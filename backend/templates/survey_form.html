@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}{{ {'pre':'Pre-workshop','post':'Post-workshop','knowledge':'Knowledge check'}[kind] }} survey — {{ workshop.name }}{% endblock %}
+{% block body %}
+<div class="admin-shell" style="max-width:760px;">
+  <div style="margin:1rem 0 1.5rem 0;">
+    <div style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.08em;color:#6b7280;font-weight:600;">{{ workshop.name }}</div>
+    <h1 style="margin:0.25rem 0 0 0;font-size:1.5rem;color:#1e3a5f;">{{ {'pre':'Pre-workshop survey','post':'Post-workshop survey','knowledge':'Knowledge check'}[kind] }}</h1>
+    {% if session_name %}<div style="font-size:0.85rem;color:#6b7280;margin-top:0.25rem;">Session: {{ session_name }}</div>{% endif %}
+    {% if is_facilitator_preview %}
+      <div style="background:#fef9c3;border-left:4px solid #ca8a04;padding:0.5rem 0.75rem;border-radius:0 4px 4px 0;font-size:0.85rem;color:#854d0e;margin-top:0.75rem;">
+        Facilitator preview — submissions are blocked until you're enrolled in a session.
+      </div>
+    {% endif %}
+  </div>
+
+  {% if template.intro %}
+    <p style="background:#eff6ff;border-left:4px solid #0066cc;padding:0.6rem 0.85rem;border-radius:0 4px 4px 0;color:#1e3a5f;font-size:0.95rem;line-height:1.5;">{{ template.intro }}</p>
+  {% endif %}
+
+  {% if error %}
+    <div class="auth-error" style="margin-bottom:0.75rem;">{{ error }}</div>
+  {% endif %}
+
+  <form method="post" class="survey-form">
+    {% for q in template.questions %}
+      <div class="qblock">
+        <label class="qlabel">
+          {{ loop.index }}. {{ q.text }}{% if q.required %} <span style="color:#b91c1c;">*</span>{% endif %}
+        </label>
+        {% if q.type == 'likert' %}
+          <div class="likert">
+            {% for label in likert_order %}
+              <label class="opt"><input type="radio" name="answer__{{ q.id }}" value="{{ label }}" {% if q.required %}required{% endif %}> {{ label }}</label>
+            {% endfor %}
+          </div>
+        {% elif q.type == 'multi_select' %}
+          <div class="opts">
+            {% for opt in q.options %}
+              <label class="opt"><input type="checkbox" name="answer__{{ q.id }}" value="{{ opt }}"> {{ opt }}</label>
+            {% endfor %}
+          </div>
+        {% elif q.type == 'single_select' %}
+          <div class="opts">
+            {% for opt in q.options %}
+              <label class="opt"><input type="radio" name="answer__{{ q.id }}" value="{{ opt }}" {% if q.required %}required{% endif %}> {{ opt }}</label>
+            {% endfor %}
+          </div>
+        {% else %}
+          <textarea name="answer__{{ q.id }}" {% if q.required %}required{% endif %} class="ftext" placeholder="Your answer..."></textarea>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <div style="margin-top:1.5rem;">
+      <button type="submit" class="primary-btn" {% if is_facilitator_preview %}disabled{% endif %} style="font-size:1rem;padding:0.65rem 1.5rem;">Submit</button>
+    </div>
+  </form>
+</div>
+
+<style>
+  .survey-form { font-family: inherit; }
+  .qblock { background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1rem 1.1rem; margin-bottom: 0.75rem; }
+  .qlabel { display: block; font-weight: 600; color: #1e3a5f; font-size: 0.95rem; margin-bottom: 0.5rem; line-height: 1.4; }
+  .likert, .opts { display: flex; flex-direction: column; gap: 0.3rem; }
+  .opt { display: flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0.5rem; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
+  .opt:hover { background: #f8fafc; }
+  .opt input { margin: 0; }
+  .ftext { width: 100%; min-height: 100px; padding: 0.6rem 0.75rem; border: 1px solid #cbd5e1; border-radius: 4px; font-family: inherit; font-size: 0.92rem; box-sizing: border-box; resize: vertical; }
+</style>
+{% endblock %}

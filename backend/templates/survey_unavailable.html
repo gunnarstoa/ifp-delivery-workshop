@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Survey unavailable — {{ workshop.name }}{% endblock %}
+{% block body %}
+<div class="auth-shell">
+  <div class="auth-card" style="text-align:center;">
+    <h1>Survey isn't available</h1>
+    <p class="subtitle">{{ reason }}</p>
+    <div style="margin-top:1rem;">
+      <a class="secondary-btn" href="/w/{{ workshop.slug }}/01-overview.html" style="text-decoration:none;">Back to the workshop</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -937,6 +937,115 @@ def admin_session_participants(slug, session_slug):
     )
 
 
+# ---------------------------- Survey templates (native) ----------------------------
+
+IFP_BACKGROUND_OPTIONS = [
+    "Certified Solution Architect",
+    "Certified Model Builder",
+    "Certified Master Anaplanner",
+    "Program Architect",
+    "Practice Lead",
+    "Project Manager",
+]
+IFP_EXPERIENCE_OPTIONS = ["No Projects (yet)", "2 to 5 Projects", "More than 5 Projects"]
+IFP_TOPICS = [
+    "Anaplan Way Methodology",
+    "Application Lifecycle Management (ALM)",
+    "Anaplan Application Configuration",
+    "Integrated Financial Planning (IFP) Application",
+    "Extensions to IFP",
+    "Anaplan Data Orchestrator (ADO)",
+]
+
+IFP_PRE_TEMPLATE = {
+    "intro": "Take a few minutes before the workshop starts to share your background and where you're starting from. Your answers help us calibrate the live discussions and the wrap-up retrospective.",
+    "questions": (
+        [
+            {"id": "background_role", "text": "Your background and role (select all that apply)", "type": "multi_select", "options": IFP_BACKGROUND_OPTIONS, "required": False},
+            {"id": "project_experience", "text": "Your project experience", "type": "single_select", "options": IFP_EXPERIENCE_OPTIONS, "required": True},
+        ]
+        + [{"id": f"topic_{i}", "text": t, "type": "likert", "required": True} for i, t in enumerate(IFP_TOPICS)]
+        + [{"id": "learning_hopes", "text": "Add one or two things you hope to learn from the course", "type": "free_text", "required": False}]
+    ),
+}
+
+IFP_POST_TEMPLATE = {
+    "intro": "Now that the workshop is wrapping up, share how things changed and what we should improve for the next cohort.",
+    "questions": (
+        [{"id": f"topic_{i}", "text": t, "type": "likert", "required": True} for i, t in enumerate(IFP_TOPICS)]
+        + [
+            {"id": "feedback_valuable", "text": "What did you find most valuable about the workshop?", "type": "free_text", "required": False},
+            {"id": "feedback_improve", "text": "What aspects of the workshop could be improved?", "type": "free_text", "required": False},
+            {"id": "feedback_topics", "text": "Are there additional topics you would like covered in future sessions?", "type": "free_text", "required": False},
+            {"id": "feedback_instructors", "text": "What feedback do you have for the instructors?", "type": "free_text", "required": False},
+        ]
+    ),
+}
+
+
+def _load_template(workshop_id, kind):
+    row = get_db().execute(
+        "SELECT * FROM survey_templates WHERE workshop_id = ? AND kind = ?",
+        (workshop_id, kind),
+    ).fetchone()
+    if not row:
+        return None
+    return {
+        "id": row["id"],
+        "workshop_id": row["workshop_id"],
+        "kind": row["kind"],
+        "intro": row["intro"],
+        "questions": json.loads(row["questions_json"]),
+        "updated_at": row["updated_at"],
+    }
+
+
+def _save_template(workshop_id, kind, intro, questions, updated_by):
+    db = get_db()
+    db.execute(
+        "INSERT INTO survey_templates (workshop_id, kind, intro, questions_json, updated_by) "
+        "VALUES (?, ?, ?, ?, ?) "
+        "ON CONFLICT(workshop_id, kind) DO UPDATE SET "
+        "intro = excluded.intro, questions_json = excluded.questions_json, "
+        "updated_at = CURRENT_TIMESTAMP, updated_by = excluded.updated_by",
+        (workshop_id, kind, intro, json.dumps(questions), updated_by),
+    )
+    db.commit()
+
+
+def _ensure_session_survey(session_id, kind):
+    """Return the session_surveys row id for (session_id, kind), creating a thin shell row if absent."""
+    db = get_db()
+    row = db.execute(
+        "SELECT id FROM session_surveys WHERE session_id = ? AND kind = ?",
+        (session_id, kind),
+    ).fetchone()
+    if row:
+        return row["id"]
+    cur = db.execute(
+        "INSERT INTO session_surveys (session_id, kind, filename, total_rows, is_anonymous, headers_json) "
+        "VALUES (?, ?, NULL, 0, 0, '[]')",
+        (session_id, kind),
+    )
+    db.commit()
+    return cur.lastrowid
+
+
+def _recompute_survey_counters(survey_id):
+    db = get_db()
+    rows = db.execute(
+        "SELECT COUNT(*) AS n, COUNT(participant_user_id) AS named "
+        "FROM survey_responses WHERE survey_id = ?",
+        (survey_id,),
+    ).fetchone()
+    is_anon = 1 if (rows["n"] > 0 and rows["named"] == 0) else 0
+    db.execute(
+        "UPDATE session_surveys SET total_rows = ?, is_anonymous = ? WHERE id = ?",
+        (rows["n"], is_anon, survey_id),
+    )
+    db.commit()
+
+
 # ---------------------------- Surveys ----------------------------
 
 def _parse_xlsx_upload(file_storage):
@@ -1117,6 +1226,163 @@ def _classify_columns(headers, responses):
     return out
 
 
+@app.route("/admin/workshops/<slug>/survey-templates")
+def admin_survey_templates(slug):
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    workshop = get_db().execute("SELECT * FROM workshops WHERE slug = ?", (slug,)).fetchone()
+    if workshop is None:
+        abort(404)
+    templates = {
+        "pre": _load_template(workshop["id"], "pre"),
+        "post": _load_template(workshop["id"], "post"),
+        "knowledge": _load_template(workshop["id"], "knowledge"),
+    }
+    return render_template(
+        "admin_survey_templates.html",
+        user=user, workshop=workshop, templates=templates,
+    )
+
+
+@app.route("/admin/workshops/<slug>/survey-templates/<kind>/edit", methods=["GET", "POST"])
+def admin_survey_template_edit(slug, kind):
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    if kind not in ("pre", "post", "knowledge"):
+        abort(404)
+    workshop = get_db().execute("SELECT * FROM workshops WHERE slug = ?", (slug,)).fetchone()
+    if workshop is None:
+        abort(404)
+
+    error = None
+    if request.method == "POST":
+        action = (request.form.get("action") or "").strip()
+        if action == "load_ifp":
+            seed = IFP_PRE_TEMPLATE if kind == "pre" else (IFP_POST_TEMPLATE if kind == "post" else {"intro": "", "questions": []})
+            _save_template(workshop["id"], kind, seed["intro"], seed["questions"], user["id"])
+            return redirect(url_for("admin_survey_template_edit", slug=slug, kind=kind))
+        if action == "delete":
+            get_db().execute("DELETE FROM survey_templates WHERE workshop_id = ? AND kind = ?", (workshop["id"], kind))
+            get_db().commit()
+            return redirect(url_for("admin_survey_templates", slug=slug))
+        intro = (request.form.get("intro") or "").strip()
+        try:
+            questions = json.loads(request.form.get("questions_json") or "[]")
+        except json.JSONDecodeError:
+            error = "Invalid questions data."
+            questions = []
+        if isinstance(questions, list):
+            cleaned = []
+            for i, q in enumerate(questions):
+                if not isinstance(q, dict):
+                    continue
+                text = str(q.get("text", "")).strip()
+                qtype = q.get("type")
+                if not text or qtype not in ("likert", "multi_select", "single_select", "free_text"):
+                    continue
+                entry = {"id": q.get("id") or f"q{i+1}", "text": text, "type": qtype, "required": bool(q.get("required", False))}
+                if qtype in ("multi_select", "single_select"):
+                    opts = q.get("options") or []
+                    entry["options"] = [str(o).strip() for o in opts if str(o).strip()]
+                cleaned.append(entry)
+            questions = cleaned
+        if not error and not questions:
+            error = "At least one question is required."
+        if not error:
+            _save_template(workshop["id"], kind, intro, questions, user["id"])
+            return redirect(url_for("admin_survey_templates", slug=slug))
+
+    template = _load_template(workshop["id"], kind)
+    return render_template(
+        "admin_survey_template_edit.html",
+        user=user, workshop=workshop, kind=kind, template=template, error=error,
+        has_ifp_seed=(kind in ("pre", "post")),
+    )
+
+
+# ---------------------------- Participant survey form ----------------------------
+
+def _current_enrollment_session(user_id, workshop_slug):
+    """Most recent (non-removed, non-archived) session enrollment for this user in this workshop."""
+    return get_db().execute(
+        "SELECT s.id, s.slug, s.name FROM session_participants sp "
+        "JOIN sessions s ON s.id = sp.session_id "
+        "JOIN workshops w ON w.id = s.workshop_id "
+        "WHERE sp.user_id = ? AND sp.removed_at IS NULL "
+        "  AND w.slug = ? AND s.status != 'archived' "
+        "ORDER BY sp.enrolled_at DESC LIMIT 1",
+        (user_id, workshop_slug),
+    ).fetchone()
+
+
+@app.route("/w/<workshop_slug>/survey/<kind>", methods=["GET", "POST"])
+def take_survey(workshop_slug, kind):
+    if kind not in ("pre", "post", "knowledge"):
+        abort(404)
+    user = current_user()
+    if user is None:
+        return redirect(url_for("login", next=request.path))
+    workshop = get_db().execute("SELECT * FROM workshops WHERE slug = ?", (workshop_slug,)).fetchone()
+    if workshop is None:
+        abort(404)
+    template = _load_template(workshop["id"], kind)
+    if template is None:
+        return render_template("survey_unavailable.html", workshop=workshop, kind=kind, reason="Your facilitator hasn't published this survey yet."), 404
+    enrollment = _current_enrollment_session(user["id"], workshop_slug)
+    if enrollment is None and not user["is_facilitator"]:
+        return render_template("survey_unavailable.html", workshop=workshop, kind=kind, reason="We couldn't find an active session enrollment for you in this workshop. Reach out to your facilitator."), 403
+
+    error = None
+    if request.method == "POST":
+        if enrollment is None:
+            abort(403)
+        already = get_db().execute(
+            "SELECT sr.id FROM survey_responses sr "
+            "JOIN session_surveys ss ON ss.id = sr.survey_id "
+            "WHERE ss.session_id = ? AND ss.kind = ? AND sr.participant_user_id = ?",
+            (enrollment["id"], kind, user["id"]),
+        ).fetchone()
+        if already:
+            return render_template("survey_already_submitted.html", workshop=workshop, kind=kind, session_name=enrollment["name"])
+        responses = {}
+        missing = []
+        for q in template["questions"]:
+            qtype = q["type"]
+            if qtype == "multi_select":
+                vals = request.form.getlist(f"answer__{q['id']}")
+                responses[q["text"]] = ";".join(vals) + ";" if vals else ""
+                if q.get("required") and not vals:
+                    missing.append(q["text"])
+            else:
+                v = (request.form.get(f"answer__{q['id']}") or "").strip()
+                responses[q["text"]] = v
+                if q.get("required") and not v:
+                    missing.append(q["text"])
+        if missing:
+            error = "Please answer all required questions: " + "; ".join(missing[:5]) + (" ..." if len(missing) > 5 else "")
+        else:
+            survey_id = _ensure_session_survey(enrollment["id"], kind)
+            get_db().execute(
+                "INSERT INTO survey_responses (survey_id, participant_user_id, raw_email, responses_json) "
+                "VALUES (?, ?, ?, ?)",
+                (survey_id, user["id"], user["username"], json.dumps(responses)),
+            )
+            get_db().commit()
+            _recompute_survey_counters(survey_id)
+            return render_template("survey_thanks.html", workshop=workshop, kind=kind, session_name=enrollment["name"])
+
+    return render_template(
+        "survey_form.html",
+        workshop=workshop, kind=kind, template=template,
+        likert_order=LIKERT_ORDER,
+        session_name=enrollment["name"] if enrollment else None,
+        is_facilitator_preview=(user["is_facilitator"] and enrollment is None),
+        error=error,
+    )
+
+
 @app.route("/admin/workshops/<slug>/sessions/<session_slug>/surveys", methods=["GET"])
 def admin_session_surveys(slug, session_slug):
     user, redir = _require_facilitator()
@@ -1131,7 +1397,17 @@ def admin_session_surveys(slug, session_slug):
             sections.append({"kind": kind, "survey": None})
             continue
         responses = _load_survey_responses(s["id"])
-        headers = json.loads(s["headers_json"]) if s["headers_json"] else []
+        stored_headers = json.loads(s["headers_json"]) if s["headers_json"] else []
+        # Union of (a) stored headers (from XLSX uploads, legacy) and (b) keys
+        # present on the response JSONs (native form submissions). Preserves
+        # order from the stored list first, then appends any new ones seen.
+        seen = set(stored_headers)
+        headers = list(stored_headers)
+        for r in responses:
+            for k in r["responses"].keys():
+                if k not in seen:
+                    seen.add(k)
+                    headers.append(k)
         cols = _classify_columns(headers, responses)
         aggregates = []
         for c in cols:

@@ -117,3 +117,16 @@ CREATE TABLE IF NOT EXISTS survey_responses (
 );
 
 CREATE INDEX IF NOT EXISTS idx_survey_responses_survey ON survey_responses(survey_id);
+
+CREATE TABLE IF NOT EXISTS survey_templates (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  workshop_id INTEGER NOT NULL,
+  kind TEXT NOT NULL,
+  intro TEXT,
+  questions_json TEXT NOT NULL,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_by INTEGER,
+  FOREIGN KEY (workshop_id) REFERENCES workshops(id) ON DELETE CASCADE,
+  FOREIGN KEY (updated_by) REFERENCES users(id),
+  UNIQUE (workshop_id, kind)
+);

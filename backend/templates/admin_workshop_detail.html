@@ -171,6 +171,14 @@
     </div>
     <div class="card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+        <h2 style="margin:0;">Survey templates</h2>
+        <a class="primary-btn" href="{{ url_for('admin_survey_templates', slug=workshop.slug) }}" style="text-decoration:none;">Manage →</a>
+      </div>
+      <p class="help-note" style="margin:0;">Define the pre-workshop, post-workshop, and knowledge-check surveys participants take from inside the workshop site. Same template applies across every session.</p>
+    </div>
+
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
         <h2 style="margin:0;">Promotion toolkit</h2>
         {% if toolkit_assets %}
           <a class="primary-btn" href="{{ url_for('admin_workshop_toolkit', slug=workshop.slug) }}" style="text-decoration:none;">Open →</a>

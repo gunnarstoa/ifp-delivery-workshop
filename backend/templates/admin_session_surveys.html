@@ -11,9 +11,9 @@
   {% include "_admin_header.html" %}
 
   <div class="card">
-    <h2 style="margin-top:0;">Upload</h2>
-    <p class="help-note" style="margin-top:0;">Upload the XLSX export from Microsoft Forms. Replacing an existing upload simply re-imports.</p>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0.75rem;">
+    <h2 style="margin-top:0;">Collection status</h2>
+    <p class="help-note" style="margin-top:0;">Responses are collected from the participant-facing form at <code>/w/{{ session.workshop_slug }}/survey/&lt;kind&gt;</code>. Manage question structure on the <a href="{{ url_for('admin_survey_templates', slug=session.workshop_slug) }}">workshop survey templates</a> page.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0.75rem;">
       {% for kind_label in [('pre','Pre-workshop survey'), ('post','Post-workshop survey'), ('knowledge','Knowledge check')] %}
         {% set kind = kind_label[0] %}
         {% set label = kind_label[1] %}
@@ -21,21 +21,11 @@
         <div style="border:1px solid #e2e8f0;border-radius:6px;padding:0.75rem;background:#fafafa;">
           <div style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.05em;color:#6b7280;font-weight:600;">{{ label }}</div>
           {% if section.survey %}
-            <div style="margin:0.4rem 0;font-size:0.85rem;">
-              <strong>{{ section.responses_count }} responses</strong>{% if section.is_anonymous %} <span class="badge">anonymous</span>{% endif %}
-              <div style="font-size:0.78rem;color:#6b7280;margin-top:0.15rem;">{{ section.survey.filename }} · uploaded {{ section.survey.uploaded_at }}</div>
-            </div>
-            <form method="post" action="{{ url_for('admin_session_survey_remove', slug=session.workshop_slug, session_slug=session.slug, kind=kind) }}" onsubmit="return confirm('Remove the {{ label }} upload?');" style="display:inline;">
-              <button class="danger-btn" type="submit">Remove</button>
-            </form>
+            <div style="margin:0.4rem 0;font-size:1.2rem;font-weight:700;color:#1e3a5f;">{{ section.responses_count }} responses</div>
+            {% if section.is_anonymous %}<span class="badge">anonymous</span>{% endif %}
           {% else %}
-            <p class="help-note" style="margin:0.3rem 0;">No upload yet.</p>
+            <p class="help-note" style="margin:0.3rem 0;">No responses yet.</p>
           {% endif %}
-          <form method="post" action="{{ url_for('admin_session_survey_upload', slug=session.workshop_slug, session_slug=session.slug) }}" enctype="multipart/form-data" style="margin-top:0.5rem;">
-            <input type="hidden" name="kind" value="{{ kind }}">
-            <input type="file" name="file" accept=".xlsx" required style="font-size:0.8rem;">
-            <button class="primary-btn" type="submit" style="margin-top:0.4rem;">{{ 'Replace' if section.survey else 'Upload' }}</button>
-          </form>
         </div>
       {% endfor %}
     </div>

@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Edit {{ kind }} survey — {{ workshop.name }}{% endblock %}
+{% block body %}
+<div class="admin-shell">
+  {% set kind_label = {'pre': 'Pre-workshop', 'post': 'Post-workshop', 'knowledge': 'Knowledge check'} %}
+  {% set page_title = kind_label[kind] + ' survey' %}
+  {% set breadcrumbs = [
+    {'label': workshop.name, 'url': url_for('admin_workshop_detail', slug=workshop.slug)},
+    {'label': 'Survey templates', 'url': url_for('admin_survey_templates', slug=workshop.slug)},
+    {'label': kind_label[kind] + ' survey'}
+  ] %}
+  {% include "_admin_header.html" %}
+
+  {% if error %}<div class="auth-error" style="margin-bottom:0.75rem;">{{ error }}</div>{% endif %}
+
+  <form method="post" onsubmit="syncJson(event)">
+    <div class="card">
+      <h2 style="margin-top:0;">Intro text</h2>
+      <p class="help-note" style="margin-top:0;">Shown above the questions to participants.</p>
+      <textarea name="intro" style="width:100%;min-height:80px;padding:0.6rem;border:1px solid #cbd5e1;border-radius:4px;font-size:0.9rem;" placeholder="Why we're collecting this, how long it takes, etc.">{{ template.intro or '' }}</textarea>
+    </div>
+
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <h2 style="margin:0;">Questions</h2>
+        <button type="button" class="primary-btn" onclick="addQuestion()">＋ Add question</button>
+      </div>
+      <p class="help-note" style="margin-top:0.25rem;">Likert questions use a fixed 5-point comfort scale. Multi/single-select questions need one option per line.</p>
+      <div id="questions" style="margin-top:0.75rem;"></div>
+      <textarea name="questions_json" id="questions_json" style="display:none;"></textarea>
+    </div>
+
+    <div class="card" style="display:flex;align-items:center;gap:0.75rem;">
+      <button class="primary-btn" type="submit">Save template</button>
+      {% if has_ifp_seed %}
+        <button type="submit" name="action" value="load_ifp" class="secondary-btn" onclick="return confirm('Replace the current questions with the IFP starter?');">Load IFP starter</button>
+      {% endif %}
+      {% if template %}
+        <button type="submit" name="action" value="delete" class="danger-btn" onclick="return confirm('Delete this survey template? Existing responses are kept.');" style="margin-left:auto;">Delete template</button>
+      {% endif %}
+    </div>
+  </form>
+</div>
+
+<style>
+  .qcard {
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    background: #fafafa;
+  }
+  .qcard-head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; }
+  .qcard-pos { font-size: 0.7rem; text-transform: uppercase; color: #6b7280; font-weight: 600; min-width: 32px; }
+  .qcard select, .qcard input[type="text"], .qcard textarea {
+    padding: 0.4rem 0.55rem; border: 1px solid #cbd5e1; border-radius: 4px;
+    font-size: 0.88rem; box-sizing: border-box;
+  }
+  .qcard input[type="text"] { flex: 1; }
+  .qcard textarea { width: 100%; min-height: 60px; font-family: ui-monospace, Menlo, monospace; font-size: 0.82rem; margin-top: 0.4rem; }
+  .qcard .req { display: flex; align-items: center; gap: 0.35rem; font-size: 0.82rem; color: #374151; margin-top: 0.4rem; }
+  .qcard .actions { display: flex; gap: 0.35rem; }
+  .qcard .actions button { padding: 0.25rem 0.55rem; font-size: 0.78rem; }
+</style>
+
+<script>
+let questions = {{ (template.questions if template else []) | tojson }};
+
+function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function render() {
+  const root = document.getElementById('questions');
+  root.innerHTML = '';
+  questions.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'qcard';
+    const opts = (q.type === 'multi_select' || q.type === 'single_select')
+      ? `<textarea placeholder="One option per line" oninput="setOptions(${i}, this.value)">${escapeHtml((q.options || []).join('\n'))}</textarea>`
+      : (q.type === 'likert' ? `<div style="font-size:0.78rem;color:#6b7280;margin-top:0.4rem;">Fixed 5-point scale: Very comfortable → Very uncomfortable.</div>` : '');
+    div.innerHTML = `
+      <div class="qcard-head">
+        <div class="qcard-pos">Q${i+1}</div>
+        <select onchange="setType(${i}, this.value)">
+          <option value="likert" ${q.type==='likert'?'selected':''}>Likert (5-point)</option>
+          <option value="multi_select" ${q.type==='multi_select'?'selected':''}>Multi-select</option>
+          <option value="single_select" ${q.type==='single_select'?'selected':''}>Single-select</option>
+          <option value="free_text" ${q.type==='free_text'?'selected':''}>Free text</option>
+        </select>
+        <input type="text" placeholder="Question text" value="${escapeHtml(q.text || '')}" oninput="questions[${i}].text = this.value">
+        <div class="actions">
+          <button type="button" class="secondary-btn" onclick="move(${i}, -1)" ${i===0?'disabled':''}>↑</button>
+          <button type="button" class="secondary-btn" onclick="move(${i}, 1)" ${i===questions.length-1?'disabled':''}>↓</button>
+          <button type="button" class="danger-btn" onclick="removeQ(${i})">Remove</button>
+        </div>
+      </div>
+      ${opts}
+      <label class="req"><input type="checkbox" ${q.required?'checked':''} onchange="questions[${i}].required = this.checked"> Required</label>
+    `;
+    root.appendChild(div);
+  });
+}
+
+function setType(i, v) { questions[i].type = v; if (v !== 'multi_select' && v !== 'single_select') delete questions[i].options; render(); }
+function setOptions(i, v) { questions[i].options = v.split('\n').map(s => s.trim()).filter(Boolean); }
+function addQuestion() { questions.push({id: 'q' + (questions.length + 1), text: '', type: 'likert', required: false}); render(); }
+function removeQ(i) { questions.splice(i, 1); render(); }
+function move(i, d) { const j = i + d; if (j < 0 || j >= questions.length) return; [questions[i], questions[j]] = [questions[j], questions[i]]; render(); }
+function syncJson(e) { document.getElementById('questions_json').value = JSON.stringify(questions); }
+render();
+</script>
+{% endblock %}

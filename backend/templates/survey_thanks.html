@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Thanks — {{ workshop.name }}{% endblock %}
+{% block body %}
+<div class="auth-shell">
+  <div class="auth-card" style="text-align:center;">
+    <div style="font-size:2rem;line-height:1;color:#15803d;margin-bottom:0.5rem;">✓</div>
+    <h1>Thanks!</h1>
+    <p class="subtitle">Your {{ {'pre':'pre-workshop','post':'post-workshop','knowledge':'knowledge check'}[kind] }} responses for <strong>{{ session_name }}</strong> are saved.</p>
+    <div style="margin-top:1rem;">
+      <a class="secondary-btn" href="/w/{{ workshop.slug }}/01-overview.html" style="text-decoration:none;">Back to the workshop</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
