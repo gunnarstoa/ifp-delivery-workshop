@@ -31,21 +31,6 @@
     </div>
   </div>
 
-  <details class="card" style="background:#fafafa;">
-    <summary style="cursor:pointer;font-weight:600;color:#374151;">Legacy CSV import — historical data only</summary>
-    <p class="help-note" style="margin-top:0.75rem;">For sessions that ran before native surveys existed. Upload a CSV export from Microsoft Forms. Responses are stored as anonymous (no per-participant matching) and surface in reports as aggregate-only. Uploading <strong>replaces</strong> any existing responses of this kind for this session.</p>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:0.75rem;">
-      {% for kind_label in [('pre','Pre-workshop CSV'), ('post','Post-workshop CSV'), ('knowledge','Knowledge check CSV')] %}
-        {% set kind = kind_label[0] %}
-        <form method="post" enctype="multipart/form-data" action="{{ url_for('admin_session_survey_upload', slug=session.workshop_slug, session_slug=session.slug) }}" style="border:1px solid #e2e8f0;border-radius:6px;padding:0.6rem 0.75rem;background:white;">
-          <div style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.05em;color:#6b7280;font-weight:600;">{{ kind_label[1] }}</div>
-          <input type="hidden" name="kind" value="{{ kind }}">
-          <input type="file" name="file" accept=".csv" required style="margin-top:0.4rem;font-size:0.8rem;width:100%;">
-          <button class="secondary-btn" type="submit" style="margin-top:0.5rem;">Import {{ kind }}</button>
-        </form>
-      {% endfor %}
-    </div>
-  </details>
 
   {% if matched_likert %}
   <div class="card">
