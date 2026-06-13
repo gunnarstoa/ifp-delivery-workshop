@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Toolkit — {{ workshop.name }}{% endblock %}
+{% block body %}
+<div class="admin-shell">
+  {% set page_title = 'Promotion toolkit' %}
+  {% set breadcrumbs = [
+    {'label': workshop.name, 'url': url_for('admin_workshop_detail', slug=workshop.slug)},
+    {'label': 'Toolkit'}
+  ] %}
+  {% include "_admin_header.html" %}
+
+  <div class="card">
+    <p class="help-note" style="margin-top:0;">Copy-pasteable assets for promoting and running <strong>{{ workshop.name }}</strong>. Files live at <code>{{ toolkit_root }}</code>. Add a new asset by creating a markdown file there with <code># Title</code> on the first line, optional <code>&gt; Description</code>, then the copy-pasteable body.</p>
+    {% if not assets %}
+      <p class="help-note">No assets yet.</p>
+    {% else %}
+      <table class="users-table" style="margin-top:0.5rem;">
+        <thead>
+          <tr><th style="width:60%;">Asset</th><th>File</th><th>Updated</th><th style="text-align:right;">Open</th></tr>
+        </thead>
+        <tbody>
+          {% for a in assets %}
+          <tr>
+            <td>
+              <a href="{{ url_for('admin_workshop_toolkit_asset', slug=workshop.slug, asset_slug=a.slug) }}"><strong>{{ a.title }}</strong></a>
+              {% if a.description %}<div style="font-size:0.78rem;color:#6b7280;margin-top:0.15rem;">{{ a.description }}</div>{% endif %}
+            </td>
+            <td><code style="font-size:0.78rem;">{{ a.filename }}</code></td>
+            <td style="font-size:0.78rem;color:#6b7280;">{{ a.modified }}</td>
+            <td style="text-align:right;">
+              <a class="secondary-btn" href="{{ url_for('admin_workshop_toolkit_asset', slug=workshop.slug, asset_slug=a.slug) }}" style="text-decoration:none;">Open</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

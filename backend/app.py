@@ -439,6 +439,66 @@ def admin_workshop_new():
     return render_template("admin_workshop_new.html", user=user, form=form, errors=errors)
 
 
+TOOLKIT_ROOT = REPO_ROOT / "toolkit"
+
+
+def _parse_toolkit_file(path: Path):
+    """Parse a toolkit markdown file: first '# Title' line, optional '> description',
+    rest is the copyable body. Returns dict or None if file is missing/empty."""
+    try:
+        text = path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError):
+        return None
+    lines = text.splitlines()
+    title = path.stem
+    description = ""
+    i = 0
+    while i < len(lines) and not lines[i].strip():
+        i += 1
+    if i < len(lines) and lines[i].startswith("# "):
+        title = lines[i][2:].strip()
+        i += 1
+    if i < len(lines) and lines[i].startswith("> "):
+        description = lines[i][2:].strip()
+        i += 1
+    while i < len(lines) and not lines[i].strip():
+        i += 1
+    body = "\n".join(lines[i:]).rstrip()
+    return {
+        "filename": path.name,
+        "slug": path.stem,
+        "title": title,
+        "description": description,
+        "body": body,
+        "size_kb": round(path.stat().st_size / 1024, 1),
+        "modified": datetime.fromtimestamp(path.stat().st_mtime, tz=timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
+    }
+
+
+def _list_toolkit_assets(workshop_slug: str):
+    base = (TOOLKIT_ROOT / workshop_slug).resolve()
+    if not base.is_dir() or not str(base).startswith(str(TOOLKIT_ROOT.resolve())):
+        return None
+    assets = []
+    for p in sorted(base.glob("*.md")):
+        a = _parse_toolkit_file(p)
+        if a:
+            assets.append(a)
+    return assets
+
+
+def _load_toolkit_asset(workshop_slug: str, asset_slug: str):
+    base = (TOOLKIT_ROOT / workshop_slug).resolve()
+    if not base.is_dir() or not str(base).startswith(str(TOOLKIT_ROOT.resolve())):
+        return None
+    if not re.fullmatch(r"[a-z0-9._-]{1,80}", asset_slug):
+        return None
+    path = (base / f"{asset_slug}.md").resolve()
+    if not path.is_file() or not str(path).startswith(str(base)):
+        return None
+    return _parse_toolkit_file(path)
+
+
 def _list_workshop_pages(workshop_slug):
     """Scan docs/<workshop_slug>/ for .html pages. Returns sorted list with mtimes."""
     base = (REPO_ROOT / "docs" / workshop_slug).resolve()
@@ -477,6 +537,8 @@ def admin_workshop_detail(slug):
     ).fetchall()
     pages = _list_workshop_pages(slug)
     content_root = f"docs/{slug}/"
+    toolkit_assets = _list_toolkit_assets(slug)
+    toolkit_root = f"toolkit/{slug}/"
     return render_template(
         "admin_workshop_detail.html",
         user=user,
@@ -484,6 +546,41 @@ def admin_workshop_detail(slug):
         sessions=sessions,
         pages=pages,
         content_root=content_root,
+        toolkit_assets=toolkit_assets,
+        toolkit_root=toolkit_root,
+    )
+
+
+@app.route("/admin/workshops/<slug>/toolkit")
+def admin_workshop_toolkit(slug):
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    workshop = get_db().execute("SELECT * FROM workshops WHERE slug = ?", (slug,)).fetchone()
+    if workshop is None:
+        abort(404)
+    assets = _list_toolkit_assets(slug)
+    return render_template(
+        "admin_workshop_toolkit.html",
+        user=user, workshop=workshop, assets=assets,
+        toolkit_root=f"toolkit/{slug}/",
+    )
+
+
+@app.route("/admin/workshops/<slug>/toolkit/<asset_slug>")
+def admin_workshop_toolkit_asset(slug, asset_slug):
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    workshop = get_db().execute("SELECT * FROM workshops WHERE slug = ?", (slug,)).fetchone()
+    if workshop is None:
+        abort(404)
+    asset = _load_toolkit_asset(slug, asset_slug)
+    if asset is None:
+        abort(404)
+    return render_template(
+        "admin_workshop_toolkit_asset.html",
+        user=user, workshop=workshop, asset=asset,
     )
 
 

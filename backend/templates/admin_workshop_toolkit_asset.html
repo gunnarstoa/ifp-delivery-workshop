@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ asset.title }} — Toolkit{% endblock %}
+{% block body %}
+<div class="admin-shell">
+  {% set page_title = asset.title %}
+  {% set breadcrumbs = [
+    {'label': workshop.name, 'url': url_for('admin_workshop_detail', slug=workshop.slug)},
+    {'label': 'Toolkit', 'url': url_for('admin_workshop_toolkit', slug=workshop.slug)},
+    {'label': asset.title}
+  ] %}
+  {% include "_admin_header.html" %}
+
+  <div class="card">
+    {% if asset.description %}
+      <p class="help-note" style="margin-top:0;">{{ asset.description }}</p>
+    {% endif %}
+    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">
+      <button class="primary-btn" type="button" onclick="copyBody()">Copy to clipboard</button>
+      <span id="copy-feedback" style="font-size:0.85rem;color:#15803d;display:none;">Copied ✓</span>
+      <span style="font-size:0.75rem;color:#6b7280;margin-left:auto;">File: <code>{{ asset.filename }}</code> · {{ asset.size_kb }} kB · updated {{ asset.modified }}</span>
+    </div>
+    <textarea id="asset-body" readonly style="width:100%;min-height:380px;padding:0.85rem 1rem;border:1px solid #d1d5db;border-radius:6px;font-family:ui-monospace,Menlo,monospace;font-size:0.85rem;line-height:1.5;background:#f8fafc;resize:vertical;">{{ asset.body }}</textarea>
+  </div>
+</div>
+<script>
+function copyBody() {
+  const ta = document.getElementById('asset-body');
+  ta.select();
+  const fb = document.getElementById('copy-feedback');
+  navigator.clipboard.writeText(ta.value).then(
+    () => { fb.style.display = 'inline'; setTimeout(() => fb.style.display = 'none', 1500); },
+    () => { document.execCommand('copy'); fb.style.display = 'inline'; setTimeout(() => fb.style.display = 'none', 1500); }
+  );
+}
+</script>
+{% endblock %}

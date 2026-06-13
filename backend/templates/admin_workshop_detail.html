@@ -89,8 +89,20 @@
       {% endif %}
     </div>
     <div class="card">
-      <h2>Promotion toolkit</h2>
-      <p class="help-note">Email templates, social posts, kickoff scripts, Slack messages. Coming as a workshop-scoped tab once we move the existing toolkit content into the DB.</p>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+        <h2 style="margin:0;">Promotion toolkit</h2>
+        {% if toolkit_assets %}
+          <a class="primary-btn" href="{{ url_for('admin_workshop_toolkit', slug=workshop.slug) }}" style="text-decoration:none;">Open →</a>
+        {% endif %}
+      </div>
+      {% if toolkit_assets %}
+        <div style="font-size:1.4rem;font-weight:700;color:#1e3a5f;">{{ toolkit_assets|length }}</div>
+        <div class="help-note" style="margin:0.25rem 0 0 0;">copy-pasteable assets in <code>{{ toolkit_root }}</code></div>
+      {% elif toolkit_assets is none %}
+        <p class="help-note" style="margin:0;">No <code>{{ toolkit_root }}</code> folder yet. Copy from IFP to seed: <code>cp -r toolkit/ifp/ {{ toolkit_root }}</code>, then edit each asset for this workshop.</p>
+      {% else %}
+        <p class="help-note" style="margin:0;">Folder is empty. Add markdown files (first line <code># Title</code>, optional <code>&gt; Description</code>, then the copy-pasteable body).</p>
+      {% endif %}
     </div>
     <div class="card">
       <h2>Reports</h2>
