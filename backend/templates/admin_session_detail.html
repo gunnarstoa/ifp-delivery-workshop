@@ -32,9 +32,12 @@
 
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-bottom:1.5rem;">
     <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;gap:0.5rem;">
         <h2 style="margin:0;">Participants</h2>
-        <a class="primary-btn" href="{{ url_for('admin_session_participants', slug=session.workshop_slug, session_slug=session.slug) }}" style="text-decoration:none;">Manage →</a>
+        <div style="display:flex;gap:0.4rem;">
+          <a class="secondary-btn" href="{{ url_for('admin_session_dashboard', slug=session.workshop_slug, session_slug=session.slug) }}" style="text-decoration:none;">Live dashboard ↗</a>
+          <a class="primary-btn" href="{{ url_for('admin_session_participants', slug=session.workshop_slug, session_slug=session.slug) }}" style="text-decoration:none;">Manage →</a>
+        </div>
       </div>
       {% if participant_total %}
         <div style="font-size:1.4rem;font-weight:700;color:#1e3a5f;">{{ participant_total }}</div>

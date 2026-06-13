@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — {{ session.name }}{% endblock %}
+{% block body %}
+<meta http-equiv="refresh" content="30">
+<div class="admin-shell">
+  {% set page_title = 'Live participant dashboard' %}
+  {% set breadcrumbs = [
+    {'label': session.workshop_name, 'url': url_for('admin_workshop_detail', slug=session.workshop_slug)},
+    {'label': session.name, 'url': url_for('admin_session_detail', slug=session.workshop_slug, session_slug=session.slug)},
+    {'label': 'Dashboard'}
+  ] %}
+  {% include "_admin_header.html" %}
+
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div style="font-size:0.85rem;color:#6b7280;">
+        Auto-refreshes every 30 seconds · last loaded {{ session.start_date }}
+      </div>
+      <a class="secondary-btn" href="?reload={{ rows | length }}" style="text-decoration:none;font-size:0.8rem;">↻ Refresh now</a>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:0.6rem;margin-top:0.75rem;">
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:0.65rem;">
+        <div style="font-size:0.7rem;text-transform:uppercase;color:#6b7280;letter-spacing:0.05em;">Counted</div>
+        <div style="font-size:1.4rem;font-weight:700;color:#1e3a5f;">{{ counted }}</div>
+      </div>
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:0.65rem;">
+        <div style="font-size:0.7rem;text-transform:uppercase;color:#6b7280;letter-spacing:0.05em;">Started</div>
+        <div style="font-size:1.4rem;font-weight:700;color:#1e3a5f;">{{ active_now }}</div>
+      </div>
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:0.65rem;">
+        <div style="font-size:0.7rem;text-transform:uppercase;color:#6b7280;letter-spacing:0.05em;">Pre-survey</div>
+        <div style="font-size:1.4rem;font-weight:700;color:#15803d;">{{ pre_count }}</div>
+      </div>
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:0.65rem;">
+        <div style="font-size:0.7rem;text-transform:uppercase;color:#6b7280;letter-spacing:0.05em;">Post-survey</div>
+        <div style="font-size:1.4rem;font-weight:700;color:#15803d;">{{ post_count }}</div>
+      </div>
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:0.65rem;">
+        <div style="font-size:0.7rem;text-transform:uppercase;color:#6b7280;letter-spacing:0.05em;">KC passed</div>
+        <div style="font-size:1.4rem;font-weight:700;color:#15803d;">{{ kc_pass_count }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <table class="users-table" style="font-size:0.85rem;">
+      <thead>
+        <tr>
+          <th>Participant</th>
+          <th>Partner</th>
+          <th style="text-align:right;">Pages</th>
+          <th style="min-width:140px;">Furthest reached</th>
+          <th>Last activity</th>
+          <th style="text-align:center;">Pre</th>
+          <th style="text-align:center;">Post</th>
+          <th style="text-align:center;">KC</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+        {% set pct = (r.furthest_idx * 100 / total_pages) | round | int if total_pages else 0 %}
+        <tr class="{{ 'excluded' if r.excluded else '' }}">
+          <td>
+            <a href="{{ url_for('admin_user_views', user_id=r.user_id) }}" style="font-family:ui-monospace,Menlo,monospace;font-size:0.78rem;text-decoration:none;color:#1e3a5f;">{{ r.username }}</a>
+            {% if r.excluded %}<span class="badge" style="margin-left:0.4rem;">excluded</span>{% endif %}
+          </td>
+          <td>{{ r.partner }}</td>
+          <td style="text-align:right;font-variant-numeric:tabular-nums;">{{ r.visited_count }} / {{ total_pages }}</td>
+          <td>
+            {% if r.furthest_idx %}
+              <div style="display:flex;align-items:center;gap:0.5rem;">
+                <div style="background:#eff6ff;border-radius:3px;height:10px;flex:1;overflow:hidden;min-width:80px;">
+                  <div style="background:{{ '#15803d' if pct >= 90 else ('#0066cc' if pct >= 50 else '#b45309') }};height:100%;width:{{ pct }}%;"></div>
+                </div>
+                <span style="font-size:0.72rem;color:#6b7280;white-space:nowrap;">{{ r.furthest_idx }}/{{ total_pages }}</span>
+              </div>
+              <div style="font-size:0.72rem;color:#6b7280;margin-top:0.2rem;">{{ r.furthest_name }}</div>
+            {% else %}
+              <span style="color:#9ca3af;font-size:0.8rem;">not started</span>
+            {% endif %}
+          </td>
+          <td style="font-size:0.78rem;color:#6b7280;white-space:nowrap;">
+            {% if r.last_activity %}{{ r.last_activity }}{% else %}—{% endif %}
+          </td>
+          <td style="text-align:center;">
+            {% if r.pre_done %}<span style="color:#15803d;font-size:1rem;">✓</span>{% else %}<span style="color:#cbd5e1;">—</span>{% endif %}
+          </td>
+          <td style="text-align:center;">
+            {% if r.post_done %}<span style="color:#15803d;font-size:1rem;">✓</span>{% else %}<span style="color:#cbd5e1;">—</span>{% endif %}
+          </td>
+          <td style="text-align:center;">
+            {% if r.kc_passed %}
+              <span style="color:#15803d;font-weight:600;">✓ {{ r.kc_best_score }}%</span>
+              <div style="font-size:0.7rem;color:#6b7280;">{{ r.kc_attempts }} attempt{{ '' if r.kc_attempts == 1 else 's' }}</div>
+            {% elif r.kc_attempts %}
+              <span style="color:#b45309;font-weight:600;">{{ r.kc_best_score if r.kc_best_score is not none else '—' }}%</span>
+              <div style="font-size:0.7rem;color:#6b7280;">{{ r.kc_attempts }} attempt{{ '' if r.kc_attempts == 1 else 's' }}</div>
+            {% else %}
+              <span style="color:#cbd5e1;">—</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+        {% if not rows %}
+        <tr><td colspan="8" style="text-align:center;color:#6b7280;padding:1rem;">No participants enrolled yet.</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1968,6 +1968,103 @@ def admin_workshop_rollup(slug):
     return render_template("admin_workshop_rollup.html", user=user, workshop=workshop, data=rollup)
 
 
+def _session_dashboard_rows(session_id, workshop_slug):
+    """Per-participant progression snapshot for the live dashboard. One DB pass
+    each for participants, then per-user queries for the small data — n usually
+    < 100 so the per-user pattern stays cheap."""
+    db = get_db()
+    pages_meta = _list_workshop_pages(workshop_slug) or []
+    page_paths = [f"/w/{workshop_slug}/{p['filename']}" for p in pages_meta]
+    path_to_index = {p: i + 1 for i, p in enumerate(page_paths)}
+    total_pages = len(page_paths)
+
+    participants = db.execute(
+        "SELECT sp.user_id, sp.partner, sp.excluded, u.username, u.last_login_at "
+        "FROM session_participants sp JOIN users u ON u.id = sp.user_id "
+        "WHERE sp.session_id = ? AND sp.removed_at IS NULL "
+        "ORDER BY sp.partner IS NULL, sp.partner, u.username",
+        (session_id,),
+    ).fetchall()
+
+    rows = []
+    for p in participants:
+        # Pages visited (limited to this workshop's content pages)
+        visited = {r["path"] for r in db.execute(
+            "SELECT DISTINCT path FROM page_views WHERE user_id = ? AND path LIKE ?",
+            (p["user_id"], f"/w/{workshop_slug}/%.html"),
+        ).fetchall()}
+        visited_in_workshop = visited & set(page_paths)
+        furthest_idx = max((path_to_index[v] for v in visited_in_workshop), default=0)
+        furthest_name = pages_meta[furthest_idx - 1]["filename"] if furthest_idx else None
+
+        last_row = db.execute(
+            "SELECT MAX(viewed_at) AS last FROM page_views WHERE user_id = ?",
+            (p["user_id"],),
+        ).fetchone()
+        last_activity = last_row["last"]
+
+        # Survey completions for THIS session
+        pre_done = db.execute(
+            "SELECT 1 FROM survey_responses sr JOIN session_surveys ss ON ss.id = sr.survey_id "
+            "WHERE ss.session_id = ? AND ss.kind = 'pre' AND sr.participant_user_id = ? LIMIT 1",
+            (session_id, p["user_id"]),
+        ).fetchone() is not None
+        post_done = db.execute(
+            "SELECT 1 FROM survey_responses sr JOIN session_surveys ss ON ss.id = sr.survey_id "
+            "WHERE ss.session_id = ? AND ss.kind = 'post' AND sr.participant_user_id = ? LIMIT 1",
+            (session_id, p["user_id"]),
+        ).fetchone() is not None
+
+        kc_attempts, kc_passed = _kc_user_status(session_id, p["user_id"])
+        kc_best_row = db.execute(
+            "SELECT MAX(sr.score) AS best FROM survey_responses sr "
+            "JOIN session_surveys ss ON ss.id = sr.survey_id "
+            "WHERE ss.session_id = ? AND ss.kind = 'knowledge' AND sr.participant_user_id = ?",
+            (session_id, p["user_id"]),
+        ).fetchone()
+        kc_best_score = kc_best_row["best"] if kc_best_row else None
+
+        rows.append({
+            "user_id": p["user_id"],
+            "username": p["username"],
+            "partner": p["partner"] or "Unknown",
+            "excluded": bool(p["excluded"]),
+            "last_activity": last_activity,
+            "last_login_at": p["last_login_at"],
+            "visited_count": len(visited_in_workshop),
+            "total_pages": total_pages,
+            "furthest_idx": furthest_idx,
+            "furthest_name": furthest_name,
+            "pre_done": pre_done,
+            "post_done": post_done,
+            "kc_attempts": kc_attempts,
+            "kc_best_score": kc_best_score,
+            "kc_passed": kc_passed,
+        })
+    return rows, total_pages, pages_meta
+
+
+@app.route("/admin/workshops/<slug>/sessions/<session_slug>/dashboard")
+def admin_session_dashboard(slug, session_slug):
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    sess = _get_session_or_404(slug, session_slug)
+    rows, total_pages, pages_meta = _session_dashboard_rows(sess["id"], slug)
+    counted = [r for r in rows if not r["excluded"]]
+    active_now = sum(1 for r in counted if r["last_activity"])  # at least one view ever
+    pre_count = sum(1 for r in counted if r["pre_done"])
+    post_count = sum(1 for r in counted if r["post_done"])
+    kc_pass_count = sum(1 for r in counted if r["kc_passed"])
+    return render_template(
+        "admin_session_dashboard.html",
+        user=user, session=sess,
+        rows=rows, total_pages=total_pages, pages=pages_meta,
+        counted=len(counted), active_now=active_now,
+        pre_count=pre_count, post_count=post_count, kc_pass_count=kc_pass_count,
+    )
+
+
 @app.route("/admin/workshops/<slug>/sessions/<session_slug>/reports")
 def admin_session_reports(slug, session_slug):
     user, redir = _require_facilitator()
