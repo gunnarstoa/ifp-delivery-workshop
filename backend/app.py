@@ -73,6 +73,15 @@ def init_db():
     try:
         with open(REPO_ROOT / "backend" / "schema.sql") as f:
             conn.executescript(f.read())
+        # Idempotent column adds for migrations beyond the initial deploy.
+        def cols(t):
+            return {r[1] for r in conn.execute(f"PRAGMA table_info({t})").fetchall()}
+        if "passing_score" not in cols("survey_templates"):
+            conn.execute("ALTER TABLE survey_templates ADD COLUMN passing_score INTEGER NOT NULL DEFAULT 70")
+        if "score" not in cols("survey_responses"):
+            conn.execute("ALTER TABLE survey_responses ADD COLUMN score INTEGER")
+        if "passed" not in cols("survey_responses"):
+            conn.execute("ALTER TABLE survey_responses ADD COLUMN passed INTEGER")
         conn.commit()
     finally:
         conn.close()
@@ -996,21 +1005,57 @@ def _load_template(workshop_id, kind):
         "kind": row["kind"],
         "intro": row["intro"],
         "questions": json.loads(row["questions_json"]),
+        "passing_score": row["passing_score"] if "passing_score" in row.keys() else 70,
         "updated_at": row["updated_at"],
     }
 
 
-def _save_template(workshop_id, kind, intro, questions, updated_by):
+def _save_template(workshop_id, kind, intro, questions, updated_by, passing_score=70):
     db = get_db()
     db.execute(
-        "INSERT INTO survey_templates (workshop_id, kind, intro, questions_json, updated_by) "
-        "VALUES (?, ?, ?, ?, ?) "
+        "INSERT INTO survey_templates (workshop_id, kind, intro, questions_json, passing_score, updated_by) "
+        "VALUES (?, ?, ?, ?, ?, ?) "
         "ON CONFLICT(workshop_id, kind) DO UPDATE SET "
         "intro = excluded.intro, questions_json = excluded.questions_json, "
+        "passing_score = excluded.passing_score, "
         "updated_at = CURRENT_TIMESTAMP, updated_by = excluded.updated_by",
-        (workshop_id, kind, intro, json.dumps(questions), updated_by),
+        (workshop_id, kind, intro, json.dumps(questions), passing_score, updated_by),
     )
     db.commit()
+
+
+def _score_knowledge_response(template, responses_by_text):
+    """Score a knowledge-check submission against the template's correct answers.
+    Returns (score_pct, passed_bool, total_scoreable). Only single_select and
+    multi_select questions with a `correct` field are scoreable."""
+    correct_count = 0
+    total = 0
+    for q in template["questions"]:
+        if q.get("type") not in ("single_select", "multi_select"):
+            continue
+        correct = q.get("correct")
+        if correct is None or correct == "" or correct == []:
+            continue
+        total += 1
+        ans = responses_by_text.get(q["text"], "")
+        if q["type"] == "single_select":
+            if isinstance(correct, list):
+                correct = correct[0] if correct else ""
+            if str(ans).strip().lower() == str(correct).strip().lower():
+                correct_count += 1
+        else:  # multi_select — answer is "A;B;" semicolon-delimited
+            ans_set = {p.strip().lower() for p in str(ans).split(";") if p.strip()}
+            if isinstance(correct, list):
+                correct_set = {str(c).strip().lower() for c in correct if str(c).strip()}
+            else:
+                correct_set = {p.strip().lower() for p in str(correct).split(";") if p.strip()}
+            if ans_set == correct_set:
+                correct_count += 1
+    if total == 0:
+        return None, None, 0
+    score_pct = round(correct_count / total * 100)
+    passed = score_pct >= int(template.get("passing_score", 70))
+    return score_pct, passed, total
 
 
 def _ensure_session_survey(session_id, kind):
@@ -1265,7 +1310,8 @@ def _load_session_surveys(session_id):
 
 def _load_survey_responses(survey_id):
     rows = get_db().execute(
-        "SELECT participant_user_id, raw_email, responses_json FROM survey_responses WHERE survey_id = ?",
+        "SELECT participant_user_id, raw_email, responses_json, score, passed "
+        "FROM survey_responses WHERE survey_id = ?",
         (survey_id,),
     ).fetchall()
     out = []
@@ -1274,6 +1320,8 @@ def _load_survey_responses(survey_id):
             "user_id": r["participant_user_id"],
             "raw_email": r["raw_email"],
             "responses": json.loads(r["responses_json"]),
+            "score": r["score"],
+            "passed": r["passed"],
         })
     return out
 
@@ -1332,6 +1380,11 @@ def admin_survey_template_edit(slug, kind):
             return redirect(url_for("admin_survey_templates", slug=slug))
         intro = (request.form.get("intro") or "").strip()
         try:
+            passing_score = int(request.form.get("passing_score") or 70)
+        except ValueError:
+            passing_score = 70
+        passing_score = max(0, min(100, passing_score))
+        try:
             questions = json.loads(request.form.get("questions_json") or "[]")
         except json.JSONDecodeError:
             error = "Invalid questions data."
@@ -1349,12 +1402,25 @@ def admin_survey_template_edit(slug, kind):
                 if qtype in ("multi_select", "single_select"):
                     opts = q.get("options") or []
                     entry["options"] = [str(o).strip() for o in opts if str(o).strip()]
+                    if kind == "knowledge":
+                        correct_raw = q.get("correct")
+                        if qtype == "single_select":
+                            cstr = str(correct_raw or "").strip()
+                            if cstr:
+                                entry["correct"] = cstr
+                        else:
+                            if isinstance(correct_raw, list):
+                                clist = [str(c).strip() for c in correct_raw if str(c).strip()]
+                            else:
+                                clist = [p.strip() for p in str(correct_raw or "").split(";") if p.strip()]
+                            if clist:
+                                entry["correct"] = clist
                 cleaned.append(entry)
             questions = cleaned
         if not error and not questions:
             error = "At least one question is required."
         if not error:
-            _save_template(workshop["id"], kind, intro, questions, user["id"])
+            _save_template(workshop["id"], kind, intro, questions, user["id"], passing_score=passing_score)
             return redirect(url_for("admin_survey_templates", slug=slug))
 
     template = _load_template(workshop["id"], kind)
@@ -1427,14 +1493,23 @@ def take_survey(workshop_slug, kind):
             error = "Please answer all required questions: " + "; ".join(missing[:5]) + (" ..." if len(missing) > 5 else "")
         else:
             survey_id = _ensure_session_survey(enrollment["id"], kind)
+            score, passed, scoreable = (None, None, 0)
+            if kind == "knowledge":
+                score, passed, scoreable = _score_knowledge_response(template, responses)
             get_db().execute(
-                "INSERT INTO survey_responses (survey_id, participant_user_id, raw_email, responses_json) "
-                "VALUES (?, ?, ?, ?)",
-                (survey_id, user["id"], user["username"], json.dumps(responses)),
+                "INSERT INTO survey_responses (survey_id, participant_user_id, raw_email, responses_json, score, passed) "
+                "VALUES (?, ?, ?, ?, ?, ?)",
+                (survey_id, user["id"], user["username"], json.dumps(responses),
+                 score, (1 if passed else (0 if passed is False else None))),
             )
             get_db().commit()
             _recompute_survey_counters(survey_id)
-            return render_template("survey_thanks.html", workshop=workshop, kind=kind, session_name=enrollment["name"])
+            return render_template(
+                "survey_thanks.html",
+                workshop=workshop, kind=kind, session_name=enrollment["name"],
+                score=score, passed=passed, scoreable=scoreable,
+                passing_score=template.get("passing_score", 70),
+            )
 
     return render_template(
         "survey_form.html",
@@ -1510,6 +1585,13 @@ def _session_report_data(session_id):
     for r in kc_resp:
         if not r["user_id"]:
             continue
+        # Prefer the stored `passed` column (native scored knowledge checks).
+        if r.get("passed") == 1:
+            kc_pass_users.add(r["user_id"])
+            continue
+        if r.get("passed") == 0:
+            continue
+        # Fallback for legacy uploads with raw Pass/Fail strings in the responses.
         for v in r["responses"].values():
             if v and PASS_FAIL_RE.match(str(v).strip()):
                 kc_pass_users.add(r["user_id"])

@@ -112,6 +112,8 @@ CREATE TABLE IF NOT EXISTS survey_responses (
   participant_user_id INTEGER,
   raw_email TEXT,
   responses_json TEXT NOT NULL,
+  score INTEGER,
+  passed INTEGER,
   FOREIGN KEY (survey_id) REFERENCES session_surveys(id) ON DELETE CASCADE,
   FOREIGN KEY (participant_user_id) REFERENCES users(id)
 );
@@ -124,6 +126,7 @@ CREATE TABLE IF NOT EXISTS survey_templates (
   kind TEXT NOT NULL,
   intro TEXT,
   questions_json TEXT NOT NULL,
+  passing_score INTEGER NOT NULL DEFAULT 70,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_by INTEGER,
   FOREIGN KEY (workshop_id) REFERENCES workshops(id) ON DELETE CASCADE,

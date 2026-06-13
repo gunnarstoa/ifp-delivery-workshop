@@ -20,6 +20,14 @@
       <textarea name="intro" style="width:100%;min-height:80px;padding:0.6rem;border:1px solid #cbd5e1;border-radius:4px;font-size:0.9rem;" placeholder="Why we're collecting this, how long it takes, etc.">{{ template.intro or '' }}</textarea>
     </div>
 
+    {% if kind == 'knowledge' %}
+    <div class="card">
+      <h2 style="margin-top:0;">Minimum passing score</h2>
+      <p class="help-note" style="margin-top:0;">Percentage of correctly-answered scoreable questions required to pass. Only single-select and multi-select questions with a correct answer set are scoreable.</p>
+      <input type="number" name="passing_score" min="0" max="100" value="{{ template.passing_score if template else 70 }}" style="width:120px;padding:0.4rem 0.55rem;border:1px solid #cbd5e1;border-radius:4px;font-size:0.95rem;"> <span style="color:#6b7280;">%</span>
+    </div>
+    {% endif %}
+
     <div class="card">
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <h2 style="margin:0;">Questions</h2>
@@ -65,8 +73,15 @@
 
 <script>
 let questions = {{ (template.questions if template else []) | tojson }};
+const KIND = {{ kind | tojson }};
 
 function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function correctValue(q) {
+  if (q.correct == null) return '';
+  if (Array.isArray(q.correct)) return q.correct.join('\n');
+  return String(q.correct);
+}
 
 function render() {
   const root = document.getElementById('questions');
@@ -74,9 +89,18 @@ function render() {
   questions.forEach((q, i) => {
     const div = document.createElement('div');
     div.className = 'qcard';
-    const opts = (q.type === 'multi_select' || q.type === 'single_select')
-      ? `<textarea placeholder="One option per line" oninput="setOptions(${i}, this.value)">${escapeHtml((q.options || []).join('\n'))}</textarea>`
-      : (q.type === 'likert' ? `<div style="font-size:0.78rem;color:#6b7280;margin-top:0.4rem;">Fixed 5-point scale: Very comfortable → Very uncomfortable.</div>` : '');
+    let optsBlock = '';
+    if (q.type === 'multi_select' || q.type === 'single_select') {
+      optsBlock = `<textarea placeholder="One option per line" oninput="setOptions(${i}, this.value)">${escapeHtml((q.options || []).join('\n'))}</textarea>`;
+      if (KIND === 'knowledge') {
+        const placeholder = q.type === 'single_select' ? 'The single correct option (must match exactly).' : 'Correct options, one per line. Must match the options above exactly.';
+        optsBlock += `<div style="margin-top:0.5rem;font-size:0.78rem;color:#1e3a5f;font-weight:600;">Correct answer${q.type === 'multi_select' ? '(s)' : ''}</div><textarea placeholder="${placeholder}" oninput="setCorrect(${i}, this.value)" style="background:#f0fdf4;border-color:#86efac;">${escapeHtml(correctValue(q))}</textarea>`;
+      }
+    } else if (q.type === 'likert') {
+      optsBlock = `<div style="font-size:0.78rem;color:#6b7280;margin-top:0.4rem;">Fixed 5-point scale: Very comfortable → Very uncomfortable.${KIND === 'knowledge' ? ' Likert isn\\'t scoreable in a knowledge check — use single-select instead.' : ''}</div>`;
+    } else if (q.type === 'free_text' && KIND === 'knowledge') {
+      optsBlock = `<div style="font-size:0.78rem;color:#6b7280;margin-top:0.4rem;">Free text isn't scoreable in a knowledge check.</div>`;
+    }
     div.innerHTML = `
       <div class="qcard-head">
         <div class="qcard-pos">Q${i+1}</div>
@@ -93,15 +117,23 @@ function render() {
           <button type="button" class="danger-btn" onclick="removeQ(${i})">Remove</button>
         </div>
       </div>
-      ${opts}
+      ${optsBlock}
       <label class="req"><input type="checkbox" ${q.required?'checked':''} onchange="questions[${i}].required = this.checked"> Required</label>
     `;
     root.appendChild(div);
   });
 }
 
-function setType(i, v) { questions[i].type = v; if (v !== 'multi_select' && v !== 'single_select') delete questions[i].options; render(); }
+function setType(i, v) { questions[i].type = v; if (v !== 'multi_select' && v !== 'single_select') { delete questions[i].options; delete questions[i].correct; } render(); }
 function setOptions(i, v) { questions[i].options = v.split('\n').map(s => s.trim()).filter(Boolean); }
+function setCorrect(i, v) {
+  const lines = v.split('\n').map(s => s.trim()).filter(Boolean);
+  if (questions[i].type === 'single_select') {
+    questions[i].correct = lines[0] || '';
+  } else {
+    questions[i].correct = lines;
+  }
+}
 function addQuestion() { questions.push({id: 'q' + (questions.length + 1), text: '', type: 'likert', required: false}); render(); }
 function removeQ(i) { questions.splice(i, 1); render(); }
 function move(i, d) { const j = i + d; if (j < 0 || j >= questions.length) return; [questions[i], questions[j]] = [questions[j], questions[i]]; render(); }

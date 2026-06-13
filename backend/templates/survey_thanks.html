@@ -3,9 +3,26 @@
 {% block body %}
 <div class="auth-shell">
   <div class="auth-card" style="text-align:center;">
-    <div style="font-size:2rem;line-height:1;color:#15803d;margin-bottom:0.5rem;">✓</div>
-    <h1>Thanks!</h1>
-    <p class="subtitle">Your {{ {'pre':'pre-workshop','post':'post-workshop','knowledge':'knowledge check'}[kind] }} responses for <strong>{{ session_name }}</strong> are saved.</p>
+    {% if kind == 'knowledge' and score is not none %}
+      {% if passed %}
+        <div style="font-size:2.5rem;line-height:1;color:#15803d;margin-bottom:0.5rem;">✓</div>
+        <h1 style="color:#15803d;">Passed</h1>
+      {% else %}
+        <div style="font-size:2.5rem;line-height:1;color:#b91c1c;margin-bottom:0.5rem;">✗</div>
+        <h1 style="color:#b91c1c;">Not yet</h1>
+      {% endif %}
+      <div style="font-size:2rem;font-weight:700;color:#1e3a5f;margin:0.5rem 0;">{{ score }}%</div>
+      <p class="subtitle">You answered correctly on {{ score }}% of the {{ scoreable }} scoreable question{{ '' if scoreable == 1 else 's' }}. Passing score is {{ passing_score }}%.</p>
+      <p class="subtitle">Saved for <strong>{{ session_name }}</strong>.</p>
+    {% elif kind == 'knowledge' %}
+      <div style="font-size:2rem;line-height:1;color:#15803d;margin-bottom:0.5rem;">✓</div>
+      <h1>Submitted</h1>
+      <p class="subtitle">Your knowledge check responses for <strong>{{ session_name }}</strong> are saved. No scoreable questions were configured — the facilitator will review manually.</p>
+    {% else %}
+      <div style="font-size:2rem;line-height:1;color:#15803d;margin-bottom:0.5rem;">✓</div>
+      <h1>Thanks!</h1>
+      <p class="subtitle">Your {{ {'pre':'pre-workshop','post':'post-workshop'}[kind] }} responses for <strong>{{ session_name }}</strong> are saved.</p>
+    {% endif %}
     <div style="margin-top:1rem;">
       <a class="secondary-btn" href="/w/{{ workshop.slug }}/01-overview.html" style="text-decoration:none;">Back to the workshop</a>
     </div>
