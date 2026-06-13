@@ -869,6 +869,7 @@ def _add_participants_to_session(session_id, emails, enrolled_by_user_id):
     Returns list of dicts with username, partner, status, initial_password (or None)."""
     db = get_db()
     results = []
+    any_reactivated = False
     for email in emails:
         partner_name, excluded = _lookup_partner(email)
         existing = db.execute("SELECT id FROM users WHERE username = ?", (email,)).fetchone()
@@ -900,6 +901,8 @@ def _add_participants_to_session(session_id, emails, enrolled_by_user_id):
                 (session_id, user_id),
             )
             enroll_status = "reactivated" if cur.rowcount else "already-enrolled"
+            if cur.rowcount:
+                any_reactivated = True
         results.append({
             "email": email,
             "partner": partner_name or "Unknown",
@@ -909,6 +912,11 @@ def _add_participants_to_session(session_id, emails, enrolled_by_user_id):
             "initial_password": initial_password,
         })
     db.commit()
+    # If any participants were reactivated, their previously-recorded survey
+    # responses are now back in the included set — refresh cached counts.
+    if any_reactivated:
+        for r in db.execute("SELECT id FROM session_surveys WHERE session_id = ?", (session_id,)).fetchall():
+            _recompute_survey_counters(r["id"])
     return results
 
 
@@ -1131,10 +1139,23 @@ def _ensure_session_survey(session_id, kind):
 
 
 def _recompute_survey_counters(survey_id):
+    """Update cached counters on session_surveys, applying the same enrollment
+    filter that _load_survey_responses uses so the counts stay consistent."""
     db = get_db()
     rows = db.execute(
-        "SELECT COUNT(*) AS n, COUNT(participant_user_id) AS named "
-        "FROM survey_responses WHERE survey_id = ?",
+        "SELECT COUNT(*) AS n, COUNT(sr.participant_user_id) AS named "
+        "FROM survey_responses sr "
+        "JOIN session_surveys ss ON ss.id = sr.survey_id "
+        "WHERE sr.survey_id = ? "
+        "  AND ( "
+        "    sr.participant_user_id IS NULL "
+        "    OR EXISTS ( "
+        "      SELECT 1 FROM session_participants sp "
+        "      WHERE sp.session_id = ss.session_id "
+        "        AND sp.user_id = sr.participant_user_id "
+        "        AND sp.removed_at IS NULL "
+        "    ) "
+        "  )",
         (survey_id,),
     ).fetchone()
     is_anon = 1 if (rows["n"] > 0 and rows["named"] == 0) else 0
@@ -1363,9 +1384,23 @@ def _load_session_surveys(session_id):
 
 
 def _load_survey_responses(survey_id):
+    """Load responses for a survey, EXCLUDING responses from users whose enrollment
+    in the survey's session has been soft-removed. Anonymous responses (no user_id)
+    are always included since they have no enrollment to check."""
     rows = get_db().execute(
-        "SELECT participant_user_id, raw_email, responses_json, score, passed "
-        "FROM survey_responses WHERE survey_id = ?",
+        "SELECT sr.participant_user_id, sr.raw_email, sr.responses_json, sr.score, sr.passed "
+        "FROM survey_responses sr "
+        "JOIN session_surveys ss ON ss.id = sr.survey_id "
+        "WHERE sr.survey_id = ? "
+        "  AND ( "
+        "    sr.participant_user_id IS NULL "
+        "    OR EXISTS ( "
+        "      SELECT 1 FROM session_participants sp "
+        "      WHERE sp.session_id = ss.session_id "
+        "        AND sp.user_id = sr.participant_user_id "
+        "        AND sp.removed_at IS NULL "
+        "    ) "
+        "  )",
         (survey_id,),
     ).fetchall()
     out = []
@@ -2188,12 +2223,20 @@ def admin_session_participant_remove(slug, session_slug, user_id):
     if redir:
         return redir
     sess = _get_session_or_404(slug, session_slug)
-    get_db().execute(
+    db = get_db()
+    db.execute(
         "UPDATE session_participants SET removed_at = CURRENT_TIMESTAMP "
         "WHERE session_id = ? AND user_id = ? AND removed_at IS NULL",
         (sess["id"], user_id),
     )
-    get_db().commit()
+    db.commit()
+    # Update the cached counts on each session_surveys row so the Collection
+    # status card on the surveys page reflects the new totals immediately.
+    survey_rows = db.execute(
+        "SELECT id FROM session_surveys WHERE session_id = ?", (sess["id"],)
+    ).fetchall()
+    for r in survey_rows:
+        _recompute_survey_counters(r["id"])
     return redirect(url_for("admin_session_participants", slug=slug, session_slug=session_slug))
 
 
