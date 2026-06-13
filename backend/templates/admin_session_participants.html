@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}Participants — {{ session.name }}{% endblock %}
+{% block body %}
+<div class="admin-shell">
+  {% set page_title = 'Participants' %}
+  {% set breadcrumbs = [
+    {'label': session.workshop_name, 'url': url_for('admin_workshop_detail', slug=session.workshop_slug)},
+    {'label': session.name, 'url': url_for('admin_session_detail', slug=session.workshop_slug, session_slug=session.slug)},
+    {'label': 'Participants'}
+  ] %}
+  {% include "_admin_header.html" %}
+
+  {% if added_results %}
+  <div class="card" style="border-left:4px solid #15803d;">
+    <h2 style="margin-top:0;color:#15803d;">Just added · {{ added_results|length }} email{{ '' if added_results|length == 1 else 's' }}</h2>
+    {% set new_creds = added_results | selectattr('initial_password') | list %}
+    {% if new_creds %}
+      <p class="help-note" style="margin-top:0.25rem;">
+        <strong>{{ new_creds|length }} new account{{ '' if new_creds|length == 1 else 's' }} created.</strong>
+        Copy the credentials below now — initial passwords are only shown once. Send each participant their username and password.
+      </p>
+      <textarea id="creds-block" readonly style="width:100%;min-height:120px;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:4px;font-family:ui-monospace,Menlo,monospace;font-size:0.82rem;background:#f8fafc;">{% for r in new_creds %}{{ r.email }}{{ '	' }}{{ r.initial_password }}
+{% endfor %}</textarea>
+      <div style="margin-top:0.5rem;">
+        <button class="primary-btn" type="button" onclick="copyCreds()">Copy all to clipboard</button>
+      </div>
+    {% endif %}
+    <table class="users-table" style="margin-top:1rem;">
+      <thead><tr><th>Email</th><th>Partner</th><th>User</th><th>Enrollment</th></tr></thead>
+      <tbody>
+        {% for r in added_results %}
+        <tr>
+          <td>{{ r.email }}</td>
+          <td>{{ r.partner }}{% if r.excluded %} <span class="badge">excluded</span>{% endif %}</td>
+          <td>
+            {% if r.user_status == 'created' %}<span class="badge facilitator">new account</span>
+            {% else %}<span class="badge">existing</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if r.enroll_status == 'enrolled' %}<span class="badge">enrolled</span>
+            {% elif r.enroll_status == 'reactivated' %}<span class="badge">re-enrolled</span>
+            {% else %}<span class="badge">already enrolled</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  <div class="card">
+    <h2 style="margin-top:0;">Add participants</h2>
+    <p class="help-note">Paste one email per line. Accepts plain <code>user@domain</code>, <code>Name &lt;user@domain&gt;</code>, or <code>"Name" &lt;user@domain&gt;</code>. Partner is auto-assigned from the email domain (data/cohorts/_partners.json) and Anaplan internal staff are auto-flagged as excluded.</p>
+    <form method="post" action="{{ url_for('admin_session_participants', slug=session.workshop_slug, session_slug=session.slug) }}">
+      <textarea name="emails" placeholder="first.last@genpact.com&#10;Jane Doe &lt;jane@accenture.com&gt;&#10;..." required style="width:100%;min-height:140px;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:4px;font-family:ui-monospace,Menlo,monospace;font-size:0.85rem;"></textarea>
+      <div style="margin-top:0.75rem;">
+        <button class="primary-btn" type="submit">Enroll participants</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+      <h2 style="margin:0;">Enrolled · {{ total }} total{% if total != included %} · {{ included }} counted{% endif %}</h2>
+    </div>
+    {% if not by_partner %}
+      <p class="help-note">No one enrolled yet.</p>
+    {% else %}
+      {% for partner, plist in by_partner.items() %}
+      <div style="margin-top:1rem;">
+        <div style="font-size:0.85rem;font-weight:600;color:#1e3a5f;border-bottom:1px solid #e2e8f0;padding-bottom:0.3rem;margin-bottom:0.4rem;">
+          {{ partner }}{% if plist[0].excluded %} <span class="badge">excluded from stats</span>{% endif %}
+          <span style="font-size:0.78rem;color:#6b7280;font-weight:400;">· {{ plist|length }}</span>
+        </div>
+        <table class="users-table">
+          <thead><tr><th>Email</th><th>Enrolled</th><th>Last login</th><th style="text-align:right;">Actions</th></tr></thead>
+          <tbody>
+            {% for p in plist %}
+            <tr>
+              <td>{{ p.email }}</td>
+              <td>{{ p.enrolled_at }}</td>
+              <td>{{ p.last_login_at or '—' }}</td>
+              <td style="text-align:right;">
+                <form method="post" action="{{ url_for('admin_session_participant_remove', slug=session.workshop_slug, session_slug=session.slug, user_id=p.user_id) }}" onsubmit="return confirm('Remove {{ p.email }} from this session?');" style="display:inline;">
+                  <button class="danger-btn" type="submit">Remove</button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
+<script>
+function copyCreds() {
+  const ta = document.getElementById('creds-block');
+  ta.select();
+  navigator.clipboard.writeText(ta.value).then(
+    () => alert('Credentials copied to clipboard.'),
+    () => { document.execCommand('copy'); alert('Copied (legacy clipboard).'); }
+  );
+}
+</script>
+{% endblock %}

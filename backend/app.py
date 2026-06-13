@@ -5,6 +5,7 @@ Logs every authenticated request to page_views for later analysis.
 Facilitator-only pages additionally require users.is_facilitator = 1.
 """
 import calendar as calmod
+import json
 import os
 import re
 import secrets
@@ -165,7 +166,17 @@ def home():
         return redirect(url_for("login"))
     if user["is_facilitator"]:
         return redirect(url_for("admin_dashboard"))
-    return redirect("/w/ifp/01-overview.html")
+    # Send participant to the workshop of their most recent enrollment.
+    row = get_db().execute(
+        "SELECT w.slug FROM session_participants sp "
+        "JOIN sessions s ON s.id = sp.session_id "
+        "JOIN workshops w ON w.id = s.workshop_id "
+        "WHERE sp.user_id = ? AND sp.removed_at IS NULL AND s.status != 'archived' "
+        "ORDER BY sp.enrolled_at DESC LIMIT 1",
+        (user["id"],),
+    ).fetchone()
+    slug = row["slug"] if row else "ifp"
+    return redirect(f"/w/{slug}/01-overview.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -534,7 +545,173 @@ def admin_session_detail(slug, session_slug):
     ).fetchone()
     if row is None:
         abort(404)
-    return render_template("admin_session_detail.html", user=user, session=row)
+    counts = get_db().execute(
+        "SELECT COUNT(*) AS total, SUM(CASE WHEN excluded = 0 THEN 1 ELSE 0 END) AS included "
+        "FROM session_participants WHERE session_id = ? AND removed_at IS NULL",
+        (row["id"],),
+    ).fetchone()
+    return render_template(
+        "admin_session_detail.html",
+        user=user, session=row,
+        participant_total=counts["total"] or 0,
+        participant_included=counts["included"] or 0,
+    )
+
+
+EMAIL_RE = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
+PARTNERS_FILE = REPO_ROOT / "data" / "cohorts" / "_partners.json"
+
+
+def _load_partners():
+    """Load partner directory and build a domain→partner_name lookup. Cached on app.config."""
+    cached = app.config.get("partners_cached")
+    if cached is not None:
+        return cached
+    try:
+        with open(PARTNERS_FILE) as f:
+            data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        data = {"partners": [], "excludePartners": []}
+    domains = {}
+    for p in data.get("partners", []):
+        for d in p.get("domains", []):
+            domains[d.strip().lower()] = p["name"]
+    out = {"domains": domains, "exclude": set(data.get("excludePartners", []))}
+    app.config["partners_cached"] = out
+    return out
+
+
+def _lookup_partner(email):
+    """Return (partner_name|None, excluded_bool) for an email address."""
+    p = _load_partners()
+    domain = email.rsplit("@", 1)[-1].lower() if "@" in email else ""
+    name = p["domains"].get(domain)
+    if name is None:
+        return None, False
+    return name, name in p["exclude"]
+
+
+def _parse_email_list(text):
+    """Pull unique lowercased emails out of pasted text. Handles 'Name <email>'."""
+    seen = set()
+    out = []
+    for line in (text or "").splitlines():
+        m = EMAIL_RE.search(line)
+        if not m:
+            continue
+        email = m.group(0).lower()
+        if email in seen:
+            continue
+        seen.add(email)
+        out.append(email)
+    return out
+
+
+def _add_participants_to_session(session_id, emails, enrolled_by_user_id):
+    """For each email: create user if missing, enroll into session.
+    Returns list of dicts with username, partner, status, initial_password (or None)."""
+    db = get_db()
+    results = []
+    for email in emails:
+        partner_name, excluded = _lookup_partner(email)
+        existing = db.execute("SELECT id FROM users WHERE username = ?", (email,)).fetchone()
+        if existing:
+            user_id = existing["id"]
+            initial_password = None
+            user_status = "existing"
+        else:
+            initial_password = secrets.token_urlsafe(10)
+            pw_hash = bcrypt.hashpw(initial_password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+            cur = db.execute(
+                "INSERT INTO users (username, email, password_hash, is_facilitator, is_active) "
+                "VALUES (?, ?, ?, 0, 1)",
+                (email, email, pw_hash),
+            )
+            user_id = cur.lastrowid
+            user_status = "created"
+        try:
+            db.execute(
+                "INSERT INTO session_participants (session_id, user_id, partner, excluded, enrolled_by) "
+                "VALUES (?, ?, ?, ?, ?)",
+                (session_id, user_id, partner_name, 1 if excluded else 0, enrolled_by_user_id),
+            )
+            enroll_status = "enrolled"
+        except sqlite3.IntegrityError:
+            # Already enrolled — reactivate if previously removed
+            cur = db.execute(
+                "UPDATE session_participants SET removed_at = NULL WHERE session_id = ? AND user_id = ? AND removed_at IS NOT NULL",
+                (session_id, user_id),
+            )
+            enroll_status = "reactivated" if cur.rowcount else "already-enrolled"
+        results.append({
+            "email": email,
+            "partner": partner_name or "Unknown",
+            "excluded": excluded,
+            "user_status": user_status,
+            "enroll_status": enroll_status,
+            "initial_password": initial_password,
+        })
+    db.commit()
+    return results
+
+
+def _get_session_or_404(workshop_slug, session_slug):
+    row = get_db().execute(
+        "SELECT s.*, w.slug AS workshop_slug, w.name AS workshop_name "
+        "FROM sessions s JOIN workshops w ON w.id = s.workshop_id "
+        "WHERE w.slug = ? AND s.slug = ?",
+        (workshop_slug, session_slug),
+    ).fetchone()
+    if row is None:
+        abort(404)
+    return row
+
+
+@app.route("/admin/workshops/<slug>/sessions/<session_slug>/participants", methods=["GET", "POST"])
+def admin_session_participants(slug, session_slug):
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    sess = _get_session_or_404(slug, session_slug)
+    added_results = []
+    if request.method == "POST":
+        emails = _parse_email_list(request.form.get("emails", ""))
+        if emails:
+            added_results = _add_participants_to_session(sess["id"], emails, user["id"])
+    participants = get_db().execute(
+        "SELECT sp.id, sp.partner, sp.excluded, sp.enrolled_at, "
+        "       u.id AS user_id, u.username, u.email, u.last_login_at "
+        "FROM session_participants sp JOIN users u ON u.id = sp.user_id "
+        "WHERE sp.session_id = ? AND sp.removed_at IS NULL "
+        "ORDER BY sp.partner IS NULL, sp.partner, u.username",
+        (sess["id"],),
+    ).fetchall()
+    by_partner = {}
+    for p in participants:
+        key = p["partner"] or "Unknown"
+        by_partner.setdefault(key, []).append(p)
+    included = sum(1 for p in participants if not p["excluded"])
+    return render_template(
+        "admin_session_participants.html",
+        user=user, session=sess, by_partner=by_partner,
+        total=len(participants), included=included,
+        added_results=added_results,
+    )
+
+
+@app.route("/admin/workshops/<slug>/sessions/<session_slug>/participants/<int:user_id>/remove", methods=["POST"])
+def admin_session_participant_remove(slug, session_slug, user_id):
+    cur_user, redir = _require_facilitator()
+    if redir:
+        return redir
+    sess = _get_session_or_404(slug, session_slug)
+    get_db().execute(
+        "UPDATE session_participants SET removed_at = CURRENT_TIMESTAMP "
+        "WHERE session_id = ? AND user_id = ? AND removed_at IS NULL",
+        (sess["id"], user_id),
+    )
+    get_db().commit()
+    return redirect(url_for("admin_session_participants", slug=slug, session_slug=session_slug))
 
 
 @app.route("/admin/workshops/<slug>/sessions/<session_slug>/archive", methods=["POST"])

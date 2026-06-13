@@ -32,8 +32,18 @@
 
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-bottom:1.5rem;">
     <div class="card">
-      <h2>Participants</h2>
-      <p class="help-note">Coming in the next PR: paste in participant emails, auto-create participant accounts with hand-deliverable initial passwords, see per-participant completion at a glance.</p>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+        <h2 style="margin:0;">Participants</h2>
+        <a class="primary-btn" href="{{ url_for('admin_session_participants', slug=session.workshop_slug, session_slug=session.slug) }}" style="text-decoration:none;">Manage →</a>
+      </div>
+      {% if participant_total %}
+        <div style="font-size:1.4rem;font-weight:700;color:#1e3a5f;">{{ participant_total }}</div>
+        <div class="help-note" style="margin:0.25rem 0 0 0;">
+          {{ participant_included }} counted{% if participant_total > participant_included %} · {{ participant_total - participant_included }} excluded (internal staff){% endif %}
+        </div>
+      {% else %}
+        <p class="help-note" style="margin:0;">No participants yet. <a href="{{ url_for('admin_session_participants', slug=session.workshop_slug, session_slug=session.slug) }}">Paste in a list of emails</a> to enroll the session.</p>
+      {% endif %}
     </div>
     <div class="card">
       <h2>Surveys &amp; Knowledge Check</h2>

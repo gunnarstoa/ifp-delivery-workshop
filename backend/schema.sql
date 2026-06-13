@@ -72,3 +72,21 @@ CREATE TABLE IF NOT EXISTS sessions (
 CREATE INDEX IF NOT EXISTS idx_sessions_dates ON sessions(start_date, end_date);
 CREATE INDEX IF NOT EXISTS idx_sessions_workshop ON sessions(workshop_id);
 CREATE INDEX IF NOT EXISTS idx_sessions_status ON sessions(status);
+
+CREATE TABLE IF NOT EXISTS session_participants (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  session_id INTEGER NOT NULL,
+  user_id INTEGER NOT NULL,
+  partner TEXT,
+  excluded INTEGER NOT NULL DEFAULT 0,
+  enrolled_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enrolled_by INTEGER,
+  removed_at TIMESTAMP,
+  FOREIGN KEY (session_id) REFERENCES sessions(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (enrolled_by) REFERENCES users(id),
+  UNIQUE (session_id, user_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_sp_session_active ON session_participants(session_id) WHERE removed_at IS NULL;
+CREATE INDEX IF NOT EXISTS idx_sp_user ON session_participants(user_id);
