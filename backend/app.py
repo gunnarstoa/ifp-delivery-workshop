@@ -1072,6 +1072,43 @@ def _parse_xlsx_upload(file_storage):
     return headers, rows
 
 
+def _parse_csv_upload(file_storage):
+    """Parse uploaded CSV into (headers, rows). Same shape as _parse_xlsx_upload."""
+    import csv
+    import io
+    raw = file_storage.read()
+    if isinstance(raw, bytes):
+        # Strip BOM if present, decode utf-8
+        for enc in ("utf-8-sig", "utf-8", "latin-1"):
+            try:
+                text = raw.decode(enc)
+                break
+            except UnicodeDecodeError:
+                continue
+        else:
+            text = raw.decode("utf-8", errors="replace")
+    else:
+        text = raw
+    reader = csv.reader(io.StringIO(text))
+    all_rows = list(reader)
+    if not all_rows:
+        return [], []
+    headers = []
+    seen_h = set()
+    for i, h in enumerate(all_rows[0]):
+        name = (h or "").strip() or f"col_{i}"
+        if name in seen_h:
+            name = f"{name}_{i}"
+        seen_h.add(name)
+        headers.append(name)
+    rows = []
+    for row in all_rows[1:]:
+        if not row or not any((c or "").strip() for c in row):
+            continue
+        rows.append({headers[i]: (row[i] if i < len(row) else "") for i in range(len(headers))})
+    return headers, rows
+
+
 def _is_metadata_header(h):
     return str(h).strip().lower() in SURVEY_METADATA_HEADERS
 
@@ -1824,8 +1861,12 @@ def admin_session_survey_upload(slug, session_slug):
     file = request.files.get("file")
     if not file or not file.filename:
         return redirect(url_for("admin_session_surveys", slug=slug, session_slug=session_slug))
+    name_lower = file.filename.lower()
     try:
-        headers, rows = _parse_xlsx_upload(file)
+        if name_lower.endswith(".csv"):
+            headers, rows = _parse_csv_upload(file)
+        else:
+            headers, rows = _parse_xlsx_upload(file)
     except Exception as e:
         return f"Failed to parse: {e}", 400
     _store_survey_upload(sess["id"], kind, file.filename, user["id"], headers, rows)
