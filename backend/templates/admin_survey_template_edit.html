@@ -22,9 +22,19 @@
 
     {% if kind == 'knowledge' %}
     <div class="card">
-      <h2 style="margin-top:0;">Minimum passing score</h2>
-      <p class="help-note" style="margin-top:0;">Percentage of correctly-answered scoreable questions required to pass. Only single-select and multi-select questions with a correct answer set are scoreable.</p>
-      <input type="number" name="passing_score" min="0" max="100" value="{{ template.passing_score if template else 70 }}" style="width:120px;padding:0.4rem 0.55rem;border:1px solid #cbd5e1;border-radius:4px;font-size:0.95rem;"> <span style="color:#6b7280;">%</span>
+      <h2 style="margin-top:0;">Scoring</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;align-items:start;">
+        <div>
+          <label style="display:block;font-weight:600;color:#1e3a5f;font-size:0.9rem;margin-bottom:0.25rem;">Minimum passing score</label>
+          <p class="help-note" style="margin:0 0 0.4rem 0;">Percentage of correctly-answered scoreable questions required to pass. Only single-select and multi-select questions with a correct answer are scoreable.</p>
+          <div><input type="number" name="passing_score" min="0" max="100" value="{{ template.passing_score if template else 70 }}" style="width:100px;padding:0.4rem 0.55rem;border:1px solid #cbd5e1;border-radius:4px;font-size:0.95rem;"> <span style="color:#6b7280;">%</span></div>
+        </div>
+        <div>
+          <label style="display:block;font-weight:600;color:#1e3a5f;font-size:0.9rem;margin-bottom:0.25rem;">Attempt limit</label>
+          <p class="help-note" style="margin:0 0 0.4rem 0;">Leave empty for unlimited retakes (we still count attempts). Set a number to cap retakes — once the participant hits it without passing, they're done.</p>
+          <div><input type="number" name="max_attempts" min="1" value="{{ template.max_attempts if template and template.max_attempts is not none else '' }}" placeholder="empty = unlimited" style="width:200px;padding:0.4rem 0.55rem;border:1px solid #cbd5e1;border-radius:4px;font-size:0.95rem;"> <span style="color:#6b7280;">attempts</span></div>
+        </div>
+      </div>
     </div>
     {% endif %}
 

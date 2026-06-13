@@ -17,6 +17,12 @@
     <p style="background:#eff6ff;border-left:4px solid #0066cc;padding:0.6rem 0.85rem;border-radius:0 4px 4px 0;color:#1e3a5f;font-size:0.95rem;line-height:1.5;">{{ template.intro }}</p>
   {% endif %}
 
+  {% if kind == 'knowledge' and attempts_so_far is defined and attempts_so_far > 0 %}
+    <div style="background:#fef9c3;border-left:4px solid #ca8a04;padding:0.6rem 0.85rem;border-radius:0 4px 4px 0;color:#854d0e;font-size:0.9rem;margin-bottom:0.75rem;">
+      Attempt <strong>{{ attempts_so_far + 1 }}</strong>{% if attempts_left is not none %} of <strong>{{ attempts_so_far + attempts_left }}</strong>{% endif %}. {% if attempts_left is not none %}You have <strong>{{ attempts_left }}</strong> attempt{{ '' if attempts_left == 1 else 's' }} remaining if you don't pass on this one.{% else %}Unlimited retakes — keep trying until you pass.{% endif %}
+    </div>
+  {% endif %}
+
   {% if error %}
     <div class="auth-error" style="margin-bottom:0.75rem;">{{ error }}</div>
   {% endif %}

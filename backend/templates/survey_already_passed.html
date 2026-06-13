@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Already passed — {{ workshop.name }}{% endblock %}
+{% block body %}
+<div class="auth-shell">
+  <div class="auth-card" style="text-align:center;">
+    <div style="font-size:2.5rem;line-height:1;color:#15803d;margin-bottom:0.5rem;">✓</div>
+    <h1 style="color:#15803d;">You've already passed</h1>
+    <p class="subtitle">Your knowledge check for <strong>{{ session_name }}</strong> is on file as passed. You don't need to retake it.</p>
+    <p class="subtitle" style="font-size:0.85rem;color:#6b7280;">Attempts on file: {{ attempts_so_far }}{% if max_attempts %} of {{ max_attempts }} allowed{% endif %}.</p>
+    <div style="margin-top:1rem;">
+      <a class="secondary-btn" href="/w/{{ workshop.slug }}/01-overview.html" style="text-decoration:none;">Back to the workshop</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

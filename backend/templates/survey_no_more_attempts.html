@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}No more attempts — {{ workshop.name }}{% endblock %}
+{% block body %}
+<div class="auth-shell">
+  <div class="auth-card" style="text-align:center;">
+    <div style="font-size:2.5rem;line-height:1;color:#b91c1c;margin-bottom:0.5rem;">✗</div>
+    <h1 style="color:#b91c1c;">No more attempts</h1>
+    <p class="subtitle">You've used all {{ max_attempts }} attempt{{ '' if max_attempts == 1 else 's' }} for the knowledge check on <strong>{{ session_name }}</strong> without passing.</p>
+    <p class="subtitle" style="font-size:0.9rem;">Reach out to your facilitator to discuss next steps.</p>
+    <div style="margin-top:1rem;">
+      <a class="secondary-btn" href="/w/{{ workshop.slug }}/01-overview.html" style="text-decoration:none;">Back to the workshop</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

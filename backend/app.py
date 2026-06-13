@@ -78,10 +78,16 @@ def init_db():
             return {r[1] for r in conn.execute(f"PRAGMA table_info({t})").fetchall()}
         if "passing_score" not in cols("survey_templates"):
             conn.execute("ALTER TABLE survey_templates ADD COLUMN passing_score INTEGER NOT NULL DEFAULT 70")
+        if "max_attempts" not in cols("survey_templates"):
+            conn.execute("ALTER TABLE survey_templates ADD COLUMN max_attempts INTEGER")
         if "score" not in cols("survey_responses"):
             conn.execute("ALTER TABLE survey_responses ADD COLUMN score INTEGER")
         if "passed" not in cols("survey_responses"):
             conn.execute("ALTER TABLE survey_responses ADD COLUMN passed INTEGER")
+        if "attempt_number" not in cols("survey_responses"):
+            conn.execute("ALTER TABLE survey_responses ADD COLUMN attempt_number INTEGER")
+        if "submitted_at" not in cols("survey_responses"):
+            conn.execute("ALTER TABLE survey_responses ADD COLUMN submitted_at TIMESTAMP")
         conn.commit()
     finally:
         conn.close()
@@ -999,29 +1005,42 @@ def _load_template(workshop_id, kind):
     ).fetchone()
     if not row:
         return None
+    keys = set(row.keys())
     return {
         "id": row["id"],
         "workshop_id": row["workshop_id"],
         "kind": row["kind"],
         "intro": row["intro"],
         "questions": json.loads(row["questions_json"]),
-        "passing_score": row["passing_score"] if "passing_score" in row.keys() else 70,
+        "passing_score": row["passing_score"] if "passing_score" in keys else 70,
+        "max_attempts": row["max_attempts"] if "max_attempts" in keys else None,
         "updated_at": row["updated_at"],
     }
 
 
-def _save_template(workshop_id, kind, intro, questions, updated_by, passing_score=70):
+def _save_template(workshop_id, kind, intro, questions, updated_by, passing_score=70, max_attempts=None):
     db = get_db()
     db.execute(
-        "INSERT INTO survey_templates (workshop_id, kind, intro, questions_json, passing_score, updated_by) "
-        "VALUES (?, ?, ?, ?, ?, ?) "
+        "INSERT INTO survey_templates (workshop_id, kind, intro, questions_json, passing_score, max_attempts, updated_by) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?) "
         "ON CONFLICT(workshop_id, kind) DO UPDATE SET "
         "intro = excluded.intro, questions_json = excluded.questions_json, "
-        "passing_score = excluded.passing_score, "
+        "passing_score = excluded.passing_score, max_attempts = excluded.max_attempts, "
         "updated_at = CURRENT_TIMESTAMP, updated_by = excluded.updated_by",
-        (workshop_id, kind, intro, json.dumps(questions), passing_score, updated_by),
+        (workshop_id, kind, intro, json.dumps(questions), passing_score, max_attempts, updated_by),
     )
     db.commit()
+
+
+def _kc_user_status(session_id, user_id):
+    """Return (attempts_so_far, has_passed) for this user's knowledge-check submissions in this session."""
+    row = get_db().execute(
+        "SELECT COUNT(*) AS n, MAX(COALESCE(sr.passed, 0)) AS any_passed "
+        "FROM survey_responses sr JOIN session_surveys ss ON ss.id = sr.survey_id "
+        "WHERE ss.session_id = ? AND ss.kind = 'knowledge' AND sr.participant_user_id = ?",
+        (session_id, user_id),
+    ).fetchone()
+    return (row["n"] or 0, bool(row["any_passed"] or 0))
 
 
 def _score_knowledge_response(template, responses_by_text):
@@ -1384,6 +1403,14 @@ def admin_survey_template_edit(slug, kind):
         except ValueError:
             passing_score = 70
         passing_score = max(0, min(100, passing_score))
+        max_attempts_raw = (request.form.get("max_attempts") or "").strip()
+        if max_attempts_raw == "":
+            max_attempts = None
+        else:
+            try:
+                max_attempts = max(1, int(max_attempts_raw))
+            except ValueError:
+                max_attempts = None
         try:
             questions = json.loads(request.form.get("questions_json") or "[]")
         except json.JSONDecodeError:
@@ -1420,7 +1447,8 @@ def admin_survey_template_edit(slug, kind):
         if not error and not questions:
             error = "At least one question is required."
         if not error:
-            _save_template(workshop["id"], kind, intro, questions, user["id"], passing_score=passing_score)
+            _save_template(workshop["id"], kind, intro, questions, user["id"],
+                           passing_score=passing_score, max_attempts=max_attempts)
             return redirect(url_for("admin_survey_templates", slug=slug))
 
     template = _load_template(workshop["id"], kind)
@@ -1463,18 +1491,41 @@ def take_survey(workshop_slug, kind):
     if enrollment is None and not user["is_facilitator"]:
         return render_template("survey_unavailable.html", workshop=workshop, kind=kind, reason="We couldn't find an active session enrollment for you in this workshop. Reach out to your facilitator."), 403
 
+    # Gating + retry logic for knowledge-check kind (allows retakes until passed or limit reached).
+    attempts_so_far = 0
+    has_passed = False
+    attempts_left = None
+    if kind == "knowledge" and enrollment is not None:
+        attempts_so_far, has_passed = _kc_user_status(enrollment["id"], user["id"])
+        max_attempts = template.get("max_attempts")
+        if max_attempts is not None:
+            attempts_left = max(0, max_attempts - attempts_so_far)
+        if has_passed:
+            return render_template(
+                "survey_already_passed.html",
+                workshop=workshop, kind=kind, session_name=enrollment["name"],
+                attempts_so_far=attempts_so_far, max_attempts=max_attempts,
+            )
+        if max_attempts is not None and attempts_so_far >= max_attempts:
+            return render_template(
+                "survey_no_more_attempts.html",
+                workshop=workshop, kind=kind, session_name=enrollment["name"],
+                attempts_so_far=attempts_so_far, max_attempts=max_attempts,
+            )
+
     error = None
     if request.method == "POST":
         if enrollment is None:
             abort(403)
-        already = get_db().execute(
-            "SELECT sr.id FROM survey_responses sr "
-            "JOIN session_surveys ss ON ss.id = sr.survey_id "
-            "WHERE ss.session_id = ? AND ss.kind = ? AND sr.participant_user_id = ?",
-            (enrollment["id"], kind, user["id"]),
-        ).fetchone()
-        if already:
-            return render_template("survey_already_submitted.html", workshop=workshop, kind=kind, session_name=enrollment["name"])
+        if kind != "knowledge":
+            already = get_db().execute(
+                "SELECT sr.id FROM survey_responses sr "
+                "JOIN session_surveys ss ON ss.id = sr.survey_id "
+                "WHERE ss.session_id = ? AND ss.kind = ? AND sr.participant_user_id = ?",
+                (enrollment["id"], kind, user["id"]),
+            ).fetchone()
+            if already:
+                return render_template("survey_already_submitted.html", workshop=workshop, kind=kind, session_name=enrollment["name"])
         responses = {}
         missing = []
         for q in template["questions"]:
@@ -1496,19 +1547,26 @@ def take_survey(workshop_slug, kind):
             score, passed, scoreable = (None, None, 0)
             if kind == "knowledge":
                 score, passed, scoreable = _score_knowledge_response(template, responses)
+            this_attempt = (attempts_so_far + 1) if kind == "knowledge" else None
             get_db().execute(
-                "INSERT INTO survey_responses (survey_id, participant_user_id, raw_email, responses_json, score, passed) "
-                "VALUES (?, ?, ?, ?, ?, ?)",
+                "INSERT INTO survey_responses (survey_id, participant_user_id, raw_email, responses_json, score, passed, attempt_number, submitted_at) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
                 (survey_id, user["id"], user["username"], json.dumps(responses),
-                 score, (1 if passed else (0 if passed is False else None))),
+                 score, (1 if passed else (0 if passed is False else None)), this_attempt),
             )
             get_db().commit()
             _recompute_survey_counters(survey_id)
+            max_attempts = template.get("max_attempts") if kind == "knowledge" else None
+            attempts_remaining = None
+            if max_attempts is not None and this_attempt is not None:
+                attempts_remaining = max(0, max_attempts - this_attempt)
             return render_template(
                 "survey_thanks.html",
                 workshop=workshop, kind=kind, session_name=enrollment["name"],
                 score=score, passed=passed, scoreable=scoreable,
                 passing_score=template.get("passing_score", 70),
+                this_attempt=this_attempt, max_attempts=max_attempts,
+                attempts_remaining=attempts_remaining,
             )
 
     return render_template(
@@ -1518,6 +1576,8 @@ def take_survey(workshop_slug, kind):
         session_name=enrollment["name"] if enrollment else None,
         is_facilitator_preview=(user["is_facilitator"] and enrollment is None),
         error=error,
+        attempts_so_far=attempts_so_far,
+        attempts_left=attempts_left,
     )
 
 

@@ -13,7 +13,19 @@
       {% endif %}
       <div style="font-size:2rem;font-weight:700;color:#1e3a5f;margin:0.5rem 0;">{{ score }}%</div>
       <p class="subtitle">You answered correctly on {{ score }}% of the {{ scoreable }} scoreable question{{ '' if scoreable == 1 else 's' }}. Passing score is {{ passing_score }}%.</p>
-      <p class="subtitle">Saved for <strong>{{ session_name }}</strong>.</p>
+      <p class="subtitle" style="font-size:0.85rem;color:#6b7280;">
+        Attempt {{ this_attempt }}{% if max_attempts %} of {{ max_attempts }}{% endif %} · saved for <strong>{{ session_name }}</strong>.
+      </p>
+      {% if not passed and (max_attempts is none or attempts_remaining > 0) %}
+        <div style="background:#eff6ff;border-left:4px solid #0066cc;border-radius:0 4px 4px 0;padding:0.6rem 0.85rem;margin:1rem 0;color:#1e3a5f;font-size:0.9rem;text-align:left;">
+          {% if max_attempts %}You have <strong>{{ attempts_remaining }}</strong> attempt{{ '' if attempts_remaining == 1 else 's' }} remaining.{% else %}Unlimited retakes — try again whenever you're ready.{% endif %}
+        </div>
+        <a class="primary-btn" href="/w/{{ workshop.slug }}/survey/knowledge" style="text-decoration:none;display:inline-block;margin-bottom:0.5rem;">Try again →</a>
+      {% elif not passed %}
+        <div style="background:#fee2e2;border-left:4px solid #b91c1c;border-radius:0 4px 4px 0;padding:0.6rem 0.85rem;margin:1rem 0;color:#7f1d1d;font-size:0.9rem;text-align:left;">
+          You've used all {{ max_attempts }} attempt{{ '' if max_attempts == 1 else 's' }}. Reach out to your facilitator to discuss next steps.
+        </div>
+      {% endif %}
     {% elif kind == 'knowledge' %}
       <div style="font-size:2rem;line-height:1;color:#15803d;margin-bottom:0.5rem;">✓</div>
       <h1>Submitted</h1>
