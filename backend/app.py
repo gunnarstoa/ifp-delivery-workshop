@@ -1127,7 +1127,10 @@ def _is_metadata_header(h):
 
 
 def _detect_question_type(values):
-    """Given non-empty values, return 'likert' | 'multi_select' | 'single_select' | 'pass_fail' | 'free_text'."""
+    """Given non-empty values, return 'likert' | 'multi_select' | 'single_select' | 'pass_fail' | 'free_text'.
+    Heuristic ordered cheapest → most expensive. Single-select requires LOW diversity (low
+    unique-to-total ratio) so verbose questions with mostly-unique answers don't get
+    mis-classified as a category."""
     cleaned = [str(v).strip() for v in values if v is not None and str(v).strip()]
     if not cleaned:
         return "free_text"
@@ -1139,7 +1142,9 @@ def _detect_question_type(values):
     if all(PASS_FAIL_RE.match(v) or FAIL_RE.match(v) for v in cleaned):
         return "pass_fail"
     unique = set(lower)
-    if len(unique) <= 8 and all(len(v) <= 50 for v in cleaned):
+    diversity = len(unique) / len(cleaned)
+    max_len = max(len(v) for v in cleaned)
+    if len(unique) <= 6 and max_len <= 50 and diversity <= 0.4:
         return "single_select"
     return "free_text"
 
