@@ -1048,6 +1048,17 @@ def _recompute_survey_counters(survey_id):
 
 # ---------------------------- Surveys ----------------------------
 
+def _coerce_cell(v):
+    """Coerce a cell value into something JSON-serializable. Mostly: datetime → ISO string."""
+    if v is None:
+        return None
+    if isinstance(v, datetime):
+        return v.isoformat(sep=" ", timespec="seconds")
+    if isinstance(v, date):
+        return v.isoformat()
+    return v
+
+
 def _parse_xlsx_upload(file_storage):
     """Parse uploaded XLSX into (headers, rows). Rows is list[dict header->value].
     Uses non-read-only mode so files with stale max_row/max_column metadata
@@ -1070,7 +1081,7 @@ def _parse_xlsx_upload(file_storage):
     for row in all_rows[1:]:
         if not row or not any(c not in (None, "") for c in row):
             continue
-        rows.append({headers[i]: row[i] for i in range(min(len(headers), len(row)))})
+        rows.append({headers[i]: _coerce_cell(row[i]) for i in range(min(len(headers), len(row)))})
     return headers, rows
 
 
