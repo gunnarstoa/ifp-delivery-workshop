@@ -778,11 +778,13 @@ def admin_session_detail(slug, session_slug):
         "FROM session_participants WHERE session_id = ? AND removed_at IS NULL",
         (row["id"],),
     ).fetchone()
+    monitors = _session_monitors(row["id"])
     return render_template(
         "admin_session_detail.html",
         user=user, session=row,
         participant_total=counts["total"] or 0,
         participant_included=counts["included"] or 0,
+        monitors=monitors,
     )
 
 
@@ -917,6 +919,71 @@ def _add_participants_to_session(session_id, emails, enrolled_by_user_id):
     if any_reactivated:
         for r in db.execute("SELECT id FROM session_surveys WHERE session_id = ?", (session_id,)).fetchall():
             _recompute_survey_counters(r["id"])
+    return results
+
+
+def _session_monitors(session_id):
+    return get_db().execute(
+        "SELECT sm.id, sm.assigned_at, "
+        "       u.id AS user_id, u.username, u.email, u.display_name, u.last_login_at "
+        "FROM session_monitors sm JOIN users u ON u.id = sm.user_id "
+        "WHERE sm.session_id = ? AND sm.removed_at IS NULL "
+        "ORDER BY sm.assigned_at",
+        (session_id,),
+    ).fetchall()
+
+
+def _user_is_session_monitor(session_id, user_id):
+    if user_id is None:
+        return False
+    return get_db().execute(
+        "SELECT 1 FROM session_monitors WHERE session_id = ? AND user_id = ? AND removed_at IS NULL",
+        (session_id, user_id),
+    ).fetchone() is not None
+
+
+def _assign_monitors_to_session(session_id, emails, assigned_by_user_id):
+    """For each email: create user if missing, assign as active monitor.
+    Mirrors _add_participants_to_session — returns dicts with status + initial_password (or None)."""
+    db = get_db()
+    results = []
+    for email in emails:
+        existing = db.execute("SELECT id FROM users WHERE username = ?", (email,)).fetchone()
+        if existing:
+            user_id = existing["id"]
+            initial_password = None
+            user_status = "existing"
+        else:
+            initial_password = secrets.token_urlsafe(10)
+            pw_hash = bcrypt.hashpw(initial_password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+            cur = db.execute(
+                "INSERT INTO users (username, email, password_hash, is_facilitator, is_active) "
+                "VALUES (?, ?, ?, 0, 1)",
+                (email, email, pw_hash),
+            )
+            user_id = cur.lastrowid
+            user_status = "created"
+        try:
+            db.execute(
+                "INSERT INTO session_monitors (session_id, user_id, assigned_by) "
+                "VALUES (?, ?, ?)",
+                (session_id, user_id, assigned_by_user_id),
+            )
+            assign_status = "assigned"
+        except sqlite3.IntegrityError:
+            cur = db.execute(
+                "UPDATE session_monitors SET removed_at = NULL, assigned_at = CURRENT_TIMESTAMP, assigned_by = ? "
+                "WHERE session_id = ? AND user_id = ? AND removed_at IS NOT NULL",
+                (assigned_by_user_id, session_id, user_id),
+            )
+            assign_status = "reactivated" if cur.rowcount else "already-assigned"
+        results.append({
+            "email": email,
+            "user_status": user_status,
+            "assign_status": assign_status,
+            "initial_password": initial_password,
+        })
+    db.commit()
     return results
 
 
@@ -2425,6 +2492,39 @@ def admin_session_participant_remove(slug, session_slug, user_id):
     for r in survey_rows:
         _recompute_survey_counters(r["id"])
     return redirect(url_for("admin_session_participants", slug=slug, session_slug=session_slug))
+
+
+@app.route("/admin/workshops/<slug>/sessions/<session_slug>/monitors", methods=["GET", "POST"])
+def admin_session_monitors(slug, session_slug):
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    sess = _get_session_or_404(slug, session_slug)
+    added_results = []
+    if request.method == "POST":
+        emails = _parse_email_list(request.form.get("emails", ""))
+        if emails:
+            added_results = _assign_monitors_to_session(sess["id"], emails, user["id"])
+    monitors = _session_monitors(sess["id"])
+    return render_template(
+        "admin_session_monitors.html",
+        user=user, session=sess, monitors=monitors, added_results=added_results,
+    )
+
+
+@app.route("/admin/workshops/<slug>/sessions/<session_slug>/monitors/<int:monitor_id>/remove", methods=["POST"])
+def admin_session_monitor_remove(slug, session_slug, monitor_id):
+    cur_user, redir = _require_facilitator()
+    if redir:
+        return redir
+    sess = _get_session_or_404(slug, session_slug)
+    get_db().execute(
+        "UPDATE session_monitors SET removed_at = CURRENT_TIMESTAMP "
+        "WHERE id = ? AND session_id = ? AND removed_at IS NULL",
+        (monitor_id, sess["id"]),
+    )
+    get_db().commit()
+    return redirect(url_for("admin_session_monitors", slug=slug, session_slug=session_slug))
 
 
 @app.route("/admin/workshops/<slug>/sessions/<session_slug>/archive", methods=["POST"])

@@ -138,3 +138,114 @@ CREATE TABLE IF NOT EXISTS survey_templates (
   FOREIGN KEY (updated_by) REFERENCES users(id),
   UNIQUE (workshop_id, kind)
 );
+
+-- Discussion foundation (B/19): per-session monitors, page-anchored threads,
+-- replies, reactions, presence, read state, and uploads. Q&A panels and
+-- monitor dashboards in later PRs all read from these tables.
+
+CREATE TABLE IF NOT EXISTS session_monitors (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  session_id INTEGER NOT NULL,
+  user_id INTEGER NOT NULL,
+  assigned_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  assigned_by INTEGER,
+  removed_at TIMESTAMP,
+  FOREIGN KEY (session_id) REFERENCES sessions(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (assigned_by) REFERENCES users(id),
+  UNIQUE (session_id, user_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_sm_session_active ON session_monitors(session_id) WHERE removed_at IS NULL;
+CREATE INDEX IF NOT EXISTS idx_sm_user ON session_monitors(user_id);
+
+CREATE TABLE IF NOT EXISTS threads (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  session_id INTEGER NOT NULL,
+  page_path TEXT NOT NULL,
+  author_user_id INTEGER NOT NULL,
+  anonymous INTEGER NOT NULL DEFAULT 0,
+  kind TEXT NOT NULL DEFAULT 'question',
+  body TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'open',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  answered_at TIMESTAMP,
+  answered_by INTEGER,
+  hidden_at TIMESTAMP,
+  hidden_by INTEGER,
+  FOREIGN KEY (session_id) REFERENCES sessions(id) ON DELETE CASCADE,
+  FOREIGN KEY (author_user_id) REFERENCES users(id),
+  FOREIGN KEY (answered_by) REFERENCES users(id),
+  FOREIGN KEY (hidden_by) REFERENCES users(id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_threads_session_page ON threads(session_id, page_path);
+CREATE INDEX IF NOT EXISTS idx_threads_session_status ON threads(session_id, status);
+CREATE INDEX IF NOT EXISTS idx_threads_session_created ON threads(session_id, created_at);
+
+CREATE TABLE IF NOT EXISTS replies (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  thread_id INTEGER NOT NULL,
+  author_user_id INTEGER NOT NULL,
+  is_monitor_reply INTEGER NOT NULL DEFAULT 0,
+  body TEXT NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  hidden_at TIMESTAMP,
+  hidden_by INTEGER,
+  FOREIGN KEY (thread_id) REFERENCES threads(id) ON DELETE CASCADE,
+  FOREIGN KEY (author_user_id) REFERENCES users(id),
+  FOREIGN KEY (hidden_by) REFERENCES users(id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_replies_thread ON replies(thread_id, created_at);
+
+CREATE TABLE IF NOT EXISTS reactions (
+  thread_id INTEGER NOT NULL,
+  user_id INTEGER NOT NULL,
+  kind TEXT NOT NULL DEFAULT 'me_too',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (thread_id, user_id, kind),
+  FOREIGN KEY (thread_id) REFERENCES threads(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE IF NOT EXISTS presence (
+  session_id INTEGER NOT NULL,
+  user_id INTEGER NOT NULL,
+  page_path TEXT NOT NULL,
+  last_seen_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (session_id, user_id, page_path),
+  FOREIGN KEY (session_id) REFERENCES sessions(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_presence_recent ON presence(session_id, page_path, last_seen_at);
+
+CREATE TABLE IF NOT EXISTS read_state (
+  user_id INTEGER NOT NULL,
+  thread_id INTEGER NOT NULL,
+  last_read_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (user_id, thread_id),
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (thread_id) REFERENCES threads(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_read_state_user ON read_state(user_id, last_read_at);
+
+CREATE TABLE IF NOT EXISTS uploads (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  thread_id INTEGER,
+  reply_id INTEGER,
+  filename TEXT NOT NULL,
+  stored_path TEXT NOT NULL,
+  mime_type TEXT,
+  size_bytes INTEGER,
+  uploaded_by INTEGER NOT NULL,
+  uploaded_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (thread_id) REFERENCES threads(id) ON DELETE CASCADE,
+  FOREIGN KEY (reply_id) REFERENCES replies(id) ON DELETE CASCADE,
+  FOREIGN KEY (uploaded_by) REFERENCES users(id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_uploads_thread ON uploads(thread_id);
+CREATE INDEX IF NOT EXISTS idx_uploads_reply ON uploads(reply_id);

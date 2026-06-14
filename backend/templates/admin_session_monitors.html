@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}Discussion monitors — {{ session.name }}{% endblock %}
+{% block body %}
+<div class="admin-shell">
+  {% set page_title = 'Discussion monitors' %}
+  {% set breadcrumbs = [
+    {'label': session.workshop_name, 'url': url_for('admin_workshop_detail', slug=session.workshop_slug)},
+    {'label': session.name, 'url': url_for('admin_session_detail', slug=session.workshop_slug, session_slug=session.slug)},
+    {'label': 'Discussion monitors'}
+  ] %}
+  {% include "_admin_header.html" %}
+
+  {% if added_results %}
+  <div class="card" style="border-left:4px solid #15803d;">
+    <h2 style="margin-top:0;color:#15803d;">Just assigned · {{ added_results|length }} email{{ '' if added_results|length == 1 else 's' }}</h2>
+    {% set new_creds = added_results | selectattr('initial_password') | list %}
+    {% if new_creds %}
+      <p class="help-note" style="margin-top:0.25rem;">
+        <strong>{{ new_creds|length }} new account{{ '' if new_creds|length == 1 else 's' }} created.</strong>
+        Copy the credentials below now — initial passwords are only shown once. Send each monitor their username and password.
+      </p>
+      <textarea id="creds-block" readonly style="width:100%;min-height:120px;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:4px;font-family:ui-monospace,Menlo,monospace;font-size:0.82rem;background:#f8fafc;">{% for r in new_creds %}{{ r.email }}{{ '	' }}{{ r.initial_password }}
+{% endfor %}</textarea>
+      <div style="margin-top:0.5rem;">
+        <button class="primary-btn" type="button" onclick="copyCreds()">Copy all to clipboard</button>
+      </div>
+    {% endif %}
+    <table class="users-table" style="margin-top:1rem;">
+      <thead><tr><th>Email</th><th>User</th><th>Assignment</th></tr></thead>
+      <tbody>
+        {% for r in added_results %}
+        <tr>
+          <td>{{ r.email }}</td>
+          <td>
+            {% if r.user_status == 'created' %}<span class="badge facilitator">new account</span>
+            {% else %}<span class="badge">existing</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if r.assign_status == 'assigned' %}<span class="badge">assigned</span>
+            {% elif r.assign_status == 'reactivated' %}<span class="badge">re-assigned</span>
+            {% else %}<span class="badge">already assigned</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  <div class="card">
+    <h2 style="margin-top:0;">Assign monitors</h2>
+    <p class="help-note">Paste one email per line. Each monitor signs in with their email as username. New users get an account auto-created — copy the initial password shown after assignment and send it to them. Monitors can reply on any workshop page in this session, and their replies show with an IFP facilitator badge.</p>
+    <form method="post" action="{{ url_for('admin_session_monitors', slug=session.workshop_slug, session_slug=session.slug) }}">
+      <textarea name="emails" placeholder="monitor1@anaplan.com&#10;monitor2@anaplan.com&#10;..." required style="width:100%;min-height:140px;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:4px;font-family:ui-monospace,Menlo,monospace;font-size:0.85rem;"></textarea>
+      <div style="margin-top:0.75rem;">
+        <button class="primary-btn" type="submit">Assign as monitors</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+      <h2 style="margin:0;">Active monitors · {{ monitors|length }}</h2>
+    </div>
+    {% if monitors|length == 0 %}
+      <p class="help-note">No monitors assigned yet. Discussion threads on workshop pages will remain closed until you assign one.</p>
+    {% else %}
+      <table class="users-table">
+        <thead><tr><th>Email</th><th>Assigned</th><th>Last login</th><th style="text-align:right;">Actions</th></tr></thead>
+        <tbody>
+          {% for m in monitors %}
+          <tr>
+            <td>{{ m.username }}</td>
+            <td>{{ m.assigned_at }}</td>
+            <td>{{ m.last_login_at or '—' }}</td>
+            <td style="text-align:right;">
+              <form method="post" action="{{ url_for('admin_session_monitor_remove', slug=session.workshop_slug, session_slug=session.slug, monitor_id=m.id) }}" onsubmit="return confirm('Remove {{ m.username }} as a monitor?');" style="display:inline;">
+                <button class="danger-btn" type="submit">Remove</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  </div>
+</div>
+<script>
+function copyCreds() {
+  const ta = document.getElementById('creds-block');
+  ta.select();
+  navigator.clipboard.writeText(ta.value).then(
+    () => alert('Credentials copied to clipboard.'),
+    () => { document.execCommand('copy'); alert('Copied (legacy clipboard).'); }
+  );
+}
+</script>
+{% endblock %}
