@@ -3173,13 +3173,14 @@ def qa_create_thread(workshop_slug):
     anonymous = 1 if request.form.get("anonymous") == "1" else 0
     if not page_path or not body or not QA_PAGE_RE.match(page_path):
         abort(400)
-    get_db().execute(
+    cur = get_db().execute(
         "INSERT INTO threads (session_id, page_path, author_user_id, anonymous, kind, body) "
         "VALUES (?, ?, ?, ?, 'question', ?)",
         (sess["id"], page_path, user["id"], anonymous, body),
     )
+    new_thread_id = cur.lastrowid
     get_db().commit()
-    return redirect(page_path + "#qa-panel")
+    return redirect(page_path + f"#qa-thread-{new_thread_id}")
 
 
 @app.route("/w/<workshop_slug>/threads/<int:thread_id>/reply", methods=["POST"])
