@@ -2803,6 +2803,22 @@ def _session_has_any_monitor(session_id):
     ).fetchone() is not None
 
 
+def _user_has_session_access(session_id, user_id):
+    """True if user is a participant, monitor, or facilitator for this session."""
+    if user_id is None:
+        return False
+    db = get_db()
+    user_row = db.execute("SELECT is_facilitator FROM users WHERE id = ?", (user_id,)).fetchone()
+    if user_row and user_row["is_facilitator"]:
+        return True
+    if _user_is_session_monitor(session_id, user_id):
+        return True
+    return db.execute(
+        "SELECT 1 FROM session_participants WHERE session_id = ? AND user_id = ? AND removed_at IS NULL",
+        (session_id, user_id),
+    ).fetchone() is not None
+
+
 def _save_attachment(file_storage, session_id, uploaded_by, thread_id=None, reply_id=None):
     """Validate an uploaded FileStorage, save to disk under UPLOADS_DIR,
     insert an `uploads` row. Returns upload_id or None if rejected/empty."""
@@ -3276,13 +3292,40 @@ def cohort_feed(workshop_slug, session_slug):
     )
 
 
+def _resolve_thread_for_action(workshop_slug, thread_id):
+    """Look up a thread by id, scoped to the given workshop. Returns the row
+    (with session_id and workshop slug) or None."""
+    return get_db().execute(
+        "SELECT t.id, t.session_id, t.page_path, w.slug AS workshop_slug "
+        "FROM threads t JOIN sessions s ON s.id = t.session_id "
+        "JOIN workshops w ON w.id = s.workshop_id "
+        "WHERE t.id = ? AND t.hidden_at IS NULL AND w.slug = ?",
+        (thread_id, workshop_slug),
+    ).fetchone()
+
+
 @app.route("/w/<workshop_slug>/threads", methods=["POST"])
 def qa_create_thread(workshop_slug):
     user = current_user()
     if user is None:
         abort(403)
-    sess, role = _user_workshop_session(user["id"], workshop_slug)
-    if sess is None or not _session_has_any_monitor(sess["id"]):
+    # Honor the session_slug the drawer is viewing (set by the session-switcher
+    # for users who have access to multiple cohorts). Falls back to the user's
+    # default workshop session for legacy form posts without the field.
+    session_slug = (request.form.get("session_slug") or "").strip()
+    sess = None
+    if session_slug:
+        sess = get_db().execute(
+            "SELECT s.id, s.slug, s.name FROM sessions s "
+            "JOIN workshops w ON w.id = s.workshop_id "
+            "WHERE w.slug = ? AND s.slug = ? AND s.status != 'archived'",
+            (workshop_slug, session_slug),
+        ).fetchone()
+    if sess is None:
+        sess, _ = _user_workshop_session(user["id"], workshop_slug)
+    if sess is None or not _user_has_session_access(sess["id"], user["id"]):
+        abort(403)
+    if not _session_has_any_monitor(sess["id"]):
         abort(403)
     page_path = request.form.get("page_path", "").strip()
     body = (request.form.get("body") or "").strip()
@@ -3306,19 +3349,15 @@ def qa_create_reply(workshop_slug, thread_id):
     user = current_user()
     if user is None:
         abort(403)
-    sess, role = _user_workshop_session(user["id"], workshop_slug)
-    if sess is None:
-        abort(403)
-    thread = get_db().execute(
-        "SELECT id, page_path FROM threads WHERE id = ? AND hidden_at IS NULL AND session_id = ?",
-        (thread_id, sess["id"]),
-    ).fetchone()
+    thread = _resolve_thread_for_action(workshop_slug, thread_id)
     if thread is None:
         abort(404)
+    if not _user_has_session_access(thread["session_id"], user["id"]):
+        abort(403)
     body = (request.form.get("body") or "").strip()
     if not body:
         abort(400)
-    is_monitor_reply = 1 if _user_is_session_monitor(sess["id"], user["id"]) else 0
+    is_monitor_reply = 1 if _user_is_session_monitor(thread["session_id"], user["id"]) else 0
     cur = get_db().execute(
         "INSERT INTO replies (thread_id, author_user_id, body, is_monitor_reply) "
         "VALUES (?, ?, ?, ?)",
@@ -3327,7 +3366,7 @@ def qa_create_reply(workshop_slug, thread_id):
     new_reply_id = cur.lastrowid
     get_db().commit()
     if "attachment" in request.files:
-        _save_attachment(request.files["attachment"], sess["id"], user["id"], reply_id=new_reply_id)
+        _save_attachment(request.files["attachment"], thread["session_id"], user["id"], reply_id=new_reply_id)
     return redirect(_safe_return_to(request.form.get("return_to"), thread["page_path"] + f"#qa-thread-{thread_id}"))
 
 
@@ -3336,15 +3375,11 @@ def qa_react(workshop_slug, thread_id):
     user = current_user()
     if user is None:
         abort(403)
-    sess, role = _user_workshop_session(user["id"], workshop_slug)
-    if sess is None:
-        abort(403)
-    thread = get_db().execute(
-        "SELECT id, page_path FROM threads WHERE id = ? AND hidden_at IS NULL AND session_id = ?",
-        (thread_id, sess["id"]),
-    ).fetchone()
+    thread = _resolve_thread_for_action(workshop_slug, thread_id)
     if thread is None:
         abort(404)
+    if not _user_has_session_access(thread["session_id"], user["id"]):
+        abort(403)
     existing = get_db().execute(
         "SELECT 1 FROM reactions WHERE thread_id = ? AND user_id = ? AND kind = 'me_too'",
         (thread_id, user["id"]),
@@ -3368,15 +3403,11 @@ def qa_mark_answered(workshop_slug, thread_id):
     user = current_user()
     if user is None:
         abort(403)
-    sess, role = _user_workshop_session(user["id"], workshop_slug)
-    if sess is None or not _user_is_session_monitor(sess["id"], user["id"]):
-        abort(403)
-    thread = get_db().execute(
-        "SELECT id, page_path FROM threads WHERE id = ? AND hidden_at IS NULL AND session_id = ?",
-        (thread_id, sess["id"]),
-    ).fetchone()
+    thread = _resolve_thread_for_action(workshop_slug, thread_id)
     if thread is None:
         abort(404)
+    if not _user_is_session_monitor(thread["session_id"], user["id"]):
+        abort(403)
     get_db().execute(
         "UPDATE threads SET status = 'answered', answered_at = CURRENT_TIMESTAMP, answered_by = ? "
         "WHERE id = ?",
