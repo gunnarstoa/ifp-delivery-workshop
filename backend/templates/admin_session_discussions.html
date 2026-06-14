@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% block title %}Discussion analytics — {{ session.name }}{% endblock %}
+{% block body %}
+<div class="admin-shell">
+  {% set page_title = 'Discussion analytics' %}
+  {% set breadcrumbs = [
+    {'label': session.workshop_name, 'url': url_for('admin_workshop_detail', slug=session.workshop_slug)},
+    {'label': session.name, 'url': url_for('admin_session_detail', slug=session.workshop_slug, session_slug=session.slug)},
+    {'label': 'Discussion analytics'}
+  ] %}
+  {% include "_admin_header.html" %}
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0.75rem;margin-bottom:1.5rem;">
+    <div style="background:white;border:1px solid #e2e8f0;border-radius:6px;padding:0.85rem 1rem;">
+      <div style="font-size:0.7rem;text-transform:uppercase;color:#6b7280;letter-spacing:0.04em;">Threads</div>
+      <div style="font-size:1.65rem;font-weight:700;color:#1e3a5f;margin-top:0.25rem;">{{ metrics.total_threads }}</div>
+      <div style="font-size:0.72rem;color:#6b7280;margin-top:0.2rem;">{{ metrics.open_count }} open · {{ metrics.answered_count }} answered</div>
+    </div>
+    <div style="background:white;border:1px solid #e2e8f0;border-radius:6px;padding:0.85rem 1rem;">
+      <div style="font-size:0.7rem;text-transform:uppercase;color:#6b7280;letter-spacing:0.04em;">Replies</div>
+      <div style="font-size:1.65rem;font-weight:700;color:#1e3a5f;margin-top:0.25rem;">{{ metrics.total_replies }}</div>
+      <div style="font-size:0.72rem;color:#6b7280;margin-top:0.2rem;">{{ metrics.monitor_replies }} from moderators</div>
+    </div>
+    <div style="background:white;border:1px solid #e2e8f0;border-radius:6px;padding:0.85rem 1rem;">
+      <div style="font-size:0.7rem;text-transform:uppercase;color:#6b7280;letter-spacing:0.04em;">Engagement</div>
+      <div style="font-size:1.65rem;font-weight:700;color:#1e3a5f;margin-top:0.25rem;">{{ metrics.posted_count }} / {{ metrics.total_participants }}</div>
+      <div style="font-size:0.72rem;color:#6b7280;margin-top:0.2rem;">{{ metrics.engagement_pct }}% posted at least once</div>
+    </div>
+    <div style="background:white;border:1px solid #e2e8f0;border-radius:6px;padding:0.85rem 1rem;">
+      <div style="font-size:0.7rem;text-transform:uppercase;color:#6b7280;letter-spacing:0.04em;">Median response</div>
+      <div style="font-size:1.65rem;font-weight:700;color:#1e3a5f;margin-top:0.25rem;">
+        {% if metrics.median_response_minutes is none %}—{% elif metrics.median_response_minutes < 60 %}{{ metrics.median_response_minutes|round|int }} min{% else %}{{ (metrics.median_response_minutes / 60)|round(1) }} h{% endif %}
+      </div>
+      <div style="font-size:0.72rem;color:#6b7280;margin-top:0.2rem;">across {{ metrics.response_total }} answered question{{ '' if metrics.response_total == 1 else 's' }}</div>
+    </div>
+    <div style="background:white;border:1px solid #e2e8f0;border-radius:6px;padding:0.85rem 1rem;">
+      <div style="font-size:0.7rem;text-transform:uppercase;color:#6b7280;letter-spacing:0.04em;">Reactions</div>
+      <div style="font-size:1.65rem;font-weight:700;color:#1e3a5f;margin-top:0.25rem;">{{ metrics.total_reactions }}</div>
+      <div style="font-size:0.72rem;color:#6b7280;margin-top:0.2rem;">{{ metrics.anonymous_pct }}% of threads anonymous</div>
+    </div>
+  </div>
+
+  {% if not metrics.total_threads %}
+  <div class="card" style="text-align:center;">
+    <p class="help-note" style="margin:0;">No discussion threads yet in this cohort.</p>
+  </div>
+  {% else %}
+
+  <div class="card">
+    <h2 style="margin-top:0;">Engagement by page</h2>
+    <p class="help-note" style="margin:0 0 1rem 0;">Combined score of threads + replies + reactions. Shows which workshop pages are sticking — or causing friction.</p>
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>Page</th>
+          <th style="text-align:right;">Threads</th>
+          <th style="text-align:right;">Open</th>
+          <th style="text-align:right;">Replies</th>
+          <th style="text-align:right;">Me-too</th>
+          <th style="text-align:right;">Posters</th>
+          <th style="width:30%;">Engagement</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in metrics.page_engagement %}
+        <tr>
+          <td><a href="{{ p.page_path }}" target="_blank" rel="noopener" style="color:#0066cc;text-decoration:none;">{{ p.page_label }} ↗</a></td>
+          <td style="text-align:right;">{{ p.thread_count }}</td>
+          <td style="text-align:right;{{ 'color:#b91c1c;font-weight:600;' if p.open_count > 0 else 'color:#9ca3af;' }}">{{ p.open_count }}</td>
+          <td style="text-align:right;">{{ p.reply_count }}</td>
+          <td style="text-align:right;">{{ p.reaction_count }}</td>
+          <td style="text-align:right;">{{ p.unique_authors }}</td>
+          <td>
+            <div style="background:#f3f4f6;border-radius:6px;height:8px;overflow:hidden;">
+              <div style="background:#0066cc;height:100%;width:{{ p.engagement_pct }}%;"></div>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if metrics.response_total %}
+  <div class="card">
+    <h2 style="margin-top:0;">Response time</h2>
+    <p class="help-note" style="margin:0 0 1rem 0;">Time from when a question was posted to the first reply from a moderator. Across {{ metrics.response_total }} answered question{{ '' if metrics.response_total == 1 else 's' }}.</p>
+    {% set b = metrics.response_buckets %}
+    <div style="display:flex;height:36px;border-radius:6px;overflow:hidden;border:1px solid #e2e8f0;">
+      {% if b.under30 %}<div style="background:#15803d;flex:{{ b.under30 }};display:flex;align-items:center;justify-content:center;color:white;font-size:0.78rem;font-weight:600;" title="Under 30 min · {{ b.under30 }}">{{ b.under30 }}</div>{% endif %}
+      {% if b.min30_2h %}<div style="background:#65a30d;flex:{{ b.min30_2h }};display:flex;align-items:center;justify-content:center;color:white;font-size:0.78rem;font-weight:600;" title="30 min – 2 h · {{ b.min30_2h }}">{{ b.min30_2h }}</div>{% endif %}
+      {% if b.h2_1d %}<div style="background:#d97706;flex:{{ b.h2_1d }};display:flex;align-items:center;justify-content:center;color:white;font-size:0.78rem;font-weight:600;" title="2 h – 1 day · {{ b.h2_1d }}">{{ b.h2_1d }}</div>{% endif %}
+      {% if b.over1d %}<div style="background:#b91c1c;flex:{{ b.over1d }};display:flex;align-items:center;justify-content:center;color:white;font-size:0.78rem;font-weight:600;" title="Over 1 day · {{ b.over1d }}">{{ b.over1d }}</div>{% endif %}
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:#6b7280;margin-top:0.4rem;">
+      <span><span style="display:inline-block;width:10px;height:10px;background:#15803d;border-radius:2px;vertical-align:middle;margin-right:0.3rem;"></span>&lt; 30 min</span>
+      <span><span style="display:inline-block;width:10px;height:10px;background:#65a30d;border-radius:2px;vertical-align:middle;margin-right:0.3rem;"></span>30 min – 2 h</span>
+      <span><span style="display:inline-block;width:10px;height:10px;background:#d97706;border-radius:2px;vertical-align:middle;margin-right:0.3rem;"></span>2 h – 1 day</span>
+      <span><span style="display:inline-block;width:10px;height:10px;background:#b91c1c;border-radius:2px;vertical-align:middle;margin-right:0.3rem;"></span>&gt; 1 day</span>
+    </div>
+    {% if metrics.open_count %}
+    <p class="help-note" style="margin:0.75rem 0 0 0;color:#b91c1c;"><strong>{{ metrics.open_count }} question{{ '' if metrics.open_count == 1 else 's' }} still open</strong> — not counted in the distribution above.</p>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:1rem;">
+
+    {% if metrics.top_threads %}
+    <div class="card">
+      <h2 style="margin-top:0;">Most-relatable questions</h2>
+      <p class="help-note" style="margin:0 0 0.85rem 0;">Top threads by me-too reactions — what your cohort is also stuck on.</p>
+      <div style="display:flex;flex-direction:column;gap:0.7rem;">
+        {% for t in metrics.top_threads %}
+        <div style="border:1px solid #e2e8f0;border-radius:6px;padding:0.65rem 0.85rem;">
+          <div style="display:flex;align-items:center;gap:0.4rem;margin-bottom:0.3rem;flex-wrap:wrap;">
+            <span style="background:#0066cc;color:white;font-size:0.7rem;padding:2px 8px;border-radius:999px;font-weight:600;">{{ t.reaction_count }} me-too</span>
+            <span style="font-size:0.7rem;background:#f3f4f6;color:#374151;padding:2px 8px;border-radius:4px;font-weight:600;">{{ t.page_label }}</span>
+            {% if t.status == 'answered' %}<span style="font-size:0.7rem;background:#dcfce7;color:#15803d;padding:2px 8px;border-radius:999px;font-weight:600;">Answered</span>{% else %}<span style="font-size:0.7rem;background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:999px;font-weight:600;">Open</span>{% endif %}
+          </div>
+          <p style="margin:0;font-size:0.88rem;color:#1f2937;line-height:1.5;">{{ t.body[:200] }}{% if t.body|length > 200 %}…{% endif %}</p>
+          <p style="margin:0.3rem 0 0 0;font-size:0.72rem;color:#9ca3af;">{{ t.author_display }} · {{ t.created_at }} · {{ t.reply_count }} repl{{ 'y' if t.reply_count == 1 else 'ies' }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% if metrics.oldest_open %}
+    <div class="card">
+      <h2 style="margin-top:0;">Oldest unanswered</h2>
+      <p class="help-note" style="margin:0 0 0.85rem 0;">Questions still waiting for a moderator response — sorted oldest first.</p>
+      <div style="display:flex;flex-direction:column;gap:0.7rem;">
+        {% for t in metrics.oldest_open %}
+        <div style="border:1px solid #fca5a5;border-radius:6px;padding:0.65rem 0.85rem;background:#fef2f2;">
+          <div style="display:flex;align-items:center;gap:0.4rem;margin-bottom:0.3rem;flex-wrap:wrap;">
+            <span style="font-size:0.7rem;background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:999px;font-weight:600;">Open</span>
+            <span style="font-size:0.7rem;background:#f3f4f6;color:#374151;padding:2px 8px;border-radius:4px;font-weight:600;">{{ t.page_label }}</span>
+          </div>
+          <p style="margin:0;font-size:0.88rem;color:#1f2937;line-height:1.5;">{{ t.body[:200] }}{% if t.body|length > 200 %}…{% endif %}</p>
+          <p style="margin:0.3rem 0 0 0;font-size:0.72rem;color:#9ca3af;">{{ t.author_display }} · since {{ t.created_at }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% if metrics.top_words %}
+    <div class="card">
+      <h2 style="margin-top:0;">Common topic words</h2>
+      <p class="help-note" style="margin:0 0 0.85rem 0;">Most-frequent words across all thread bodies, excluding stopwords. A rough proxy for what your cohort is talking about.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:0.5rem;align-items:baseline;">
+        {% for w in metrics.top_words %}
+        <span style="display:inline-flex;align-items:baseline;gap:0.3rem;padding:4px 10px;background:#eff6ff;border:1px solid #93c5fd;color:#1e40af;border-radius:999px;font-size:{{ 0.8 + (w.rel / 100) * 0.6 }}rem;font-weight:600;line-height:1.2;">{{ w.word }} <span style="font-size:0.7rem;color:#3b82f6;font-weight:400;">{{ w.count }}</span></span>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+
+  {% endif %}
+</div>
+{% endblock %}
