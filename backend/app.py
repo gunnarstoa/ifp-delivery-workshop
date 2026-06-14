@@ -2907,6 +2907,9 @@ def inject_qa_panel(resp):
         has_monitor=has_monitor,
         new_count=new_count,
     )
+    # send_from_directory returns the response in direct_passthrough mode,
+    # which makes resp.get_data() raise. Switch off before reading the body.
+    resp.direct_passthrough = False
     body = resp.get_data(as_text=True)
     if "</main>" in body:
         body = body.replace("</main>", panel_html + "\n  </main>", 1)
