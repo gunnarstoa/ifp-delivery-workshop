@@ -2852,6 +2852,59 @@ def _page_presence_for_session(session_id, page_path):
     return active, total
 
 
+def _bell_items_for_user(user_id, session_id, limit=10):
+    """Return unread thread-activity items for the user in this session, newest first.
+    Each item summarizes the latest event (a new thread, or the latest reply on an
+    existing thread). Threads where the user is already caught up are dropped via
+    the read_state JOIN; the user's own posts roll their read_state forward when
+    the panel re-renders after submit, so this query naturally excludes them."""
+    db = get_db()
+    rows = db.execute(
+        "SELECT t.id, t.page_path, t.body AS thread_body, t.anonymous, t.created_at, "
+        "       u.username AS thread_author_username, "
+        "       (SELECT MAX(rep.created_at) FROM replies rep WHERE rep.thread_id = t.id AND rep.hidden_at IS NULL) AS latest_reply_at, "
+        "       (SELECT rep.body FROM replies rep WHERE rep.thread_id = t.id AND rep.hidden_at IS NULL ORDER BY rep.created_at DESC LIMIT 1) AS latest_reply_body, "
+        "       (SELECT rep.is_monitor_reply FROM replies rep WHERE rep.thread_id = t.id AND rep.hidden_at IS NULL ORDER BY rep.created_at DESC LIMIT 1) AS latest_reply_is_monitor, "
+        "       (SELECT u2.username FROM replies rep LEFT JOIN users u2 ON u2.id = rep.author_user_id WHERE rep.thread_id = t.id AND rep.hidden_at IS NULL ORDER BY rep.created_at DESC LIMIT 1) AS latest_reply_author, "
+        "       rs.last_read_at "
+        "FROM threads t LEFT JOIN users u ON u.id = t.author_user_id "
+        "LEFT JOIN read_state rs ON rs.thread_id = t.id AND rs.user_id = ? "
+        "WHERE t.session_id = ? AND t.hidden_at IS NULL "
+        "ORDER BY t.created_at DESC",
+        (user_id, session_id),
+    ).fetchall()
+    items = []
+    for r in rows:
+        latest_at = max(r["created_at"], r["latest_reply_at"] or "")
+        if r["last_read_at"] is not None and latest_at <= r["last_read_at"]:
+            continue
+        if r["latest_reply_at"] and r["latest_reply_at"] > r["created_at"]:
+            kind = "reply"
+            snippet = (r["latest_reply_body"] or "")[:120]
+            author_display = _display_name_from_username(r["latest_reply_author"])
+            is_monitor = bool(r["latest_reply_is_monitor"])
+            at = r["latest_reply_at"]
+        else:
+            kind = "thread"
+            author_display = "Anonymous" if r["anonymous"] else _display_name_from_username(r["thread_author_username"])
+            snippet = (r["thread_body"] or "")[:120]
+            is_monitor = False
+            at = r["created_at"]
+        items.append({
+            "thread_id": r["id"],
+            "page_path": r["page_path"],
+            "page_label": _page_label_from_path(r["page_path"]),
+            "kind": kind,
+            "author_display": author_display,
+            "snippet": snippet,
+            "at": at,
+            "is_monitor_reply": is_monitor,
+        })
+        if len(items) >= limit:
+            break
+    return items
+
+
 def _user_has_session_access(session_id, user_id):
     """True if user is a participant, monitor, or facilitator for this session."""
     if user_id is None:
@@ -3486,6 +3539,7 @@ def inject_qa_panel(resp):
     threads = _threads_for_page(sess["id"], request.path, user["id"]) if has_monitor else []
     new_count = sum(1 for t in threads if t.get("new_for_me"))
     active_count, total_participants = _page_presence_for_session(sess["id"], request.path)
+    bell_items = _bell_items_for_user(user["id"], sess["id"], limit=10)
     panel_html = render_template(
         "_qa_panel.html",
         threads=threads,
@@ -3499,6 +3553,7 @@ def inject_qa_panel(resp):
         accessible_sessions=accessible_sessions,
         active_count=active_count,
         total_participants=total_participants,
+        bell_items=bell_items,
     )
     # send_from_directory returns the response in direct_passthrough mode,
     # which makes resp.get_data() raise. Switch off before reading the body.
