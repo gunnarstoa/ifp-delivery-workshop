@@ -2540,6 +2540,19 @@ def admin_session_monitors(slug, session_slug):
     )
 
 
+@app.route("/admin/workshops/<slug>/sessions/<session_slug>/discussions")
+def admin_session_discussions(slug, session_slug):
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    sess = _get_session_or_404(slug, session_slug)
+    metrics = _admin_discussion_metrics(sess["id"], sess)
+    return render_template(
+        "admin_session_discussions.html",
+        user=user, session=sess, metrics=metrics,
+    )
+
+
 @app.route("/admin/workshops/<slug>/sessions/<session_slug>/monitors/<int:monitor_id>/remove", methods=["POST"])
 def admin_session_monitor_remove(slug, session_slug, monitor_id):
     cur_user, redir = _require_facilitator()
@@ -3180,6 +3193,212 @@ def _monitor_dashboard_metrics(session_id, session_row):
         "posted_count": posted_count,
         "total_participants": total_participants,
         "days_remaining": days_remaining,
+    }
+
+
+# Common English stopwords pruned for thread-body word frequency analysis.
+DISCUSSION_STOPWORDS = frozenset({
+    "the", "and", "for", "are", "but", "not", "you", "all", "can", "any", "had",
+    "has", "have", "her", "his", "its", "may", "now", "one", "our", "out", "see",
+    "she", "the", "two", "use", "was", "way", "who", "with", "your", "from", "this",
+    "that", "they", "them", "their", "what", "when", "where", "which", "while",
+    "would", "could", "should", "there", "these", "those", "than", "then", "into",
+    "just", "like", "also", "been", "being", "does", "doing", "very", "much",
+    "many", "more", "most", "some", "such", "only", "even", "ever", "never",
+    "still", "yet", "thanks", "hello", "hi", "hey", "yes", "really", "actually",
+    "every", "anyone", "anything", "everyone", "ifp", "workshop",
+})
+
+
+def _common_words_in_threads(session_id, limit=18):
+    """Top N most-frequent words across all thread bodies, excluding stopwords + short tokens."""
+    db = get_db()
+    rows = db.execute(
+        "SELECT body FROM threads WHERE session_id = ? AND hidden_at IS NULL",
+        (session_id,),
+    ).fetchall()
+    word_re = re.compile(r"[a-z][a-z'-]{2,}")
+    counts = {}
+    for row in rows:
+        for w in word_re.findall((row["body"] or "").lower()):
+            w = w.strip("'-")
+            if len(w) < 4 or w in DISCUSSION_STOPWORDS:
+                continue
+            counts[w] = counts.get(w, 0) + 1
+    top = sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))[:limit]
+    return [{"word": w, "count": c} for w, c in top]
+
+
+def _admin_discussion_metrics(session_id, session_row):
+    """Comprehensive analytics for a session's discussion. Used by the admin
+    discussion-dashboard page; computes hero metrics, per-page engagement,
+    response-time distribution, top threads, and topic words in one pass."""
+    db = get_db()
+    total_threads = db.execute(
+        "SELECT COUNT(*) AS c FROM threads WHERE session_id = ? AND hidden_at IS NULL",
+        (session_id,),
+    ).fetchone()["c"]
+    total_replies = db.execute(
+        "SELECT COUNT(*) AS c FROM replies r JOIN threads t ON t.id = r.thread_id "
+        "WHERE t.session_id = ? AND r.hidden_at IS NULL AND t.hidden_at IS NULL",
+        (session_id,),
+    ).fetchone()["c"]
+    monitor_replies = db.execute(
+        "SELECT COUNT(*) AS c FROM replies r JOIN threads t ON t.id = r.thread_id "
+        "WHERE t.session_id = ? AND r.is_monitor_reply = 1 AND r.hidden_at IS NULL AND t.hidden_at IS NULL",
+        (session_id,),
+    ).fetchone()["c"]
+    total_reactions = db.execute(
+        "SELECT COUNT(*) AS c FROM reactions r JOIN threads t ON t.id = r.thread_id "
+        "WHERE t.session_id = ? AND t.hidden_at IS NULL",
+        (session_id,),
+    ).fetchone()["c"]
+    answered_count = db.execute(
+        "SELECT COUNT(*) AS c FROM threads WHERE session_id = ? AND status = 'answered' AND kind = 'question' AND hidden_at IS NULL",
+        (session_id,),
+    ).fetchone()["c"]
+    open_count = db.execute(
+        "SELECT COUNT(*) AS c FROM threads WHERE session_id = ? AND status = 'open' AND kind = 'question' AND hidden_at IS NULL",
+        (session_id,),
+    ).fetchone()["c"]
+    anon_count = db.execute(
+        "SELECT COUNT(*) AS c FROM threads WHERE session_id = ? AND anonymous = 1 AND hidden_at IS NULL",
+        (session_id,),
+    ).fetchone()["c"]
+    total_participants = db.execute(
+        "SELECT COUNT(*) AS c FROM session_participants WHERE session_id = ? AND removed_at IS NULL AND excluded = 0",
+        (session_id,),
+    ).fetchone()["c"]
+    posted_count = db.execute(
+        "SELECT COUNT(DISTINCT t.author_user_id) AS c FROM threads t "
+        "JOIN session_participants sp ON sp.user_id = t.author_user_id AND sp.session_id = t.session_id "
+        "WHERE t.session_id = ? AND sp.removed_at IS NULL AND sp.excluded = 0 AND t.hidden_at IS NULL",
+        (session_id,),
+    ).fetchone()["c"]
+
+    # Response-time buckets (minutes between thread creation and first monitor reply)
+    response_times = db.execute(
+        "SELECT (julianday(MIN(rep.created_at)) - julianday(t.created_at)) * 24 * 60 AS minutes "
+        "FROM threads t JOIN replies rep ON rep.thread_id = t.id "
+        "WHERE t.session_id = ? AND t.status = 'answered' AND t.kind = 'question' AND rep.is_monitor_reply = 1 "
+        "GROUP BY t.id",
+        (session_id,),
+    ).fetchall()
+    times = sorted(r["minutes"] for r in response_times if r["minutes"] is not None and r["minutes"] >= 0)
+    median_response_minutes = None
+    if times:
+        mid = len(times) // 2
+        median_response_minutes = times[mid] if len(times) % 2 == 1 else (times[mid - 1] + times[mid]) / 2
+    buckets = {"under30": 0, "min30_2h": 0, "h2_1d": 0, "over1d": 0}
+    for t in times:
+        if t < 30:
+            buckets["under30"] += 1
+        elif t < 120:
+            buckets["min30_2h"] += 1
+        elif t < 1440:
+            buckets["h2_1d"] += 1
+        else:
+            buckets["over1d"] += 1
+
+    # Engagement per page (no nested subquery — group threads, then join replies)
+    page_rows = db.execute(
+        "SELECT t.page_path, "
+        "       COUNT(t.id) AS thread_count, "
+        "       SUM(CASE WHEN t.status = 'open' AND t.kind = 'question' THEN 1 ELSE 0 END) AS open_count, "
+        "       COUNT(DISTINCT t.author_user_id) AS unique_authors "
+        "FROM threads t "
+        "WHERE t.session_id = ? AND t.hidden_at IS NULL "
+        "GROUP BY t.page_path ORDER BY thread_count DESC, t.page_path",
+        (session_id,),
+    ).fetchall()
+    page_engagement = []
+    for p in page_rows:
+        # Cheap per-page reply + reaction counts
+        reply_count = db.execute(
+            "SELECT COUNT(*) AS c FROM replies r JOIN threads t ON t.id = r.thread_id "
+            "WHERE t.session_id = ? AND t.page_path = ? AND r.hidden_at IS NULL AND t.hidden_at IS NULL",
+            (session_id, p["page_path"]),
+        ).fetchone()["c"]
+        reaction_count = db.execute(
+            "SELECT COUNT(*) AS c FROM reactions r JOIN threads t ON t.id = r.thread_id "
+            "WHERE t.session_id = ? AND t.page_path = ? AND t.hidden_at IS NULL",
+            (session_id, p["page_path"]),
+        ).fetchone()["c"]
+        page_engagement.append({
+            "page_path": p["page_path"],
+            "page_label": _page_label_from_path(p["page_path"]),
+            "thread_count": p["thread_count"],
+            "open_count": p["open_count"] or 0,
+            "unique_authors": p["unique_authors"],
+            "reply_count": reply_count,
+            "reaction_count": reaction_count,
+            "engagement_score": p["thread_count"] + reply_count + reaction_count,
+        })
+    page_engagement.sort(key=lambda x: -x["engagement_score"])
+    max_engagement = max((p["engagement_score"] for p in page_engagement), default=0)
+    for p in page_engagement:
+        p["engagement_pct"] = round(100 * p["engagement_score"] / max_engagement) if max_engagement else 0
+
+    # Top threads by me-too reactions (most-relatable questions)
+    top_threads = db.execute(
+        "SELECT t.id, t.body, t.page_path, t.status, t.created_at, t.anonymous, "
+        "       u.username AS author_username, "
+        "       (SELECT COUNT(*) FROM reactions r WHERE r.thread_id = t.id) AS reaction_count, "
+        "       (SELECT COUNT(*) FROM replies r WHERE r.thread_id = t.id AND r.hidden_at IS NULL) AS reply_count "
+        "FROM threads t LEFT JOIN users u ON u.id = t.author_user_id "
+        "WHERE t.session_id = ? AND t.hidden_at IS NULL "
+        "ORDER BY reaction_count DESC, reply_count DESC, t.created_at DESC LIMIT 5",
+        (session_id,),
+    ).fetchall()
+    top_threads_data = []
+    for t in top_threads:
+        d = dict(t)
+        d["author_display"] = "Anonymous" if t["anonymous"] else _display_name_from_username(t["author_username"])
+        d["page_label"] = _page_label_from_path(t["page_path"])
+        top_threads_data.append(d)
+
+    # Oldest unanswered (where moderator attention is most needed)
+    oldest_open = db.execute(
+        "SELECT t.id, t.body, t.page_path, t.created_at, t.anonymous, "
+        "       u.username AS author_username "
+        "FROM threads t LEFT JOIN users u ON u.id = t.author_user_id "
+        "WHERE t.session_id = ? AND t.status = 'open' AND t.kind = 'question' AND t.hidden_at IS NULL "
+        "ORDER BY t.created_at ASC LIMIT 5",
+        (session_id,),
+    ).fetchall()
+    oldest_open_data = []
+    for t in oldest_open:
+        d = dict(t)
+        d["author_display"] = "Anonymous" if t["anonymous"] else _display_name_from_username(t["author_username"])
+        d["page_label"] = _page_label_from_path(t["page_path"])
+        oldest_open_data.append(d)
+
+    # Topic words across thread bodies
+    top_words = _common_words_in_threads(session_id, limit=18)
+    max_word_count = max((w["count"] for w in top_words), default=0)
+    for w in top_words:
+        w["rel"] = round(100 * w["count"] / max_word_count) if max_word_count else 0
+
+    return {
+        "total_threads": total_threads,
+        "total_replies": total_replies,
+        "monitor_replies": monitor_replies,
+        "total_reactions": total_reactions,
+        "answered_count": answered_count,
+        "open_count": open_count,
+        "anonymous_count": anon_count,
+        "anonymous_pct": round(100 * anon_count / total_threads) if total_threads else 0,
+        "answered_pct": round(100 * answered_count / (answered_count + open_count)) if (answered_count + open_count) else 0,
+        "total_participants": total_participants,
+        "posted_count": posted_count,
+        "engagement_pct": round(100 * posted_count / total_participants) if total_participants else 0,
+        "median_response_minutes": median_response_minutes,
+        "response_buckets": buckets,
+        "response_total": len(times),
+        "page_engagement": page_engagement,
+        "top_threads": top_threads_data,
+        "oldest_open": oldest_open_data,
+        "top_words": top_words,
     }
 
 
