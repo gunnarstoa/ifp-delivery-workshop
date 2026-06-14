@@ -6,6 +6,14 @@
   {% set breadcrumbs = [{'label': session.workshop_name, 'url': url_for('admin_workshop_detail', slug=session.workshop_slug)}, {'label': session.name}] %}
   {% include "_admin_header.html" %}
 
+  {% if monitors|length == 0 %}
+  <div class="card" style="border-left:4px solid #d97706;background:#fffbeb;">
+    <h2 style="margin-top:0;color:#92400e;">Set up discussion</h2>
+    <p style="margin:0.5rem 0 0.75rem 0;color:#78350f;">Monitors respond to participant questions on each workshop page and post celebrations. Discussion opens once at least one monitor is assigned to this session.</p>
+    <a class="primary-btn" href="{{ url_for('admin_session_monitors', slug=session.workshop_slug, session_slug=session.slug) }}" style="text-decoration:none;">Assign a monitor</a>
+  </div>
+  {% endif %}
+
   <div class="card">
     <div style="display:flex;align-items:center;justify-content:space-between;">
       <div>
@@ -61,6 +69,20 @@
         <a class="primary-btn" href="{{ url_for('admin_session_reports', slug=session.workshop_slug, session_slug=session.slug) }}" style="text-decoration:none;">Open →</a>
       </div>
       <p class="help-note" style="margin:0;">Executive summary, Slack celebration post, per-partner sponsor reports, JSON export — all rendered from this session's participants and survey responses.</p>
+    </div>
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+        <h2 style="margin:0;">Discussion monitors</h2>
+        <a class="primary-btn" href="{{ url_for('admin_session_monitors', slug=session.workshop_slug, session_slug=session.slug) }}" style="text-decoration:none;">Manage →</a>
+      </div>
+      {% if monitors|length > 0 %}
+        <div style="font-size:1.4rem;font-weight:700;color:#1e3a5f;">{{ monitors|length }}</div>
+        <div class="help-note" style="margin:0.25rem 0 0 0;">
+          Active monitor{{ '' if monitors|length == 1 else 's' }} · responding to questions and posting celebrations across this session's workshop pages.
+        </div>
+      {% else %}
+        <p class="help-note" style="margin:0;">None assigned yet. <a href="{{ url_for('admin_session_monitors', slug=session.workshop_slug, session_slug=session.slug) }}">Assign one</a> to open discussion on workshop pages.</p>
+      {% endif %}
     </div>
   </div>
 </div>
