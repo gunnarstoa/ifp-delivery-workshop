@@ -3025,12 +3025,24 @@ def _default_landing_for_user(user_id):
     ).fetchone()
     if row:
         return f"/w/{row['workshop_slug']}/s/{row['session_slug']}/feed"
+    # Monitors: prefer the session with open questions, then most recent
+    # thread activity, then most recent assignment. Sessions that are
+    # actually live tend to have posts; empty future sessions don't.
     row = db.execute(
-        "SELECT s.slug AS session_slug, w.slug AS workshop_slug FROM session_monitors sm "
+        "SELECT s.slug AS session_slug, w.slug AS workshop_slug "
+        "FROM session_monitors sm "
         "JOIN sessions s ON s.id = sm.session_id "
         "JOIN workshops w ON w.id = s.workshop_id "
+        "LEFT JOIN ("
+        "  SELECT session_id, "
+        "         SUM(CASE WHEN status = 'open' AND kind = 'question' THEN 1 ELSE 0 END) AS open_count, "
+        "         MAX(created_at) AS latest_thread "
+        "  FROM threads WHERE hidden_at IS NULL GROUP BY session_id"
+        ") tc ON tc.session_id = s.id "
         "WHERE sm.user_id = ? AND sm.removed_at IS NULL AND s.status != 'archived' "
-        "ORDER BY sm.assigned_at DESC LIMIT 1",
+        "ORDER BY (CASE WHEN COALESCE(tc.open_count, 0) > 0 THEN 1 ELSE 0 END) DESC, "
+        "         tc.latest_thread DESC, sm.assigned_at DESC "
+        "LIMIT 1",
         (user_id,),
     ).fetchone()
     if row:
@@ -3226,11 +3238,13 @@ def monitor_dashboard(workshop_slug, session_slug):
         abort(403)
     open_threads = _monitor_dashboard_open_threads(sess["id"])
     metrics = _monitor_dashboard_metrics(sess["id"], sess)
+    accessible_sessions = _accessible_sessions_for_workshop(user["id"], workshop_slug)
     return render_template(
         "monitor_dashboard.html",
         user=user, session=sess, workshop_slug=workshop_slug,
         open_threads=open_threads, metrics=metrics,
         is_monitor=is_monitor,
+        accessible_sessions=accessible_sessions,
     )
 
 

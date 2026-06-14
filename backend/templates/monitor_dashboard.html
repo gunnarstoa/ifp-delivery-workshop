@@ -6,7 +6,19 @@
   <div style="display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem;padding-bottom:0.75rem;border-bottom:1px solid #e2e8f0;">
     <div>
       <h1 style="margin:0;font-size:1.4rem;color:#1e3a5f;">Monitor dashboard</h1>
-      <p style="margin:0.25rem 0 0 0;font-size:0.85rem;color:#6b7280;">{{ session.workshop_name }} · {{ session.name }} · refreshes every 30s</p>
+      <p style="margin:0.25rem 0 0 0;font-size:0.85rem;color:#6b7280;">{{ session.workshop_name }} · refreshes every 30s</p>
+      {% if accessible_sessions and accessible_sessions|length > 1 %}
+      <div style="margin-top:0.5rem;display:inline-flex;align-items:center;gap:0.4rem;">
+        <label for="m-session-select" style="font-size:0.78rem;color:#6b7280;">Cohort:</label>
+        <select id="m-session-select" onchange="window.location.href=this.value" style="padding:0.3rem 0.5rem;border:1px solid #cbd5e1;border-radius:4px;font-family:inherit;font-size:0.85rem;background:white;color:#1e3a5f;">
+          {% for s in accessible_sessions %}
+          <option value="{{ url_for('monitor_dashboard', workshop_slug=workshop_slug, session_slug=s.slug) }}" {% if s.slug == session.slug %}selected{% endif %}>{{ s.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      {% else %}
+      <p style="margin:0.25rem 0 0 0;font-size:0.85rem;color:#1e3a5f;font-weight:500;">{{ session.name }}</p>
+      {% endif %}
     </div>
     <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;">
       <a class="secondary-btn" href="{{ url_for('cohort_feed', workshop_slug=workshop_slug, session_slug=session.slug) }}" style="text-decoration:none;">Cohort feed →</a>
