@@ -1,0 +1,91 @@
+<section id="qa-panel" aria-label="Discussion on this page" style="max-width:920px;margin:3rem auto 0;padding:2rem 2.5rem 1rem;border-top:2px solid #e2e8f0;font-family:inherit;">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem;">
+    <h2 style="margin:0;font-size:1.5rem;color:#1f2937;">Discussion on this page</h2>
+    <div style="font-size:0.85rem;color:#6b7280;">
+      {{ session_name }} · {{ threads|length }} thread{{ '' if threads|length == 1 else 's' }}
+    </div>
+  </div>
+
+  {% if not has_monitor %}
+  <div style="background:#fffbeb;border-left:4px solid #d97706;border-radius:0 6px 6px 0;padding:1rem 1.2rem;">
+    <strong style="display:block;color:#92400e;font-size:1rem;">Discussion not yet open</strong>
+    <p style="margin:0.4rem 0 0 0;color:#78350f;">Waiting for a monitor to be assigned to this cohort. Once that happens you'll be able to post questions and discussion here, and the cohort's monitor will respond.</p>
+  </div>
+  {% else %}
+
+    {% if not threads %}
+    <p style="color:#6b7280;font-style:italic;margin:0 0 1rem 0;">No questions yet on this page. Be the first to ask — questions stay scoped to your cohort and your cohort's monitor will respond.</p>
+    {% endif %}
+
+    {% for t in threads %}
+    <div id="qa-thread-{{ t.id }}" style="background:white;border:1px solid #e2e8f0;border-radius:8px;padding:1rem 1.25rem;margin:0.85rem 0;">
+      <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+        <div style="width:34px;height:34px;border-radius:50%;background:#e6f0fa;color:#0052a3;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:0.85rem;flex-shrink:0;">{% if t.anonymous %}?{% else %}{{ (t.author_display or '?')[0]|upper }}{% endif %}</div>
+        <div style="flex:1;min-width:120px;">
+          <div style="font-weight:600;font-size:0.9rem;color:#1f2937;">{{ t.author_display }}</div>
+          <div style="font-size:0.75rem;color:#9ca3af;">{{ t.created_at }}</div>
+        </div>
+        {% if t.status == 'answered' %}
+        <span style="background:#dcfce7;color:#15803d;font-size:0.72rem;padding:3px 9px;border-radius:999px;font-weight:600;">Answered</span>
+        {% else %}
+        <span style="background:#fef3c7;color:#92400e;font-size:0.72rem;padding:3px 9px;border-radius:999px;font-weight:600;">Open</span>
+        {% endif %}
+      </div>
+
+      <p style="margin:0.75rem 0;line-height:1.55;color:#374151;white-space:pre-wrap;">{{ t.body }}</p>
+
+      <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;">
+        <form method="post" action="{{ url_for('qa_react', workshop_slug=workshop_slug, thread_id=t.id) }}" style="display:inline;margin:0;">
+          <button type="submit" style="background:{{ '#0066cc' if t.i_reacted else 'transparent' }};color:{{ 'white' if t.i_reacted else '#374151' }};border:1px solid {{ '#0066cc' if t.i_reacted else '#d1d5db' }};font-size:0.78rem;padding:4px 10px;border-radius:6px;cursor:pointer;font-family:inherit;">Me too{% if t.me_too_count %} · {{ t.me_too_count }}{% endif %}</button>
+        </form>
+        {% if role == 'monitor' and t.status != 'answered' %}
+        <form method="post" action="{{ url_for('qa_mark_answered', workshop_slug=workshop_slug, thread_id=t.id) }}" style="display:inline;margin:0;">
+          <button type="submit" style="background:#15803d;color:white;border:none;font-size:0.78rem;padding:5px 11px;border-radius:6px;cursor:pointer;font-family:inherit;">Mark as answered</button>
+        </form>
+        {% endif %}
+        {% if t.replies %}
+        <span style="font-size:0.78rem;color:#6b7280;">{{ t.replies|length }} repl{{ 'y' if t.replies|length == 1 else 'ies' }}</span>
+        {% endif %}
+      </div>
+
+      {% if t.replies %}
+      <div style="margin-top:1rem;padding-left:1rem;border-left:3px solid #e2e8f0;">
+        {% for r in t.replies %}
+        <div style="margin:0.85rem 0;">
+          <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;font-size:0.82rem;">
+            <strong style="color:#1f2937;">{{ r.author_display }}</strong>
+            {% if r.is_monitor_reply %}<span style="background:#dbeafe;color:#1e40af;font-size:0.7rem;padding:2px 7px;border-radius:4px;font-weight:600;">IFP facilitator</span>{% endif %}
+            <span style="color:#9ca3af;font-size:0.75rem;">{{ r.created_at }}</span>
+          </div>
+          <p style="margin:0.35rem 0 0 0;line-height:1.55;color:#374151;white-space:pre-wrap;">{{ r.body }}</p>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <form method="post" action="{{ url_for('qa_create_reply', workshop_slug=workshop_slug, thread_id=t.id) }}" style="margin-top:0.85rem;">
+        <textarea name="body" placeholder="Reply…" required style="width:100%;min-height:60px;padding:0.5rem 0.7rem;border:1px solid #d1d5db;border-radius:6px;font-family:inherit;font-size:0.88rem;box-sizing:border-box;"></textarea>
+        <div style="margin-top:0.45rem;text-align:right;">
+          <button type="submit" style="background:#0066cc;color:white;border:none;font-size:0.82rem;padding:6px 16px;border-radius:6px;cursor:pointer;font-family:inherit;font-weight:600;">Reply</button>
+        </div>
+      </form>
+    </div>
+    {% endfor %}
+
+    <div style="background:white;border:2px dashed #cbd5e1;border-radius:8px;padding:1rem 1.25rem;margin-top:1.5rem;">
+      <h3 style="margin:0 0 0.5rem 0;font-size:1.1rem;color:#1f2937;">Ask a question</h3>
+      <p style="margin:0 0 0.6rem 0;font-size:0.85rem;color:#6b7280;">Your cohort's monitor will respond. Anyone in your cohort can chime in too.</p>
+      <form method="post" action="{{ url_for('qa_create_thread', workshop_slug=workshop_slug) }}">
+        <input type="hidden" name="page_path" value="{{ page_path }}">
+        <textarea name="body" placeholder="What are you stuck on, curious about, or wanting to share?" required style="width:100%;min-height:90px;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:6px;font-family:inherit;font-size:0.9rem;box-sizing:border-box;"></textarea>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:0.75rem;margin-top:0.6rem;flex-wrap:wrap;">
+          <label style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.85rem;color:#6b7280;cursor:pointer;">
+            <input type="checkbox" name="anonymous" value="1"> Post anonymously
+          </label>
+          <button type="submit" style="background:#0066cc;color:white;border:none;font-size:0.9rem;padding:8px 20px;border-radius:6px;cursor:pointer;font-family:inherit;font-weight:600;">Post to cohort</button>
+        </div>
+      </form>
+    </div>
+
+  {% endif %}
+</section>
