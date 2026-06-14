@@ -2833,6 +2833,25 @@ def _session_has_any_monitor(session_id):
     ).fetchone() is not None
 
 
+def _page_presence_for_session(session_id, page_path):
+    """Return (active_count, total_count): distinct cohort participants who viewed
+    this page in the last 7 days, and the cohort's counted participant total."""
+    db = get_db()
+    total = db.execute(
+        "SELECT COUNT(*) AS c FROM session_participants "
+        "WHERE session_id = ? AND removed_at IS NULL AND excluded = 0",
+        (session_id,),
+    ).fetchone()["c"]
+    active = db.execute(
+        "SELECT COUNT(DISTINCT pv.user_id) AS c FROM page_views pv "
+        "JOIN session_participants sp ON sp.user_id = pv.user_id "
+        "WHERE pv.path = ? AND pv.viewed_at > datetime('now', '-7 days') "
+        "  AND sp.session_id = ? AND sp.removed_at IS NULL AND sp.excluded = 0",
+        (page_path, session_id),
+    ).fetchone()["c"]
+    return active, total
+
+
 def _user_has_session_access(session_id, user_id):
     """True if user is a participant, monitor, or facilitator for this session."""
     if user_id is None:
@@ -3466,6 +3485,7 @@ def inject_qa_panel(resp):
     has_monitor = _session_has_any_monitor(sess["id"])
     threads = _threads_for_page(sess["id"], request.path, user["id"]) if has_monitor else []
     new_count = sum(1 for t in threads if t.get("new_for_me"))
+    active_count, total_participants = _page_presence_for_session(sess["id"], request.path)
     panel_html = render_template(
         "_qa_panel.html",
         threads=threads,
@@ -3477,6 +3497,8 @@ def inject_qa_panel(resp):
         has_monitor=has_monitor,
         new_count=new_count,
         accessible_sessions=accessible_sessions,
+        active_count=active_count,
+        total_participants=total_participants,
     )
     # send_from_directory returns the response in direct_passthrough mode,
     # which makes resp.get_data() raise. Switch off before reading the body.
