@@ -133,4 +133,50 @@
 
   {% endif %}
 </div>
+<script>
+(function() {
+  function pastedFile(blob) {
+    var ext = (blob.type.split('/')[1] || 'png').toLowerCase();
+    var ts = new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').slice(0, 19);
+    return new File([blob], 'pasted-screenshot-' + ts + '.' + ext, { type: blob.type });
+  }
+  function showStaged(form, file) {
+    var label = form.querySelector('label[for]') || form.querySelector('label');
+    if (!label) return;
+    var ind = label.querySelector('.qa-paste-ok');
+    if (!ind) {
+      ind = document.createElement('span');
+      ind.className = 'qa-paste-ok';
+      ind.style.cssText = 'display:inline-block;margin-left:0.4rem;padding:1px 7px;background:#dcfce7;color:#15803d;font-size:0.7rem;border-radius:4px;font-weight:600;';
+      label.appendChild(ind);
+    }
+    ind.textContent = '✓ Screenshot pasted (' + Math.round(file.size / 1024) + ' KB)';
+  }
+  document.addEventListener('paste', function(e) {
+    var target = e.target;
+    if (!target || target.tagName !== 'TEXTAREA') return;
+    var form = target.closest('form');
+    if (!form) return;
+    var fileInput = form.querySelector('input[type="file"][name="attachment"]');
+    if (!fileInput) return;
+    var items = (e.clipboardData || {}).items;
+    if (!items) return;
+    for (var i = 0; i < items.length; i++) {
+      var item = items[i];
+      if (item.kind === 'file' && item.type.indexOf('image/') === 0) {
+        var blob = item.getAsFile();
+        if (!blob) continue;
+        try {
+          var dt = new DataTransfer();
+          dt.items.add(pastedFile(blob));
+          fileInput.files = dt.files;
+          showStaged(form, dt.files[0]);
+          e.preventDefault();
+        } catch (err) { /* DataTransfer not supported (older browsers) */ }
+        return;
+      }
+    }
+  });
+})();
+</script>
 {% endblock %}
