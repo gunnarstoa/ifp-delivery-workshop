@@ -10,6 +10,17 @@
   ] %}
   {% include "_admin_header.html" %}
 
+  {% if reset_creds %}
+  <div class="card" style="border-left:4px solid #d97706;background:#fffbeb;">
+    <h2 style="margin-top:0;color:#92400e;">Password reset · {{ reset_creds.username }}</h2>
+    <p class="help-note" style="margin-top:0.25rem;">Copy now — the new password is only shown once. Send it to the participant and they can sign in.</p>
+    <textarea id="reset-block" readonly style="width:100%;min-height:60px;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:4px;font-family:ui-monospace,Menlo,monospace;font-size:0.82rem;background:#f8fafc;">{{ reset_creds.username }}{{ '	' }}{{ reset_creds.password }}</textarea>
+    <div style="margin-top:0.5rem;">
+      <button class="primary-btn" type="button" onclick="copyReset()">Copy to clipboard</button>
+    </div>
+  </div>
+  {% endif %}
+
   {% if added_results %}
   <div class="card" style="border-left:4px solid #15803d;">
     <h2 style="margin-top:0;color:#15803d;">Just added · {{ added_results|length }} email{{ '' if added_results|length == 1 else 's' }}</h2>
@@ -83,6 +94,9 @@
               <td>{{ p.enrolled_at }}</td>
               <td>{{ p.last_login_at or '—' }}</td>
               <td style="text-align:right;">
+                <form method="post" action="{{ url_for('admin_session_participant_reset_password', slug=session.workshop_slug, session_slug=session.slug, user_id=p.user_id) }}" onsubmit="return confirm('Reset password for {{ p.email }}? The new password will be shown once.');" style="display:inline;margin-right:0.4rem;">
+                  <button class="secondary-btn" type="submit">Reset password</button>
+                </form>
                 <form method="post" action="{{ url_for('admin_session_participant_remove', slug=session.workshop_slug, session_slug=session.slug, user_id=p.user_id) }}" onsubmit="return confirm('Remove {{ p.email }} from this session?');" style="display:inline;">
                   <button class="danger-btn" type="submit">Remove</button>
                 </form>
@@ -102,6 +116,14 @@ function copyCreds() {
   ta.select();
   navigator.clipboard.writeText(ta.value).then(
     () => alert('Credentials copied to clipboard.'),
+    () => { document.execCommand('copy'); alert('Copied (legacy clipboard).'); }
+  );
+}
+function copyReset() {
+  const ta = document.getElementById('reset-block');
+  ta.select();
+  navigator.clipboard.writeText(ta.value).then(
+    () => alert('New credentials copied to clipboard.'),
     () => { document.execCommand('copy'); alert('Copied (legacy clipboard).'); }
   );
 }

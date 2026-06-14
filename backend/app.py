@@ -1023,11 +1023,13 @@ def admin_session_participants(slug, session_slug):
         key = p["partner"] or "Unknown"
         by_partner.setdefault(key, []).append(p)
     included = sum(1 for p in participants if not p["excluded"])
+    reset_creds = session.pop("reset_credentials", None)
     return render_template(
         "admin_session_participants.html",
         user=user, session=sess, by_partner=by_partner,
         total=len(participants), included=included,
         added_results=added_results,
+        reset_creds=reset_creds,
     )
 
 
@@ -2506,9 +2508,11 @@ def admin_session_monitors(slug, session_slug):
         if emails:
             added_results = _assign_monitors_to_session(sess["id"], emails, user["id"])
     monitors = _session_monitors(sess["id"])
+    reset_creds = session.pop("reset_credentials", None)
     return render_template(
         "admin_session_monitors.html",
         user=user, session=sess, monitors=monitors, added_results=added_results,
+        reset_creds=reset_creds,
     )
 
 
@@ -2525,6 +2529,51 @@ def admin_session_monitor_remove(slug, session_slug, monitor_id):
     )
     get_db().commit()
     return redirect(url_for("admin_session_monitors", slug=slug, session_slug=session_slug))
+
+
+def _reset_user_password(user_id):
+    """Generate a new password, store the bcrypt hash, return the plaintext for the admin to forward."""
+    new_pw = secrets.token_urlsafe(10)
+    pw_hash = bcrypt.hashpw(new_pw.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+    get_db().execute("UPDATE users SET password_hash = ? WHERE id = ?", (pw_hash, user_id))
+    get_db().commit()
+    return new_pw
+
+
+@app.route("/admin/workshops/<slug>/sessions/<session_slug>/monitors/<int:monitor_id>/reset-password", methods=["POST"])
+def admin_session_monitor_reset_password(slug, session_slug, monitor_id):
+    cur_user, redir = _require_facilitator()
+    if redir:
+        return redir
+    sess = _get_session_or_404(slug, session_slug)
+    row = get_db().execute(
+        "SELECT u.id, u.username FROM session_monitors sm JOIN users u ON u.id = sm.user_id "
+        "WHERE sm.id = ? AND sm.session_id = ?",
+        (monitor_id, sess["id"]),
+    ).fetchone()
+    if row is None:
+        abort(404)
+    new_pw = _reset_user_password(row["id"])
+    session["reset_credentials"] = {"username": row["username"], "password": new_pw}
+    return redirect(url_for("admin_session_monitors", slug=slug, session_slug=session_slug))
+
+
+@app.route("/admin/workshops/<slug>/sessions/<session_slug>/participants/<int:user_id>/reset-password", methods=["POST"])
+def admin_session_participant_reset_password(slug, session_slug, user_id):
+    cur_user, redir = _require_facilitator()
+    if redir:
+        return redir
+    sess = _get_session_or_404(slug, session_slug)
+    row = get_db().execute(
+        "SELECT u.id, u.username FROM session_participants sp JOIN users u ON u.id = sp.user_id "
+        "WHERE sp.user_id = ? AND sp.session_id = ? AND sp.removed_at IS NULL",
+        (user_id, sess["id"]),
+    ).fetchone()
+    if row is None:
+        abort(404)
+    new_pw = _reset_user_password(row["id"])
+    session["reset_credentials"] = {"username": row["username"], "password": new_pw}
+    return redirect(url_for("admin_session_participants", slug=slug, session_slug=session_slug))
 
 
 @app.route("/admin/workshops/<slug>/sessions/<session_slug>/archive", methods=["POST"])
