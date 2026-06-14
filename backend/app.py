@@ -2796,6 +2796,34 @@ def _session_has_any_monitor(session_id):
     ).fetchone() is not None
 
 
+def _accessible_sessions_for_workshop(user_id, workshop_slug):
+    """Sessions the user can view in this workshop, most-recent first.
+    Facilitators see all non-archived sessions; others see only the ones
+    they are enrolled in or assigned to as a monitor."""
+    if user_id is None:
+        return []
+    db = get_db()
+    user_row = db.execute("SELECT is_facilitator FROM users WHERE id = ?", (user_id,)).fetchone()
+    if user_row and user_row["is_facilitator"]:
+        return db.execute(
+            "SELECT s.id, s.slug, s.name FROM sessions s "
+            "JOIN workshops w ON w.id = s.workshop_id "
+            "WHERE w.slug = ? AND s.status != 'archived' "
+            "ORDER BY s.start_date DESC",
+            (workshop_slug,),
+        ).fetchall()
+    return db.execute(
+        "SELECT DISTINCT s.id, s.slug, s.name FROM sessions s "
+        "JOIN workshops w ON w.id = s.workshop_id "
+        "LEFT JOIN session_participants sp ON sp.session_id = s.id AND sp.user_id = ? AND sp.removed_at IS NULL "
+        "LEFT JOIN session_monitors sm ON sm.session_id = s.id AND sm.user_id = ? AND sm.removed_at IS NULL "
+        "WHERE w.slug = ? AND s.status != 'archived' "
+        "  AND (sp.id IS NOT NULL OR sm.id IS NOT NULL) "
+        "ORDER BY s.start_date DESC",
+        (user_id, user_id, workshop_slug),
+    ).fetchall()
+
+
 def _threads_for_page(session_id, page_path, viewer_user_id):
     """Return list of threads on this (session, page) with reactions, replies, and viewer-specific flags."""
     db = get_db()
@@ -3044,9 +3072,19 @@ def inject_qa_panel(resp):
     if not content_type.startswith("text/html"):
         return resp
     workshop_slug = m.group(1)
-    sess, role = _user_workshop_session(user["id"], workshop_slug)
-    if sess is None:
+    accessible_sessions = _accessible_sessions_for_workshop(user["id"], workshop_slug)
+    if not accessible_sessions:
         return resp
+    desired = request.args.get("session")
+    sess = next((s for s in accessible_sessions if s["slug"] == desired), None) if desired else None
+    if sess is None:
+        sess = accessible_sessions[0]
+    if _user_is_session_monitor(sess["id"], user["id"]):
+        role = "monitor"
+    elif user["is_facilitator"]:
+        role = "facilitator"
+    else:
+        role = "participant"
     has_monitor = _session_has_any_monitor(sess["id"])
     threads = _threads_for_page(sess["id"], request.path, user["id"]) if has_monitor else []
     new_count = sum(1 for t in threads if t.get("new_for_me"))
@@ -3060,6 +3098,7 @@ def inject_qa_panel(resp):
         role=role,
         has_monitor=has_monitor,
         new_count=new_count,
+        accessible_sessions=accessible_sessions,
     )
     # send_from_directory returns the response in direct_passthrough mode,
     # which makes resp.get_data() raise. Switch off before reading the body.
