@@ -71,7 +71,7 @@
   <div class="qa-drawer-header">
     <div style="min-width:0;">
       <h2>Discussion on this page</h2>
-      <div class="qa-sub">{{ session_name }}{% if role == 'facilitator' %} · admin view{% elif role == 'monitor' %} · monitor view{% endif %} · {{ threads|length }} thread{{ '' if threads|length == 1 else 's' }}</div>
+      <div class="qa-sub">{{ session_name }}{% if role == 'facilitator' %} · admin view{% elif role == 'monitor' %} · moderator view{% endif %} · {{ threads|length }} thread{{ '' if threads|length == 1 else 's' }}</div>
     </div>
     <button id="qa-drawer-close" type="button" class="qa-drawer-close" aria-label="Close discussion drawer">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -93,7 +93,7 @@
     {% if not has_monitor %}
     <div style="background:#fffbeb;border-left:4px solid #d97706;border-radius:0 6px 6px 0;padding:0.85rem 1rem;">
       <strong style="display:block;color:#92400e;font-size:0.92rem;">Discussion not yet open</strong>
-      <p style="margin:0.3rem 0 0 0;color:#78350f;font-size:0.82rem;">Waiting for a monitor to be assigned to this cohort.</p>
+      <p style="margin:0.3rem 0 0 0;color:#78350f;font-size:0.82rem;">Waiting for a moderator to be assigned to this cohort.</p>
     </div>
     {% else %}
 
@@ -182,7 +182,7 @@
       {% endfor %}
 
       {% if role == 'facilitator' %}
-      <div class="qa-readonly-notice">You're viewing as an admin (read-only). To post or reply, sign in as a participant or monitor of this cohort.</div>
+      <div class="qa-readonly-notice">You're viewing as an admin (read-only). To post or reply, sign in as a participant or moderator of this cohort.</div>
       {% else %}
       <div class="qa-compose">
         <h3>Ask a question</h3>

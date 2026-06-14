@@ -15,7 +15,7 @@
   {% if not has_monitor %}
   <div style="background:#fffbeb;border-left:4px solid #d97706;border-radius:0 6px 6px 0;padding:1rem 1.2rem;margin-bottom:1.25rem;">
     <strong style="display:block;color:#92400e;font-size:1rem;">Discussion not yet open</strong>
-    <p style="margin:0.4rem 0 0 0;color:#78350f;font-size:0.9rem;">This cohort doesn't have a monitor assigned yet. Once one is assigned, you'll be able to post questions on each workshop page and they'll show up in this feed.</p>
+    <p style="margin:0.4rem 0 0 0;color:#78350f;font-size:0.9rem;">This cohort doesn't have a moderator assigned yet. Once one is assigned, you'll be able to post questions on each workshop page and they'll show up in this feed.</p>
   </div>
   {% endif %}
 
@@ -29,7 +29,7 @@
   {% if not threads %}
   <div style="background:white;border:1px dashed #cbd5e1;border-radius:8px;padding:2rem;text-align:center;">
     {% if filter_kind == 'unanswered' %}
-      <p style="margin:0;color:#6b7280;font-size:0.95rem;">No unanswered threads. Nice — all questions have a response from the monitor.</p>
+      <p style="margin:0;color:#6b7280;font-size:0.95rem;">No unanswered threads. Nice — all questions have a response from the moderator.</p>
     {% elif filter_kind == 'celebrations' %}
       <p style="margin:0;color:#6b7280;font-size:0.95rem;">No celebrations yet. They show up automatically when a cohort member completes a checkpoint.</p>
     {% else %}
