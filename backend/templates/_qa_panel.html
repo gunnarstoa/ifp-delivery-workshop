@@ -212,8 +212,8 @@
   var closeBtn = document.getElementById('qa-drawer-close');
   if (!drawer || !backdrop || !fab) return;
   var KEY = 'qa-drawer-open';
-  function openDrawer() { drawer.classList.add('qa-visible'); backdrop.classList.add('qa-visible'); try { localStorage.setItem(KEY, '1'); } catch (e) {} }
-  function closeDrawer() { drawer.classList.remove('qa-visible'); backdrop.classList.remove('qa-visible'); try { localStorage.removeItem(KEY); } catch (e) {} }
+  function openDrawer() { drawer.classList.add('qa-visible'); backdrop.classList.add('qa-visible'); document.body.classList.add('qa-drawer-open'); try { localStorage.setItem(KEY, '1'); } catch (e) {} }
+  function closeDrawer() { drawer.classList.remove('qa-visible'); backdrop.classList.remove('qa-visible'); document.body.classList.remove('qa-drawer-open'); try { localStorage.removeItem(KEY); } catch (e) {} }
   function toggleDrawer() { if (drawer.classList.contains('qa-visible')) closeDrawer(); else openDrawer(); }
   fab.addEventListener('click', toggleDrawer);
   if (closeBtn) closeBtn.addEventListener('click', closeDrawer);

@@ -192,6 +192,19 @@ body {
   margin-left: var(--sidebar-width);
   min-height: 100vh;
   background: var(--color-bg);
+  transition: padding-right 0.25s ease-out;
+}
+
+/* When the discussion drawer is open the body gets `.qa-drawer-open`;
+   reserve drawer-width on the right so workshop content reflows
+   instead of being hidden behind the drawer. */
+body.qa-drawer-open .main-content {
+  padding-right: 440px;
+}
+@media (max-width: 600px) {
+  body.qa-drawer-open .main-content {
+    padding-right: 0;
+  }
 }
 
 .content-header {
@@ -234,7 +247,6 @@ body {
 
 .content-body {
   padding: 2rem 2.5rem 4rem;
-  max-width: 920px;
 }
 
 /* ============================================================
