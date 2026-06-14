@@ -27,6 +27,13 @@
     </div>
   </div>
 
+  {% if is_locked %}
+  <div style="background:#f1f5f9;border-left:4px solid #64748b;border-radius:0 6px 6px 0;padding:1rem 1.2rem;margin-bottom:1.25rem;">
+    <strong style="display:block;color:#1e293b;font-size:1rem;">Cohort archived · view only</strong>
+    <p style="margin:0.4rem 0 0 0;color:#475569;font-size:0.9rem;">This cohort ended more than two weeks ago. The discussion is read-only — replies and mark-as-answered are closed.</p>
+  </div>
+  {% endif %}
+
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0.75rem;margin-bottom:1.5rem;">
     <div style="background:white;border:1px solid #e2e8f0;border-radius:6px;padding:0.85rem 1rem;">
       <div style="font-size:0.72rem;text-transform:uppercase;color:#6b7280;letter-spacing:0.04em;">Open questions</div>
@@ -121,7 +128,7 @@
       </div>
       {% endif %}
 
-      {% if t.suggestions %}
+      {% if t.suggestions and not is_locked %}
       <div style="margin:0.6rem 0;padding:0.7rem 0.85rem;background:#eff6ff;border-left:3px solid #93c5fd;border-radius:0 5px 5px 0;">
         <div style="font-size:0.7rem;text-transform:uppercase;color:#1e40af;font-weight:600;letter-spacing:0.04em;margin-bottom:0.5rem;">Past similar answers · monitor-only</div>
         {% for s in t.suggestions %}
@@ -142,6 +149,7 @@
       </div>
       {% endif %}
 
+      {% if not is_locked %}
       <form method="post" action="{{ url_for('qa_create_reply', workshop_slug=workshop_slug, thread_id=t.id) }}" style="margin:0;" enctype="multipart/form-data">
         <input type="hidden" name="return_to" value="{{ return_to }}#qa-thread-{{ t.id }}">
         <textarea name="body" data-reply-for="{{ t.id }}" placeholder="Reply as the IFP facilitator…" required style="width:100%;min-height:65px;padding:0.55rem 0.7rem;border:1px solid #d1d5db;border-radius:6px;font-family:inherit;font-size:0.9rem;box-sizing:border-box;"></textarea>
@@ -153,8 +161,9 @@
           </div>
         </div>
       </form>
+      {% endif %}
 
-      {% if is_monitor %}
+      {% if is_monitor and not is_locked %}
       <form method="post" action="{{ url_for('qa_mark_answered', workshop_slug=workshop_slug, thread_id=t.id) }}" style="margin:0.55rem 0 0 0;">
         <input type="hidden" name="return_to" value="{{ return_to }}">
         <button type="submit" style="background:#15803d;color:white;border:none;font-size:0.82rem;padding:6px 14px;border-radius:6px;cursor:pointer;font-family:inherit;font-weight:600;">Mark as answered</button>

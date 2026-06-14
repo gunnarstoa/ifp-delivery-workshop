@@ -12,7 +12,12 @@
     </form>
   </div>
 
-  {% if not has_monitor %}
+  {% if is_locked %}
+  <div style="background:#f1f5f9;border-left:4px solid #64748b;border-radius:0 6px 6px 0;padding:1rem 1.2rem;margin-bottom:1.25rem;">
+    <strong style="display:block;color:#1e293b;font-size:1rem;">Cohort archived · view only</strong>
+    <p style="margin:0.4rem 0 0 0;color:#475569;font-size:0.9rem;">This cohort ended more than two weeks ago. You can still read the discussion, but posting and replies are closed.</p>
+  </div>
+  {% elif not has_monitor %}
   <div style="background:#fffbeb;border-left:4px solid #d97706;border-radius:0 6px 6px 0;padding:1rem 1.2rem;margin-bottom:1.25rem;">
     <strong style="display:block;color:#92400e;font-size:1rem;">Discussion not yet open</strong>
     <p style="margin:0.4rem 0 0 0;color:#78350f;font-size:0.9rem;">This cohort doesn't have a moderator assigned yet. Once one is assigned, you'll be able to post questions on each workshop page and they'll show up in this feed.</p>
