@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}Monitor dashboard — {{ session.name }}{% endblock %}
+{% block body %}
+<meta http-equiv="refresh" content="30">
+<div class="admin-shell" style="max-width:1100px;">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem;padding-bottom:0.75rem;border-bottom:1px solid #e2e8f0;">
+    <div>
+      <h1 style="margin:0;font-size:1.4rem;color:#1e3a5f;">Monitor dashboard</h1>
+      <p style="margin:0.25rem 0 0 0;font-size:0.85rem;color:#6b7280;">{{ session.workshop_name }} · {{ session.name }} · refreshes every 30s</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;">
+      <a class="secondary-btn" href="{{ url_for('cohort_feed', workshop_slug=workshop_slug, session_slug=session.slug) }}" style="text-decoration:none;">Cohort feed →</a>
+      {% if user.is_facilitator %}<a class="secondary-btn" href="{{ url_for('admin_session_leaderboard', slug=workshop_slug, session_slug=session.slug) }}" style="text-decoration:none;">Leaderboard ↗</a>{% endif %}
+      <form method="post" action="{{ url_for('logout') }}" style="margin:0;"><button class="secondary-btn" type="submit">Sign out</button></form>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0.75rem;margin-bottom:1.5rem;">
+    <div style="background:white;border:1px solid #e2e8f0;border-radius:6px;padding:0.85rem 1rem;">
+      <div style="font-size:0.72rem;text-transform:uppercase;color:#6b7280;letter-spacing:0.04em;">Open questions</div>
+      <div style="font-size:1.65rem;font-weight:700;color:{{ '#b91c1c' if metrics.open_count > 0 else '#15803d' }};margin-top:0.25rem;">{{ metrics.open_count }}</div>
+    </div>
+    <div style="background:white;border:1px solid #e2e8f0;border-radius:6px;padding:0.85rem 1rem;">
+      <div style="font-size:0.72rem;text-transform:uppercase;color:#6b7280;letter-spacing:0.04em;">Median response</div>
+      <div style="font-size:1.65rem;font-weight:700;color:#1e3a5f;margin-top:0.25rem;">
+        {% if metrics.median_response_minutes is none %}—{% elif metrics.median_response_minutes < 60 %}{{ metrics.median_response_minutes|round|int }} min{% else %}{{ (metrics.median_response_minutes / 60)|round(1) }} h{% endif %}
+      </div>
+    </div>
+    <div style="background:white;border:1px solid #e2e8f0;border-radius:6px;padding:0.85rem 1rem;">
+      <div style="font-size:0.72rem;text-transform:uppercase;color:#6b7280;letter-spacing:0.04em;">Posted at least once</div>
+      <div style="font-size:1.65rem;font-weight:700;color:#1e3a5f;margin-top:0.25rem;">{{ metrics.posted_count }} / {{ metrics.total_participants }}</div>
+    </div>
+    <div style="background:white;border:1px solid #e2e8f0;border-radius:6px;padding:0.85rem 1rem;">
+      <div style="font-size:0.72rem;text-transform:uppercase;color:#6b7280;letter-spacing:0.04em;">Days remaining</div>
+      <div style="font-size:1.65rem;font-weight:700;color:{{ '#1e3a5f' if metrics.days_remaining is none or metrics.days_remaining > 0 else '#92400e' }};margin-top:0.25rem;">
+        {% if metrics.days_remaining is none %}—{% elif metrics.days_remaining < 0 %}{{ -metrics.days_remaining }} past{% else %}{{ metrics.days_remaining }}{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:0.75rem;">
+    <h2 style="margin:0;font-size:1.1rem;color:#1e3a5f;">Open questions</h2>
+    <span style="font-size:0.78rem;color:#6b7280;">Oldest first · aging pill after 1h</span>
+  </div>
+
+  {% if not open_threads %}
+  <div style="background:white;border:1px dashed #cbd5e1;border-radius:8px;padding:2rem;text-align:center;">
+    <p style="margin:0;color:#6b7280;font-size:0.95rem;">No open questions right now. Everything in this cohort is answered or has yet to be asked.</p>
+  </div>
+  {% else %}
+
+  <div style="display:flex;flex-direction:column;gap:0.85rem;">
+    {% for t in open_threads %}
+    {% set return_to = url_for('monitor_dashboard', workshop_slug=workshop_slug, session_slug=session.slug) %}
+    <div id="qa-thread-{{ t.id }}" style="background:white;border:1px solid {{ '#fca5a5' if t.is_aging else '#e2e8f0' }};border-radius:8px;padding:1rem 1.25rem;{{ 'box-shadow:0 0 0 3px #fee2e2;' if t.is_aging else '' }}">
+      <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.5rem;">
+        <a href="{{ t.page_path }}#qa-thread-{{ t.id }}" style="background:#f3f4f6;color:#374151;font-size:0.72rem;padding:3px 9px;border-radius:4px;font-weight:600;text-decoration:none;">{{ t.page_label }} ↗</a>
+        {% if t.is_aging %}
+        <span style="background:#fee2e2;color:#b91c1c;font-size:0.72rem;padding:3px 9px;border-radius:999px;font-weight:600;">Aging · {{ t.age_minutes }} min</span>
+        {% else %}
+        <span style="background:#fef3c7;color:#92400e;font-size:0.72rem;padding:3px 9px;border-radius:999px;font-weight:600;">Open · {{ t.age_minutes }} min</span>
+        {% endif %}
+        {% if t.me_too_count %}
+        <span style="font-size:0.78rem;color:#6b7280;">Me too · {{ t.me_too_count }}</span>
+        {% endif %}
+        <span style="margin-left:auto;font-size:0.78rem;color:#9ca3af;">{{ t.created_at }}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;color:#374151;margin-bottom:0.4rem;">
+        <strong>{{ t.author_display }}</strong>
+      </div>
+      <p style="margin:0 0 0.6rem 0;line-height:1.55;color:#1f2937;white-space:pre-wrap;">{{ t.body }}</p>
+
+      {% if t.replies %}
+      <div style="margin:0.5rem 0 0.85rem 0;padding:0.6rem 0.85rem;background:#f8fafc;border-left:3px solid #cbd5e1;border-radius:0 4px 4px 0;">
+        <div style="font-size:0.72rem;text-transform:uppercase;color:#6b7280;font-weight:600;letter-spacing:0.04em;margin-bottom:0.4rem;">{{ t.replies|length }} repl{{ 'y' if t.replies|length == 1 else 'ies' }} already</div>
+        {% for r in t.replies %}
+        <div style="margin:0.4rem 0;">
+          <div style="display:flex;align-items:center;gap:0.45rem;flex-wrap:wrap;font-size:0.82rem;">
+            <strong style="color:#1f2937;">{{ r.author_display }}</strong>
+            {% if r.is_monitor_reply %}<span style="background:#dbeafe;color:#1e40af;font-size:0.7rem;padding:2px 7px;border-radius:4px;font-weight:600;">IFP facilitator</span>{% endif %}
+            <span style="color:#9ca3af;font-size:0.75rem;">{{ r.created_at }}</span>
+          </div>
+          <p style="margin:0.3rem 0 0 0;line-height:1.5;color:#374151;white-space:pre-wrap;font-size:0.92rem;">{{ r.body }}</p>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <form method="post" action="{{ url_for('qa_create_reply', workshop_slug=workshop_slug, thread_id=t.id) }}" style="margin:0;">
+        <input type="hidden" name="return_to" value="{{ return_to }}#qa-thread-{{ t.id }}">
+        <textarea name="body" placeholder="Reply as the IFP facilitator…" required style="width:100%;min-height:65px;padding:0.55rem 0.7rem;border:1px solid #d1d5db;border-radius:6px;font-family:inherit;font-size:0.9rem;box-sizing:border-box;"></textarea>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;margin-top:0.5rem;flex-wrap:wrap;">
+          <span style="font-size:0.78rem;color:#6b7280;">Posts with the IFP facilitator badge.</span>
+          <div style="display:flex;gap:0.4rem;">
+            <button type="submit" class="primary-btn" style="font-size:0.85rem;padding:6px 14px;">Send reply</button>
+          </div>
+        </div>
+      </form>
+
+      {% if is_monitor %}
+      <form method="post" action="{{ url_for('qa_mark_answered', workshop_slug=workshop_slug, thread_id=t.id) }}" style="margin:0.55rem 0 0 0;">
+        <input type="hidden" name="return_to" value="{{ return_to }}">
+        <button type="submit" style="background:#15803d;color:white;border:none;font-size:0.82rem;padding:6px 14px;border-radius:6px;cursor:pointer;font-family:inherit;font-weight:600;">Mark as answered</button>
+      </form>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+
+  {% endif %}
+</div>
+{% endblock %}
