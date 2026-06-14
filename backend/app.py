@@ -2846,7 +2846,8 @@ def _cohort_feed(session_id, viewer_user_id, filter_kind="all"):
 
 
 def _default_landing_for_user(user_id):
-    """Return URL of the most-recent active cohort feed for this user, or None."""
+    """Return URL of the most-recent landing for this user, or None.
+    Participants land on the cohort feed; pure monitors land on the monitor dashboard."""
     if user_id is None:
         return None
     db = get_db()
@@ -2858,18 +2859,122 @@ def _default_landing_for_user(user_id):
         "ORDER BY sp.enrolled_at DESC LIMIT 1",
         (user_id,),
     ).fetchone()
-    if row is None:
-        row = db.execute(
-            "SELECT s.slug AS session_slug, w.slug AS workshop_slug FROM session_monitors sm "
-            "JOIN sessions s ON s.id = sm.session_id "
-            "JOIN workshops w ON w.id = s.workshop_id "
-            "WHERE sm.user_id = ? AND sm.removed_at IS NULL AND s.status != 'archived' "
-            "ORDER BY sm.assigned_at DESC LIMIT 1",
-            (user_id,),
-        ).fetchone()
-    if row is None:
-        return None
-    return f"/w/{row['workshop_slug']}/s/{row['session_slug']}/feed"
+    if row:
+        return f"/w/{row['workshop_slug']}/s/{row['session_slug']}/feed"
+    row = db.execute(
+        "SELECT s.slug AS session_slug, w.slug AS workshop_slug FROM session_monitors sm "
+        "JOIN sessions s ON s.id = sm.session_id "
+        "JOIN workshops w ON w.id = s.workshop_id "
+        "WHERE sm.user_id = ? AND sm.removed_at IS NULL AND s.status != 'archived' "
+        "ORDER BY sm.assigned_at DESC LIMIT 1",
+        (user_id,),
+    ).fetchone()
+    if row:
+        return f"/m/{row['workshop_slug']}/{row['session_slug']}"
+    return None
+
+
+def _monitor_dashboard_open_threads(session_id):
+    """Open question threads in this session, oldest-first, with replies and aging flag."""
+    db = get_db()
+    threads_rows = db.execute(
+        "SELECT t.id, t.author_user_id, t.anonymous, t.kind, t.body, t.status, t.created_at, t.page_path, "
+        "       u.username AS author_username, "
+        "       (SELECT COUNT(*) FROM reactions r WHERE r.thread_id = t.id AND r.kind = 'me_too') AS me_too_count "
+        "FROM threads t LEFT JOIN users u ON u.id = t.author_user_id "
+        "WHERE t.session_id = ? AND t.status = 'open' AND t.kind = 'question' AND t.hidden_at IS NULL "
+        "ORDER BY t.created_at ASC LIMIT 50",
+        (session_id,),
+    ).fetchall()
+    if not threads_rows:
+        return []
+    thread_ids = [t["id"] for t in threads_rows]
+    placeholders = ",".join("?" * len(thread_ids))
+    replies_rows = db.execute(
+        f"SELECT r.id, r.thread_id, r.body, r.is_monitor_reply, r.created_at, u.username AS author_username "
+        f"FROM replies r LEFT JOIN users u ON u.id = r.author_user_id "
+        f"WHERE r.thread_id IN ({placeholders}) AND r.hidden_at IS NULL "
+        f"ORDER BY r.created_at",
+        thread_ids,
+    ).fetchall()
+    by_thread = {}
+    for r in replies_rows:
+        d = dict(r)
+        d["author_display"] = _display_name_from_username(r["author_username"])
+        by_thread.setdefault(r["thread_id"], []).append(d)
+    now = datetime.utcnow()
+    result = []
+    for t in threads_rows:
+        d = dict(t)
+        d["author_display"] = "Anonymous" if t["anonymous"] else _display_name_from_username(t["author_username"])
+        d["replies"] = by_thread.get(t["id"], [])
+        d["page_label"] = _page_label_from_path(t["page_path"])
+        try:
+            created = datetime.fromisoformat(t["created_at"].replace(" ", "T"))
+            age_seconds = (now - created).total_seconds()
+            d["is_aging"] = age_seconds > 3600
+            d["age_minutes"] = max(0, round(age_seconds / 60))
+        except (ValueError, TypeError, AttributeError):
+            d["is_aging"] = False
+            d["age_minutes"] = None
+        result.append(d)
+    return result
+
+
+def _monitor_dashboard_metrics(session_id, session_row):
+    """Open count, median response time (minutes), engagement, days remaining."""
+    db = get_db()
+    open_count = db.execute(
+        "SELECT COUNT(*) AS c FROM threads "
+        "WHERE session_id = ? AND status = 'open' AND kind = 'question' AND hidden_at IS NULL",
+        (session_id,),
+    ).fetchone()["c"]
+    response_times = db.execute(
+        "SELECT (julianday(MIN(rep.created_at)) - julianday(t.created_at)) * 24 * 60 AS minutes "
+        "FROM threads t JOIN replies rep ON rep.thread_id = t.id "
+        "WHERE t.session_id = ? AND t.status = 'answered' AND t.kind = 'question' AND rep.is_monitor_reply = 1 "
+        "GROUP BY t.id",
+        (session_id,),
+    ).fetchall()
+    times_sorted = sorted(r["minutes"] for r in response_times if r["minutes"] is not None and r["minutes"] >= 0)
+    median_minutes = None
+    if times_sorted:
+        mid = len(times_sorted) // 2
+        median_minutes = times_sorted[mid] if len(times_sorted) % 2 == 1 else (times_sorted[mid - 1] + times_sorted[mid]) / 2
+    total_participants = db.execute(
+        "SELECT COUNT(*) AS c FROM session_participants WHERE session_id = ? AND removed_at IS NULL AND excluded = 0",
+        (session_id,),
+    ).fetchone()["c"]
+    posted_count = db.execute(
+        "SELECT COUNT(DISTINCT t.author_user_id) AS c FROM threads t "
+        "JOIN session_participants sp ON sp.user_id = t.author_user_id AND sp.session_id = t.session_id "
+        "WHERE t.session_id = ? AND sp.removed_at IS NULL AND sp.excluded = 0 AND t.hidden_at IS NULL",
+        (session_id,),
+    ).fetchone()["c"]
+    days_remaining = None
+    if session_row["end_date"]:
+        try:
+            end = date.fromisoformat(session_row["end_date"])
+            days_remaining = (end - date.today()).days
+        except (ValueError, TypeError):
+            days_remaining = None
+    return {
+        "open_count": open_count,
+        "median_response_minutes": median_minutes,
+        "posted_count": posted_count,
+        "total_participants": total_participants,
+        "days_remaining": days_remaining,
+    }
+
+
+def _safe_return_to(value, fallback):
+    """Validate a return_to form field to prevent open-redirect; fall back if invalid."""
+    if not value:
+        return fallback
+    value = value.strip()
+    if value.startswith("/") and not value.startswith("//"):
+        return value
+    return fallback
 
 
 @app.after_request
@@ -2918,6 +3023,25 @@ def inject_qa_panel(resp):
     if threads:
         _mark_threads_read(user["id"], [t["id"] for t in threads])
     return resp
+
+
+@app.route("/m/<workshop_slug>/<session_slug>")
+def monitor_dashboard(workshop_slug, session_slug):
+    user = current_user()
+    if user is None:
+        abort(403)
+    sess = _get_session_or_404(workshop_slug, session_slug)
+    is_monitor = _user_is_session_monitor(sess["id"], user["id"])
+    if not (is_monitor or user["is_facilitator"]):
+        abort(403)
+    open_threads = _monitor_dashboard_open_threads(sess["id"])
+    metrics = _monitor_dashboard_metrics(sess["id"], sess)
+    return render_template(
+        "monitor_dashboard.html",
+        user=user, session=sess, workshop_slug=workshop_slug,
+        open_threads=open_threads, metrics=metrics,
+        is_monitor=is_monitor,
+    )
 
 
 @app.route("/w/<workshop_slug>/s/<session_slug>/feed")
@@ -2994,7 +3118,7 @@ def qa_create_reply(workshop_slug, thread_id):
         (thread_id, user["id"], body, is_monitor_reply),
     )
     get_db().commit()
-    return redirect(thread["page_path"] + f"#qa-thread-{thread_id}")
+    return redirect(_safe_return_to(request.form.get("return_to"), thread["page_path"] + f"#qa-thread-{thread_id}"))
 
 
 @app.route("/w/<workshop_slug>/threads/<int:thread_id>/react", methods=["POST"])
@@ -3049,7 +3173,7 @@ def qa_mark_answered(workshop_slug, thread_id):
         (user["id"], thread_id),
     )
     get_db().commit()
-    return redirect(thread["page_path"] + f"#qa-thread-{thread_id}")
+    return redirect(_safe_return_to(request.form.get("return_to"), thread["page_path"] + f"#qa-thread-{thread_id}"))
 
 
 # Initialize DB at import time so gunicorn workers see the schema.
