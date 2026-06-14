@@ -2833,6 +2833,43 @@ def _session_has_any_monitor(session_id):
     ).fetchone() is not None
 
 
+SESSION_LOCK_GRACE_DAYS = 14
+
+
+def _session_is_locked(session_row):
+    """A session is locked (read-only) when it's been manually archived OR its
+    end_date plus the grace window is in the past. Lets recent cohorts keep
+    posting after end_date without admin action while still retiring stale
+    cohorts automatically — no cron required."""
+    if session_row is None:
+        return False
+    try:
+        if session_row["status"] == "archived":
+            return True
+    except (IndexError, KeyError):
+        pass
+    end_date_raw = None
+    try:
+        end_date_raw = session_row["end_date"]
+    except (IndexError, KeyError):
+        pass
+    if not end_date_raw:
+        return False
+    try:
+        end = date.fromisoformat(str(end_date_raw))
+        return (date.today() - end).days > SESSION_LOCK_GRACE_DAYS
+    except (ValueError, TypeError):
+        return False
+
+
+def _session_lock_row(session_id):
+    """Fetch the minimal session row needed to evaluate _session_is_locked from a session_id."""
+    return get_db().execute(
+        "SELECT id, status, end_date FROM sessions WHERE id = ?",
+        (session_id,),
+    ).fetchone()
+
+
 def _page_presence_for_session(session_id, page_path):
     """Return (active_count, total_count): distinct cohort participants who viewed
     this page in the last 7 days, and the cohort's counted participant total."""
@@ -3606,6 +3643,7 @@ def inject_qa_panel(resp):
     new_count = sum(1 for t in threads if t.get("new_for_me"))
     active_count, total_participants = _page_presence_for_session(sess["id"], request.path)
     bell_items = _bell_items_for_user(user["id"], sess["id"], limit=10)
+    is_locked = _session_is_locked(_session_lock_row(sess["id"]))
     panel_html = render_template(
         "_qa_panel.html",
         threads=threads,
@@ -3620,6 +3658,7 @@ def inject_qa_panel(resp):
         active_count=active_count,
         total_participants=total_participants,
         bell_items=bell_items,
+        is_locked=is_locked,
     )
     # send_from_directory returns the response in direct_passthrough mode,
     # which makes resp.get_data() raise. Switch off before reading the body.
@@ -3662,6 +3701,7 @@ def monitor_dashboard(workshop_slug, session_slug):
         open_threads=open_threads, metrics=metrics,
         is_monitor=is_monitor,
         accessible_sessions=accessible_sessions,
+        is_locked=_session_is_locked(sess),
     )
 
 
@@ -3690,6 +3730,7 @@ def cohort_feed(workshop_slug, session_slug):
         "cohort_feed.html",
         user=user, session=sess, threads=threads, filter_kind=filter_kind,
         role=role, has_monitor=has_monitor, workshop_slug=workshop_slug,
+        is_locked=_session_is_locked(sess),
     )
 
 
@@ -3728,6 +3769,8 @@ def qa_create_thread(workshop_slug):
         abort(403)
     if not _session_has_any_monitor(sess["id"]):
         abort(403)
+    if _session_is_locked(_session_lock_row(sess["id"])):
+        abort(403)
     page_path = request.form.get("page_path", "").strip()
     body = (request.form.get("body") or "").strip()
     anonymous = 1 if request.form.get("anonymous") == "1" else 0
@@ -3755,6 +3798,8 @@ def qa_create_reply(workshop_slug, thread_id):
         abort(404)
     if not _user_has_session_access(thread["session_id"], user["id"]):
         abort(403)
+    if _session_is_locked(_session_lock_row(thread["session_id"])):
+        abort(403)
     body = (request.form.get("body") or "").strip()
     if not body:
         abort(400)
@@ -3780,6 +3825,8 @@ def qa_react(workshop_slug, thread_id):
     if thread is None:
         abort(404)
     if not _user_has_session_access(thread["session_id"], user["id"]):
+        abort(403)
+    if _session_is_locked(_session_lock_row(thread["session_id"])):
         abort(403)
     existing = get_db().execute(
         "SELECT 1 FROM reactions WHERE thread_id = ? AND user_id = ? AND kind = 'me_too'",
@@ -3808,6 +3855,8 @@ def qa_mark_answered(workshop_slug, thread_id):
     if thread is None:
         abort(404)
     if not _user_is_session_monitor(thread["session_id"], user["id"]):
+        abort(403)
+    if _session_is_locked(_session_lock_row(thread["session_id"])):
         abort(403)
     get_db().execute(
         "UPDATE threads SET status = 'answered', answered_at = CURRENT_TIMESTAMP, answered_by = ? "

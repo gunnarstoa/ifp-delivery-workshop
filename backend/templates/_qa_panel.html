@@ -132,6 +132,12 @@
   {% endif %}
 
   <div class="qa-drawer-body">
+    {% if is_locked %}
+    <div style="background:#f1f5f9;border-left:4px solid #64748b;border-radius:0 6px 6px 0;padding:0.85rem 1rem;margin-bottom:1rem;">
+      <strong style="display:block;color:#1e293b;font-size:0.92rem;">Cohort archived · view only</strong>
+      <p style="margin:0.3rem 0 0 0;color:#475569;font-size:0.82rem;">This cohort ended more than {{ 14 }} days ago. You can still read the discussion, but posting and replies are closed.</p>
+    </div>
+    {% endif %}
     {% if not has_monitor %}
     <div style="background:#fffbeb;border-left:4px solid #d97706;border-radius:0 6px 6px 0;padding:0.85rem 1rem;">
       <strong style="display:block;color:#92400e;font-size:0.92rem;">Discussion not yet open</strong>
@@ -174,7 +180,7 @@
         </div>
         {% endif %}
 
-        {% if role != 'facilitator' %}
+        {% if role != 'facilitator' and not is_locked %}
         <div class="qa-actions">
           <form method="post" action="{{ url_for('qa_react', workshop_slug=workshop_slug, thread_id=t.id) }}" style="display:inline;margin:0;">
             <button type="submit" class="qa-btn-react{{ ' qa-active' if t.i_reacted else '' }}">Me too{% if t.me_too_count %} · {{ t.me_too_count }}{% endif %}</button>
@@ -213,7 +219,7 @@
         </div>
         {% endif %}
 
-        {% if role != 'facilitator' %}
+        {% if role != 'facilitator' and not is_locked %}
         <form method="post" action="{{ url_for('qa_create_reply', workshop_slug=workshop_slug, thread_id=t.id) }}" class="qa-reply-form" enctype="multipart/form-data">
           <textarea name="body" placeholder="Reply…" required></textarea>
           <label class="qa-file-input">Attach a screenshot or file (optional, max 10MB) <input type="file" name="attachment" accept="image/*,.pdf,.csv,.txt,.alm"></label>
@@ -223,7 +229,9 @@
       </div>
       {% endfor %}
 
-      {% if role == 'facilitator' %}
+      {% if is_locked %}
+      {# locked banner already shown at the top of the body #}
+      {% elif role == 'facilitator' %}
       <div class="qa-readonly-notice">You're viewing as an admin (read-only). To post or reply, sign in as a participant or moderator of this cohort.</div>
       {% else %}
       <div class="qa-compose">
