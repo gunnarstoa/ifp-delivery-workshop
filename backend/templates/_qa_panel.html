@@ -71,7 +71,7 @@
   <div class="qa-drawer-header">
     <div style="min-width:0;">
       <h2>Discussion on this page</h2>
-      <div class="qa-sub">{{ session_name }}{% if role == 'facilitator' %} · admin view{% elif role == 'monitor' %} · moderator view{% endif %} · {{ threads|length }} thread{{ '' if threads|length == 1 else 's' }}</div>
+      <div class="qa-sub">{{ session_name }}{% if role == 'facilitator' %} · admin view{% elif role == 'monitor' %} · moderator view{% endif %} · {{ threads|length }} thread{{ '' if threads|length == 1 else 's' }}{% if total_participants and active_count %} · {{ active_count }} of {{ total_participants }} viewed this page this week{% endif %}</div>
     </div>
     <button id="qa-drawer-close" type="button" class="qa-drawer-close" aria-label="Close discussion drawer">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
