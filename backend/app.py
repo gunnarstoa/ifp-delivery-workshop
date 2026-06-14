@@ -224,7 +224,7 @@ def login():
             session.permanent = True
             get_db().execute("UPDATE users SET last_login_at = CURRENT_TIMESTAMP WHERE id = ?", (row["id"],))
             get_db().commit()
-            nxt = request.args.get("next") or request.form.get("next") or "/"
+            nxt = request.args.get("next") or request.form.get("next") or _default_landing_for_user(row["id"]) or "/"
             if not nxt.startswith("/") or nxt.startswith("//"):
                 nxt = "/"
             return redirect(nxt)
@@ -2754,11 +2754,13 @@ def _threads_for_page(session_id, page_path, viewer_user_id):
         "SELECT t.id, t.author_user_id, t.anonymous, t.kind, t.body, t.status, t.created_at, t.answered_at, "
         "       u.username AS author_username, "
         "       (SELECT COUNT(*) FROM reactions r WHERE r.thread_id = t.id AND r.kind = 'me_too') AS me_too_count, "
-        "       EXISTS(SELECT 1 FROM reactions r WHERE r.thread_id = t.id AND r.user_id = ? AND r.kind = 'me_too') AS i_reacted "
+        "       EXISTS(SELECT 1 FROM reactions r WHERE r.thread_id = t.id AND r.user_id = ? AND r.kind = 'me_too') AS i_reacted, "
+        "       (SELECT MAX(rep.created_at) FROM replies rep WHERE rep.thread_id = t.id AND rep.hidden_at IS NULL) AS latest_reply_at, "
+        "       (SELECT rs.last_read_at FROM read_state rs WHERE rs.thread_id = t.id AND rs.user_id = ?) AS last_read_at "
         "FROM threads t LEFT JOIN users u ON u.id = t.author_user_id "
         "WHERE t.session_id = ? AND t.page_path = ? AND t.hidden_at IS NULL "
         "ORDER BY t.created_at",
-        (viewer_user_id, session_id, page_path),
+        (viewer_user_id, viewer_user_id, session_id, page_path),
     ).fetchall()
     if not threads_rows:
         return []
@@ -2782,8 +2784,92 @@ def _threads_for_page(session_id, page_path, viewer_user_id):
         d = dict(t)
         d["author_display"] = "Anonymous" if t["anonymous"] else _display_name_from_username(t["author_username"])
         d["replies"] = by_thread.get(t["id"], [])
+        latest_activity = max(t["created_at"], t["latest_reply_at"] or "")
+        d["new_for_me"] = (t["last_read_at"] is None) or (latest_activity > t["last_read_at"])
         result.append(d)
     return result
+
+
+def _mark_threads_read(user_id, thread_ids):
+    """Upsert read_state to now for the given threads."""
+    if not thread_ids or user_id is None:
+        return
+    db = get_db()
+    db.executemany(
+        "INSERT INTO read_state (user_id, thread_id, last_read_at) VALUES (?, ?, CURRENT_TIMESTAMP) "
+        "ON CONFLICT(user_id, thread_id) DO UPDATE SET last_read_at = excluded.last_read_at",
+        [(user_id, tid) for tid in thread_ids],
+    )
+    db.commit()
+
+
+def _page_label_from_path(path):
+    """Pretty label for /w/ifp/01-overview.html → '01 Overview' (cheap, no template parse)."""
+    m = re.match(r"^/w/[a-z0-9-]+/(.+)\.html$", path)
+    if not m:
+        return path
+    parts = m.group(1).split("-")
+    return " ".join(p.capitalize() if not p.isdigit() else p for p in parts)
+
+
+def _cohort_feed(session_id, viewer_user_id, filter_kind="all"):
+    """Return threads across all pages in this cohort, newest first, with viewer-specific flags."""
+    db = get_db()
+    where_extra = ""
+    if filter_kind == "unanswered":
+        where_extra = " AND t.status = 'open' AND t.kind = 'question'"
+    elif filter_kind == "celebrations":
+        where_extra = " AND t.kind = 'celebration'"
+    threads_rows = db.execute(
+        "SELECT t.id, t.author_user_id, t.anonymous, t.kind, t.body, t.status, t.created_at, t.page_path, "
+        "       u.username AS author_username, "
+        "       (SELECT COUNT(*) FROM reactions r WHERE r.thread_id = t.id AND r.kind = 'me_too') AS me_too_count, "
+        "       (SELECT COUNT(*) FROM replies rep WHERE rep.thread_id = t.id AND rep.hidden_at IS NULL) AS reply_count, "
+        "       (SELECT MAX(rep.created_at) FROM replies rep WHERE rep.thread_id = t.id AND rep.hidden_at IS NULL) AS latest_reply_at, "
+        "       EXISTS(SELECT 1 FROM reactions r WHERE r.thread_id = t.id AND r.user_id = ? AND r.kind = 'me_too') AS i_reacted, "
+        "       (SELECT rs.last_read_at FROM read_state rs WHERE rs.thread_id = t.id AND rs.user_id = ?) AS last_read_at "
+        "FROM threads t LEFT JOIN users u ON u.id = t.author_user_id "
+        f"WHERE t.session_id = ? AND t.hidden_at IS NULL{where_extra} "
+        "ORDER BY t.created_at DESC "
+        "LIMIT 200",
+        (viewer_user_id, viewer_user_id, session_id),
+    ).fetchall()
+    results = []
+    for t in threads_rows:
+        d = dict(t)
+        d["author_display"] = "Anonymous" if t["anonymous"] else _display_name_from_username(t["author_username"])
+        latest_activity = max(t["created_at"], t["latest_reply_at"] or "")
+        d["new_for_me"] = (t["last_read_at"] is None) or (latest_activity > t["last_read_at"])
+        d["page_label"] = _page_label_from_path(t["page_path"])
+        results.append(d)
+    return results
+
+
+def _default_landing_for_user(user_id):
+    """Return URL of the most-recent active cohort feed for this user, or None."""
+    if user_id is None:
+        return None
+    db = get_db()
+    row = db.execute(
+        "SELECT s.slug AS session_slug, w.slug AS workshop_slug FROM session_participants sp "
+        "JOIN sessions s ON s.id = sp.session_id "
+        "JOIN workshops w ON w.id = s.workshop_id "
+        "WHERE sp.user_id = ? AND sp.removed_at IS NULL AND s.status != 'archived' "
+        "ORDER BY sp.enrolled_at DESC LIMIT 1",
+        (user_id,),
+    ).fetchone()
+    if row is None:
+        row = db.execute(
+            "SELECT s.slug AS session_slug, w.slug AS workshop_slug FROM session_monitors sm "
+            "JOIN sessions s ON s.id = sm.session_id "
+            "JOIN workshops w ON w.id = s.workshop_id "
+            "WHERE sm.user_id = ? AND sm.removed_at IS NULL AND s.status != 'archived' "
+            "ORDER BY sm.assigned_at DESC LIMIT 1",
+            (user_id,),
+        ).fetchone()
+    if row is None:
+        return None
+    return f"/w/{row['workshop_slug']}/s/{row['session_slug']}/feed"
 
 
 @app.after_request
@@ -2809,21 +2895,54 @@ def inject_qa_panel(resp):
         return resp
     has_monitor = _session_has_any_monitor(sess["id"])
     threads = _threads_for_page(sess["id"], request.path, user["id"]) if has_monitor else []
+    new_count = sum(1 for t in threads if t.get("new_for_me"))
     panel_html = render_template(
         "_qa_panel.html",
         threads=threads,
         session_name=sess["name"],
+        session_slug=sess["slug"],
         workshop_slug=workshop_slug,
         page_path=request.path,
         role=role,
         has_monitor=has_monitor,
+        new_count=new_count,
     )
     body = resp.get_data(as_text=True)
     if "</main>" in body:
         body = body.replace("</main>", panel_html + "\n  </main>", 1)
         resp.set_data(body)
         resp.headers["Content-Length"] = str(len(resp.get_data()))
+    if threads:
+        _mark_threads_read(user["id"], [t["id"] for t in threads])
     return resp
+
+
+@app.route("/w/<workshop_slug>/s/<session_slug>/feed")
+def cohort_feed(workshop_slug, session_slug):
+    user = current_user()
+    if user is None:
+        abort(403)
+    sess = _get_session_or_404(workshop_slug, session_slug)
+    is_participant = get_db().execute(
+        "SELECT 1 FROM session_participants WHERE session_id = ? AND user_id = ? AND removed_at IS NULL",
+        (sess["id"], user["id"]),
+    ).fetchone() is not None
+    is_monitor = _user_is_session_monitor(sess["id"], user["id"])
+    if not (is_participant or is_monitor or user["is_facilitator"]):
+        abort(403)
+    filter_kind = request.args.get("filter", "all")
+    if filter_kind not in ("all", "unanswered", "celebrations"):
+        filter_kind = "all"
+    threads = _cohort_feed(sess["id"], user["id"], filter_kind)
+    if threads:
+        _mark_threads_read(user["id"], [t["id"] for t in threads])
+    role = "monitor" if is_monitor else ("facilitator" if user["is_facilitator"] else "participant")
+    has_monitor = _session_has_any_monitor(sess["id"])
+    return render_template(
+        "cohort_feed.html",
+        user=user, session=sess, threads=threads, filter_kind=filter_kind,
+        role=role, has_monitor=has_monitor, workshop_slug=workshop_slug,
+    )
 
 
 @app.route("/w/<workshop_slug>/threads", methods=["POST"])

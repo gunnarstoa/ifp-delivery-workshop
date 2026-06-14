@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Cohort feed — {{ session.name }}{% endblock %}
+{% block body %}
+<div class="admin-shell" style="max-width:920px;">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem;padding-bottom:0.75rem;border-bottom:1px solid #e2e8f0;">
+    <div>
+      <h1 style="margin:0;font-size:1.4rem;color:#1e3a5f;">Cohort feed</h1>
+      <p style="margin:0.25rem 0 0 0;font-size:0.85rem;color:#6b7280;">{{ session.workshop_name }} · {{ session.name }}</p>
+    </div>
+    <form method="post" action="{{ url_for('logout') }}" style="margin:0;">
+      <button class="secondary-btn" type="submit">Sign out</button>
+    </form>
+  </div>
+
+  {% if not has_monitor %}
+  <div style="background:#fffbeb;border-left:4px solid #d97706;border-radius:0 6px 6px 0;padding:1rem 1.2rem;margin-bottom:1.25rem;">
+    <strong style="display:block;color:#92400e;font-size:1rem;">Discussion not yet open</strong>
+    <p style="margin:0.4rem 0 0 0;color:#78350f;font-size:0.9rem;">This cohort doesn't have a monitor assigned yet. Once one is assigned, you'll be able to post questions on each workshop page and they'll show up in this feed.</p>
+  </div>
+  {% endif %}
+
+  <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.25rem;">
+    {% set chip_styles = {'active': 'background:#0066cc;color:white;border-color:#0066cc;', 'idle': 'background:white;color:#374151;border-color:#cbd5e1;'} %}
+    <a href="{{ url_for('cohort_feed', workshop_slug=workshop_slug, session_slug=session.slug) }}" style="padding:0.35rem 0.85rem;border-radius:999px;border:1px solid;font-size:0.85rem;text-decoration:none;font-weight:500;{{ chip_styles.active if filter_kind == 'all' else chip_styles.idle }}">All</a>
+    <a href="{{ url_for('cohort_feed', workshop_slug=workshop_slug, session_slug=session.slug, filter='unanswered') }}" style="padding:0.35rem 0.85rem;border-radius:999px;border:1px solid;font-size:0.85rem;text-decoration:none;font-weight:500;{{ chip_styles.active if filter_kind == 'unanswered' else chip_styles.idle }}">Unanswered</a>
+    <a href="{{ url_for('cohort_feed', workshop_slug=workshop_slug, session_slug=session.slug, filter='celebrations') }}" style="padding:0.35rem 0.85rem;border-radius:999px;border:1px solid;font-size:0.85rem;text-decoration:none;font-weight:500;{{ chip_styles.active if filter_kind == 'celebrations' else chip_styles.idle }}">Celebrations</a>
+  </div>
+
+  {% if not threads %}
+  <div style="background:white;border:1px dashed #cbd5e1;border-radius:8px;padding:2rem;text-align:center;">
+    {% if filter_kind == 'unanswered' %}
+      <p style="margin:0;color:#6b7280;font-size:0.95rem;">No unanswered threads. Nice — all questions have a response from the monitor.</p>
+    {% elif filter_kind == 'celebrations' %}
+      <p style="margin:0;color:#6b7280;font-size:0.95rem;">No celebrations yet. They show up automatically when a cohort member completes a checkpoint.</p>
+    {% else %}
+      <p style="margin:0 0 0.5rem 0;color:#6b7280;font-size:0.95rem;">No threads in this cohort yet.</p>
+      <p style="margin:0;color:#9ca3af;font-size:0.85rem;">Head to a workshop page and post the first question — your cohort can see it.</p>
+    {% endif %}
+  </div>
+  {% else %}
+
+  <div style="display:flex;flex-direction:column;gap:0.85rem;">
+    {% for t in threads %}
+    <a href="{{ t.page_path }}#qa-thread-{{ t.id }}" style="text-decoration:none;color:inherit;">
+    <div style="background:white;border:1px solid {{ '#93c5fd' if t.new_for_me else '#e2e8f0' }};border-radius:8px;padding:1rem 1.25rem;{{ 'box-shadow:0 0 0 3px #eff6ff;' if t.new_for_me else '' }}">
+      <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.4rem;">
+        <span style="background:#f3f4f6;color:#374151;font-size:0.72rem;padding:3px 9px;border-radius:4px;font-weight:600;">{{ t.page_label }}</span>
+        {% if t.kind == 'celebration' %}
+          <span style="background:#dcfce7;color:#15803d;font-size:0.72rem;padding:3px 9px;border-radius:999px;font-weight:600;">Celebration</span>
+        {% elif t.status == 'answered' %}
+          <span style="background:#dcfce7;color:#15803d;font-size:0.72rem;padding:3px 9px;border-radius:999px;font-weight:600;">Answered</span>
+        {% else %}
+          <span style="background:#fef3c7;color:#92400e;font-size:0.72rem;padding:3px 9px;border-radius:999px;font-weight:600;">Open</span>
+        {% endif %}
+        {% if t.new_for_me %}
+        <span style="background:#0066cc;color:white;font-size:0.7rem;padding:2px 8px;border-radius:999px;font-weight:600;">New</span>
+        {% endif %}
+        <span style="margin-left:auto;font-size:0.78rem;color:#9ca3af;">{{ t.created_at }}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;color:#374151;margin-bottom:0.4rem;">
+        <strong>{{ t.author_display }}</strong>
+      </div>
+      <p style="margin:0 0 0.55rem 0;line-height:1.5;color:#1f2937;white-space:pre-wrap;">{{ t.body }}</p>
+      <div style="display:flex;align-items:center;gap:1rem;font-size:0.78rem;color:#6b7280;">
+        {% if t.me_too_count %}<span>Me too · {{ t.me_too_count }}</span>{% endif %}
+        {% if t.reply_count %}<span>{{ t.reply_count }} repl{{ 'y' if t.reply_count == 1 else 'ies' }}</span>{% endif %}
+        {% if t.latest_reply_at %}<span>last reply {{ t.latest_reply_at }}</span>{% endif %}
+      </div>
+    </div>
+    </a>
+    {% endfor %}
+  </div>
+
+  {% endif %}
+</div>
+{% endblock %}

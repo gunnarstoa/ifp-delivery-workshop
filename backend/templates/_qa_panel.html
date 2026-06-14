@@ -1,10 +1,18 @@
 <section id="qa-panel" aria-label="Discussion on this page" style="max-width:920px;margin:3rem auto 0;padding:2rem 2.5rem 1rem;border-top:2px solid #e2e8f0;font-family:inherit;">
   <div style="display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem;">
     <h2 style="margin:0;font-size:1.5rem;color:#1f2937;">Discussion on this page</h2>
-    <div style="font-size:0.85rem;color:#6b7280;">
-      {{ session_name }} · {{ threads|length }} thread{{ '' if threads|length == 1 else 's' }}
+    <div style="font-size:0.85rem;color:#6b7280;display:flex;align-items:baseline;gap:0.9rem;flex-wrap:wrap;">
+      <span>{{ session_name }} · {{ threads|length }} thread{{ '' if threads|length == 1 else 's' }}</span>
+      <a href="{{ url_for('cohort_feed', workshop_slug=workshop_slug, session_slug=session_slug) }}" style="color:#0066cc;text-decoration:none;">View cohort feed →</a>
     </div>
   </div>
+
+  {% if new_count and new_count > 0 %}
+  <div style="background:#eff6ff;border:1px solid #93c5fd;border-radius:6px;padding:0.6rem 0.85rem;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;">
+    <span style="background:#0066cc;color:white;font-size:0.72rem;padding:2px 8px;border-radius:999px;font-weight:600;">{{ new_count }} new</span>
+    <span style="font-size:0.88rem;color:#1e40af;">{{ 'thread' if new_count == 1 else 'threads' }} on this page since you were last here</span>
+  </div>
+  {% endif %}
 
   {% if not has_monitor %}
   <div style="background:#fffbeb;border-left:4px solid #d97706;border-radius:0 6px 6px 0;padding:1rem 1.2rem;">
