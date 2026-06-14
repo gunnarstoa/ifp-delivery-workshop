@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% block title %}Monitor dashboard — {{ session.name }}{% endblock %}
+{% block title %}Moderator dashboard — {{ session.name }}{% endblock %}
 {% block body %}
 <meta http-equiv="refresh" content="30">
 <div class="admin-shell" style="max-width:1100px;">
   <div style="display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem;padding-bottom:0.75rem;border-bottom:1px solid #e2e8f0;">
     <div>
-      <h1 style="margin:0;font-size:1.4rem;color:#1e3a5f;">Monitor dashboard</h1>
+      <h1 style="margin:0;font-size:1.4rem;color:#1e3a5f;">Moderator dashboard</h1>
       <p style="margin:0.25rem 0 0 0;font-size:0.85rem;color:#6b7280;">{{ session.workshop_name }} · refreshes every 30s</p>
       {% if accessible_sessions and accessible_sessions|length > 1 %}
       <div style="margin-top:0.5rem;display:inline-flex;align-items:center;gap:0.4rem;">

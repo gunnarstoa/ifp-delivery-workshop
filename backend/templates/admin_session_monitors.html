@@ -1,19 +1,19 @@
 {% extends "base.html" %}
-{% block title %}Discussion monitors — {{ session.name }}{% endblock %}
+{% block title %}Discussion moderators — {{ session.name }}{% endblock %}
 {% block body %}
 <div class="admin-shell">
-  {% set page_title = 'Discussion monitors' %}
+  {% set page_title = 'Discussion moderators' %}
   {% set breadcrumbs = [
     {'label': session.workshop_name, 'url': url_for('admin_workshop_detail', slug=session.workshop_slug)},
     {'label': session.name, 'url': url_for('admin_session_detail', slug=session.workshop_slug, session_slug=session.slug)},
-    {'label': 'Discussion monitors'}
+    {'label': 'Discussion moderators'}
   ] %}
   {% include "_admin_header.html" %}
 
   {% if reset_creds %}
   <div class="card" style="border-left:4px solid #d97706;background:#fffbeb;">
     <h2 style="margin-top:0;color:#92400e;">Password reset · {{ reset_creds.username }}</h2>
-    <p class="help-note" style="margin-top:0.25rem;">Copy now — the new password is only shown once. Send it to the monitor and they can sign in.</p>
+    <p class="help-note" style="margin-top:0.25rem;">Copy now — the new password is only shown once. Send it to the moderator and they can sign in.</p>
     <textarea id="reset-block" readonly style="width:100%;min-height:60px;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:4px;font-family:ui-monospace,Menlo,monospace;font-size:0.82rem;background:#f8fafc;">{{ reset_creds.username }}{{ '	' }}{{ reset_creds.password }}</textarea>
     <div style="margin-top:0.5rem;">
       <button class="primary-btn" type="button" onclick="copyReset()">Copy to clipboard</button>
@@ -28,7 +28,7 @@
     {% if new_creds %}
       <p class="help-note" style="margin-top:0.25rem;">
         <strong>{{ new_creds|length }} new account{{ '' if new_creds|length == 1 else 's' }} created.</strong>
-        Copy the credentials below now — initial passwords are only shown once. Send each monitor their username and password.
+        Copy the credentials below now — initial passwords are only shown once. Send each moderator their username and password.
       </p>
       <textarea id="creds-block" readonly style="width:100%;min-height:120px;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:4px;font-family:ui-monospace,Menlo,monospace;font-size:0.82rem;background:#f8fafc;">{% for r in new_creds %}{{ r.email }}{{ '	' }}{{ r.initial_password }}
 {% endfor %}</textarea>
@@ -61,22 +61,22 @@
   {% endif %}
 
   <div class="card">
-    <h2 style="margin-top:0;">Assign monitors</h2>
-    <p class="help-note">Paste one email per line. Each monitor signs in with their email as username. New users get an account auto-created — copy the initial password shown after assignment and send it to them. Monitors can reply on any workshop page in this session, and their replies show with an IFP facilitator badge.</p>
+    <h2 style="margin-top:0;">Assign moderators</h2>
+    <p class="help-note">Paste one email per line. Each moderator signs in with their email as username. New users get an account auto-created — copy the initial password shown after assignment and send it to them. Moderators can reply on any workshop page in this session, and their replies show with an IFP facilitator badge.</p>
     <form method="post" action="{{ url_for('admin_session_monitors', slug=session.workshop_slug, session_slug=session.slug) }}">
-      <textarea name="emails" placeholder="monitor1@anaplan.com&#10;monitor2@anaplan.com&#10;..." required style="width:100%;min-height:140px;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:4px;font-family:ui-monospace,Menlo,monospace;font-size:0.85rem;"></textarea>
+      <textarea name="emails" placeholder="moderator1@anaplan.com&#10;moderator2@anaplan.com&#10;..." required style="width:100%;min-height:140px;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:4px;font-family:ui-monospace,Menlo,monospace;font-size:0.85rem;"></textarea>
       <div style="margin-top:0.75rem;">
-        <button class="primary-btn" type="submit">Assign as monitors</button>
+        <button class="primary-btn" type="submit">Assign as moderators</button>
       </div>
     </form>
   </div>
 
   <div class="card">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
-      <h2 style="margin:0;">Active monitors · {{ monitors|length }}</h2>
+      <h2 style="margin:0;">Active moderators · {{ monitors|length }}</h2>
     </div>
     {% if monitors|length == 0 %}
-      <p class="help-note">No monitors assigned yet. Discussion threads on workshop pages will remain closed until you assign one.</p>
+      <p class="help-note">No moderators assigned yet. Discussion threads on workshop pages will remain closed until you assign one.</p>
     {% else %}
       <table class="users-table">
         <thead><tr><th>Email</th><th>Assigned</th><th>Last login</th><th style="text-align:right;">Actions</th></tr></thead>
@@ -90,7 +90,7 @@
               <form method="post" action="{{ url_for('admin_session_monitor_reset_password', slug=session.workshop_slug, session_slug=session.slug, monitor_id=m.id) }}" onsubmit="return confirm('Reset password for {{ m.username }}? The new password will be shown once.');" style="display:inline;margin-right:0.4rem;">
                 <button class="secondary-btn" type="submit">Reset password</button>
               </form>
-              <form method="post" action="{{ url_for('admin_session_monitor_remove', slug=session.workshop_slug, session_slug=session.slug, monitor_id=m.id) }}" onsubmit="return confirm('Remove {{ m.username }} as a monitor?');" style="display:inline;">
+              <form method="post" action="{{ url_for('admin_session_monitor_remove', slug=session.workshop_slug, session_slug=session.slug, monitor_id=m.id) }}" onsubmit="return confirm('Remove {{ m.username }} as a moderator?');" style="display:inline;">
                 <button class="danger-btn" type="submit">Remove</button>
               </form>
             </td>
