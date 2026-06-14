@@ -61,10 +61,26 @@
         <strong>{{ t.author_display }}</strong>
       </div>
       <p style="margin:0 0 0.55rem 0;line-height:1.5;color:#1f2937;white-space:pre-wrap;">{{ t.body }}</p>
+
+      {% if t.replies %}
+      <div style="margin:0.5rem 0;padding-left:0.85rem;border-left:2px solid #cbd5e1;">
+        {% for r in t.replies %}
+        <div style="margin:0.55rem 0;">
+          <div style="display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap;font-size:0.78rem;">
+            <strong style="color:#1f2937;">{{ r.author_display }}</strong>
+            {% if r.is_monitor_reply %}<span style="background:#dbeafe;color:#1e40af;font-size:0.66rem;padding:1px 6px;border-radius:3px;font-weight:600;">IFP facilitator</span>{% endif %}
+            <span style="color:#9ca3af;font-size:0.7rem;">{{ r.created_at }}</span>
+          </div>
+          <p style="margin:0.25rem 0 0 0;font-size:0.85rem;line-height:1.5;color:#374151;white-space:pre-wrap;">{{ r.body }}</p>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
       <div style="display:flex;align-items:center;gap:1rem;font-size:0.78rem;color:#6b7280;">
         {% if t.me_too_count %}<span>Me too · {{ t.me_too_count }}</span>{% endif %}
         {% if t.reply_count %}<span>{{ t.reply_count }} repl{{ 'y' if t.reply_count == 1 else 'ies' }}</span>{% endif %}
-        {% if t.latest_reply_at %}<span>last reply {{ t.latest_reply_at }}</span>{% endif %}
+        {% if t.latest_reply_at and not t.replies %}<span>last reply {{ t.latest_reply_at }}</span>{% endif %}
       </div>
     </div>
     </a>

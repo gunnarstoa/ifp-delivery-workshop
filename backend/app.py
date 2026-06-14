@@ -3044,6 +3044,25 @@ def _cohort_feed(session_id, viewer_user_id, filter_kind="all"):
         "LIMIT 200",
         (viewer_user_id, viewer_user_id, session_id),
     ).fetchall()
+    # Hydrate replies in one batched query so the feed can show them inline
+    # under each thread (admins asked to see moderator answers, not just a
+    # green pill saying "Answered").
+    by_thread = {}
+    if threads_rows:
+        thread_ids = [t["id"] for t in threads_rows]
+        placeholders = ",".join("?" * len(thread_ids))
+        for r in db.execute(
+            f"SELECT r.id, r.thread_id, r.body, r.is_monitor_reply, r.created_at, "
+            f"       u.username AS author_username "
+            f"FROM replies r LEFT JOIN users u ON u.id = r.author_user_id "
+            f"WHERE r.thread_id IN ({placeholders}) AND r.hidden_at IS NULL "
+            f"ORDER BY r.created_at",
+            thread_ids,
+        ).fetchall():
+            d = dict(r)
+            d["author_display"] = _display_name_from_username(r["author_username"])
+            by_thread.setdefault(r["thread_id"], []).append(d)
+
     results = []
     for t in threads_rows:
         d = dict(t)
@@ -3051,6 +3070,7 @@ def _cohort_feed(session_id, viewer_user_id, filter_kind="all"):
         latest_activity = max(t["created_at"], t["latest_reply_at"] or "")
         d["new_for_me"] = (t["last_read_at"] is None) or (latest_activity > t["last_read_at"])
         d["page_label"] = _page_label_from_path(t["page_path"])
+        d["replies"] = by_thread.get(t["id"], [])
         results.append(d)
     return results
 
