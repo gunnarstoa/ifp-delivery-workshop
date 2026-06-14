@@ -49,8 +49,6 @@
   .qa-compose-row label { font-size: 0.78rem; color: #6b7280; display: inline-flex; align-items: center; gap: 0.3rem; cursor: pointer; }
   .qa-compose-row button { background: #0066cc; color: white; border: none; font-size: 0.88rem; padding: 7px 16px; border-radius: 5px; cursor: pointer; font-family: inherit; font-weight: 600; }
   .qa-readonly-notice { background: #f1f5f9; color: #475569; padding: 0.55rem 0.85rem; border-radius: 6px; font-size: 0.82rem; margin-top: 0.85rem; }
-  .qa-drawer-footer { display: block; text-align: center; padding: 0.65rem; border-top: 1px solid #e2e8f0; background: #f8fafc; font-size: 0.82rem; color: #0066cc; text-decoration: none; flex-shrink: 0; }
-  .qa-drawer-footer:hover { background: #eff6ff; }
   @media (max-width: 600px) { .qa-drawer { width: 100vw; } .qa-fab { bottom: 1rem; right: 1rem; } }
 </style>
 
@@ -170,7 +168,6 @@
     {% endif %}
   </div>
 
-  <a href="{{ url_for('cohort_feed', workshop_slug=workshop_slug, session_slug=session_slug) }}" class="qa-drawer-footer">View full cohort feed →</a>
 </aside>
 
 <script>
