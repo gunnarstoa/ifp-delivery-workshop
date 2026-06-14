@@ -3321,6 +3321,72 @@ def _common_words_in_threads(session_id, limit=18):
     return [{"word": w, "count": c} for w, c in top]
 
 
+def _suggested_replies(question_body, workshop_slug, current_session_id, limit=3):
+    """Past answered threads in the same workshop with a similar body, with their
+    first moderator reply attached as a suggestion. Jaccard similarity over
+    stop-pruned word sets — dumb but instant, no embeddings or LLM needed.
+    The monitor dashboard surfaces this so moderators don't retype an answer
+    that's already been given to a prior cohort."""
+    if not question_body:
+        return []
+    word_re = re.compile(r"[a-z][a-z'-]{2,}")
+    current_words = set()
+    for w in word_re.findall(question_body.lower()):
+        w = w.strip("'-")
+        if len(w) < 4 or w in DISCUSSION_STOPWORDS:
+            continue
+        current_words.add(w)
+    if not current_words:
+        return []
+    db = get_db()
+    past_threads = db.execute(
+        "SELECT t.id, t.body, t.created_at, s.name AS session_name, s.slug AS session_slug "
+        "FROM threads t JOIN sessions s ON s.id = t.session_id "
+        "JOIN workshops w ON w.id = s.workshop_id "
+        "WHERE w.slug = ? AND t.session_id != ? AND t.status = 'answered' "
+        "  AND t.kind = 'question' AND t.hidden_at IS NULL",
+        (workshop_slug, current_session_id),
+    ).fetchall()
+    scored = []
+    for past in past_threads:
+        past_words = set()
+        for w in word_re.findall((past["body"] or "").lower()):
+            w = w.strip("'-")
+            if len(w) < 4 or w in DISCUSSION_STOPWORDS:
+                continue
+            past_words.add(w)
+        if not past_words:
+            continue
+        overlap = len(current_words & past_words)
+        if overlap < 2:
+            continue
+        union_size = len(current_words | past_words)
+        score = overlap / union_size
+        if score < 0.15:
+            continue
+        scored.append((past, score))
+    scored.sort(key=lambda x: -x[1])
+    suggestions = []
+    for past, score in scored[:limit]:
+        reply = db.execute(
+            "SELECT body, created_at FROM replies "
+            "WHERE thread_id = ? AND is_monitor_reply = 1 AND hidden_at IS NULL "
+            "ORDER BY created_at LIMIT 1",
+            (past["id"],),
+        ).fetchone()
+        if not reply:
+            continue
+        suggestions.append({
+            "past_thread_id": past["id"],
+            "past_thread_body": (past["body"] or "")[:160],
+            "past_session_name": past["session_name"],
+            "reply_body": reply["body"],
+            "reply_at": reply["created_at"],
+            "match_pct": round(100 * score),
+        })
+    return suggestions
+
+
 def _admin_discussion_metrics(session_id, session_row):
     """Comprehensive analytics for a session's discussion. Used by the admin
     discussion-dashboard page; computes hero metrics, per-page engagement,
@@ -3586,6 +3652,8 @@ def monitor_dashboard(workshop_slug, session_slug):
     if not (is_monitor or user["is_facilitator"]):
         abort(403)
     open_threads = _monitor_dashboard_open_threads(sess["id"])
+    for t in open_threads:
+        t["suggestions"] = _suggested_replies(t["body"], workshop_slug, sess["id"], limit=3)
     metrics = _monitor_dashboard_metrics(sess["id"], sess)
     accessible_sessions = _accessible_sessions_for_workshop(user["id"], workshop_slug)
     return render_template(

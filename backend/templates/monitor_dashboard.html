@@ -121,9 +121,30 @@
       </div>
       {% endif %}
 
+      {% if t.suggestions %}
+      <div style="margin:0.6rem 0;padding:0.7rem 0.85rem;background:#eff6ff;border-left:3px solid #93c5fd;border-radius:0 5px 5px 0;">
+        <div style="font-size:0.7rem;text-transform:uppercase;color:#1e40af;font-weight:600;letter-spacing:0.04em;margin-bottom:0.5rem;">Past similar answers · monitor-only</div>
+        {% for s in t.suggestions %}
+        <div style="margin:0.4rem 0;padding:0.45rem 0;{% if not loop.last %}border-bottom:1px solid #dbeafe;{% endif %}">
+          <div style="display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap;font-size:0.72rem;color:#1e40af;margin-bottom:0.25rem;">
+            <strong>{{ s.match_pct }}% match</strong>
+            <span>·</span>
+            <span>{{ s.past_session_name }}</span>
+            <span>·</span>
+            <span style="color:#3b82f6;">{{ s.reply_at }}</span>
+          </div>
+          <p style="margin:0 0 0.3rem 0;font-size:0.78rem;color:#475569;font-style:italic;">Q: {{ s.past_thread_body }}{% if s.past_thread_body|length >= 160 %}…{% endif %}</p>
+          <p style="margin:0;font-size:0.85rem;color:#1f2937;line-height:1.45;">{{ s.reply_body[:240] }}{% if s.reply_body|length > 240 %}…{% endif %}</p>
+          <button type="button" data-thread-id="{{ t.id }}" data-suggestion-id="suggestion-{{ t.id }}-{{ s.past_thread_id }}" class="qa-use-suggestion" style="margin-top:0.4rem;background:white;color:#1e40af;border:1px solid #93c5fd;font-size:0.74rem;padding:4px 11px;border-radius:5px;cursor:pointer;font-family:inherit;font-weight:600;">Use this as starting point</button>
+          <textarea id="suggestion-{{ t.id }}-{{ s.past_thread_id }}" style="display:none;">{{ s.reply_body }}</textarea>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
       <form method="post" action="{{ url_for('qa_create_reply', workshop_slug=workshop_slug, thread_id=t.id) }}" style="margin:0;" enctype="multipart/form-data">
         <input type="hidden" name="return_to" value="{{ return_to }}#qa-thread-{{ t.id }}">
-        <textarea name="body" placeholder="Reply as the IFP facilitator…" required style="width:100%;min-height:65px;padding:0.55rem 0.7rem;border:1px solid #d1d5db;border-radius:6px;font-family:inherit;font-size:0.9rem;box-sizing:border-box;"></textarea>
+        <textarea name="body" data-reply-for="{{ t.id }}" placeholder="Reply as the IFP facilitator…" required style="width:100%;min-height:65px;padding:0.55rem 0.7rem;border:1px solid #d1d5db;border-radius:6px;font-family:inherit;font-size:0.9rem;box-sizing:border-box;"></textarea>
         <label style="display:block;margin:0.4rem 0 0.2rem 0;font-size:0.78rem;color:#6b7280;">Attach a screenshot or file (optional, max 10MB) <input type="file" name="attachment" accept="image/*,.pdf,.csv,.txt,.alm" style="font-size:0.78rem;"></label>
         <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;margin-top:0.5rem;flex-wrap:wrap;">
           <span style="font-size:0.78rem;color:#6b7280;">Posts with the IFP facilitator badge.</span>
@@ -188,6 +209,24 @@
         return;
       }
     }
+  });
+})();
+
+(function() {
+  // "Use this as starting point" — copies a past moderator reply into the
+  // reply textarea for the matching thread so the moderator can tweak instead
+  // of retyping. Buttons carry data-thread-id and data-suggestion-id.
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('.qa-use-suggestion');
+    if (!btn) return;
+    var threadId = btn.getAttribute('data-thread-id');
+    var suggestionId = btn.getAttribute('data-suggestion-id');
+    var src = document.getElementById(suggestionId);
+    var dst = document.querySelector('textarea[data-reply-for="' + threadId + '"]');
+    if (!src || !dst) return;
+    dst.value = src.value;
+    dst.focus();
+    dst.scrollIntoView({ block: 'center', behavior: 'smooth' });
   });
 })();
 </script>
