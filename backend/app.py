@@ -3202,6 +3202,14 @@ def inject_qa_panel(resp):
         body = body.replace("</main>", panel_html + "\n  </main>", 1)
         resp.set_data(body)
         resp.headers["Content-Length"] = str(len(resp.get_data()))
+        # The body now carries dynamic discussion state — bust caching so a
+        # post-submit redirect re-fetches with the new thread visible instead
+        # of serving the browser's heuristic-cached HTML.
+        resp.headers["Cache-Control"] = "no-store, must-revalidate"
+        resp.headers["Pragma"] = "no-cache"
+        resp.headers["Expires"] = "0"
+        resp.headers.pop("ETag", None)
+        resp.headers.pop("Last-Modified", None)
     if threads:
         _mark_threads_read(user["id"], [t["id"] for t in threads])
     return resp
