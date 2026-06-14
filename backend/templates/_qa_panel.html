@@ -49,6 +49,14 @@
   .qa-compose-row label { font-size: 0.78rem; color: #6b7280; display: inline-flex; align-items: center; gap: 0.3rem; cursor: pointer; }
   .qa-compose-row button { background: #0066cc; color: white; border: none; font-size: 0.88rem; padding: 7px 16px; border-radius: 5px; cursor: pointer; font-family: inherit; font-weight: 600; }
   .qa-readonly-notice { background: #f1f5f9; color: #475569; padding: 0.55rem 0.85rem; border-radius: 6px; font-size: 0.82rem; margin-top: 0.85rem; }
+  .qa-attachments { margin: 0.5rem 0 0.3rem 0; display: flex; flex-direction: column; gap: 0.4rem; }
+  .qa-attach-image { display: block; max-width: 100%; max-height: 240px; border-radius: 6px; border: 1px solid #e2e8f0; }
+  .qa-attach-chip { display: inline-flex; align-items: center; gap: 0.4rem; padding: 5px 10px; background: #f3f4f6; color: #1f2937; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.82rem; text-decoration: none; max-width: 100%; }
+  .qa-attach-chip:hover { background: #e5e7eb; }
+  .qa-attach-chip .qa-attach-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .qa-attach-size { color: #9ca3af; font-size: 0.72rem; flex-shrink: 0; }
+  .qa-file-input { display: block; margin: 0.45rem 0 0.1rem 0; font-size: 0.78rem; color: #6b7280; }
+  .qa-file-input input[type=file] { font-size: 0.78rem; color: #374151; }
   @media (max-width: 600px) { .qa-drawer { width: 100vw; } .qa-fab { bottom: 1rem; right: 1rem; } }
 </style>
 
@@ -112,6 +120,18 @@
         </div>
         <p class="qa-body">{{ t.body }}</p>
 
+        {% if t.attachments %}
+        <div class="qa-attachments">
+          {% for a in t.attachments %}
+            {% if a.is_image %}
+            <a href="{{ url_for('serve_upload', upload_id=a.id) }}" target="_blank" rel="noopener"><img src="{{ url_for('serve_upload', upload_id=a.id) }}" alt="{{ a.filename }}" class="qa-attach-image"></a>
+            {% else %}
+            <a href="{{ url_for('serve_upload', upload_id=a.id) }}" class="qa-attach-chip" target="_blank" rel="noopener"><span>📎</span><span class="qa-attach-name">{{ a.filename }}</span><span class="qa-attach-size">{{ (a.size_bytes / 1024)|round|int }} KB</span></a>
+            {% endif %}
+          {% endfor %}
+        </div>
+        {% endif %}
+
         {% if role != 'facilitator' %}
         <div class="qa-actions">
           <form method="post" action="{{ url_for('qa_react', workshop_slug=workshop_slug, thread_id=t.id) }}" style="display:inline;margin:0;">
@@ -135,14 +155,26 @@
               <span style="color:#9ca3af;font-size:0.7rem;">{{ r.created_at }}</span>
             </div>
             <p class="qa-reply-body">{{ r.body }}</p>
+            {% if r.attachments %}
+            <div class="qa-attachments">
+              {% for a in r.attachments %}
+                {% if a.is_image %}
+                <a href="{{ url_for('serve_upload', upload_id=a.id) }}" target="_blank" rel="noopener"><img src="{{ url_for('serve_upload', upload_id=a.id) }}" alt="{{ a.filename }}" class="qa-attach-image"></a>
+                {% else %}
+                <a href="{{ url_for('serve_upload', upload_id=a.id) }}" class="qa-attach-chip" target="_blank" rel="noopener"><span>📎</span><span class="qa-attach-name">{{ a.filename }}</span><span class="qa-attach-size">{{ (a.size_bytes / 1024)|round|int }} KB</span></a>
+                {% endif %}
+              {% endfor %}
+            </div>
+            {% endif %}
           </div>
           {% endfor %}
         </div>
         {% endif %}
 
         {% if role != 'facilitator' %}
-        <form method="post" action="{{ url_for('qa_create_reply', workshop_slug=workshop_slug, thread_id=t.id) }}" class="qa-reply-form">
+        <form method="post" action="{{ url_for('qa_create_reply', workshop_slug=workshop_slug, thread_id=t.id) }}" class="qa-reply-form" enctype="multipart/form-data">
           <textarea name="body" placeholder="Reply…" required></textarea>
+          <label class="qa-file-input">Attach a screenshot or file (optional, max 10MB) <input type="file" name="attachment" accept="image/*,.pdf,.csv,.txt,.alm"></label>
           <div style="text-align:right;"><button type="submit" class="qa-reply-submit">Reply</button></div>
         </form>
         {% endif %}
@@ -154,9 +186,10 @@
       {% else %}
       <div class="qa-compose">
         <h3>Ask a question</h3>
-        <form method="post" action="{{ url_for('qa_create_thread', workshop_slug=workshop_slug) }}">
+        <form method="post" action="{{ url_for('qa_create_thread', workshop_slug=workshop_slug) }}" enctype="multipart/form-data">
           <input type="hidden" name="page_path" value="{{ page_path }}">
           <textarea name="body" placeholder="What are you stuck on, or want to share?" required></textarea>
+          <label class="qa-file-input">Attach a screenshot or file (optional, max 10MB) <input type="file" name="attachment" accept="image/*,.pdf,.csv,.txt,.alm"></label>
           <div class="qa-compose-row">
             <label><input type="checkbox" name="anonymous" value="1"> Post anonymously</label>
             <button type="submit">Post to cohort</button>

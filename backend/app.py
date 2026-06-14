@@ -27,10 +27,16 @@ from flask import (
     session,
     url_for,
 )
+from werkzeug.utils import secure_filename
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DB_PATH = Path(os.environ.get("WORKSHOP_DB", REPO_ROOT / "workshop.db"))
+UPLOADS_DIR = Path(os.environ.get("WORKSHOP_UPLOADS_DIR", DB_PATH.parent / "uploads"))
 SECRET_KEY = os.environ.get("WORKSHOP_SECRET_KEY") or secrets.token_hex(32)
+
+MAX_UPLOAD_BYTES = 10 * 1024 * 1024  # 10 MB per file
+ALLOWED_UPLOAD_EXTS = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".pdf", ".csv", ".txt", ".alm"}
+ALLOWED_UPLOAD_MIME_PREFIXES = ("image/", "application/pdf", "text/csv", "text/plain", "application/octet-stream")
 
 # Paths that require an additional is_facilitator check.
 FACILITATOR_PATH_RE = re.compile(
@@ -46,6 +52,7 @@ app.config.update(
     SESSION_COOKIE_SAMESITE="Lax",
     SESSION_COOKIE_SECURE=os.environ.get("WORKSHOP_PRODUCTION") == "1",
     PERMANENT_SESSION_LIFETIME=60 * 60 * 8,  # 8 hours
+    MAX_CONTENT_LENGTH=MAX_UPLOAD_BYTES + 8192,  # request size cap; small overhead for form fields
 )
 
 
@@ -2796,6 +2803,79 @@ def _session_has_any_monitor(session_id):
     ).fetchone() is not None
 
 
+def _save_attachment(file_storage, session_id, uploaded_by, thread_id=None, reply_id=None):
+    """Validate an uploaded FileStorage, save to disk under UPLOADS_DIR,
+    insert an `uploads` row. Returns upload_id or None if rejected/empty."""
+    if not file_storage or not file_storage.filename:
+        return None
+    raw_name = file_storage.filename
+    safe_name = secure_filename(raw_name) or "upload"
+    ext = os.path.splitext(safe_name)[1].lower()
+    if ext not in ALLOWED_UPLOAD_EXTS:
+        return None
+    mime = (file_storage.mimetype or "").lower()
+    if not any(mime.startswith(p) for p in ALLOWED_UPLOAD_MIME_PREFIXES):
+        return None
+    data = file_storage.read()
+    size = len(data)
+    if size == 0 or size > MAX_UPLOAD_BYTES:
+        return None
+    kind = "threads" if thread_id else "replies"
+    parent_id = thread_id or reply_id
+    target_dir = UPLOADS_DIR / str(session_id) / kind / str(parent_id)
+    target_dir.mkdir(parents=True, exist_ok=True)
+    target_path = target_dir / safe_name
+    stem, ext2 = os.path.splitext(safe_name)
+    counter = 1
+    while target_path.exists():
+        target_path = target_dir / f"{stem}-{counter}{ext2}"
+        counter += 1
+    with open(target_path, "wb") as f:
+        f.write(data)
+    rel_path = str(target_path.relative_to(UPLOADS_DIR))
+    cur = get_db().execute(
+        "INSERT INTO uploads (thread_id, reply_id, filename, stored_path, mime_type, size_bytes, uploaded_by) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?)",
+        (thread_id, reply_id, raw_name, rel_path, mime, size, uploaded_by),
+    )
+    get_db().commit()
+    return cur.lastrowid
+
+
+def _attachments_for_thread_ids(thread_ids):
+    if not thread_ids:
+        return {}
+    placeholders = ",".join("?" * len(thread_ids))
+    rows = get_db().execute(
+        f"SELECT id, thread_id, filename, mime_type, size_bytes FROM uploads "
+        f"WHERE thread_id IN ({placeholders}) ORDER BY uploaded_at",
+        thread_ids,
+    ).fetchall()
+    out = {}
+    for r in rows:
+        d = dict(r)
+        d["is_image"] = (r["mime_type"] or "").startswith("image/")
+        out.setdefault(r["thread_id"], []).append(d)
+    return out
+
+
+def _attachments_for_reply_ids(reply_ids):
+    if not reply_ids:
+        return {}
+    placeholders = ",".join("?" * len(reply_ids))
+    rows = get_db().execute(
+        f"SELECT id, reply_id, filename, mime_type, size_bytes FROM uploads "
+        f"WHERE reply_id IN ({placeholders}) ORDER BY uploaded_at",
+        reply_ids,
+    ).fetchall()
+    out = {}
+    for r in rows:
+        d = dict(r)
+        d["is_image"] = (r["mime_type"] or "").startswith("image/")
+        out.setdefault(r["reply_id"], []).append(d)
+    return out
+
+
 def _accessible_sessions_for_workshop(user_id, workshop_slug):
     """Sessions the user can view in this workshop, most-recent first.
     Facilitators see all non-archived sessions; others see only the ones
@@ -2852,15 +2932,22 @@ def _threads_for_page(session_id, page_path, viewer_user_id):
         thread_ids,
     ).fetchall()
     by_thread = {}
+    all_reply_ids = []
     for r in replies_rows:
         d = dict(r)
         d["author_display"] = _display_name_from_username(r["author_username"])
         by_thread.setdefault(r["thread_id"], []).append(d)
+        all_reply_ids.append(r["id"])
+    thread_attachments = _attachments_for_thread_ids(thread_ids)
+    reply_attachments = _attachments_for_reply_ids(all_reply_ids)
     result = []
     for t in threads_rows:
         d = dict(t)
         d["author_display"] = "Anonymous" if t["anonymous"] else _display_name_from_username(t["author_username"])
         d["replies"] = by_thread.get(t["id"], [])
+        for r in d["replies"]:
+            r["attachments"] = reply_attachments.get(r["id"], [])
+        d["attachments"] = thread_attachments.get(t["id"], [])
         latest_activity = max(t["created_at"], t["latest_reply_at"] or "")
         d["new_for_me"] = (t["last_read_at"] is None) or (latest_activity > t["last_read_at"])
         result.append(d)
@@ -2975,16 +3062,23 @@ def _monitor_dashboard_open_threads(session_id):
         thread_ids,
     ).fetchall()
     by_thread = {}
+    all_reply_ids = []
     for r in replies_rows:
         d = dict(r)
         d["author_display"] = _display_name_from_username(r["author_username"])
         by_thread.setdefault(r["thread_id"], []).append(d)
+        all_reply_ids.append(r["id"])
+    thread_attachments = _attachments_for_thread_ids(thread_ids)
+    reply_attachments = _attachments_for_reply_ids(all_reply_ids)
     now = datetime.utcnow()
     result = []
     for t in threads_rows:
         d = dict(t)
         d["author_display"] = "Anonymous" if t["anonymous"] else _display_name_from_username(t["author_username"])
         d["replies"] = by_thread.get(t["id"], [])
+        for r in d["replies"]:
+            r["attachments"] = reply_attachments.get(r["id"], [])
+        d["attachments"] = thread_attachments.get(t["id"], [])
         d["page_label"] = _page_label_from_path(t["page_path"])
         try:
             created = datetime.fromisoformat(t["created_at"].replace(" ", "T"))
@@ -3180,6 +3274,8 @@ def qa_create_thread(workshop_slug):
     )
     new_thread_id = cur.lastrowid
     get_db().commit()
+    if "attachment" in request.files:
+        _save_attachment(request.files["attachment"], sess["id"], user["id"], thread_id=new_thread_id)
     return redirect(page_path + f"#qa-thread-{new_thread_id}")
 
 
@@ -3201,12 +3297,15 @@ def qa_create_reply(workshop_slug, thread_id):
     if not body:
         abort(400)
     is_monitor_reply = 1 if _user_is_session_monitor(sess["id"], user["id"]) else 0
-    get_db().execute(
+    cur = get_db().execute(
         "INSERT INTO replies (thread_id, author_user_id, body, is_monitor_reply) "
         "VALUES (?, ?, ?, ?)",
         (thread_id, user["id"], body, is_monitor_reply),
     )
+    new_reply_id = cur.lastrowid
     get_db().commit()
+    if "attachment" in request.files:
+        _save_attachment(request.files["attachment"], sess["id"], user["id"], reply_id=new_reply_id)
     return redirect(_safe_return_to(request.form.get("return_to"), thread["page_path"] + f"#qa-thread-{thread_id}"))
 
 
@@ -3263,6 +3362,53 @@ def qa_mark_answered(workshop_slug, thread_id):
     )
     get_db().commit()
     return redirect(_safe_return_to(request.form.get("return_to"), thread["page_path"] + f"#qa-thread-{thread_id}"))
+
+
+@app.route("/uploads/<int:upload_id>")
+def serve_upload(upload_id):
+    """Auth-gated file serve. Caller must be participant, monitor, or facilitator of the session
+    that owns the upload's thread or reply."""
+    user = current_user()
+    if user is None:
+        abort(403)
+    row = get_db().execute(
+        "SELECT thread_id, reply_id, filename, stored_path, mime_type "
+        "FROM uploads WHERE id = ?",
+        (upload_id,),
+    ).fetchone()
+    if row is None:
+        abort(404)
+    if row["thread_id"]:
+        sess_row = get_db().execute(
+            "SELECT session_id FROM threads WHERE id = ?", (row["thread_id"],)
+        ).fetchone()
+    elif row["reply_id"]:
+        sess_row = get_db().execute(
+            "SELECT t.session_id FROM threads t JOIN replies r ON r.thread_id = t.id WHERE r.id = ?",
+            (row["reply_id"],),
+        ).fetchone()
+    else:
+        abort(404)
+    if sess_row is None:
+        abort(404)
+    session_id = sess_row["session_id"]
+    has_access = (
+        user["is_facilitator"]
+        or _user_is_session_monitor(session_id, user["id"])
+        or get_db().execute(
+            "SELECT 1 FROM session_participants WHERE session_id = ? AND user_id = ? AND removed_at IS NULL",
+            (session_id, user["id"]),
+        ).fetchone() is not None
+    )
+    if not has_access:
+        abort(403)
+    rel = row["stored_path"]
+    return send_from_directory(
+        str(UPLOADS_DIR), rel,
+        mimetype=row["mime_type"],
+        download_name=row["filename"],
+        as_attachment=False,
+    )
 
 
 # Initialize DB at import time so gunicorn workers see the schema.

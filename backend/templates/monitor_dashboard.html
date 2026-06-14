@@ -70,6 +70,18 @@
       </div>
       <p style="margin:0 0 0.6rem 0;line-height:1.55;color:#1f2937;white-space:pre-wrap;">{{ t.body }}</p>
 
+      {% if t.attachments %}
+      <div style="display:flex;flex-direction:column;gap:0.4rem;margin:0 0 0.7rem 0;">
+        {% for a in t.attachments %}
+          {% if a.is_image %}
+          <a href="{{ url_for('serve_upload', upload_id=a.id) }}" target="_blank" rel="noopener"><img src="{{ url_for('serve_upload', upload_id=a.id) }}" alt="{{ a.filename }}" style="display:block;max-width:100%;max-height:320px;border-radius:6px;border:1px solid #e2e8f0;"></a>
+          {% else %}
+          <a href="{{ url_for('serve_upload', upload_id=a.id) }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.4rem;padding:5px 10px;background:#f3f4f6;color:#1f2937;border:1px solid #e2e8f0;border-radius:6px;font-size:0.82rem;text-decoration:none;align-self:flex-start;"><span>📎</span><span>{{ a.filename }}</span><span style="color:#9ca3af;font-size:0.72rem;">{{ (a.size_bytes / 1024)|round|int }} KB</span></a>
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% endif %}
+
       {% if t.replies %}
       <div style="margin:0.5rem 0 0.85rem 0;padding:0.6rem 0.85rem;background:#f8fafc;border-left:3px solid #cbd5e1;border-radius:0 4px 4px 0;">
         <div style="font-size:0.72rem;text-transform:uppercase;color:#6b7280;font-weight:600;letter-spacing:0.04em;margin-bottom:0.4rem;">{{ t.replies|length }} repl{{ 'y' if t.replies|length == 1 else 'ies' }} already</div>
@@ -81,14 +93,26 @@
             <span style="color:#9ca3af;font-size:0.75rem;">{{ r.created_at }}</span>
           </div>
           <p style="margin:0.3rem 0 0 0;line-height:1.5;color:#374151;white-space:pre-wrap;font-size:0.92rem;">{{ r.body }}</p>
+          {% if r.attachments %}
+          <div style="display:flex;flex-direction:column;gap:0.3rem;margin-top:0.3rem;">
+            {% for a in r.attachments %}
+              {% if a.is_image %}
+              <a href="{{ url_for('serve_upload', upload_id=a.id) }}" target="_blank" rel="noopener"><img src="{{ url_for('serve_upload', upload_id=a.id) }}" alt="{{ a.filename }}" style="display:block;max-width:100%;max-height:240px;border-radius:6px;border:1px solid #e2e8f0;"></a>
+              {% else %}
+              <a href="{{ url_for('serve_upload', upload_id=a.id) }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.4rem;padding:4px 8px;background:white;color:#1f2937;border:1px solid #e2e8f0;border-radius:5px;font-size:0.78rem;text-decoration:none;align-self:flex-start;"><span>📎</span><span>{{ a.filename }}</span><span style="color:#9ca3af;font-size:0.68rem;">{{ (a.size_bytes / 1024)|round|int }} KB</span></a>
+              {% endif %}
+            {% endfor %}
+          </div>
+          {% endif %}
         </div>
         {% endfor %}
       </div>
       {% endif %}
 
-      <form method="post" action="{{ url_for('qa_create_reply', workshop_slug=workshop_slug, thread_id=t.id) }}" style="margin:0;">
+      <form method="post" action="{{ url_for('qa_create_reply', workshop_slug=workshop_slug, thread_id=t.id) }}" style="margin:0;" enctype="multipart/form-data">
         <input type="hidden" name="return_to" value="{{ return_to }}#qa-thread-{{ t.id }}">
         <textarea name="body" placeholder="Reply as the IFP facilitator…" required style="width:100%;min-height:65px;padding:0.55rem 0.7rem;border:1px solid #d1d5db;border-radius:6px;font-family:inherit;font-size:0.9rem;box-sizing:border-box;"></textarea>
+        <label style="display:block;margin:0.4rem 0 0.2rem 0;font-size:0.78rem;color:#6b7280;">Attach a screenshot or file (optional, max 10MB) <input type="file" name="attachment" accept="image/*,.pdf,.csv,.txt,.alm" style="font-size:0.78rem;"></label>
         <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;margin-top:0.5rem;flex-wrap:wrap;">
           <span style="font-size:0.78rem;color:#6b7280;">Posts with the IFP facilitator badge.</span>
           <div style="display:flex;gap:0.4rem;">
