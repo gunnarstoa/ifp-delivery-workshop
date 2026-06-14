@@ -188,6 +188,7 @@
         <h3>Ask a question</h3>
         <form method="post" action="{{ url_for('qa_create_thread', workshop_slug=workshop_slug) }}" enctype="multipart/form-data">
           <input type="hidden" name="page_path" value="{{ page_path }}">
+          <input type="hidden" name="session_slug" value="{{ session_slug }}">
           <textarea name="body" placeholder="What are you stuck on, or want to share?" required></textarea>
           <label class="qa-file-input">Attach a screenshot or file (optional, max 10MB) <input type="file" name="attachment" accept="image/*,.pdf,.csv,.txt,.alm"></label>
           <div class="qa-compose-row">
