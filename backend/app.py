@@ -2705,5 +2705,230 @@ def cli_add_admin():
     print(f"created facilitator: {username}")
 
 
+# ---------------------------- Discussion Q&A panel (B/20) ----------------------------
+
+QA_PAGE_RE = re.compile(r"^/w/([a-z0-9-]+)/([a-z0-9_-]+)\.html$")
+
+
+def _display_name_from_username(username):
+    if not username or "@" not in username:
+        return username or "Unknown"
+    local = username.split("@", 1)[0]
+    parts = re.split(r"[._-]+", local)
+    return " ".join(p.capitalize() for p in parts if p) or username
+
+
+def _user_workshop_session(user_id, workshop_slug):
+    """Return (session_row, role) for this user in this workshop.
+    role is 'participant', 'monitor', or both None when not enrolled and not assigned."""
+    if user_id is None:
+        return (None, None)
+    sess = _current_enrollment_session(user_id, workshop_slug)
+    if sess:
+        return (sess, "participant")
+    sess = get_db().execute(
+        "SELECT s.id, s.slug, s.name FROM session_monitors sm "
+        "JOIN sessions s ON s.id = sm.session_id "
+        "JOIN workshops w ON w.id = s.workshop_id "
+        "WHERE sm.user_id = ? AND sm.removed_at IS NULL "
+        "  AND w.slug = ? AND s.status != 'archived' "
+        "ORDER BY sm.assigned_at DESC LIMIT 1",
+        (user_id, workshop_slug),
+    ).fetchone()
+    if sess:
+        return (sess, "monitor")
+    return (None, None)
+
+
+def _session_has_any_monitor(session_id):
+    return get_db().execute(
+        "SELECT 1 FROM session_monitors WHERE session_id = ? AND removed_at IS NULL LIMIT 1",
+        (session_id,),
+    ).fetchone() is not None
+
+
+def _threads_for_page(session_id, page_path, viewer_user_id):
+    """Return list of threads on this (session, page) with reactions, replies, and viewer-specific flags."""
+    db = get_db()
+    threads_rows = db.execute(
+        "SELECT t.id, t.author_user_id, t.anonymous, t.kind, t.body, t.status, t.created_at, t.answered_at, "
+        "       u.username AS author_username, "
+        "       (SELECT COUNT(*) FROM reactions r WHERE r.thread_id = t.id AND r.kind = 'me_too') AS me_too_count, "
+        "       EXISTS(SELECT 1 FROM reactions r WHERE r.thread_id = t.id AND r.user_id = ? AND r.kind = 'me_too') AS i_reacted "
+        "FROM threads t LEFT JOIN users u ON u.id = t.author_user_id "
+        "WHERE t.session_id = ? AND t.page_path = ? AND t.hidden_at IS NULL "
+        "ORDER BY t.created_at",
+        (viewer_user_id, session_id, page_path),
+    ).fetchall()
+    if not threads_rows:
+        return []
+    thread_ids = [t["id"] for t in threads_rows]
+    placeholders = ",".join("?" * len(thread_ids))
+    replies_rows = db.execute(
+        f"SELECT r.id, r.thread_id, r.author_user_id, r.body, r.is_monitor_reply, r.created_at, "
+        f"       u.username AS author_username "
+        f"FROM replies r LEFT JOIN users u ON u.id = r.author_user_id "
+        f"WHERE r.thread_id IN ({placeholders}) AND r.hidden_at IS NULL "
+        f"ORDER BY r.created_at",
+        thread_ids,
+    ).fetchall()
+    by_thread = {}
+    for r in replies_rows:
+        d = dict(r)
+        d["author_display"] = _display_name_from_username(r["author_username"])
+        by_thread.setdefault(r["thread_id"], []).append(d)
+    result = []
+    for t in threads_rows:
+        d = dict(t)
+        d["author_display"] = "Anonymous" if t["anonymous"] else _display_name_from_username(t["author_username"])
+        d["replies"] = by_thread.get(t["id"], [])
+        result.append(d)
+    return result
+
+
+@app.after_request
+def inject_qa_panel(resp):
+    """Inject the discussion panel before </main> on workshop content pages
+    when the viewer has an active session enrollment or monitor assignment."""
+    if request.method != "GET":
+        return resp
+    if resp.status_code != 200:
+        return resp
+    m = QA_PAGE_RE.match(request.path)
+    if not m:
+        return resp
+    user = g.get("user")
+    if user is None:
+        return resp
+    content_type = resp.headers.get("Content-Type", "")
+    if not content_type.startswith("text/html"):
+        return resp
+    workshop_slug = m.group(1)
+    sess, role = _user_workshop_session(user["id"], workshop_slug)
+    if sess is None:
+        return resp
+    has_monitor = _session_has_any_monitor(sess["id"])
+    threads = _threads_for_page(sess["id"], request.path, user["id"]) if has_monitor else []
+    panel_html = render_template(
+        "_qa_panel.html",
+        threads=threads,
+        session_name=sess["name"],
+        workshop_slug=workshop_slug,
+        page_path=request.path,
+        role=role,
+        has_monitor=has_monitor,
+    )
+    body = resp.get_data(as_text=True)
+    if "</main>" in body:
+        body = body.replace("</main>", panel_html + "\n  </main>", 1)
+        resp.set_data(body)
+        resp.headers["Content-Length"] = str(len(resp.get_data()))
+    return resp
+
+
+@app.route("/w/<workshop_slug>/threads", methods=["POST"])
+def qa_create_thread(workshop_slug):
+    user = current_user()
+    if user is None:
+        abort(403)
+    sess, role = _user_workshop_session(user["id"], workshop_slug)
+    if sess is None or not _session_has_any_monitor(sess["id"]):
+        abort(403)
+    page_path = request.form.get("page_path", "").strip()
+    body = (request.form.get("body") or "").strip()
+    anonymous = 1 if request.form.get("anonymous") == "1" else 0
+    if not page_path or not body or not QA_PAGE_RE.match(page_path):
+        abort(400)
+    get_db().execute(
+        "INSERT INTO threads (session_id, page_path, author_user_id, anonymous, kind, body) "
+        "VALUES (?, ?, ?, ?, 'question', ?)",
+        (sess["id"], page_path, user["id"], anonymous, body),
+    )
+    get_db().commit()
+    return redirect(page_path + "#qa-panel")
+
+
+@app.route("/w/<workshop_slug>/threads/<int:thread_id>/reply", methods=["POST"])
+def qa_create_reply(workshop_slug, thread_id):
+    user = current_user()
+    if user is None:
+        abort(403)
+    sess, role = _user_workshop_session(user["id"], workshop_slug)
+    if sess is None:
+        abort(403)
+    thread = get_db().execute(
+        "SELECT id, page_path FROM threads WHERE id = ? AND hidden_at IS NULL AND session_id = ?",
+        (thread_id, sess["id"]),
+    ).fetchone()
+    if thread is None:
+        abort(404)
+    body = (request.form.get("body") or "").strip()
+    if not body:
+        abort(400)
+    is_monitor_reply = 1 if _user_is_session_monitor(sess["id"], user["id"]) else 0
+    get_db().execute(
+        "INSERT INTO replies (thread_id, author_user_id, body, is_monitor_reply) "
+        "VALUES (?, ?, ?, ?)",
+        (thread_id, user["id"], body, is_monitor_reply),
+    )
+    get_db().commit()
+    return redirect(thread["page_path"] + f"#qa-thread-{thread_id}")
+
+
+@app.route("/w/<workshop_slug>/threads/<int:thread_id>/react", methods=["POST"])
+def qa_react(workshop_slug, thread_id):
+    user = current_user()
+    if user is None:
+        abort(403)
+    sess, role = _user_workshop_session(user["id"], workshop_slug)
+    if sess is None:
+        abort(403)
+    thread = get_db().execute(
+        "SELECT id, page_path FROM threads WHERE id = ? AND hidden_at IS NULL AND session_id = ?",
+        (thread_id, sess["id"]),
+    ).fetchone()
+    if thread is None:
+        abort(404)
+    existing = get_db().execute(
+        "SELECT 1 FROM reactions WHERE thread_id = ? AND user_id = ? AND kind = 'me_too'",
+        (thread_id, user["id"]),
+    ).fetchone()
+    if existing:
+        get_db().execute(
+            "DELETE FROM reactions WHERE thread_id = ? AND user_id = ? AND kind = 'me_too'",
+            (thread_id, user["id"]),
+        )
+    else:
+        get_db().execute(
+            "INSERT INTO reactions (thread_id, user_id, kind) VALUES (?, ?, 'me_too')",
+            (thread_id, user["id"]),
+        )
+    get_db().commit()
+    return redirect(thread["page_path"] + f"#qa-thread-{thread_id}")
+
+
+@app.route("/w/<workshop_slug>/threads/<int:thread_id>/answer", methods=["POST"])
+def qa_mark_answered(workshop_slug, thread_id):
+    user = current_user()
+    if user is None:
+        abort(403)
+    sess, role = _user_workshop_session(user["id"], workshop_slug)
+    if sess is None or not _user_is_session_monitor(sess["id"], user["id"]):
+        abort(403)
+    thread = get_db().execute(
+        "SELECT id, page_path FROM threads WHERE id = ? AND hidden_at IS NULL AND session_id = ?",
+        (thread_id, sess["id"]),
+    ).fetchone()
+    if thread is None:
+        abort(404)
+    get_db().execute(
+        "UPDATE threads SET status = 'answered', answered_at = CURRENT_TIMESTAMP, answered_by = ? "
+        "WHERE id = ?",
+        (user["id"], thread_id),
+    )
+    get_db().commit()
+    return redirect(thread["page_path"] + f"#qa-thread-{thread_id}")
+
+
 # Initialize DB at import time so gunicorn workers see the schema.
 init_db()
