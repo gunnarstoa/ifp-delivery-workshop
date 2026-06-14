@@ -267,6 +267,23 @@ def serve_docs(filename):
     return _serve_repo_file("docs", filename)
 
 
+@app.route("/w/<workshop_slug>/")
+def workshop_root(workshop_slug):
+    """Land on the workshop's first content page (sorted alphabetically)."""
+    if not re.fullmatch(r"[a-z0-9-]{1,40}", workshop_slug):
+        abort(404)
+    docs_dir = REPO_ROOT / "docs" / workshop_slug
+    if not docs_dir.is_dir():
+        abort(404)
+    pages = sorted(
+        p.name for p in docs_dir.glob("*.html")
+        if re.fullmatch(r"[a-z0-9_-]+\.html", p.name)
+    )
+    if not pages:
+        abort(404)
+    return redirect(f"/w/{workshop_slug}/{pages[0]}")
+
+
 @app.route("/w/<workshop_slug>/<path:filename>")
 def serve_workshop(workshop_slug, filename):
     # Defense-in-depth: workshop_slug must match SLUG_RE shape; route param itself doesn't enforce it.
@@ -3032,7 +3049,7 @@ def _default_landing_for_user(user_id):
         return None
     db = get_db()
     row = db.execute(
-        "SELECT s.slug AS session_slug, w.slug AS workshop_slug FROM session_participants sp "
+        "SELECT w.slug AS workshop_slug FROM session_participants sp "
         "JOIN sessions s ON s.id = sp.session_id "
         "JOIN workshops w ON w.id = s.workshop_id "
         "WHERE sp.user_id = ? AND sp.removed_at IS NULL AND s.status != 'archived' "
@@ -3040,7 +3057,7 @@ def _default_landing_for_user(user_id):
         (user_id,),
     ).fetchone()
     if row:
-        return f"/w/{row['workshop_slug']}/s/{row['session_slug']}/feed"
+        return f"/w/{row['workshop_slug']}/"
     # Monitors: prefer the session with open questions, then most recent
     # thread activity, then most recent assignment. Sessions that are
     # actually live tend to have posts; empty future sessions don't.
