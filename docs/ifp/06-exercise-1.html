@@ -197,6 +197,24 @@
         Configurator Dimensions section after Step 2 is complete — Entity (2 levels), CostCenter (3), Roles (3), Suppliers (2), HR Org (3) all marked required; Product, Customer, Location all marked not required.
       </div>
 
+      <div class="lab-check" data-check-id="ex1-step2-dimensions" data-workshop-slug="ifp">
+        <p class="lab-check-prompt">Once all eight dimensions are configured and both custom lists are added, run the check below.</p>
+        <button type="button" class="lab-check-button">Check my work</button>
+        <div class="lab-check-results" hidden>
+          <p class="lab-check-summary">Dimensions look good.</p>
+          <ul class="lab-check-list">
+            <li><strong>Entity</strong> — required, 2 levels</li>
+            <li><strong>CostCenter</strong> (renamed from Department) — required, 3 levels</li>
+            <li><strong>Roles</strong> (renamed from Job) — required, 3 levels</li>
+            <li><strong>Suppliers</strong> (renamed from Vendor) — required, 2 levels</li>
+            <li><strong>HR Org</strong> (renamed from Functional Area) — required, 3 levels</li>
+            <li><strong>Product</strong>, <strong>Customer</strong>, <strong>Location</strong> — not required</li>
+            <li><strong>Projects</strong> and <strong>Country</strong> added as flat custom lists</li>
+          </ul>
+          <p class="lab-check-next">Dimension scope matches the scenario. You're cleared to move on to Step 3.</p>
+        </div>
+      </div>
+
       <div class="lab-quiz" data-correct="C">
         <span class="lab-quiz-label">Quick check</span>
         <h3>Your client needs to track spend by project code. How do you handle "Project" in this exercise?</h3>
@@ -227,6 +245,34 @@
         Top-Level Questions section with Multi-currency support set to <code>Yes</code>, Use the Location dimension set to <code>No</code>, and Use the Functional Area dimension set to <code>Yes</code>.
       </div>
 
+      <div class="lab-check" data-check-id="ex1-step3-toplevel" data-workshop-slug="ifp">
+        <p class="lab-check-prompt">Once the three top-level answers are saved, run the check below.</p>
+        <button type="button" class="lab-check-button">Check my work</button>
+        <div class="lab-check-results" hidden>
+          <p class="lab-check-summary">Top-level answers look good.</p>
+          <ul class="lab-check-list">
+            <li>Multi-currency support &rarr; <strong>Yes</strong></li>
+            <li>Use the Location dimension &rarr; <strong>No</strong></li>
+            <li>Use the Functional Area dimension &rarr; <strong>Yes</strong></li>
+          </ul>
+          <p class="lab-check-next">All three orientation questions are answered for this scenario. You're cleared to move on to Step 4.</p>
+        </div>
+      </div>
+
+      <div class="lab-quiz" data-correct="B">
+        <span class="lab-quiz-label">Quick check</span>
+        <h3>Why is Multi-currency support set to <strong>Yes</strong> at the Top-Level question for this scenario?</h3>
+        <div class="lab-quiz-options">
+          <label class="lab-quiz-option"><input type="radio" name="quiz-multicurrency" value="A"><span class="lab-quiz-letter">A</span><span>It's required when there are more than 2 cost centers</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-multicurrency" value="B"><span class="lab-quiz-letter">B</span><span>Multi-entity reporting requires it</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-multicurrency" value="C"><span class="lab-quiz-letter">C</span><span>The Configurator turns on multi-currency by default</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-multicurrency" value="D"><span class="lab-quiz-letter">D</span><span>It's required when using composite hierarchies</span></label>
+        </div>
+        <button type="button" class="lab-quiz-check">Check answer</button>
+        <div class="lab-quiz-feedback lab-quiz-feedback-correct"><strong>Correct.</strong> A manufacturing company planning across multiple departments typically reports across multiple entities — that's the trigger for multi-currency. If everything were in one entity in one currency, you could safely leave it off.</div>
+        <div class="lab-quiz-feedback lab-quiz-feedback-wrong"><strong>Not quite.</strong> The right answer is <strong>B</strong>. Multi-currency support is needed for multi-entity reporting — when a single model serves entities operating in different currencies.</div>
+      </div>
+
       <h2>Step 4 — Answer the Financial Planning questions</h2>
       <p>The Financial Planning model is the OpEx engine for this scenario. Pay attention to <strong>Margin Planning → Expense Only</strong> — that's what scopes the model to OpEx and skips revenue.</p>
 
@@ -247,6 +293,38 @@
         Financial Planning section with all seven answers set per the scenario: Multi-currency <code>Yes</code>, Top-down targets <code>No</code>, Margin Planning <code>Expense Only</code>, Expense planning <code>Yes</code>, Dimensionality <code>Department, Vendor</code>, Itemized dimensionality <code>Department</code>, Expense allocations <code>No</code>.
       </div>
 
+      <div class="lab-check" data-check-id="ex1-step4-fp" data-workshop-slug="ifp">
+        <p class="lab-check-prompt">Once all seven Financial Planning answers are saved, run the check below.</p>
+        <button type="button" class="lab-check-button">Check my work</button>
+        <div class="lab-check-results" hidden>
+          <p class="lab-check-summary">Financial Planning answers look good.</p>
+          <ul class="lab-check-list">
+            <li>Multi-currency support &rarr; <strong>Yes</strong></li>
+            <li>Top-down targets &rarr; <strong>No</strong></li>
+            <li>Margin Planning &rarr; <strong>Expense Only</strong></li>
+            <li>Expense planning &rarr; <strong>Yes</strong></li>
+            <li>Dimensionality for expense planning &rarr; <strong>Department, Vendor</strong></li>
+            <li>Dimensionality for itemized expense planning &rarr; <strong>Department</strong></li>
+            <li>Expense allocations &rarr; <strong>No</strong></li>
+          </ul>
+          <p class="lab-check-next">All seven Financial Planning answers match the OpEx-only scope. You're cleared to move on to Step 5.</p>
+        </div>
+      </div>
+
+      <div class="lab-quiz" data-correct="A">
+        <span class="lab-quiz-label">Quick check</span>
+        <h3>Why did you set <strong>Margin Planning</strong> to <code>Expense Only</code> in this exercise?</h3>
+        <div class="lab-quiz-options">
+          <label class="lab-quiz-option"><input type="radio" name="quiz-margin" value="A"><span class="lab-quiz-letter">A</span><span>The scenario only needs OpEx planning — revenue, COGS, and balance-sheet planning aren't in scope</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-margin" value="B"><span class="lab-quiz-letter">B</span><span>Expense Only is the recommended default for any IFP configuration</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-margin" value="C"><span class="lab-quiz-letter">C</span><span>It speeds up generation by skipping the Headcount model</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-margin" value="D"><span class="lab-quiz-letter">D</span><span>It's required when multi-currency is turned on</span></label>
+        </div>
+        <button type="button" class="lab-quiz-check">Check answer</button>
+        <div class="lab-quiz-feedback lab-quiz-feedback-correct"><strong>Correct.</strong> Margin Planning controls the scope of the Financial Planning model. <code>Expense Only</code> is right when the client only needs OpEx — it strips out the revenue and balance-sheet pieces so generation only builds what you'll actually use. Exercise 2 will widen the scope.</div>
+        <div class="lab-quiz-feedback lab-quiz-feedback-wrong"><strong>Not quite.</strong> The right answer is <strong>A</strong>. Margin Planning controls the model's scope — <code>Expense Only</code> matches a client who needs OpEx but not revenue, COGS, or balance-sheet planning. There's no universal default; the scenario dictates the answer.</div>
+      </div>
+
       <h2>Step 5 — Answer the Headcount questions</h2>
       <p>The Headcount model handles workforce planning.</p>
 
@@ -262,18 +340,31 @@
         Headcount section with Multi-currency support set to <code>Yes</code> and Term for Job set to <code>Roles</code>.
       </div>
 
-      <div class="lab-quiz" data-correct="A">
+      <div class="lab-check" data-check-id="ex1-step5-headcount" data-workshop-slug="ifp">
+        <p class="lab-check-prompt">Once both Headcount answers are saved, run the check below.</p>
+        <button type="button" class="lab-check-button">Check my work</button>
+        <div class="lab-check-results" hidden>
+          <p class="lab-check-summary">Headcount answers look good.</p>
+          <ul class="lab-check-list">
+            <li>Multi-currency support &rarr; <strong>Yes</strong></li>
+            <li>Term for Job &rarr; <strong>Roles</strong></li>
+          </ul>
+          <p class="lab-check-next">Both Headcount answers are set, and the term matches the Job dimension's rename in Step 2.</p>
+        </div>
+      </div>
+
+      <div class="lab-quiz" data-correct="B">
         <span class="lab-quiz-label">Quick check</span>
-        <h3>Why did you set <strong>Margin Planning</strong> to <code>Expense Only</code> in this exercise?</h3>
+        <h3>Why must the <strong>Term for Job</strong> in the Headcount section match the rename you applied to the Job dimension in Step 2?</h3>
         <div class="lab-quiz-options">
-          <label class="lab-quiz-option"><input type="radio" name="quiz-margin" value="A"><span class="lab-quiz-letter">A</span><span>The scenario only needs OpEx planning — revenue, COGS, and balance-sheet planning aren't in scope</span></label>
-          <label class="lab-quiz-option"><input type="radio" name="quiz-margin" value="B"><span class="lab-quiz-letter">B</span><span>Expense Only is the recommended default for any IFP configuration</span></label>
-          <label class="lab-quiz-option"><input type="radio" name="quiz-margin" value="C"><span class="lab-quiz-letter">C</span><span>It speeds up generation by skipping the Headcount model</span></label>
-          <label class="lab-quiz-option"><input type="radio" name="quiz-margin" value="D"><span class="lab-quiz-letter">D</span><span>It's required when multi-currency is turned on</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-jobterm" value="A"><span class="lab-quiz-letter">A</span><span>The Configurator won't generate the Headcount model otherwise</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-jobterm" value="B"><span class="lab-quiz-letter">B</span><span>Internal references in the Headcount model use that term — a mismatch creates broken references after generation</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-jobterm" value="C"><span class="lab-quiz-letter">C</span><span>The Job dimension can only be renamed in one place</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-jobterm" value="D"><span class="lab-quiz-letter">D</span><span>It's a Configurator UI display preference only</span></label>
         </div>
         <button type="button" class="lab-quiz-check">Check answer</button>
-        <div class="lab-quiz-feedback lab-quiz-feedback-correct"><strong>Correct.</strong> Margin Planning controls the scope of the Financial Planning model. <code>Expense Only</code> is right when the client only needs OpEx — it strips out the revenue and balance-sheet pieces so generation only builds what you'll actually use. Exercise 2 will widen the scope.</div>
-        <div class="lab-quiz-feedback lab-quiz-feedback-wrong"><strong>Not quite.</strong> The right answer is <strong>A</strong>. Margin Planning controls the model's scope — <code>Expense Only</code> matches a client who needs OpEx but not revenue, COGS, or balance-sheet planning. There's no universal default; the scenario dictates the answer.</div>
+        <div class="lab-quiz-feedback lab-quiz-feedback-correct"><strong>Correct.</strong> The Headcount model's formulas and import actions reference whichever term you chose for Job. If the rename and the term don't match, you'll see <code>LINE_ITEM_FORMULA</code> errors after generation — exactly the kind covered in Error Log Review.</div>
+        <div class="lab-quiz-feedback lab-quiz-feedback-wrong"><strong>Not quite.</strong> The right answer is <strong>B</strong>. The Headcount model uses "Job" as the source of truth for references inside its formulas. If you rename the dimension in Step 2 but leave the Headcount term as the default, generation produces broken references — the kind that show up in the error log review later.</div>
       </div>
 
       <h2>You're done with the configuration</h2>
