@@ -184,6 +184,42 @@ body {
   font-weight: 600;
 }
 
+/* Sidebar status dots — injected by js/nav.js on workshop pages.
+   Each nav-link gets a small leading dot showing the participant's status
+   for that page: done (green), partial (orange), failed (red), todo (gray). */
+.nav-link-status {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 0.55rem;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+.nav-link-status-done    { background: #2A9D5B; box-shadow: 0 0 0 1px rgba(42,157,91,0.25); }
+.nav-link-status-partial { background: #E08240; box-shadow: 0 0 0 1px rgba(224,130,64,0.25); }
+.nav-link-status-failed  { background: #DC4848; box-shadow: 0 0 0 1px rgba(220,72,72,0.25); }
+.nav-link-status-todo    { background: rgba(255,255,255,0.18); }
+
+/* "My Progress" link in the sidebar — sits at the top of Getting Started,
+   carries a leading chart emoji and a trailing percent badge. */
+.nav-link-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+.nav-link-progress-icon { font-size: 0.95rem; line-height: 1; }
+.nav-link-progress-percent {
+  margin-left: auto;
+  background: rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.85);
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: 999px;
+  letter-spacing: 0.02em;
+}
+
 /* ============================================================
    Main Content
    ============================================================ */

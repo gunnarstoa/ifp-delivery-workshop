@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+{% block title %}My Progress — {{ workshop_name }}{% endblock %}
+{% block body %}
+<div class="progress-shell">
+  <div class="progress-header">
+    <div>
+      <h1>My Progress</h1>
+      <p class="progress-subtitle">{{ workshop_name }} &middot; {{ session.name }}</p>
+    </div>
+    <div class="progress-header-actions">
+      <a class="secondary-btn" href="/w/{{ workshop_slug }}/">Back to workshop</a>
+      <form method="post" action="{{ url_for('logout') }}" style="margin:0;">
+        <button class="secondary-btn" type="submit">Sign out</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="progress-overall card">
+    <div class="progress-overall-row">
+      <div class="progress-overall-label">
+        <span class="progress-overall-count">{{ progress.overall.done }} of {{ progress.overall.total }} complete</span>
+        <span class="progress-overall-percent">{{ progress.overall.percent }}%</span>
+      </div>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-bar-fill" style="width: {{ progress.overall.percent }}%;"></div>
+    </div>
+  </div>
+
+  {% if progress.next_up %}
+  <a class="progress-nextup" href="{{ progress.next_up.page_path }}">
+    <span class="progress-nextup-label">Next up &middot; {{ progress.next_up.section }}</span>
+    <span class="progress-nextup-title">{{ progress.next_up.label }} &rarr;</span>
+  </a>
+  {% else %}
+  <div class="progress-nextup progress-nextup-done">
+    <span class="progress-nextup-label">Workshop complete</span>
+    <span class="progress-nextup-title">Every task is done. Nice work.</span>
+  </div>
+  {% endif %}
+
+  {% for section in progress.sections %}
+  <section class="progress-section">
+    <div class="progress-section-head">
+      <h2>{{ section.title }}</h2>
+      <span class="progress-section-count">{{ section.done }} of {{ section.total }}</span>
+    </div>
+    <div class="progress-bar progress-bar-thin">
+      <div class="progress-bar-fill" style="width: {{ section.percent }}%;"></div>
+    </div>
+    <ul class="progress-items">
+      {% for item in section.items %}
+      <li class="progress-item progress-item-{{ item.status }}">
+        <a class="progress-item-link" href="{{ item.page_path }}">
+          <span class="progress-dot progress-dot-{{ item.status }}" aria-hidden="true"></span>
+          <span class="progress-item-label">{{ item.label }}</span>
+          {% if item.kind == 'page' and item.checks_total %}
+            <span class="progress-item-meta">{{ item.checks_passed }} / {{ item.checks_total }} checks</span>
+          {% elif item.kind == 'kc' and item.attempts and item.status != 'done' %}
+            <span class="progress-item-meta">Attempted &middot; retake</span>
+          {% endif %}
+          <span class="progress-item-status">
+            {% if item.status == 'done' %}Done
+            {% elif item.status == 'partial' %}In progress
+            {% elif item.status == 'failed' %}Needs retry
+            {% else %}Not started
+            {% endif %}
+          </span>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endfor %}
+</div>
+
+<style>
+  .progress-shell {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 1.75rem 1.25rem 3rem;
+  }
+  .progress-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .progress-header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #1e3a5f;
+    letter-spacing: -0.01em;
+  }
+  .progress-subtitle {
+    margin: 0.25rem 0 0 0;
+    font-size: 0.9rem;
+    color: #6b7280;
+  }
+  .progress-header-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .progress-header-actions .secondary-btn {
+    text-decoration: none;
+    background: white;
+    border: 1px solid #cbd5e1;
+    color: #1f2937;
+    padding: 0.45rem 0.85rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .progress-header-actions .secondary-btn:hover {
+    background: #f8fafc;
+  }
+  .progress-overall {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1.1rem 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .progress-overall-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 0.55rem;
+  }
+  .progress-overall-count {
+    font-size: 1rem;
+    color: #1e3a5f;
+    font-weight: 600;
+  }
+  .progress-overall-percent {
+    font-size: 1.4rem;
+    color: #1A7A47;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .progress-bar {
+    background: #e2e8f0;
+    height: 10px;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-bar-thin { height: 6px; }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #1A7A47 0%, #2A9D5B 100%);
+    transition: width 0.3s ease;
+  }
+  .progress-nextup {
+    display: block;
+    background: #0A2F46;
+    color: white;
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    text-decoration: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .progress-nextup:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(10, 47, 70, 0.18);
+  }
+  .progress-nextup-label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0.75;
+    margin-bottom: 0.25rem;
+  }
+  .progress-nextup-title {
+    display: block;
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+  .progress-nextup-done {
+    background: #1A7A47;
+  }
+  .progress-section {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1rem 1.25rem 0.6rem;
+    margin-bottom: 1rem;
+  }
+  .progress-section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+  .progress-section-head h2 {
+    margin: 0;
+    font-size: 1.05rem;
+    color: #1e3a5f;
+    font-weight: 600;
+  }
+  .progress-section-count {
+    font-size: 0.8rem;
+    color: #6b7280;
+    font-weight: 500;
+  }
+  .progress-items {
+    list-style: none;
+    padding: 0;
+    margin: 0.75rem 0 0 0;
+  }
+  .progress-item-link {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.4rem;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #1f2937;
+    transition: background 0.15s ease;
+  }
+  .progress-item-link:hover { background: #f8fafc; }
+  .progress-item + .progress-item .progress-item-link {
+    border-top: 1px solid #f1f5f9;
+  }
+  .progress-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .progress-dot-done    { background: #1A7A47; box-shadow: 0 0 0 1px rgba(26,122,71,0.2); }
+  .progress-dot-partial { background: #C06010; box-shadow: 0 0 0 1px rgba(192,96,16,0.2); }
+  .progress-dot-failed  { background: #B91C1C; box-shadow: 0 0 0 1px rgba(185,28,28,0.2); }
+  .progress-dot-todo    { background: #cbd5e1; }
+  .progress-item-label { font-size: 0.95rem; }
+  .progress-item-meta {
+    font-size: 0.78rem;
+    color: #6b7280;
+    background: #f1f5f9;
+    padding: 2px 7px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .progress-item-status {
+    font-size: 0.75rem;
+    color: #6b7280;
+    text-align: right;
+    min-width: 80px;
+  }
+  .progress-item-done .progress-item-status { color: #1A7A47; font-weight: 600; }
+  .progress-item-partial .progress-item-status { color: #C06010; font-weight: 600; }
+  .progress-item-failed .progress-item-status { color: #B91C1C; font-weight: 600; }
+  @media (max-width: 540px) {
+    .progress-item-link {
+      grid-template-columns: auto 1fr auto;
+    }
+    .progress-item-status { display: none; }
+  }
+</style>
+{% endblock %}

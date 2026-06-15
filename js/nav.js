@@ -93,4 +93,60 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // ── My Progress link + sidebar status dots ────────────────────────────────
+  // Only runs on workshop pages served at /w/<slug>/<page>.html — the Flask
+  // backend exposes /w/<slug>/progress (page) and /w/<slug>/progress.json (data).
+  // The static GitHub Pages docs site doesn't serve those endpoints, so the
+  // injection is a no-op there (the fetch fails silently, the link is hidden).
+  (function () {
+    var wMatch = window.location.pathname.match(/^\/w\/([a-z0-9-]{1,40})\//);
+    if (!wMatch) return;
+    var workshopSlug = wMatch[1];
+    var navList = document.querySelector('.nav-list');
+    var firstSubmenu = navList ? navList.querySelector('.nav-submenu') : null;
+    if (!firstSubmenu) return;
+
+    // Inject "My Progress" as the first item in the first nav section
+    var progressLi = document.createElement('li');
+    progressLi.className = 'nav-progress-item';
+    progressLi.innerHTML = '<a class="nav-link nav-link-progress" href="/w/' + workshopSlug + '/progress">' +
+      '<span class="nav-link-progress-icon" aria-hidden="true">📊</span>' +
+      '<span>My Progress</span>' +
+      '<span class="nav-link-progress-percent" data-progress-percent>—</span>' +
+      '</a>';
+    firstSubmenu.insertBefore(progressLi, firstSubmenu.firstChild);
+    // Mark active when we're on the progress page itself
+    if (window.location.pathname === '/w/' + workshopSlug + '/progress') {
+      progressLi.querySelector('a').classList.add('active');
+    }
+
+    // Fetch the per-page status map and paint dots beside each nav-link
+    fetch('/w/' + workshopSlug + '/progress.json', { credentials: 'same-origin' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) {
+        if (!data) return;
+        if (data.overall && typeof data.overall.percent === 'number') {
+          var pctEl = progressLi.querySelector('[data-progress-percent]');
+          if (pctEl) pctEl.textContent = data.overall.percent + '%';
+        }
+        var byPage = data.by_page || {};
+        document.querySelectorAll('.nav-list .nav-link').forEach(function (link) {
+          if (link.classList.contains('nav-link-progress')) return;
+          var href = link.getAttribute('href') || '';
+          // Resolve relative href ("./05-…html") to absolute /w/<slug>/<file>
+          var fileName = href.split('/').pop();
+          if (!fileName) return;
+          var key = '/w/' + workshopSlug + '/' + fileName;
+          var status = byPage[key];
+          if (!status) return;
+          var dot = document.createElement('span');
+          dot.className = 'nav-link-status nav-link-status-' + status;
+          dot.setAttribute('aria-hidden', 'true');
+          dot.title = status === 'done' ? 'Complete' : status === 'partial' ? 'In progress' : status === 'failed' ? 'Needs retry' : 'Not started';
+          link.insertBefore(dot, link.firstChild);
+        });
+      })
+      .catch(function () { /* silent — static-site build won't have this endpoint */ });
+  })();
+
 });

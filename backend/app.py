@@ -2106,6 +2106,207 @@ WORKSHOP_LAB_CHECKS = {
 }
 
 
+# Per-workshop section groupings for the participant My Progress page and the
+# sidebar nav-link status dots. Each section lists the page filenames in nav order;
+# they're mapped to /w/<slug>/<filename> at render time.
+WORKSHOP_PROGRESS_SECTIONS = {
+    "ifp": [
+        {"title": "Getting Started", "pages": ["01-overview.html", "02-tenant-access.html", "03-ifp-overview.html", "04-anaplan-way.html"]},
+        {"title": "Configuration",   "pages": ["05-configurator-walkthrough.html", "06-exercise-1.html", "06-exercise-2.html", "06-exercise-3.html", "07-generation.html", "08-post-gen.html", "09-error-logs.html"]},
+        {"title": "Extensions",      "pages": ["10-extensions-overview.html", "11-extension-exercise-1.html", "12-extension-exercise-2.html"]},
+        {"title": "Reference",       "pages": ["13-whats-coming.html", "14-qanda.html", "15-workshop-wrap-up.html"]},
+    ],
+}
+
+
+def _participant_progress(session_id, user_id, workshop_slug):
+    """Compute one participant's progress across page visits, lab checks, surveys,
+    and the knowledge check. Returns a dict shaped for both the My Progress page
+    template and the sidebar status-dot JSON endpoint."""
+    db = get_db()
+    sections_cfg = WORKSHOP_PROGRESS_SECTIONS.get(workshop_slug, [])
+    lab_checks = WORKSHOP_LAB_CHECKS.get(workshop_slug, [])
+
+    # Bucket lab checks by page so each page can roll up its own check status
+    lab_checks_by_page = {}
+    for c in lab_checks:
+        lab_checks_by_page.setdefault(c["page_path"], []).append(c)
+
+    # All page paths the participant could visit (from the section config)
+    all_page_paths = []
+    for sec in sections_cfg:
+        for pname in sec["pages"]:
+            all_page_paths.append(f"/w/{workshop_slug}/{pname}")
+
+    # One query: which of those pages has the user visited at all
+    if all_page_paths:
+        ph = ",".join("?" * len(all_page_paths))
+        visited = {r["path"] for r in db.execute(
+            f"SELECT DISTINCT path FROM page_views WHERE user_id = ? AND path IN ({ph})",
+            [user_id] + all_page_paths,
+        ).fetchall()}
+    else:
+        visited = set()
+
+    # One query: best result per lab-check id (1 = passed, 0 = failed)
+    lab_result = {}
+    if lab_checks:
+        for r in db.execute(
+            "SELECT check_id, MAX(passed) AS best FROM lab_check_attempts "
+            "WHERE user_id = ? AND session_id = ? GROUP BY check_id",
+            (user_id, session_id),
+        ).fetchall():
+            lab_result[r["check_id"]] = r["best"]
+
+    # Survey + KC completions for this session
+    pre_done = db.execute(
+        "SELECT 1 FROM survey_responses sr JOIN session_surveys ss ON ss.id = sr.survey_id "
+        "WHERE ss.session_id = ? AND ss.kind = 'pre' AND sr.participant_user_id = ? LIMIT 1",
+        (session_id, user_id),
+    ).fetchone() is not None
+    post_done = db.execute(
+        "SELECT 1 FROM survey_responses sr JOIN session_surveys ss ON ss.id = sr.survey_id "
+        "WHERE ss.session_id = ? AND ss.kind = 'post' AND sr.participant_user_id = ? LIMIT 1",
+        (session_id, user_id),
+    ).fetchone() is not None
+    kc_attempts, kc_passed = _kc_user_status(session_id, user_id)
+
+    # Pretty title for a workshop page (read the <title> from the file once)
+    def _page_title(filename):
+        try:
+            html = (REPO_ROOT / "docs" / workshop_slug / filename).read_text(encoding="utf-8", errors="replace")
+            m = re.search(r"<title>([^<]+)</title>", html)
+            if m:
+                t = m.group(1).strip()
+                t = re.sub(r"\s*[—–-]\s*IFP\s+Delivery\s+Partner\s+Workshop\s*$", "", t)
+                return t or filename
+        except (OSError, UnicodeDecodeError):
+            pass
+        return filename
+
+    # Roll up each page's status from visits + lab checks
+    def _page_status(page_path):
+        page_checks = lab_checks_by_page.get(page_path, [])
+        check_results = [lab_result.get(c["id"]) for c in page_checks]
+        passed = sum(1 for r in check_results if r == 1)
+        failed = sum(1 for r in check_results if r == 0)
+        total_checks = len(page_checks)
+        was_visited = page_path in visited
+        if not page_checks:
+            status = "done" if was_visited else "todo"
+        elif passed == total_checks:
+            status = "done"
+        elif failed and not was_visited:
+            status = "todo"
+        elif was_visited and passed == 0 and failed == 0:
+            status = "partial"
+        elif passed or failed:
+            status = "partial" if not failed else "failed" if was_visited else "partial"
+        else:
+            status = "todo"
+        return {
+            "status": status,
+            "checks_passed": passed,
+            "checks_total": total_checks,
+            "visited": was_visited,
+        }
+
+    # "Workshop Activities" section: surveys + KC. Always at the top.
+    activities_items = []
+    activities_done = 0
+    pre_status = "done" if pre_done else "todo"
+    activities_items.append({
+        "key": "pre_survey",
+        "label": "Pre-Workshop Survey",
+        "status": pre_status,
+        "page_path": f"/w/{workshop_slug}/survey/pre",
+        "kind": "survey",
+    })
+    if pre_done: activities_done += 1
+    post_status = "done" if post_done else "todo"
+    activities_items.append({
+        "key": "post_survey",
+        "label": "Post-Workshop Survey",
+        "status": post_status,
+        "page_path": f"/w/{workshop_slug}/survey/post",
+        "kind": "survey",
+    })
+    if post_done: activities_done += 1
+    if kc_passed:
+        kc_status = "done"
+        activities_done += 1
+    elif kc_attempts:
+        kc_status = "partial"
+    else:
+        kc_status = "todo"
+    activities_items.append({
+        "key": "knowledge_check",
+        "label": "Knowledge Check",
+        "status": kc_status,
+        "page_path": f"/w/{workshop_slug}/survey/knowledge",
+        "kind": "kc",
+        "attempts": kc_attempts,
+    })
+
+    sections = [{
+        "title": "Workshop Activities",
+        "items": activities_items,
+        "done": activities_done,
+        "total": len(activities_items),
+    }]
+
+    # Content sections from WORKSHOP_PROGRESS_SECTIONS
+    by_page = {}
+    for sec in sections_cfg:
+        items = []
+        done_count = 0
+        for pname in sec["pages"]:
+            page_path = f"/w/{workshop_slug}/{pname}"
+            ps = _page_status(page_path)
+            items.append({
+                "key": "page_" + pname,
+                "label": _page_title(pname),
+                "status": ps["status"],
+                "page_path": page_path,
+                "kind": "page",
+                "checks_passed": ps["checks_passed"],
+                "checks_total": ps["checks_total"],
+            })
+            if ps["status"] == "done":
+                done_count += 1
+            by_page[page_path] = ps["status"]
+        sections.append({
+            "title": sec["title"],
+            "items": items,
+            "done": done_count,
+            "total": len(items),
+        })
+
+    # Percent + "next up" deep link
+    for sec in sections:
+        sec["percent"] = int(round(100 * sec["done"] / sec["total"])) if sec["total"] else 0
+
+    overall_done = sum(s["done"] for s in sections)
+    overall_total = sum(s["total"] for s in sections)
+    overall_percent = int(round(100 * overall_done / overall_total)) if overall_total else 0
+
+    next_up = None
+    for sec in sections:
+        for item in sec["items"]:
+            if item["status"] != "done":
+                next_up = {"label": item["label"], "page_path": item["page_path"], "section": sec["title"]}
+                break
+        if next_up:
+            break
+
+    return {
+        "sections": sections,
+        "overall": {"done": overall_done, "total": overall_total, "percent": overall_percent},
+        "next_up": next_up,
+        "by_page": by_page,
+    }
+
+
 def _session_leaderboard(session_id, workshop_slug):
     """One row per active participant with a status entry per checkpoint defined in
     WORKSHOP_LEADERBOARD plus every Check-my-work entry in WORKSHOP_LAB_CHECKS.
@@ -3916,6 +4117,53 @@ def qa_mark_answered(workshop_slug, thread_id):
     )
     get_db().commit()
     return redirect(_safe_return_to(request.form.get("return_to"), thread["page_path"] + f"#qa-thread-{thread_id}"))
+
+
+@app.route("/w/<workshop_slug>/progress")
+def participant_progress(workshop_slug):
+    """My Progress page — what the participant has done and what's next."""
+    user = current_user()
+    if user is None:
+        return redirect(url_for("login", next=request.path))
+    if not re.fullmatch(r"[a-z0-9-]{1,40}", workshop_slug):
+        abort(404)
+    sess, role = _user_workshop_session(user["id"], workshop_slug)
+    if sess is None:
+        abort(403)
+    progress = _participant_progress(sess["id"], user["id"], workshop_slug)
+    workshop_name_row = get_db().execute(
+        "SELECT w.name FROM workshops w WHERE w.slug = ?", (workshop_slug,)
+    ).fetchone()
+    workshop_name = workshop_name_row["name"] if workshop_name_row else workshop_slug
+    return render_template(
+        "participant_progress.html",
+        user=user,
+        workshop_slug=workshop_slug,
+        workshop_name=workshop_name,
+        session=sess,
+        role=role,
+        progress=progress,
+    )
+
+
+@app.route("/w/<workshop_slug>/progress.json")
+def participant_progress_json(workshop_slug):
+    """Lightweight JSON feed for the sidebar status dots. Returns just by_page so
+    the nav.js can paint dots without re-rendering anything else."""
+    user = current_user()
+    if user is None:
+        return jsonify({"by_page": {}}), 401
+    if not re.fullmatch(r"[a-z0-9-]{1,40}", workshop_slug):
+        abort(404)
+    sess, _role = _user_workshop_session(user["id"], workshop_slug)
+    if sess is None:
+        return jsonify({"by_page": {}}), 403
+    progress = _participant_progress(sess["id"], user["id"], workshop_slug)
+    return jsonify({
+        "by_page": progress["by_page"],
+        "overall": progress["overall"],
+        "next_up": progress["next_up"],
+    })
 
 
 @app.route("/w/<workshop_slug>/lab-check", methods=["POST"])
