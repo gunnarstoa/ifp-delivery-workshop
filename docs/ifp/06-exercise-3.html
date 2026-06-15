@@ -69,201 +69,306 @@
 
   <main class="main-content">
     <div class="content-header">
-      <h1>Configuration Exercise 3: Nuclear Plant – OpEx and Headcount</h1>
-      <p class="subtitle">Hands-on exercise to configure IFP for a utilities company</p>
-      <div class="badge-row"><span class="content-badge">Configuration</span><span class="content-badge">30 min</span><span class="content-badge">Guided Practice</span></div>
+      <h1>Exercise 3: Nuclear Plant — OpEx and Headcount with WBS</h1>
+      <p class="subtitle">Configure IFP for a utilities company with deep cost-center attributes and a Work Breakdown Structure</p>
+      <div class="badge-row"><span class="content-badge">Configuration</span><span class="content-badge">⏱ About 30 mins</span><span class="content-badge">Guided practice</span></div>
     </div>
     <div class="content-body">
 
+      <div class="lab-objectives">
+        <h3>What you'll do</h3>
+        <ul>
+          <li>Apply the standardized naming convention with the Exercise 3 date so this run is unique in the tenant</li>
+          <li>Configure the eight standard dimensions with four renames (Accounts &rarr; GL Accounts, Department &rarr; CostCenter, Vendor &rarr; Supplier, Functional Area &rarr; WBS)</li>
+          <li>Add four flat custom lists for downstream PO and management tracking</li>
+          <li>Attach four attributes to the CostCenter dimension so cost centers can be sliced by manager, entity, profit center, and country</li>
+          <li>Answer the top-level and Financial Planning questions for an OpEx-only scope</li>
+        </ul>
+      </div>
+
+      <h2>Reset the Configurator before you start</h2>
+      <p>This exercise is net-new and independent of Exercise 2. Reset everything so prior answers don't carry over.</p>
+
       <div class="callout-warning">
-        <span class="callout-label">⚠ Reset Before You Start — Each Exercise is Net-New</span>
-        <p>This exercise is independent of the previous one. Before you begin, restore the Application Framework Configurator to its default state so prior answers don't carry over.</p>
-        <p><strong>Important:</strong> Hierarchies must be restored to default <strong>one at a time</strong> — there is no global "restore all hierarchies" button. Work through each hierarchy individually.</p>
-        <p>Complete all three resets in this order:</p>
+        <span class="callout-label">⚠ Complete all three resets in this order</span>
         <ol>
-          <li><strong>Restore Default for Configuration Questions</strong> — In the Configuration Questions section, click <strong>Restore default</strong>. All gray "CUSTOM ANSWER" indicators should flip back to "DEFAULT ANSWER".</li>
-          <li><strong>Restore Default for each Hierarchy</strong> — In the Hierarchies section, open each hierarchy (Entity, Account, Location, etc.) and click <strong>Restore default</strong> for each one individually. Confirm levels return to the documented defaults.</li>
-          <li><strong>Clear Dataspace Objects</strong> — Remove any objects from your assigned Dataspace that were created during the prior exercise so generation starts from a clean slate.</li>
+          <li><strong>Restore default for the Configuration Questions</strong> — in the Configuration Questions section, click <strong>Restore default</strong>. Every gray "CUSTOM ANSWER" indicator should flip back to "DEFAULT ANSWER".</li>
+          <li><strong>Restore default for each Hierarchy</strong> — hierarchies must be restored <strong>one at a time</strong>. Open each one (Entity, Account, Location, etc.) and click <strong>Restore default</strong> individually. Confirm levels return to documented defaults.</li>
+          <li><strong>Clear Dataspace objects</strong> — remove any objects in your assigned Dataspace from the prior exercise so this generation starts from a clean slate.</li>
         </ol>
       </div>
 
-<h2>Standardized Naming Convention</h2>
-      <p>Replace the default model and app names with a standardized format before generating. The recommended pattern is <code>[ModelType]_Exercise ##_YYYYMMDD</code> — this ensures every generation produces uniquely-named artifacts and avoids name-collision generation errors when the same exercise is run more than once in the tenant.</p>
-      <figure class="screenshot">
-        <img src="../../img/configurator/naming-convention-exercise-3.png" alt="Standardized naming convention for Exercise 3 showing Admin Model, Financial Planning Model, CapEx Model, Headcount Model, and IFP App with example names following the [ModelType]_Exercise 03_YYYYMMDD pattern" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;">
-        <figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Standardized naming convention for Exercise 3 — apply to all four models and the IFP App before generation</figcaption>
-      </figure>
+      <h2>The scenario</h2>
+      <p>A utilities company operates a nuclear facility and needs <strong>operating expense and headcount planning</strong> with a detailed Work Breakdown Structure (WBS) for project hierarchy. They <strong>do not</strong> need balance sheet, cashflow, margin planning, or CapEx in the base model — CapEx project and purchase-order tracking are added in the extension phase. The model uses a rich set of attributes on the CostCenter dimension so cost centers can be sliced by manager, entity, profit center, and country.</p>
 
-      <h2>Scenario</h2>
-      <p><strong>A utilities company operating a nuclear facility needs operating expense and headcount planning</strong> with a detailed work breakdown structure (WBS) for capital project tracking. No balance sheet, cashflow, or margin planning required.</p>
-
-      <h3>Model Setup</h3>
-      <ul>
-        <li>Operating Expense and Headcount only</li>
-        <li>Will NOT use: top-down targets, margin planning, CapEx, balance sheet, cashflow, or allocations</li>
-        <li>Will configure extension for CapEx projects &amp; PO tracking</li>
-        <li>Time strata: Monthly</li>
-        <li><strong>Estimated generation time: 20–40 minutes</strong></li>
-      </ul>
-
-      <h3>Dimension Configuration</h3>
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Standard Dimension</th>
-            <th>Required?</th>
-            <th>Rename To</th>
-            <th>OpEx?</th>
-            <th># of Levels</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Accounts</strong></td>
-            <td>Yes</td>
-            <td>GL Accounts</td>
-            <td>—</td>
-            <td>—</td>
-          </tr>
-          <tr>
-            <td><strong>Entity</strong></td>
-            <td>Yes</td>
-            <td>—</td>
-            <td>Yes</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td><strong>Department</strong></td>
-            <td>Yes</td>
-            <td>CostCenter</td>
-            <td>Yes</td>
-            <td>3</td>
-          </tr>
-          <tr>
-            <td><strong>Job</strong></td>
-            <td>Yes</td>
-            <td>—</td>
-            <td>—</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td><strong>Vendor</strong></td>
-            <td>Yes</td>
-            <td>Supplier</td>
-            <td>—</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td><strong>Functional Area</strong></td>
-            <td>Yes</td>
-            <td>WBS</td>
-            <td>—</td>
-            <td>5</td>
-          </tr>
-          <tr>
-            <td><strong>Customer</strong></td>
-            <td>No</td>
-            <td>—</td>
-            <td>—</td>
-            <td>—</td>
-          </tr>
-          <tr>
-            <td><strong>Location</strong></td>
-            <td>No</td>
-            <td>—</td>
-            <td>—</td>
-            <td>—</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h3>Custom Dimensions</h3>
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Custom List</th>
-            <th>Type</th>
-            <th>Notes</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Country</strong></td>
-            <td>Flat</td>
-            <td>Supporting attribute</td>
-          </tr>
-          <tr>
-            <td><strong>PO Headers</strong></td>
-            <td>Flat</td>
-            <td>For purchase order tracking (extension)</td>
-          </tr>
-          <tr>
-            <td><strong>PO Items</strong></td>
-            <td>Flat</td>
-            <td>For line-item detail (extension)</td>
-          </tr>
-          <tr>
-            <td><strong>Managers</strong></td>
-            <td>Flat</td>
-            <td>For management hierarchy</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h3>Dimension Attributes</h3>
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Parent Dimension</th>
-            <th>Attribute</th>
-            <th>Type</th>
-            <th>Attribute List</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Cost Center</strong></td>
-            <td>Cost Ctr Manager</td>
-            <td>List</td>
-            <td>Managers</td>
-          </tr>
-          <tr>
-            <td><strong>Cost Center</strong></td>
-            <td>Entity</td>
-            <td>List</td>
-            <td>E2 Entity</td>
-          </tr>
-          <tr>
-            <td><strong>Cost Center</strong></td>
-            <td>Profit Center</td>
-            <td>List</td>
-            <td>C3 Cost Ctr</td>
-          </tr>
-          <tr>
-            <td><strong>Cost Center</strong></td>
-            <td>Country</td>
-            <td>List</td>
-            <td>Country</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h3>Key Configuration Decisions</h3>
-      <ul>
-        <li>Functional Area repurposed as <strong>WBS (Work Breakdown Structure)</strong> with 5 levels for detailed project hierarchy</li>
-        <li>Multiple custom dimensions for project and procurement tracking (handled in extension)</li>
-        <li>Rich attribute structure on Cost Center for multi-dimensional analysis</li>
-        <li>Minimal scope: OpEx + Headcount only, keeping configuration simple</li>
-      </ul>
+      <h2>Before you start: the six rules</h2>
+      <p>The same rules from Exercise 1 still apply — refer back as you work.</p>
 
       <div class="callout-warning">
-        <span class="callout-label">⚠ Custom Dimensions Are Extensions</span>
-        <p>PO Headers, PO Items, and other custom lists for this use case are NOT part of the base generation. They will be added as part of the extension phase, after the model is generated with the core dimensions configured.</p>
+        <span class="callout-label">⚠ Rules to follow throughout the exercise</span>
+        <ul>
+          <li><strong>Use a standardized naming convention</strong> for every model and app — duplicate names in the tenant cause generation to fail</li>
+          <li><strong>Renames must be no longer than the original dimension name</strong>, especially "Department"</li>
+          <li>All standard dimensions are <strong>composite hierarchies</strong>. Flat custom lists are handled in the extension layer</li>
+          <li>Minimum <strong>2</strong> levels per dimension, maximum <strong>15</strong></li>
+          <li>When modifying hierarchy levels, <strong>add or remove from the middle</strong> — never from the leaf</li>
+          <li>Click <strong>Apply Changes</strong> after every modification. If you need to start over, use <strong>Restore default</strong></li>
+        </ul>
       </div>
+
+      <h2>Step 1 — Rename every model with the standardized naming convention</h2>
+      <p>Give every model a unique name before you touch any dimension. Each name uses today's date so this run is unique in the shared training tenant.</p>
+
+      <ol class="lab-steps">
+        <li>From the Workspace, select <strong>View All Models</strong>.</li>
+        <li>Select <strong>Manage models</strong>.</li>
+        <li>Select <strong>IFP v2.0.0 TRAIN - Base - Administration</strong>, click <strong>Rename</strong>, enter <code>admin_Exercise 3_<span class="lab-today-date">YYYYMMDD</span></code> in the Model Name field, and click <strong>OK</strong>.</li>
+        <li>Back at the Model Management screen, select the model named <strong>IFP v2.0.0 TRAIN - Base - CapEx</strong>, click <strong>Rename</strong>, enter <code>capex_Exercise 3_<span class="lab-today-date">YYYYMMDD</span></code> in the Model Name field, and click <strong>OK</strong>.</li>
+        <li>Back at the Model Management screen, select the model named <strong>IFP v2.0.0 TRAIN - Base - Headcount</strong>, click <strong>Rename</strong>, enter <code>headcount_Exercise 3_<span class="lab-today-date">YYYYMMDD</span></code> in the Model Name field, and click <strong>OK</strong>.</li>
+        <li>Back at the Model Management screen, select the model named <strong>IFP v2.0.0 TRAIN - Base - Financial Planning</strong>, click <strong>Rename</strong>, enter <code>fp_Exercise 3_<span class="lab-today-date">YYYYMMDD</span></code> in the Model Name field, and click <strong>OK</strong>.</li>
+        <li>Back at the Model Management screen, select the model named <strong>Application Training</strong>, click <strong>Rename</strong>, enter <code>ifp-app_Exercise 3_<span class="lab-today-date">YYYYMMDD</span></code> in the Model Name field, and click <strong>OK</strong>.</li>
+        <li>Click <strong>Close</strong> to exit the Model Management dialog.</li>
+      </ol>
+
+      <div class="lab-expected-todo">
+        <strong>End-of-step screenshot to capture</strong>
+        Model Management dialog with all five models renamed to the Exercise 3 pattern — admin_Exercise 3_<span class="lab-today-date">YYYYMMDD</span>, capex_Exercise 3_<span class="lab-today-date">YYYYMMDD</span>, headcount_Exercise 3_<span class="lab-today-date">YYYYMMDD</span>, fp_Exercise 3_<span class="lab-today-date">YYYYMMDD</span>, and ifp-app_Exercise 3_<span class="lab-today-date">YYYYMMDD</span>.
+      </div>
+
+      <div class="lab-check" data-check-id="ex3-step1-renames" data-workshop-slug="ifp">
+        <p class="lab-check-prompt">Once all five renames are saved in your tenant, run the check below.</p>
+        <button type="button" class="lab-check-button">Check my work</button>
+        <div class="lab-check-results" hidden>
+          <p class="lab-check-summary">All five renames look good.</p>
+          <ul class="lab-check-list">
+            <li><strong>Admin model</strong> &rarr; <code>admin_Exercise 3_<span class="lab-today-date">YYYYMMDD</span></code></li>
+            <li><strong>CapEx model</strong> &rarr; <code>capex_Exercise 3_<span class="lab-today-date">YYYYMMDD</span></code></li>
+            <li><strong>Headcount model</strong> &rarr; <code>headcount_Exercise 3_<span class="lab-today-date">YYYYMMDD</span></code></li>
+            <li><strong>Financial Planning model</strong> &rarr; <code>fp_Exercise 3_<span class="lab-today-date">YYYYMMDD</span></code></li>
+            <li><strong>Application Training</strong> &rarr; <code>ifp-app_Exercise 3_<span class="lab-today-date">YYYYMMDD</span></code></li>
+          </ul>
+          <p class="lab-check-next">Each name matches the <code>[ModelType]_Exercise 3_<span class="lab-today-date">YYYYMMDD</span></code> pattern. You're cleared to move on to Step 2.</p>
+        </div>
+      </div>
+
+      <div class="lab-quiz" data-correct="B">
+        <span class="lab-quiz-label">Quick check</span>
+        <h3>The scenario says CapEx isn't in scope for this exercise. Why still rename the <strong>capex</strong> model?</h3>
+        <div class="lab-quiz-options">
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex3-naming" value="A"><span class="lab-quiz-letter">A</span><span>The CapEx model can't be excluded from generation — it always generates</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex3-naming" value="B"><span class="lab-quiz-letter">B</span><span>The base model exists in the tenant whether or not the scenario uses it — leaving its default name in place would collide with prior exercises that left their CapEx default in the tenant</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex3-naming" value="C"><span class="lab-quiz-letter">C</span><span>It's required so the CapEx extension exercise can find the model later</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex3-naming" value="D"><span class="lab-quiz-letter">D</span><span>Tenant policy requires every base model to have a renamed copy</span></label>
+        </div>
+        <button type="button" class="lab-quiz-check">Check answer</button>
+        <div class="lab-quiz-feedback lab-quiz-feedback-correct"><strong>Correct.</strong> The renames happen at the model-management level, not at generation. Every base model in the tenant is renamed so each exercise leaves the tenant in a unique, attributable state — even models the current scenario won't actually exercise.</div>
+        <div class="lab-quiz-feedback lab-quiz-feedback-wrong"><strong>Not quite.</strong> The right answer is <strong>B</strong>. You're not renaming because the model will be used in this scenario — you're renaming so the tenant's base models stay uniquely named per exercise, avoiding name collisions on later runs.</div>
+      </div>
+
+      <h2>Step 2 — Configure the eight standard dimensions</h2>
+      <p>This scenario has four renames — including Functional Area repurposed as the Work Breakdown Structure (WBS) with 5 levels for the project hierarchy. Click <strong>Apply Changes</strong> after each dimension before moving on.</p>
+
+      <ol class="lab-steps">
+        <li>In the Configurator, open the <strong>Dimensions</strong> section.</li>
+        <li>For <strong>Accounts</strong>, keep it required and rename it to <code>GL Accounts</code>. Click <strong>Apply Changes</strong>.</li>
+        <li>For <strong>Entity</strong>, keep it required, leave the name as-is, and set <strong># of levels</strong> to <code>2</code>. Click <strong>Apply Changes</strong>.</li>
+        <li>For <strong>Department</strong>, keep it required, rename it to <code>CostCenter</code>, and set <strong># of levels</strong> to <code>3</code>. Click <strong>Apply Changes</strong>.</li>
+        <li>For <strong>Job</strong>, keep it required, leave the name as-is, and set <strong># of levels</strong> to <code>2</code>. Click <strong>Apply Changes</strong>.</li>
+        <li>For <strong>Vendor</strong>, keep it required, rename it to <code>Supplier</code>, and set <strong># of levels</strong> to <code>2</code>. Click <strong>Apply Changes</strong>.</li>
+        <li>For <strong>Functional Area</strong>, keep it required, rename it to <code>WBS</code>, and set <strong># of levels</strong> to <code>5</code> for the Work Breakdown Structure. Click <strong>Apply Changes</strong>.</li>
+        <li>For <strong>Customer</strong>, mark it <strong>not required</strong>. Click <strong>Apply Changes</strong>.</li>
+        <li>For <strong>Location</strong>, mark it <strong>not required</strong>. Click <strong>Apply Changes</strong>.</li>
+      </ol>
+
+      <div class="lab-expected-todo">
+        <strong>End-of-step screenshot to capture</strong>
+        Configurator Dimensions section after Step 2 — GL Accounts (renamed from Accounts), Entity (2 levels), CostCenter (3 levels, renamed from Department), Job (2 levels), Supplier (2 levels, renamed from Vendor), WBS (5 levels, renamed from Functional Area) all marked required; Customer and Location marked not required.
+      </div>
+
+      <div class="lab-check" data-check-id="ex3-step2-dimensions" data-workshop-slug="ifp">
+        <p class="lab-check-prompt">Once all eight dimensions are configured, run the check below.</p>
+        <button type="button" class="lab-check-button">Check my work</button>
+        <div class="lab-check-results" hidden>
+          <p class="lab-check-summary">Dimensions look good.</p>
+          <ul class="lab-check-list">
+            <li><strong>GL Accounts</strong> (renamed from Accounts) — required</li>
+            <li><strong>Entity</strong> — required, 2 levels</li>
+            <li><strong>CostCenter</strong> (renamed from Department) — required, 3 levels</li>
+            <li><strong>Job</strong> — required, 2 levels</li>
+            <li><strong>Supplier</strong> (renamed from Vendor) — required, 2 levels</li>
+            <li><strong>WBS</strong> (renamed from Functional Area) — required, 5 levels</li>
+            <li><strong>Customer</strong>, <strong>Location</strong> — not required</li>
+          </ul>
+          <p class="lab-check-next">Dimension scope matches the WBS-centric utilities scenario. You're cleared to move on to Step 3.</p>
+        </div>
+      </div>
+
+      <div class="lab-quiz" data-correct="B">
+        <span class="lab-quiz-label">Quick check</span>
+        <h3>This scenario repurposes <strong>Functional Area</strong> as <code>WBS</code> with 5 levels. What's the reason for picking Functional Area for that?</h3>
+        <div class="lab-quiz-options">
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex3-wbs" value="A"><span class="lab-quiz-letter">A</span><span>Functional Area is the only standard dimension that allows 5 levels</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex3-wbs" value="B"><span class="lab-quiz-letter">B</span><span>Functional Area is an optional standard dimension that's available to repurpose when the scenario doesn't need it for its original meaning — and it supports a composite hierarchy deep enough for a WBS</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex3-wbs" value="C"><span class="lab-quiz-letter">C</span><span>It's a Configurator requirement to repurpose Functional Area when CapEx is out of scope</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex3-wbs" value="D"><span class="lab-quiz-letter">D</span><span>A WBS list always lives under Functional Area in Anaplan</span></label>
+        </div>
+        <button type="button" class="lab-quiz-check">Check answer</button>
+        <div class="lab-quiz-feedback lab-quiz-feedback-correct"><strong>Correct.</strong> Repurposing is a common pattern. A standard dimension the scenario doesn't need for its original meaning — like Functional Area here — becomes the slot you reuse for something that needs the composite-hierarchy shape, such as a 5-level WBS.</div>
+        <div class="lab-quiz-feedback lab-quiz-feedback-wrong"><strong>Not quite.</strong> The right answer is <strong>B</strong>. Repurposing reuses an unused optional dimension as a composite hierarchy. There's no hard rule forcing this — Functional Area is just convenient here because the utility scenario doesn't need it for its original meaning.</div>
+      </div>
+
+      <h2>Step 3 — Add four flat custom lists</h2>
+      <p>The utilities scenario tracks countries, PO headers, PO items, and managers as flat lists. Three of them (PO Headers, PO Items, Managers) are placeholders for the CapEx and PO extension exercises, but they're declared here so the extension layer can reference them.</p>
+
+      <ol class="lab-steps">
+        <li>Open the <strong>Custom Lists</strong> section in the Configurator.</li>
+        <li>Add <code>Country</code> as a <strong>Flat</strong> custom list — supporting attribute list for Cost Center attribution.</li>
+        <li>Add <code>PO Headers</code> as a <strong>Flat</strong> custom list — placeholder for purchase-order tracking in the extension exercise.</li>
+        <li>Add <code>PO Items</code> as a <strong>Flat</strong> custom list — placeholder for line-item detail in the extension exercise.</li>
+        <li>Add <code>Managers</code> as a <strong>Flat</strong> custom list — used by the CostCenter manager attribute in Step 4.</li>
+        <li>Click <strong>Apply Changes</strong> to save all four lists.</li>
+      </ol>
+
+      <div class="lab-expected-todo">
+        <strong>End-of-step screenshot to capture</strong>
+        Custom Lists section with Country, PO Headers, PO Items, and Managers all added as Flat custom lists.
+      </div>
+
+      <div class="lab-check" data-check-id="ex3-step3-customlists" data-workshop-slug="ifp">
+        <p class="lab-check-prompt">Once all four custom lists are added, run the check below.</p>
+        <button type="button" class="lab-check-button">Check my work</button>
+        <div class="lab-check-results" hidden>
+          <p class="lab-check-summary">Custom lists look good.</p>
+          <ul class="lab-check-list">
+            <li><strong>Country</strong> — Flat</li>
+            <li><strong>PO Headers</strong> — Flat (extension)</li>
+            <li><strong>PO Items</strong> — Flat (extension)</li>
+            <li><strong>Managers</strong> — Flat</li>
+          </ul>
+          <p class="lab-check-next">All four placeholders are in place. You're cleared to move on to Step 4.</p>
+        </div>
+      </div>
+
+      <div class="lab-quiz" data-correct="C">
+        <span class="lab-quiz-label">Quick check</span>
+        <h3>The scenario says PO Headers and PO Items are part of the CapEx extension, not the base generation. Why declare them in the Configurator at all?</h3>
+        <div class="lab-quiz-options">
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex3-extlists" value="A"><span class="lab-quiz-letter">A</span><span>The Configurator generates a stub for every custom list whether the model uses it or not</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex3-extlists" value="B"><span class="lab-quiz-letter">B</span><span>Custom lists must be declared before any dimension can reference them</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex3-extlists" value="C"><span class="lab-quiz-letter">C</span><span>The extension exercises reference custom lists by name — declaring them up front means the lists are already in the tenant when the extension runs</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex3-extlists" value="D"><span class="lab-quiz-letter">D</span><span>Custom lists must always come in pairs (Headers + Items)</span></label>
+        </div>
+        <button type="button" class="lab-quiz-check">Check answer</button>
+        <div class="lab-quiz-feedback lab-quiz-feedback-correct"><strong>Correct.</strong> Extensions don't create custom lists from nothing — they reference lists that already exist in the tenant. Declaring the PO Headers / PO Items / Managers lists during the base configuration is what lets the extension exercise wire them into the model without manual setup.</div>
+        <div class="lab-quiz-feedback lab-quiz-feedback-wrong"><strong>Not quite.</strong> The right answer is <strong>C</strong>. The base configuration prepares the tenant for the extension by creating the custom lists the extension will reference by name.</div>
+      </div>
+
+      <h2>Step 4 — Configure CostCenter dimension attributes</h2>
+      <p>The utilities scenario uses a rich attribute structure on CostCenter so each cost center carries a manager, an entity, a profit center, and a country.</p>
+
+      <ol class="lab-steps">
+        <li>Open the <strong>Dimensions</strong> section in the Configurator and expand <strong>CostCenter</strong>.</li>
+        <li>Add an attribute named <strong>Cost Ctr Manager</strong>, type <strong>List</strong>, attribute list <code>Managers</code>. Click <strong>Apply Changes</strong>.</li>
+        <li>Add an attribute named <strong>Entity</strong>, type <strong>List</strong>, attribute list <code>E2 Entity</code>. Click <strong>Apply Changes</strong>.</li>
+        <li>Add an attribute named <strong>Profit Center</strong>, type <strong>List</strong>, attribute list <code>C3 Cost Ctr</code>. Click <strong>Apply Changes</strong>.</li>
+        <li>Add an attribute named <strong>Country</strong>, type <strong>List</strong>, attribute list <code>Country</code>. Click <strong>Apply Changes</strong>.</li>
+      </ol>
+
+      <div class="lab-expected-todo">
+        <strong>End-of-step screenshot to capture</strong>
+        CostCenter dimension expanded with all four attributes attached — Cost Ctr Manager (Managers), Entity (E2 Entity), Profit Center (C3 Cost Ctr), Country (Country).
+      </div>
+
+      <div class="lab-check" data-check-id="ex3-step4-attributes" data-workshop-slug="ifp">
+        <p class="lab-check-prompt">Once all four CostCenter attributes are added, run the check below.</p>
+        <button type="button" class="lab-check-button">Check my work</button>
+        <div class="lab-check-results" hidden>
+          <p class="lab-check-summary">CostCenter attributes look good.</p>
+          <ul class="lab-check-list">
+            <li><strong>Cost Ctr Manager</strong> — List, attribute list <code>Managers</code></li>
+            <li><strong>Entity</strong> — List, attribute list <code>E2 Entity</code></li>
+            <li><strong>Profit Center</strong> — List, attribute list <code>C3 Cost Ctr</code></li>
+            <li><strong>Country</strong> — List, attribute list <code>Country</code></li>
+          </ul>
+          <p class="lab-check-next">CostCenter now carries the four attributes the scenario calls for. You're cleared to move on to Step 5.</p>
+        </div>
+      </div>
+
+      <div class="lab-quiz" data-correct="A">
+        <span class="lab-quiz-label">Quick check</span>
+        <h3>Why use a <strong>dimension attribute</strong> for "Cost Ctr Manager" instead of adding Managers as its own dimension?</h3>
+        <div class="lab-quiz-options">
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex3-attr" value="A"><span class="lab-quiz-letter">A</span><span>An attribute attaches each cost center to one manager without adding a planning axis — Managers isn't something you plan against, it's something you slice cost centers by</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex3-attr" value="B"><span class="lab-quiz-letter">B</span><span>Managers can't be configured as a standard dimension</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex3-attr" value="C"><span class="lab-quiz-letter">C</span><span>Attributes generate faster than dimensions</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex3-attr" value="D"><span class="lab-quiz-letter">D</span><span>Cost Center can only carry a manager via an attribute — the Configurator blocks adding Managers as a dimension</span></label>
+        </div>
+        <button type="button" class="lab-quiz-check">Check answer</button>
+        <div class="lab-quiz-feedback lab-quiz-feedback-correct"><strong>Correct.</strong> Adding Managers as a dimension would multiply every planning line item by every manager — a planning axis. As an attribute, each cost center just points to a single manager, and reports can group cost centers by their attached manager without inflating the model.</div>
+        <div class="lab-quiz-feedback lab-quiz-feedback-wrong"><strong>Not quite.</strong> The right answer is <strong>A</strong>. The decision is shaped by what you're planning against versus what you're slicing by. Managers is a slicer for cost centers — attributes are the right tool for that.</div>
+      </div>
+
+      <h2>Step 5 — Answer the top-level and Financial Planning questions</h2>
+      <p>This scenario narrows scope back to OpEx and Headcount only — Margin Planning is set to <code>Expense Only</code> and balance-sheet, cashflow, top-down, and allocations are all turned off.</p>
+
+      <ol class="lab-steps">
+        <li>Open the <strong>Top-Level Questions</strong> section in the Configurator.</li>
+        <li>Set <strong>Multi-currency support?</strong> to <strong>Yes</strong>.</li>
+        <li>Set <strong>Use the Functional Area dimension?</strong> to <strong>Yes</strong> — the scenario repurposes it as WBS, but the dimension itself is still in scope.</li>
+        <li>Click <strong>Apply Changes</strong>.</li>
+        <li>Open the <strong>Financial Planning</strong> section.</li>
+        <li>Set <strong>Top-down targets?</strong> to <strong>No</strong>.</li>
+        <li>Set <strong>Margin Planning?</strong> to <strong>Expense Only</strong> — OpEx-only scope, no revenue or balance-sheet planning.</li>
+        <li>Set <strong>Balance Sheet?</strong> to <strong>No</strong>.</li>
+        <li>Set <strong>Cashflow reporting?</strong> to <strong>No</strong>.</li>
+        <li>Set <strong>Expense allocations?</strong> to <strong>No</strong>.</li>
+        <li>Click <strong>Apply Changes</strong> to save the Financial Planning answers.</li>
+      </ol>
+
+      <div class="lab-expected-todo">
+        <strong>End-of-step screenshot to capture</strong>
+        Top-Level Questions with Multi-currency <code>Yes</code> and Functional Area <code>Yes</code>; Financial Planning with Top-down targets <code>No</code>, Margin Planning <code>Expense Only</code>, Balance Sheet <code>No</code>, Cashflow reporting <code>No</code>, Expense allocations <code>No</code>.
+      </div>
+
+      <div class="lab-check" data-check-id="ex3-step5-fp" data-workshop-slug="ifp">
+        <p class="lab-check-prompt">Once all top-level and Financial Planning answers are saved, run the check below.</p>
+        <button type="button" class="lab-check-button">Check my work</button>
+        <div class="lab-check-results" hidden>
+          <p class="lab-check-summary">Top-level and Financial Planning answers look good.</p>
+          <ul class="lab-check-list">
+            <li>Multi-currency support &rarr; <strong>Yes</strong></li>
+            <li>Use the Functional Area dimension &rarr; <strong>Yes</strong></li>
+            <li>Top-down targets &rarr; <strong>No</strong></li>
+            <li>Margin Planning &rarr; <strong>Expense Only</strong></li>
+            <li>Balance Sheet &rarr; <strong>No</strong></li>
+            <li>Cashflow reporting &rarr; <strong>No</strong></li>
+            <li>Expense allocations &rarr; <strong>No</strong></li>
+          </ul>
+          <p class="lab-check-next">The model is scoped to OpEx + Headcount only. Configuration for Exercise 3 is complete.</p>
+        </div>
+      </div>
+
+      <div class="lab-quiz" data-correct="B">
+        <span class="lab-quiz-label">Quick check</span>
+        <h3>This scenario sets <strong>Balance Sheet</strong> and <strong>Cashflow reporting</strong> to <code>No</code> even though the utility's accountants do produce financial statements. What's the right reason?</h3>
+        <div class="lab-quiz-options">
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex3-scope" value="A"><span class="lab-quiz-letter">A</span><span>Balance Sheet and Cashflow are not supported when WBS has 5 levels</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex3-scope" value="B"><span class="lab-quiz-letter">B</span><span>The IFP model is scoped to OpEx and Headcount only — financial-statement planning is handled outside IFP, so generating those structures here would be unused weight</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex3-scope" value="C"><span class="lab-quiz-letter">C</span><span>Turning them off speeds up generation by skipping the Headcount model</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex3-scope" value="D"><span class="lab-quiz-letter">D</span><span>It's required when CostCenter has dimension attributes</span></label>
+        </div>
+        <button type="button" class="lab-quiz-check">Check answer</button>
+        <div class="lab-quiz-feedback lab-quiz-feedback-correct"><strong>Correct.</strong> Scope decisions come from the client's planning needs, not from technical constraints. The utility plans OpEx and headcount in IFP; their statements live elsewhere. Turning Balance Sheet and Cashflow off keeps the generated model focused on what's actually used.</div>
+        <div class="lab-quiz-feedback lab-quiz-feedback-wrong"><strong>Not quite.</strong> The right answer is <strong>B</strong>. There's no Configurator rule blocking these answers — they're switched off because financial-statement planning isn't part of the IFP scope for this client.</div>
+      </div>
+
+      <h2>You're done with the configuration</h2>
+      <p>You've configured all three exercises. The next phase is <a href="./07-generation.html">Model Generation</a> — the Configurator hands its answers to the model factory and you watch the four base models build out. After that, <a href="./08-post-gen.html">Post-Generation Steps</a> walks through what to verify before extensions land on top.</p>
 
       <div class="prevnext-nav"><a class="prevnext-btn" href="./06-exercise-2.html">← Previous</a><a class="prevnext-btn" href="./07-generation.html">Next →</a></div>
     </div>
   </main>
   <script src="../../js/nav.js"></script>
+  <script src="../../js/lab-quiz.js"></script>
 </body>
 </html>

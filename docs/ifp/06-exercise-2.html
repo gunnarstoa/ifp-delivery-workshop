@@ -69,137 +69,291 @@
 
   <main class="main-content">
     <div class="content-header">
-      <h1>Configuration Exercise 2: Insurance – 3 Statement Planning</h1>
-      <p class="subtitle">Hands-on exercise to configure IFP for an insurance company</p>
-      <div class="badge-row"><span class="content-badge">Configuration</span><span class="content-badge">30 min</span><span class="content-badge">Guided Practice</span></div>
+      <h1>Exercise 2: Insurance — 3-Statement Planning</h1>
+      <p class="subtitle">Configure IFP for an insurance company that needs full P&amp;L, Balance Sheet, and Cashflow</p>
+      <div class="badge-row"><span class="content-badge">Configuration</span><span class="content-badge">⏱ About 30 mins</span><span class="content-badge">Guided practice</span></div>
     </div>
     <div class="content-body">
 
+      <div class="lab-objectives">
+        <h3>What you'll do</h3>
+        <ul>
+          <li>Apply the standardized naming convention with the Exercise 2 date so this run is unique in the tenant</li>
+          <li>Configure the eight standard dimensions for a 3-statement insurance scenario (Vendor renamed to Projects, Product deeply hierarchical)</li>
+          <li>Add the CapEx List custom dimension for capital project tracking</li>
+          <li>Answer the top-level and Financial Planning questions that widen the model to Balance Sheet and Cashflow</li>
+        </ul>
+      </div>
+
+      <h2>Reset the Configurator before you start</h2>
+      <p>This exercise is net-new and independent of Exercise 1. Reset everything so prior answers don't carry over.</p>
+
       <div class="callout-warning">
-        <span class="callout-label">⚠ Reset Before You Start — Each Exercise is Net-New</span>
-        <p>This exercise is independent of the previous one. Before you begin, restore the Application Framework Configurator to its default state so prior answers don't carry over.</p>
-        <p><strong>Important:</strong> Hierarchies must be restored to default <strong>one at a time</strong> — there is no global "restore all hierarchies" button. Work through each hierarchy individually.</p>
-        <p>Complete all three resets in this order:</p>
+        <span class="callout-label">⚠ Complete all three resets in this order</span>
         <ol>
-          <li><strong>Restore Default for Configuration Questions</strong> — In the Configuration Questions section, click <strong>Restore default</strong>. All gray "CUSTOM ANSWER" indicators should flip back to "DEFAULT ANSWER".</li>
-          <li><strong>Restore Default for each Hierarchy</strong> — In the Hierarchies section, open each hierarchy (Entity, Account, Location, etc.) and click <strong>Restore default</strong> for each one individually. Confirm levels return to the documented defaults.</li>
-          <li><strong>Clear Dataspace Objects</strong> — Remove any objects from your assigned Dataspace that were created during the prior exercise so generation starts from a clean slate.</li>
+          <li><strong>Restore default for the Configuration Questions</strong> — in the Configuration Questions section, click <strong>Restore default</strong>. Every gray "CUSTOM ANSWER" indicator should flip back to "DEFAULT ANSWER".</li>
+          <li><strong>Restore default for each Hierarchy</strong> — hierarchies must be restored <strong>one at a time</strong>. Open each one (Entity, Account, Location, etc.) and click <strong>Restore default</strong> individually. Confirm levels return to documented defaults.</li>
+          <li><strong>Clear Dataspace objects</strong> — remove any objects in your assigned Dataspace from the prior exercise so this generation starts from a clean slate.</li>
         </ol>
       </div>
 
-<h2>Standardized Naming Convention</h2>
-      <p>Replace the default model and app names with a standardized format before generating. The recommended pattern is <code>[ModelType]_Exercise ##_YYYYMMDD</code> — this ensures every generation produces uniquely-named artifacts and avoids name-collision generation errors when the same exercise is run more than once in the tenant.</p>
-      <figure class="screenshot">
-        <img src="../../img/configurator/naming-convention-exercise-2.png" alt="Standardized naming convention for Exercise 2 showing Admin Model, Financial Planning Model, CapEx Model, Headcount Model, and IFP App with example names following the [ModelType]_Exercise 02_YYYYMMDD pattern" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;">
-        <figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Standardized naming convention for Exercise 2 — apply to all four models and the IFP App before generation</figcaption>
-      </figure>
+      <h2>The scenario</h2>
+      <p>An insurance company needs comprehensive financial planning across the <strong>income statement, balance sheet, and cashflow</strong>. They run a multi-product portfolio with detailed cost-center and vendor tracking. CapEx project tracking will be added in the extension phase. You'll configure all three statements, deepen the Product hierarchy, and prepare the model for the CapEx extension.</p>
 
-      <h2>Scenario</h2>
-      <p><strong>An insurance company requires comprehensive financial planning across income statement, balance sheet, and cash flow.</strong> Multiple products with detailed cost center and vendor tracking.</p>
+      <h2>Before you start: the six rules</h2>
+      <p>The same rules from Exercise 1 still apply — refer back as you work.</p>
 
-      <h3>Model Setup</h3>
-      <ul>
-        <li>Insurance company with multi-product portfolio</li>
-        <li>All use cases in-scope (P&L, Balance Sheet, Cashflow)</li>
-        <li>Will not use top-down targets</li>
-        <li>Time strata: Monthly</li>
-        <li><strong>Estimated generation time: 20–40 minutes</strong></li>
-      </ul>
+      <div class="callout-warning">
+        <span class="callout-label">⚠ Rules to follow throughout the exercise</span>
+        <ul>
+          <li><strong>Use a standardized naming convention</strong> for every model and app — duplicate names in the tenant cause generation to fail</li>
+          <li><strong>Renames must be no longer than the original dimension name</strong>, especially "Department"</li>
+          <li>All standard dimensions are <strong>composite hierarchies</strong>. Flat custom lists are handled in the extension layer</li>
+          <li>Minimum <strong>2</strong> levels per dimension, maximum <strong>15</strong></li>
+          <li>When modifying hierarchy levels, <strong>add or remove from the middle</strong> — never from the leaf</li>
+          <li>Click <strong>Apply Changes</strong> after every modification. If you need to start over, use <strong>Restore default</strong></li>
+        </ul>
+      </div>
 
-      <h3>Dimension Configuration</h3>
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Standard Dimension</th>
-            <th>Required?</th>
-            <th>Rename To</th>
-            <th># of Levels</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Entity</strong></td>
-            <td>Yes</td>
-            <td>—</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td><strong>Department</strong></td>
-            <td>Yes</td>
-            <td>—</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td><strong>Product</strong></td>
-            <td>Yes</td>
-            <td>Product</td>
-            <td>5</td>
-          </tr>
-          <tr>
-            <td><strong>Job</strong></td>
-            <td>Yes</td>
-            <td>—</td>
-            <td>3</td>
-          </tr>
-          <tr>
-            <td><strong>Vendor</strong></td>
-            <td>Yes</td>
-            <td>Projects</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td><strong>Functional Area</strong></td>
-            <td>Yes</td>
-            <td>—</td>
-            <td>3</td>
-          </tr>
-          <tr>
-            <td><strong>Customer</strong></td>
-            <td>No</td>
-            <td>—</td>
-            <td>—</td>
-          </tr>
-          <tr>
-            <td><strong>Location</strong></td>
-            <td>No</td>
-            <td>—</td>
-            <td>—</td>
-          </tr>
-        </tbody>
-      </table>
+      <h2>Step 1 — Rename every model with the standardized naming convention</h2>
+      <p>Give every model a unique name before you touch any dimension. Each name uses today's date so this run is unique in the shared training tenant.</p>
 
-      <h3>Custom Dimensions</h3>
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Custom List</th>
-            <th>Type</th>
-            <th>Notes</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>CapEx List</strong></td>
-            <td>Flat</td>
-            <td>For capital project tracking</td>
-          </tr>
-        </tbody>
-      </table>
+      <ol class="lab-steps">
+        <li>From the Workspace, select <strong>View All Models</strong>.</li>
+        <li>Select <strong>Manage models</strong>.</li>
+        <li>Select <strong>IFP v2.0.0 TRAIN - Base - Administration</strong>, click <strong>Rename</strong>, enter <code>admin_Exercise 2_<span class="lab-today-date">YYYYMMDD</span></code> in the Model Name field, and click <strong>OK</strong>.</li>
+        <li>Back at the Model Management screen, select the model named <strong>IFP v2.0.0 TRAIN - Base - CapEx</strong>, click <strong>Rename</strong>, enter <code>capex_Exercise 2_<span class="lab-today-date">YYYYMMDD</span></code> in the Model Name field, and click <strong>OK</strong>.</li>
+        <li>Back at the Model Management screen, select the model named <strong>IFP v2.0.0 TRAIN - Base - Headcount</strong>, click <strong>Rename</strong>, enter <code>headcount_Exercise 2_<span class="lab-today-date">YYYYMMDD</span></code> in the Model Name field, and click <strong>OK</strong>.</li>
+        <li>Back at the Model Management screen, select the model named <strong>IFP v2.0.0 TRAIN - Base - Financial Planning</strong>, click <strong>Rename</strong>, enter <code>fp_Exercise 2_<span class="lab-today-date">YYYYMMDD</span></code> in the Model Name field, and click <strong>OK</strong>.</li>
+        <li>Back at the Model Management screen, select the model named <strong>Application Training</strong>, click <strong>Rename</strong>, enter <code>ifp-app_Exercise 2_<span class="lab-today-date">YYYYMMDD</span></code> in the Model Name field, and click <strong>OK</strong>.</li>
+        <li>Click <strong>Close</strong> to exit the Model Management dialog.</li>
+      </ol>
 
-      <h3>Key Configuration Decisions</h3>
-      <ul>
-        <li>Balance Sheet: <strong>Yes</strong> (3-statement planning required)</li>
-        <li>Cashflow Reporting: <strong>Yes</strong></li>
-        <li>Product dimension deeply configured (5 levels) for detailed product profitability</li>
-        <li>Will require extension for CapEx project tracking</li>
-      </ul>
+      <div class="lab-expected-todo">
+        <strong>End-of-step screenshot to capture</strong>
+        Model Management dialog with all five models renamed to the Exercise 2 pattern — admin_Exercise 2_<span class="lab-today-date">YYYYMMDD</span>, capex_Exercise 2_<span class="lab-today-date">YYYYMMDD</span>, headcount_Exercise 2_<span class="lab-today-date">YYYYMMDD</span>, fp_Exercise 2_<span class="lab-today-date">YYYYMMDD</span>, and ifp-app_Exercise 2_<span class="lab-today-date">YYYYMMDD</span>.
+      </div>
 
-      <h3>Configuration Answers</h3>
-      <div class="table-wrap"><table><thead><tr><th>Question</th><th>Answer</th><th>Notes</th></tr></thead><tbody><tr><td colspan="3" style="background-color:#e8f1f8;font-weight:bold;">Top-Level Questions</td></tr><tr><td>8. Use geography dimension?</td><td>No</td><td>—</td></tr><tr><td>11. Use functional area dimension?</td><td>Yes</td><td>Re-purposed for Projects</td></tr><tr><td colspan="3" style="background-color:#e8f1f8;font-weight:bold;">Financial Planning Questions</td></tr><tr><td>2. Top-down targets?</td><td>No</td><td>—</td></tr><tr><td>15. Dimensionality for expense planning</td><td>Department, Vendor</td><td>—</td></tr><tr><td>16. Dimensionality for itemized expense planning</td><td>Department</td><td>—</td></tr><tr><td>17. Expense allocations?</td><td>No</td><td>—</td></tr></tbody></table></div>
+      <div class="lab-check" data-check-id="ex2-step1-renames" data-workshop-slug="ifp">
+        <p class="lab-check-prompt">Once all five renames are saved in your tenant, run the check below. It calls the Anaplan API to confirm each model now follows the standardized naming pattern for Exercise 2.</p>
+        <button type="button" class="lab-check-button">Check my work</button>
+        <div class="lab-check-results" hidden>
+          <p class="lab-check-summary">All five renames look good.</p>
+          <ul class="lab-check-list">
+            <li><strong>Admin model</strong> &rarr; <code>admin_Exercise 2_<span class="lab-today-date">YYYYMMDD</span></code></li>
+            <li><strong>CapEx model</strong> &rarr; <code>capex_Exercise 2_<span class="lab-today-date">YYYYMMDD</span></code></li>
+            <li><strong>Headcount model</strong> &rarr; <code>headcount_Exercise 2_<span class="lab-today-date">YYYYMMDD</span></code></li>
+            <li><strong>Financial Planning model</strong> &rarr; <code>fp_Exercise 2_<span class="lab-today-date">YYYYMMDD</span></code></li>
+            <li><strong>Application Training</strong> &rarr; <code>ifp-app_Exercise 2_<span class="lab-today-date">YYYYMMDD</span></code></li>
+          </ul>
+          <p class="lab-check-next">Each name matches the <code>[ModelType]_Exercise 2_<span class="lab-today-date">YYYYMMDD</span></code> pattern. You're cleared to move on to Step 2.</p>
+        </div>
+      </div>
+
+      <div class="lab-quiz" data-correct="C">
+        <span class="lab-quiz-label">Quick check</span>
+        <h3>You finished Exercise 1 yesterday and the tenant still has models named <code>admin_Exercise 1_20260613</code>. Why does that not conflict with today's Exercise 2 generation?</h3>
+        <div class="lab-quiz-options">
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex2-naming" value="A"><span class="lab-quiz-letter">A</span><span>Anaplan auto-suffixes duplicate names on generation</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex2-naming" value="B"><span class="lab-quiz-letter">B</span><span>The Configurator clears yesterday's models when you start a new exercise</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex2-naming" value="C"><span class="lab-quiz-letter">C</span><span>The Exercise 2 names use a different exercise number and today's date — together that's enough to keep every artifact unique</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex2-naming" value="D"><span class="lab-quiz-letter">D</span><span>Yesterday's models are scoped to a separate tenant</span></label>
+        </div>
+        <button type="button" class="lab-quiz-check">Check answer</button>
+        <div class="lab-quiz-feedback lab-quiz-feedback-correct"><strong>Correct.</strong> The whole point of <code>[ModelType]_Exercise ##_YYYYMMDD</code> is that the exercise number <em>and</em> the date together guarantee a unique name even when you re-run an exercise. Yesterday's Exercise 1 models stay in the tenant without colliding with today's Exercise 2 models.</div>
+        <div class="lab-quiz-feedback lab-quiz-feedback-wrong"><strong>Not quite.</strong> The right answer is <strong>C</strong>. The naming pattern includes the exercise number and the date precisely so prior exercises don't collide with the current one. Anaplan does not auto-suffix duplicates — generation just fails.</div>
+      </div>
+
+      <h2>Step 2 — Configure the eight standard dimensions</h2>
+      <p>This scenario has a deeply hierarchical Product dimension and uses Vendor as a Projects placeholder. Click <strong>Apply Changes</strong> after each dimension before moving on.</p>
+
+      <ol class="lab-steps">
+        <li>In the Configurator, open the <strong>Dimensions</strong> section.</li>
+        <li>For <strong>Entity</strong>, keep it required, leave the name as-is, and set <strong># of levels</strong> to <code>2</code>. Click <strong>Apply Changes</strong>.</li>
+        <li>For <strong>Department</strong>, keep it required, leave the name as-is, and set <strong># of levels</strong> to <code>2</code>. Click <strong>Apply Changes</strong>.</li>
+        <li>For <strong>Product</strong>, keep it required, leave the name as <code>Product</code>, and set <strong># of levels</strong> to <code>5</code> for the multi-product portfolio. Click <strong>Apply Changes</strong>.</li>
+        <li>For <strong>Job</strong>, keep it required, leave the name as-is, and set <strong># of levels</strong> to <code>3</code>. Click <strong>Apply Changes</strong>.</li>
+        <li>For <strong>Vendor</strong>, keep it required, rename it to <code>Projects</code>, and set <strong># of levels</strong> to <code>2</code>. Click <strong>Apply Changes</strong>.</li>
+        <li>For <strong>Functional Area</strong>, keep it required, leave the name as-is, and set <strong># of levels</strong> to <code>3</code>. Click <strong>Apply Changes</strong>.</li>
+        <li>For <strong>Customer</strong>, mark it <strong>not required</strong>. Click <strong>Apply Changes</strong>.</li>
+        <li>For <strong>Location</strong>, mark it <strong>not required</strong>. Click <strong>Apply Changes</strong>.</li>
+      </ol>
+
+      <div class="lab-expected-todo">
+        <strong>End-of-step screenshot to capture</strong>
+        Configurator Dimensions section after Step 2 — Entity (2), Department (2), Product (5), Job (3), Projects (2, renamed from Vendor), Functional Area (3) all marked required; Customer and Location marked not required.
+      </div>
+
+      <div class="lab-check" data-check-id="ex2-step2-dimensions" data-workshop-slug="ifp">
+        <p class="lab-check-prompt">Once all eight dimensions are configured, run the check below.</p>
+        <button type="button" class="lab-check-button">Check my work</button>
+        <div class="lab-check-results" hidden>
+          <p class="lab-check-summary">Dimensions look good.</p>
+          <ul class="lab-check-list">
+            <li><strong>Entity</strong> — required, 2 levels</li>
+            <li><strong>Department</strong> — required, 2 levels</li>
+            <li><strong>Product</strong> — required, 5 levels</li>
+            <li><strong>Job</strong> — required, 3 levels</li>
+            <li><strong>Projects</strong> (renamed from Vendor) — required, 2 levels</li>
+            <li><strong>Functional Area</strong> — required, 3 levels</li>
+            <li><strong>Customer</strong>, <strong>Location</strong> — not required</li>
+          </ul>
+          <p class="lab-check-next">Dimension scope matches the 3-statement insurance scenario. You're cleared to move on to Step 3.</p>
+        </div>
+      </div>
+
+      <div class="lab-quiz" data-correct="B">
+        <span class="lab-quiz-label">Quick check</span>
+        <h3>Why does this scenario set the <strong>Product</strong> dimension to <code>5</code> levels rather than the default?</h3>
+        <div class="lab-quiz-options">
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex2-product" value="A"><span class="lab-quiz-letter">A</span><span>Five levels is the Configurator default for Product</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex2-product" value="B"><span class="lab-quiz-letter">B</span><span>The insurance scenario calls for a detailed product portfolio — each level represents a layer of the line-of-business hierarchy</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex2-product" value="C"><span class="lab-quiz-letter">C</span><span>Three-statement planning requires Product to have at least five levels</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex2-product" value="D"><span class="lab-quiz-letter">D</span><span>Level count must match the number of dimensions in scope</span></label>
+        </div>
+        <button type="button" class="lab-quiz-check">Check answer</button>
+        <div class="lab-quiz-feedback lab-quiz-feedback-correct"><strong>Correct.</strong> Level count is dictated by the client's actual reporting structure — not by a rule of the Configurator. Here the insurance scenario calls for detailed product profitability, so five levels of Product hierarchy is the right fit.</div>
+        <div class="lab-quiz-feedback lab-quiz-feedback-wrong"><strong>Not quite.</strong> The right answer is <strong>B</strong>. There's no hard rule tying level count to anything else in the configuration — you set the depth to match what the client actually needs to plan and report on.</div>
+      </div>
+
+      <h2>Step 3 — Add the CapEx List custom dimension</h2>
+      <p>The insurance scenario tracks capital projects through a flat custom list. Flat lists are added in the Custom Lists section, not as standard dimensions.</p>
+
+      <ol class="lab-steps">
+        <li>Open the <strong>Custom Lists</strong> section in the Configurator.</li>
+        <li>Add a new custom list named <code>CapEx List</code> with type <strong>Flat</strong> — this is the placeholder for capital project tracking. Click <strong>Apply Changes</strong>.</li>
+      </ol>
+
+      <div class="lab-expected-todo">
+        <strong>End-of-step screenshot to capture</strong>
+        Custom Lists section with the CapEx List entry added as a Flat list.
+      </div>
+
+      <div class="lab-check" data-check-id="ex2-step3-customlists" data-workshop-slug="ifp">
+        <p class="lab-check-prompt">Once the CapEx List is added, run the check below.</p>
+        <button type="button" class="lab-check-button">Check my work</button>
+        <div class="lab-check-results" hidden>
+          <p class="lab-check-summary">Custom list looks good.</p>
+          <ul class="lab-check-list">
+            <li><strong>CapEx List</strong> — added as a Flat custom list</li>
+          </ul>
+          <p class="lab-check-next">Capital project tracking placeholder is in place. You're cleared to move on to Step 4.</p>
+        </div>
+      </div>
+
+      <div class="lab-quiz" data-correct="A">
+        <span class="lab-quiz-label">Quick check</span>
+        <h3>Why isn't CapEx List configured as a standard dimension with hierarchy levels?</h3>
+        <div class="lab-quiz-options">
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex2-capex" value="A"><span class="lab-quiz-letter">A</span><span>Standard dimensions are always composite hierarchies — flat lists like project codes belong in Custom Lists, handled by the extension layer</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex2-capex" value="B"><span class="lab-quiz-letter">B</span><span>CapEx List has too many items to fit a standard dimension</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex2-capex" value="C"><span class="lab-quiz-letter">C</span><span>The Configurator doesn't support a CapEx-related dimension</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex2-capex" value="D"><span class="lab-quiz-letter">D</span><span>Flat lists generate faster than composite hierarchies</span></label>
+        </div>
+        <button type="button" class="lab-quiz-check">Check answer</button>
+        <div class="lab-quiz-feedback lab-quiz-feedback-correct"><strong>Correct.</strong> The Configurator's standard dimensions are always composite (multi-level). Anything you want as a flat list goes into Custom Lists, and the extension exercises wire those lists into the model as line-item dimensions afterwards.</div>
+        <div class="lab-quiz-feedback lab-quiz-feedback-wrong"><strong>Not quite.</strong> The right answer is <strong>A</strong>. The shape — composite vs. flat — decides where a list lives in the Configurator. Composite goes in Dimensions; flat goes in Custom Lists.</div>
+      </div>
+
+      <h2>Step 4 — Answer the top-level configuration questions</h2>
+      <p>The top-level section orients the Configurator before drilling into each model.</p>
+
+      <ol class="lab-steps">
+        <li>Open the <strong>Top-Level Questions</strong> section in the Configurator.</li>
+        <li>Set <strong>Use the Geography dimension?</strong> to <strong>No</strong> — not required by this scenario.</li>
+        <li>Set <strong>Use the Functional Area dimension?</strong> to <strong>Yes</strong> — the scenario keeps Functional Area required in Step 2.</li>
+        <li>Click <strong>Apply Changes</strong> to save both answers.</li>
+      </ol>
+
+      <div class="lab-expected-todo">
+        <strong>End-of-step screenshot to capture</strong>
+        Top-Level Questions section with Use the Geography dimension set to <code>No</code> and Use the Functional Area dimension set to <code>Yes</code>.
+      </div>
+
+      <div class="lab-check" data-check-id="ex2-step4-toplevel" data-workshop-slug="ifp">
+        <p class="lab-check-prompt">Once both top-level answers are saved, run the check below.</p>
+        <button type="button" class="lab-check-button">Check my work</button>
+        <div class="lab-check-results" hidden>
+          <p class="lab-check-summary">Top-level answers look good.</p>
+          <ul class="lab-check-list">
+            <li>Use the Geography dimension &rarr; <strong>No</strong></li>
+            <li>Use the Functional Area dimension &rarr; <strong>Yes</strong></li>
+          </ul>
+          <p class="lab-check-next">Orientation questions are aligned with the dimensions you configured in Step 2. You're cleared to move on to Step 5.</p>
+        </div>
+      </div>
+
+      <div class="lab-quiz" data-correct="C">
+        <span class="lab-quiz-label">Quick check</span>
+        <h3>A teammate sets <strong>Use the Functional Area dimension?</strong> to <code>No</code> but kept Functional Area marked required in Step 2. What happens?</h3>
+        <div class="lab-quiz-options">
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex2-fa" value="A"><span class="lab-quiz-letter">A</span><span>The Configurator silently corrects the answer to match the dimension setting</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex2-fa" value="B"><span class="lab-quiz-letter">B</span><span>Generation finishes but Functional Area is read-only afterwards</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex2-fa" value="C"><span class="lab-quiz-letter">C</span><span>The top-level answer and the dimension list disagree — that's the kind of mismatch that surfaces as a generation error or broken reference downstream</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex2-fa" value="D"><span class="lab-quiz-letter">D</span><span>The dimension is removed automatically before generation runs</span></label>
+        </div>
+        <button type="button" class="lab-quiz-check">Check answer</button>
+        <div class="lab-quiz-feedback lab-quiz-feedback-correct"><strong>Correct.</strong> The Configurator doesn't reconcile contradictions across sections for you. A dimension marked required but turned off at the top-level is the same shape of inconsistency you'll see surfaced as a <code>LINE_ITEM_FORMULA</code> error in Error Log Review.</div>
+        <div class="lab-quiz-feedback lab-quiz-feedback-wrong"><strong>Not quite.</strong> The right answer is <strong>C</strong>. The Configurator captures each answer literally — it's on you to keep the dimension list and the top-level answers in agreement.</div>
+      </div>
+
+      <h2>Step 5 — Answer the Financial Planning questions</h2>
+      <p>Three-statement scope is the headline of this exercise. Balance Sheet and Cashflow are both turned on, and the expense planning dimensionality matches the dimensions you configured in Step 2.</p>
+
+      <ol class="lab-steps">
+        <li>Open the <strong>Financial Planning</strong> section in the Configurator.</li>
+        <li>Set <strong>Top-down targets?</strong> to <strong>No</strong>.</li>
+        <li>Set <strong>Balance Sheet?</strong> to <strong>Yes</strong> — required for 3-statement planning.</li>
+        <li>Set <strong>Cashflow reporting?</strong> to <strong>Yes</strong> — required for 3-statement planning.</li>
+        <li>Set <strong>Dimensionality for expense planning</strong> to <strong>Department, Vendor</strong>.</li>
+        <li>Set <strong>Dimensionality for itemized expense planning</strong> to <strong>Department</strong>.</li>
+        <li>Set <strong>Expense allocations?</strong> to <strong>No</strong>.</li>
+        <li>Click <strong>Apply Changes</strong> to save all six answers.</li>
+      </ol>
+
+      <div class="lab-expected-todo">
+        <strong>End-of-step screenshot to capture</strong>
+        Financial Planning section with Top-down targets <code>No</code>, Balance Sheet <code>Yes</code>, Cashflow reporting <code>Yes</code>, Dimensionality for expense planning <code>Department, Vendor</code>, Itemized dimensionality <code>Department</code>, Expense allocations <code>No</code>.
+      </div>
+
+      <div class="lab-check" data-check-id="ex2-step5-fp" data-workshop-slug="ifp">
+        <p class="lab-check-prompt">Once all Financial Planning answers are saved, run the check below.</p>
+        <button type="button" class="lab-check-button">Check my work</button>
+        <div class="lab-check-results" hidden>
+          <p class="lab-check-summary">Financial Planning answers look good.</p>
+          <ul class="lab-check-list">
+            <li>Top-down targets &rarr; <strong>No</strong></li>
+            <li>Balance Sheet &rarr; <strong>Yes</strong></li>
+            <li>Cashflow reporting &rarr; <strong>Yes</strong></li>
+            <li>Dimensionality for expense planning &rarr; <strong>Department, Vendor</strong></li>
+            <li>Dimensionality for itemized expense planning &rarr; <strong>Department</strong></li>
+            <li>Expense allocations &rarr; <strong>No</strong></li>
+          </ul>
+          <p class="lab-check-next">Financial Planning is set for full 3-statement scope. Configuration for Exercise 2 is complete.</p>
+        </div>
+      </div>
+
+      <div class="lab-quiz" data-correct="A">
+        <span class="lab-quiz-label">Quick check</span>
+        <h3>What changes about the generated model when you set <strong>Balance Sheet</strong> and <strong>Cashflow reporting</strong> both to <code>Yes</code>?</h3>
+        <div class="lab-quiz-options">
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex2-3statement" value="A"><span class="lab-quiz-letter">A</span><span>The Financial Planning model is generated with the full 3-statement structure — P&amp;L, Balance Sheet, and Cashflow — instead of OpEx only</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex2-3statement" value="B"><span class="lab-quiz-letter">B</span><span>It enables real-time consolidation across multi-currency reporting</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex2-3statement" value="C"><span class="lab-quiz-letter">C</span><span>The Headcount model is skipped to save generation time</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ex2-3statement" value="D"><span class="lab-quiz-letter">D</span><span>It locks Top-down targets to Yes</span></label>
+        </div>
+        <button type="button" class="lab-quiz-check">Check answer</button>
+        <div class="lab-quiz-feedback lab-quiz-feedback-correct"><strong>Correct.</strong> These two answers expand the Financial Planning model's scope from a P&amp;L-only model (what Exercise 1 produced with <code>Expense Only</code> margin planning) to a full 3-statement structure. The generated model now carries balance-sheet line items and a cashflow rollup.</div>
+        <div class="lab-quiz-feedback lab-quiz-feedback-wrong"><strong>Not quite.</strong> The right answer is <strong>A</strong>. Balance Sheet and Cashflow widen the Financial Planning model's scope to full 3-statement planning — that's the headline change versus Exercise 1.</div>
+      </div>
+
+      <h2>You're done with the configuration</h2>
+      <p>Exercise 2 is configured for full 3-statement planning with deep product hierarchy and a CapEx placeholder. Leave the Configurator alone for now and head to <a href="./06-exercise-3.html">Exercise 3</a>, which narrows scope back to OpEx + headcount but adds dimension attributes and a richer custom-list set.</p>
 
       <div class="prevnext-nav"><a class="prevnext-btn" href="./06-exercise-1.html">← Previous</a><a class="prevnext-btn" href="./06-exercise-3.html">Next →</a></div>
     </div>
   </main>
   <script src="../../js/nav.js"></script>
+  <script src="../../js/lab-quiz.js"></script>
 </body>
 </html>
