@@ -103,23 +103,34 @@
         </ul>
       </div>
 
-      <h2>Step 1 — Apply the standardized naming convention</h2>
-      <p>Before you touch any dimension, give every generated artifact a unique name following the pattern <code>[ModelType]_Exercise 1_YYYYMMDD</code>. This is what keeps each run unique when the same exercise runs repeatedly in the shared training tenant. Substitute today's date for <code>YYYYMMDD</code>.</p>
+      <h2>Step 1 — Rename every model with the standardized naming convention</h2>
+      <p>Before you touch any dimension, give every model a unique name following the pattern <code>[ModelType]_Exercise 1_YYYYMMDD</code>. That's what keeps each run unique when the same exercise runs repeatedly in the shared training tenant. Substitute today's date for <code>YYYYMMDD</code>.</p>
 
       <ol class="lab-steps">
-        <li>From the Configurator landing screen, scroll to the <strong>Model & App Names</strong> section.</li>
-        <li>Click into the <strong>Admin Model</strong> name field and replace the default with <code>admin_Exercise 1_YYYYMMDD</code>.</li>
-        <li>Click into the <strong>Financial Planning Model</strong> name field and replace the default with <code>fp_Exercise 1_YYYYMMDD</code>.</li>
-        <li>Click into the <strong>CapEx Model</strong> name field and replace the default with <code>capex_Exercise 1_YYYYMMDD</code>.</li>
-        <li>Click into the <strong>Headcount Model</strong> name field and replace the default with <code>headcount_Exercise 1_YYYYMMDD</code>.</li>
-        <li>Click into the <strong>IFP App</strong> name field and replace the default with <code>ifp-app_Exercise 1_YYYYMMDD</code>.</li>
-        <li>Click <strong>Apply Changes</strong> to save all five renames.</li>
+        <li>From the Workspace, select <strong>View All Models</strong>.
+          <figure class="lab-expected">
+            <img src="../../img/configurator/01-models-pane.png" alt="The Models pane open, listing IFP v2.0.0 TRAIN base models and Application Training">
+            <figcaption>The Models pane open, listing the IFP v2.0.0 TRAIN models you'll rename.</figcaption>
+          </figure>
+        </li>
+        <li>Select <strong>Manage Models</strong>.
+          <figure class="lab-expected">
+            <img src="../../img/configurator/02-manage-models-dialog.png" alt="Model Management dialog listing the five models with sizes and the Rename button on the right">
+            <figcaption>The Model Management dialog open, with the model list on the left and the Rename button on the right.</figcaption>
+          </figure>
+        </li>
+        <li>Select <strong>IFP v2.0.0 TRAIN - Base - Administration</strong>, click <strong>Rename</strong>, enter <code>admin_Exercise 1_YYYYMMDD</code> in the Model Name field, and click <strong>OK</strong>.
+          <figure class="lab-expected">
+            <img src="../../img/configurator/03-rename-model-dialog.png" alt="Rename dialog with admin_Exercise 1_YYYYMMDD typed into the Model Name field">
+            <figcaption>The Rename dialog with the new name typed in — repeat the same flow for each remaining model.</figcaption>
+          </figure>
+        </li>
+        <li>Select <strong>IFP v2.0.0 TRAIN - Base - CapEx</strong>, click <strong>Rename</strong>, enter <code>capex_Exercise 1_YYYYMMDD</code>, and click <strong>OK</strong>.</li>
+        <li>Select <strong>IFP v2.0.0 TRAIN - Base - Headcount</strong>, click <strong>Rename</strong>, enter <code>headcount_Exercise 1_YYYYMMDD</code>, and click <strong>OK</strong>.</li>
+        <li>Select <strong>IFP v2.0.0 TRAIN - Base - Financial Planning</strong>, click <strong>Rename</strong>, enter <code>fp_Exercise 1_YYYYMMDD</code>, and click <strong>OK</strong>.</li>
+        <li>Select <strong>Application Training</strong>, click <strong>Rename</strong>, enter <code>ifp-app_Exercise 1_YYYYMMDD</code>, and click <strong>OK</strong>.</li>
+        <li>Click <strong>Close</strong> to exit the Model Management dialog.</li>
       </ol>
-
-      <figure class="lab-expected">
-        <img src="../../img/configurator/naming-convention.png" alt="Naming convention table showing Admin Model, Financial Planning Model, CapEx Model, Headcount Model, and IFP App renamed using the [ModelType]_Exercise ##_YYYYMMDD pattern">
-        <figcaption>All four models and the IFP App renamed before you proceed.</figcaption>
-      </figure>
 
       <div class="lab-quiz" data-correct="B">
         <span class="lab-quiz-label">Quick check</span>
@@ -177,7 +188,13 @@
       </div>
 
       <h2>Step 3 — Answer the top-level configuration questions</h2>
-      <p>The Configurator asks a handful of orientation questions before drilling into each model. Open the <strong>Top-Level Questions</strong> section and set each answer below.</p>
+      <p>The Configurator asks a handful of orientation questions before drilling into each model.</p>
+
+      <ol class="lab-steps">
+        <li>Open the <strong>Top-Level Questions</strong> section in the Configurator.</li>
+      </ol>
+
+      <p>Set each answer below.</p>
 
       <div class="lab-decisions">
         <div class="lab-decision">
@@ -197,12 +214,18 @@
         </div>
       </div>
 
-      <ol class="lab-steps" start="12">
+      <ol class="lab-steps" start="2">
         <li>Click <strong>Apply Changes</strong> once all three answers are set.</li>
       </ol>
 
       <h2>Step 4 — Answer the Financial Planning questions</h2>
-      <p>The Financial Planning model is the OpEx engine for this scenario. Open the <strong>Financial Planning</strong> section and set each answer below. Pay attention to <strong>Margin Planning → Expense Only</strong> — that's what scopes the model to OpEx and skips revenue.</p>
+      <p>The Financial Planning model is the OpEx engine for this scenario. Pay attention to <strong>Margin Planning → Expense Only</strong> — that's what scopes the model to OpEx and skips revenue.</p>
+
+      <ol class="lab-steps">
+        <li>Open the <strong>Financial Planning</strong> section in the Configurator.</li>
+      </ol>
+
+      <p>Set each answer below.</p>
 
       <div class="lab-decisions">
         <div class="lab-decision">
@@ -236,12 +259,18 @@
         </div>
       </div>
 
-      <ol class="lab-steps" start="13">
+      <ol class="lab-steps" start="2">
         <li>Click <strong>Apply Changes</strong> once all seven answers are set.</li>
       </ol>
 
       <h2>Step 5 — Answer the Headcount questions</h2>
-      <p>The Headcount model handles workforce planning. Open the <strong>Headcount</strong> section and set each answer below.</p>
+      <p>The Headcount model handles workforce planning.</p>
+
+      <ol class="lab-steps">
+        <li>Open the <strong>Headcount</strong> section in the Configurator.</li>
+      </ol>
+
+      <p>Set each answer below.</p>
 
       <div class="lab-decisions">
         <div class="lab-decision">
@@ -255,7 +284,7 @@
         </div>
       </div>
 
-      <ol class="lab-steps" start="14">
+      <ol class="lab-steps" start="2">
         <li>Click <strong>Apply Changes</strong> once both answers are set.</li>
       </ol>
 
