@@ -1,3 +1,21 @@
+// Screenshot toggle — each .lab-screenshot-toggle button expands the next-id
+// .lab-screenshot-container so the page stays text-first by default and the
+// reader only pulls up the screenshot when they want a visual confirmation.
+(function () {
+  function bindToggle(btn) {
+    var targetId = btn.getAttribute('aria-controls');
+    var target = targetId ? document.getElementById(targetId) : btn.nextElementSibling;
+    if (!target) return;
+    btn.addEventListener('click', function () {
+      var nextOpen = btn.getAttribute('aria-expanded') !== 'true';
+      btn.setAttribute('aria-expanded', nextOpen ? 'true' : 'false');
+      target.classList.toggle('lab-expanded', nextOpen);
+      btn.textContent = nextOpen ? '📷 Hide screenshot' : '📷 Show screenshot';
+    });
+  }
+  document.querySelectorAll('.lab-screenshot-toggle').forEach(bindToggle);
+})();
+
 // Today's date — replaces every .lab-today-date placeholder with YYYYMMDD
 // (no separators, matches the model-naming convention) so the participant
 // reads the literal value to type instead of substituting a placeholder.
