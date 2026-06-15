@@ -70,46 +70,141 @@
   <main class="main-content">
     <div class="content-header">
       <h1>Model Generation</h1>
-      <p class="subtitle">What happens during generation, how long it takes, and what to expect</p>
-      <div class="badge-row"><span class="content-badge">30 min</span><span class="content-badge">Walkthrough</span></div>
+      <p class="subtitle">Trigger generation, watch the four IFP models build out, and read what the status tells you</p>
+      <div class="badge-row"><span class="content-badge">Configuration</span><span class="content-badge">⏱ 30 min</span><span class="content-badge">Guided practice</span></div>
     </div>
     <div class="content-body">
 
-<h2>What Generation Does</h2>
-      <p>When you trigger generation, the Application Framework reads all 44 of your configuration answers and provisions the complete IFP model structure. This is not a template copy — it is a dynamic generation process that applies your configuration decisions to produce a model specific to your answers.</p>
-      <p>Generation provisions four models:</p>
+      <div class="lab-objectives">
+        <h3>What you'll do</h3>
+        <ul>
+          <li>Trigger generation from the Application Framework Configurator</li>
+          <li>Recognize what the four status states mean, especially <em>Generated with Errors</em></li>
+          <li>Verify all four expected models exist in the workspace and capture a baseline error count</li>
+          <li>Internalize that "errors after generation" is normal — they're fixed in Error Log Review, not by re-generating</li>
+        </ul>
+      </div>
+
+      <h2>What generation actually does</h2>
+      <p>When you click <strong>Generate</strong>, the Application Framework reads all 44 of your configuration answers and provisions a complete IFP model structure specific to those answers. This is dynamic provisioning, not a template copy. Generation produces four models:</p>
       <ul>
-        <li><strong>Financial Planning</strong> — the main planning model (INP, CALC, OUT modules)</li>
-        <li><strong>Headcount</strong> — the HC model with Job-level planning (if enabled)</li>
-        <li><strong>Admin</strong> — primary spot to do source to planning meta-data mappings for account hierarchies, entity, and department.</li>
-        <li><strong>CapEx</strong> — capex planning model (only if enabled)</li>
+        <li><strong>Financial Planning</strong> — the main planning model (ADMIN, SYS, DAT, INP, CALC, OUT modules)</li>
+        <li><strong>Headcount</strong> — workforce planning with Job-level detail (when enabled)</li>
+        <li><strong>Admin</strong> — the mapping hub for source-to-planning metadata (accounts, entity, department)</li>
+        <li><strong>CapEx</strong> — capital expenditure planning (only when enabled)</li>
       </ul>
+      <p>It also creates the UX app participants will navigate, plus ~17 assets (import definitions, saved views, dashboard configurations).</p>
 
-      <h2>What Gets Created</h2>
-<div class="table-wrap"><table><thead><tr><th>Object Type</th><th>Count (Typical)</th><th>What It Contains</th></tr></thead><tbody><tr><td>Models</td><td>4</td><td>Financial Planning, Headcount, Admin, CapEx</td></tr><tr><td>UX Apps</td><td>1+</td><td>The IFP planning application end users will access</td></tr><tr><td>Assets</td><td>~17</td><td>Import definitions, saved views, dashboard configurations</td></tr></tbody></table></div>
+      <h2>The four generation status states</h2>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Status</th><th>What it means</th><th>What to do</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Generating…</strong></td><td>Provisioning is in progress.</td><td>Wait. Don't trigger another generation. Expected: 20–40 min.</td></tr>
+          <tr><td><strong>Generated with Errors</strong></td><td>Generation completed but some formulas reference items that don't match the base template (usually because of renames or removed dimensions).</td><td>Normal and expected. The model works. Errors are resolved in Error Log Review.</td></tr>
+          <tr><td><strong>Generated Successfully</strong></td><td>Generation completed with zero formula errors.</td><td>Proceed straight to Post-Generation Steps.</td></tr>
+          <tr><td><strong>Generation Failed</strong></td><td>A platform error stopped generation.</td><td>Don't retry blindly. Contact Anaplan support so the failure is diagnosed first.</td></tr>
+        </tbody>
+      </table></div>
 
-      <h2>Generation Status States</h2>
-<div class="table-wrap"><table><thead><tr><th>Status</th><th>What It Means</th><th>What to Do</th></tr></thead><tbody><tr><td>Generating...</td><td>Generation is in progress. Models are being provisioned.</td><td>Wait. Do not trigger another generation. Expected: 20–40 min.</td></tr><tr><td>Generated with Errors</td><td>Generation completed. Some formulas have errors due to configuration differences from base model.</td><td>Normal and expected. Review error logs — most errors are resolvable.</td></tr><tr><td>Generated Successfully</td><td>Generation completed with no formula errors detected.</td><td>Proceed to post-generation steps.</td></tr><tr><td>Generation Failed</td><td>Generation did not complete due to a platform error.</td><td>Contact Anaplan support. Do not attempt another generation without diagnosis.</td></tr></tbody></table></div><div class="callout-important"><span class="callout-label">🚨 'Generated with Errors' Does Not Mean Broken</span><p>'Generated with Errors' is normal and expected, especially in training and early implementations. It means some formulas reference items that differ from the base model template — usually caused by hierarchy renaming, geography removal, or configuration choices that differ from the template assumptions. The model is functional. You will work through the error list systematically in the Error Log Review section.</p></div>
+      <div class="callout-important">
+        <span class="callout-label">🚨 "Generated with Errors" is normal — don't re-generate</span>
+        <p>This status almost always means a formula referenced a dimension or item that you renamed or turned off in the Configurator. The model is functional and you'll work through the error list systematically in Error Log Review. Re-running generation won't change anything — the errors are baked into the configuration, not into the generation pipeline.</p>
+      </div>
 
-      <h2>IFP Model Pages After Generation</h2>
-<figure class="screenshot"><img src="../../img/generation/gen-0265.jpg" alt="IFP model pages list — 43 pages across ADMIN, SYS, DAT, INP, CALC, OUT modules" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">IFP model pages list — 43 pages across ADMIN, SYS, DAT, INP, CALC, OUT modules</figcaption></figure>
+      <h2>Step 1 — Trigger generation</h2>
+      <p>You only do this once per exercise. From here on, the Application Framework does the work.</p>
 
-      <h2>Generation With Errors — Activity Panel</h2>
-<figure class="screenshot"><img src="../../img/generation/gen-d2-0235.jpg" alt="Application Framework generation with errors — Activity panel showing model data sources and error count" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Application Framework generation with errors — Activity panel showing model data sources and error count</figcaption></figure>
+      <ol class="lab-steps">
+        <li>From the Application Framework Configurator, confirm every section is answered — every "DEFAULT ANSWER" or "CUSTOM ANSWER" indicator should be settled the way you intended.</li>
+        <li>Click <strong>Generate</strong>.</li>
+        <li>Confirm any prompts that appear.</li>
+        <li>Note the start time. Generation typically takes 20–40 minutes.</li>
+      </ol>
 
-      <h2>Default Financial Planning Modules after Generation</h2>
-<figure class="screenshot"><img src="../../img/v2.1-screenshots/modules-list.png" alt="Default modules list in IFP v2.1 showing ADMIN, SYS, DAT, INP, CALC, OUT modules with functional areas, line items, and properties" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Default Financial Planning Modules (v2.1) — showing ADMIN, SYS, DAT, INP, CALC, OUT module structure with functional areas and metadata</figcaption></figure>
+      <h2>Step 2 — Monitor status while generation runs</h2>
+      <p>The Application Framework overview page is the source of truth for status. Don't close the browser, don't trigger another generation, don't refresh the workspace looking for the models — they appear together when generation finishes.</p>
 
-      <h2>UX Navigation Structure &amp; Pages</h2>
-      <p>Once generation completes, the generated UX app contains organized pages and categories that users navigate to do their planning work. The v2.1.0 default template includes:</p>
-<figure class="screenshot"><img src="../../img/v2.1-screenshots/ux-navigation-structure.png" alt="AW_FIN - Integrated Financial Planning v2.1.0 UX navigation showing Quick Access, Categories (Home, Reporting &amp; Analysis, Top Down Planning, Revenue &amp; COGS, Operating Expense, Headcount, CapEx Planning, Balance Sheet &amp; Cash Flow, Administration categories), and sub-pages under each." style="width:100%;border-radius:6px;border:1px solid #e2e8f0;"><figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">AW_FIN (v2.1.0) UX Navigation Structure — Categories and pages organized by business function and planning type</figcaption></figure>
+      <ol class="lab-steps">
+        <li>Stay on the Application Framework overview page (or come back to it periodically).</li>
+        <li>Refresh the page every few minutes to read the current status.</li>
+        <li>If the status flips to <strong>Generation Failed</strong>, stop and capture a screenshot for support — don't restart on your own.</li>
+      </ol>
 
-      <h2>Generation Steps</h2>
-<div class="step"><div class="step-badge">1</div><div class="step-content"><h3>Trigger Generation</h3><p>From the Application Framework Configurator, after completing all sections, click Generate. Confirm any prompts. Note the start time.</p></div></div><div class="step"><div class="step-badge">2</div><div class="step-content"><h3>Monitor Status</h3><p>The Application Framework overview page shows generation status. Refresh periodically. Do not close the browser or trigger another generation while in progress.</p></div></div><div class="step"><div class="step-badge">3</div><div class="step-content"><h3>First Look at Generated Model</h3><p>Once complete, navigate to your workspace. You should see the four IFP models listed. Open the Financial Planning model and verify the planning sub-processes are present — including Revenue &amp; COGS, Operating Expense, Headcount, CapEx Planning, and Balance Sheet &amp; Cash Flow (based on your configuration).</p></div></div><div class="step"><div class="step-badge">4</div><div class="step-content"><h3>Check Error Logs</h3><p>Return to the Application Framework. In the bottom-right of the overview page, find the error log count. Click to expand the log. Note: more than 0 errors is normal. Proceed to Error Log Review.</p></div></div>
+      <h2>Step 3 — Verify the four models in your workspace</h2>
+      <p>Once the status reads <strong>Generated Successfully</strong> or <strong>Generated with Errors</strong>, the four models exist in your workspace.</p>
+
+      <ol class="lab-steps">
+        <li>From the workspace, open the Models list. Confirm four models are present: Financial Planning, Headcount, Admin, and CapEx (CapEx is only there if the scenario enabled it).</li>
+        <li>Open the <strong>Financial Planning</strong> model.</li>
+        <li>Navigate to <strong>Modules</strong>. Confirm modules with each of these prefixes exist: <code>ADMIN</code>, <code>SYS</code>, <code>DAT</code>, <code>INP</code>, <code>CALC</code>, <code>OUT</code>.</li>
+        <li>Spot-check that the planning sub-processes match the scenario — Revenue &amp; COGS, Operating Expense, Headcount, CapEx Planning, Balance Sheet &amp; Cash Flow should appear when the scenario enabled them, and be absent when it didn't.</li>
+      </ol>
+
+      <h2>Step 4 — Record your baseline error count</h2>
+      <p>The error log is the bridge to the next page. Capturing the count now gives you a number to compare against as you work through resolutions.</p>
+
+      <ol class="lab-steps">
+        <li>Return to the Application Framework overview page.</li>
+        <li>Find the error log indicator in the bottom-right of the page.</li>
+        <li>Note the total error count. Record it in your notes — this is your baseline for Error Log Review.</li>
+        <li>Click into the error log briefly to see the first few entries. You don't need to resolve them here; that's what the next two pages are for.</li>
+      </ol>
+
+      <div class="lab-expected-todo">
+        <strong>End-of-step screenshot to capture</strong>
+        Application Framework overview page showing the final status (Generated Successfully or Generated with Errors), the four models listed, and the error count indicator with your baseline number visible.
+      </div>
+
+      <div class="lab-check" data-check-id="gen-complete" data-workshop-slug="ifp">
+        <p class="lab-check-prompt">Once the four models exist in your workspace and you've recorded the baseline error count, run the check below.</p>
+        <button type="button" class="lab-check-button">Check my work</button>
+        <div class="lab-check-results" hidden>
+          <p class="lab-check-summary">Generation results look good.</p>
+          <ul class="lab-check-list">
+            <li><strong>Status</strong> &rarr; Generated Successfully or Generated with Errors</li>
+            <li><strong>Models in workspace</strong> &rarr; Financial Planning, Headcount, Admin (plus CapEx if enabled)</li>
+            <li><strong>Module prefixes</strong> &rarr; ADMIN, SYS, DAT, INP, CALC, OUT all present in Financial Planning</li>
+            <li><strong>Baseline error count</strong> &rarr; recorded in your notes</li>
+          </ul>
+          <p class="lab-check-next">Your generation produced the expected structure. Move on to <a href="./08-post-gen.html">Post-Generation Steps</a> to verify the model and then to Error Log Review.</p>
+        </div>
+      </div>
+
+      <div class="lab-quiz" data-correct="B">
+        <span class="lab-quiz-label">Quick check</span>
+        <h3>Generation finishes with status <strong>Generated with Errors</strong> and 47 errors in the log. What's the right next step?</h3>
+        <div class="lab-quiz-options">
+          <label class="lab-quiz-option"><input type="radio" name="quiz-gen-status" value="A"><span class="lab-quiz-letter">A</span><span>Re-trigger generation — something went wrong with the run</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-gen-status" value="B"><span class="lab-quiz-letter">B</span><span>Record the count as your baseline and move on to Post-Generation Steps and Error Log Review</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-gen-status" value="C"><span class="lab-quiz-letter">C</span><span>Restore the Configurator defaults and start over</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-gen-status" value="D"><span class="lab-quiz-letter">D</span><span>Contact Anaplan support before doing anything else</span></label>
+        </div>
+        <button type="button" class="lab-quiz-check">Check answer</button>
+        <div class="lab-quiz-feedback lab-quiz-feedback-correct"><strong>Correct.</strong> <em>Generated with Errors</em> is expected, especially in training scenarios where you've renamed dimensions or turned things off. The errors are formula references that need fixing in the model, not a generation-pipeline failure. Re-running generation produces the same errors.</div>
+        <div class="lab-quiz-feedback lab-quiz-feedback-wrong"><strong>Not quite.</strong> The right answer is <strong>B</strong>. Errors after generation are normal and resolved in Error Log Review — they don't mean the run is broken. The only status that warrants stopping is <em>Generation Failed</em>, which is a platform-level error rather than a formula issue.</div>
+      </div>
+
+      <div class="lab-quiz" data-correct="A">
+        <span class="lab-quiz-label">Quick check</span>
+        <h3>A teammate sees the status flip from <em>Generating…</em> to <em>Generation Failed</em>. What should they do?</h3>
+        <div class="lab-quiz-options">
+          <label class="lab-quiz-option"><input type="radio" name="quiz-gen-failed" value="A"><span class="lab-quiz-letter">A</span><span>Capture a screenshot of the status page and contact Anaplan support — don't trigger another generation until the failure is diagnosed</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-gen-failed" value="B"><span class="lab-quiz-letter">B</span><span>Click Generate again immediately to retry</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-gen-failed" value="C"><span class="lab-quiz-letter">C</span><span>Restore Configurator defaults and re-answer the questions</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-gen-failed" value="D"><span class="lab-quiz-letter">D</span><span>Wait — the status updates itself eventually</span></label>
+        </div>
+        <button type="button" class="lab-quiz-check">Check answer</button>
+        <div class="lab-quiz-feedback lab-quiz-feedback-correct"><strong>Correct.</strong> Unlike <em>Generated with Errors</em>, a <em>Generation Failed</em> status is a platform-level issue. Retrying without diagnosis can leave the tenant in a half-built state. The screenshot gives support the context they need to investigate.</div>
+        <div class="lab-quiz-feedback lab-quiz-feedback-wrong"><strong>Not quite.</strong> The right answer is <strong>A</strong>. <em>Generation Failed</em> means the platform stopped mid-build — that warrants a controlled diagnosis, not another attempt that could compound the problem.</div>
+      </div>
+
+      <h2>You're done with generation</h2>
+      <p>Your model exists. Next up is <a href="./08-post-gen.html">Post-Generation Steps</a> — a short verification checklist to confirm the model is in a stable shape before you spend any time on data or extensions. After that, <a href="./09-error-logs.html">Error Log Review</a> walks through working down your baseline error count.</p>
 
       <div class="prevnext-nav"><a class="prevnext-btn" href="./06-exercise-3.html">← Previous</a><a class="prevnext-btn" href="./08-post-gen.html">Next →</a></div>
     </div>
   </main>
   <script src="../../js/nav.js"></script>
+  <script src="../../js/lab-quiz.js"></script>
 </body>
 </html>
