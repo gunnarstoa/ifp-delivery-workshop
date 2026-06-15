@@ -1514,9 +1514,29 @@ ol.lab-steps {
   padding: 0;
 }
 ol.lab-steps li {
-  margin: 0.65rem 0;
+  margin: 0.85rem 0;
   line-height: 1.6;
   padding-left: 0.4rem;
+}
+ol.lab-steps li.lab-step-with-image {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.75fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+.lab-step-image {
+  margin: 0;
+}
+.lab-step-image img {
+  display: block;
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+}
+@media (max-width: 720px) {
+  ol.lab-steps li.lab-step-with-image {
+    grid-template-columns: 1fr;
+  }
 }
 ol.lab-steps code {
   background: #f3f4f6;
