@@ -1,3 +1,16 @@
+// Today's date — replaces every .lab-today-date placeholder with YYYYMMDD
+// (no separators, matches the model-naming convention) so the participant
+// reads the literal value to type instead of substituting a placeholder.
+(function () {
+  var d = new Date();
+  var today = d.getFullYear() +
+              String(d.getMonth() + 1).padStart(2, '0') +
+              String(d.getDate()).padStart(2, '0');
+  document.querySelectorAll('.lab-today-date').forEach(function (el) {
+    el.textContent = today;
+  });
+})();
+
 // Lab quiz handler — Trailhead-style inline mini-quizzes.
 // Each .lab-quiz block carries data-correct (the right answer letter); two
 // pre-baked feedback elements (.lab-quiz-feedback-correct / -wrong) hold the
