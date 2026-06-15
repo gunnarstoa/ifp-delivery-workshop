@@ -2078,11 +2078,30 @@ WORKSHOP_LEADERBOARD = {
     ],
 }
 
+# Every "Check my work" block across the workshop gets one entry here.
+# The leaderboard renders a column per entry; the lab-check button POSTs the id
+# to record the attempt. Add a new entry when a new lab page introduces a check.
+WORKSHOP_LAB_CHECKS = {
+    "ifp": [
+        {
+            "id": "ex1-step1-renames",
+            "page_path": "/w/ifp/06-exercise-1.html",
+            "label": "Ex1: Renames",
+        },
+    ],
+}
+
 
 def _session_leaderboard(session_id, workshop_slug):
     """One row per active participant with a status entry per checkpoint defined in
-    WORKSHOP_LEADERBOARD for this workshop. Status is 'done' / 'partial' / 'todo'."""
-    checkpoints = WORKSHOP_LEADERBOARD.get(workshop_slug, [])
+    WORKSHOP_LEADERBOARD plus every Check-my-work entry in WORKSHOP_LAB_CHECKS.
+    Status is 'done' / 'partial' / 'todo' / 'failed' (lab checks only)."""
+    base_checkpoints = WORKSHOP_LEADERBOARD.get(workshop_slug, [])
+    lab_checks = WORKSHOP_LAB_CHECKS.get(workshop_slug, [])
+    checkpoints = list(base_checkpoints) + [
+        {"key": "lab_check_" + c["id"], "label": c["label"], "type": "lab_check", "check_id": c["id"]}
+        for c in lab_checks
+    ]
     db = get_db()
     participants = db.execute(
         "SELECT sp.user_id, sp.partner, sp.excluded, u.username "
@@ -2117,6 +2136,16 @@ def _session_leaderboard(session_id, workshop_slug):
         ).fetchone() is not None
         kc_attempts, kc_passed = _kc_user_status(session_id, p["user_id"])
 
+        # Per-user lab check best result (MAX(passed) so any pass counts as passed)
+        lab_result = {}
+        if lab_checks:
+            for r in db.execute(
+                "SELECT check_id, MAX(passed) AS best FROM lab_check_attempts "
+                "WHERE user_id = ? AND session_id = ? GROUP BY check_id",
+                (p["user_id"], session_id),
+            ).fetchall():
+                lab_result[r["check_id"]] = r["best"]
+
         statuses = []
         for c in checkpoints:
             if c["type"] == "survey":
@@ -2131,6 +2160,14 @@ def _session_leaderboard(session_id, workshop_slug):
                     statuses.append("partial")
                 else:
                     statuses.append("todo")
+            elif c["type"] == "lab_check":
+                best = lab_result.get(c["check_id"])
+                if best is None:
+                    statuses.append("todo")
+                elif best:
+                    statuses.append("done")
+                else:
+                    statuses.append("failed")
             else:
                 statuses.append("todo")
 
@@ -3865,6 +3902,37 @@ def qa_mark_answered(workshop_slug, thread_id):
     )
     get_db().commit()
     return redirect(_safe_return_to(request.form.get("return_to"), thread["page_path"] + f"#qa-thread-{thread_id}"))
+
+
+@app.route("/w/<workshop_slug>/lab-check", methods=["POST"])
+def lab_check_record(workshop_slug):
+    """Records a participant's Check-my-work attempt. For Phase 1 every attempt
+    returns passed=True (matches the simulated success the lab-check button
+    already showed). When the real Anaplan API integration lands, the
+    `passed` value here becomes the validator's verdict."""
+    user = current_user()
+    if user is None:
+        abort(403)
+    sess, _role = _user_workshop_session(user["id"], workshop_slug)
+    if sess is None:
+        abort(403)
+    check_id = (request.form.get("check_id") or "").strip()
+    page_path = (request.form.get("page_path") or "").strip()
+    if not check_id:
+        abort(400)
+    cfg = next((c for c in WORKSHOP_LAB_CHECKS.get(workshop_slug, []) if c["id"] == check_id), None)
+    if cfg is None:
+        abort(400)
+    if not page_path or not QA_PAGE_RE.match(page_path):
+        page_path = cfg["page_path"]
+    passed = 1
+    get_db().execute(
+        "INSERT INTO lab_check_attempts (user_id, session_id, workshop_slug, page_path, check_id, passed) "
+        "VALUES (?, ?, ?, ?, ?, ?)",
+        (user["id"], sess["id"], workshop_slug, page_path, check_id, passed),
+    )
+    get_db().commit()
+    return jsonify({"passed": bool(passed), "check_id": check_id})
 
 
 @app.route("/uploads/<int:upload_id>")
