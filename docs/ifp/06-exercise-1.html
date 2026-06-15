@@ -104,17 +104,21 @@
       </div>
 
       <h2>Step 1 — Apply the standardized naming convention</h2>
-      <p>Before you touch any dimension, give every generated artifact a unique name following the pattern <code>[ModelType]_Exercise ##_YYYYMMDD</code>. This is what keeps each run unique when the same exercise is run repeatedly in the shared training tenant.</p>
+      <p>Before you touch any dimension, give every generated artifact a unique name following the pattern <code>[ModelType]_Exercise 1_YYYYMMDD</code>. This is what keeps each run unique when the same exercise runs repeatedly in the shared training tenant. Substitute today's date for <code>YYYYMMDD</code>.</p>
 
       <ol class="lab-steps">
         <li>From the Configurator landing screen, scroll to the <strong>Model & App Names</strong> section.</li>
-        <li>For each of the four generated models (Admin, Financial Planning, CapEx, Headcount) and the IFP App, replace the default name with <code>[ModelType]_Exercise 1_YYYYMMDD</code> — substitute today's date.</li>
-        <li>Click <strong>Apply Changes</strong>.</li>
+        <li>Click into the <strong>Admin Model</strong> name field and replace the default with <code>admin_Exercise 1_YYYYMMDD</code>.</li>
+        <li>Click into the <strong>Financial Planning Model</strong> name field and replace the default with <code>fp_Exercise 1_YYYYMMDD</code>.</li>
+        <li>Click into the <strong>CapEx Model</strong> name field and replace the default with <code>capex_Exercise 1_YYYYMMDD</code>.</li>
+        <li>Click into the <strong>Headcount Model</strong> name field and replace the default with <code>headcount_Exercise 1_YYYYMMDD</code>.</li>
+        <li>Click into the <strong>IFP App</strong> name field and replace the default with <code>ifp-app_Exercise 1_YYYYMMDD</code>.</li>
+        <li>Click <strong>Apply Changes</strong> to save all five renames.</li>
       </ol>
 
       <figure class="lab-expected">
         <img src="../../img/configurator/naming-convention.png" alt="Naming convention table showing Admin Model, Financial Planning Model, CapEx Model, Headcount Model, and IFP App renamed using the [ModelType]_Exercise ##_YYYYMMDD pattern">
-        <figcaption>What you should see — all four models and the IFP App renamed before you proceed.</figcaption>
+        <figcaption>All four models and the IFP App renamed before you proceed.</figcaption>
       </figure>
 
       <div class="lab-quiz" data-correct="B">
@@ -132,43 +136,26 @@
       </div>
 
       <h2>Step 2 — Configure the eight standard dimensions</h2>
-      <p>IFP ships with eight standard dimensions. Your job is to mark the ones this scenario needs, rename a few of them, and set the right number of hierarchy levels for each.</p>
+      <p>IFP ships with eight standard dimensions. Mark the ones this scenario needs, rename four of them, and set the right number of hierarchy levels for each. Click <strong>Apply Changes</strong> after each dimension before moving to the next.</p>
 
       <ol class="lab-steps">
         <li>In the Configurator, open the <strong>Dimensions</strong> section.</li>
-        <li>For each row in the table below, toggle the dimension to <strong>required</strong> or <strong>not required</strong>. For the dimensions marked Yes, also set the <strong>rename</strong> and <strong># of levels</strong> values shown.</li>
-        <li>After each dimension change, click <strong>Apply Changes</strong> before moving to the next.</li>
+        <li>For <strong>Entity</strong>, keep it required, leave the name as-is, and set <strong># of levels</strong> to <code>2</code>. Click <strong>Apply Changes</strong>.</li>
+        <li>For <strong>Department</strong>, keep it required, rename it to <code>CostCenter</code>, and set <strong># of levels</strong> to <code>3</code>. Click <strong>Apply Changes</strong>.</li>
+        <li>For <strong>Product</strong>, mark it <strong>not required</strong>. Click <strong>Apply Changes</strong>.</li>
+        <li>For <strong>Job</strong>, keep it required, rename it to <code>Roles</code>, and set <strong># of levels</strong> to <code>3</code>. Click <strong>Apply Changes</strong>.</li>
+        <li>For <strong>Vendor</strong>, keep it required, rename it to <code>Suppliers</code>, and set <strong># of levels</strong> to <code>2</code>. Click <strong>Apply Changes</strong>.</li>
+        <li>For <strong>Functional Area</strong>, keep it required, rename it to <code>HR Org</code>, and set <strong># of levels</strong> to <code>3</code>. Click <strong>Apply Changes</strong>.</li>
+        <li>For <strong>Customer</strong>, mark it <strong>not required</strong>. Click <strong>Apply Changes</strong>.</li>
+        <li>For <strong>Location</strong>, mark it <strong>not required</strong>. Click <strong>Apply Changes</strong>.</li>
       </ol>
 
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Standard dimension</th>
-            <th>Required?</th>
-            <th>Rename to</th>
-            <th># of levels</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td><strong>Entity</strong></td><td>Yes</td><td>—</td><td>2</td></tr>
-          <tr><td><strong>Department</strong></td><td>Yes</td><td><code>CostCenter</code></td><td>3</td></tr>
-          <tr><td><strong>Product</strong></td><td>No</td><td>—</td><td>—</td></tr>
-          <tr><td><strong>Job</strong></td><td>Yes</td><td><code>Roles</code></td><td>3</td></tr>
-          <tr><td><strong>Vendor</strong></td><td>Yes</td><td><code>Suppliers</code></td><td>2</td></tr>
-          <tr><td><strong>Functional Area</strong></td><td>Yes</td><td><code>HR Org</code></td><td>3</td></tr>
-          <tr><td><strong>Customer</strong></td><td>No</td><td>—</td><td>—</td></tr>
-          <tr><td><strong>Location</strong></td><td>No</td><td>—</td><td>—</td></tr>
-        </tbody>
-      </table>
+      <p>This scenario also needs two custom lists handled in the extension layer (not in the Configurator).</p>
 
-      <p>The scenario also needs two custom lists handled in the extension layer:</p>
-      <table class="data-table">
-        <thead><tr><th>Custom list</th><th>Type</th><th>Purpose</th></tr></thead>
-        <tbody>
-          <tr><td><strong>Projects</strong></td><td>Flat</td><td>Project tracking, added in the extension exercise</td></tr>
-          <tr><td><strong>Country</strong></td><td>Flat</td><td>Supporting attribute list</td></tr>
-        </tbody>
-      </table>
+      <ol class="lab-steps" start="10">
+        <li>Open the <strong>Custom Lists</strong> section. Add <code>Projects</code> as a <strong>flat</strong> list — you'll use it for project tracking in the extension exercise.</li>
+        <li>Add <code>Country</code> as a <strong>flat</strong> list — it's a supporting attribute list for later use.</li>
+      </ol>
 
       <div class="lab-expected-todo">
         <strong>Screenshot to capture</strong>
@@ -190,60 +177,86 @@
       </div>
 
       <h2>Step 3 — Answer the top-level configuration questions</h2>
-      <p>The Configurator asks a handful of orientation questions before drilling into each model. For this scenario:</p>
+      <p>The Configurator asks a handful of orientation questions before drilling into each model. Open the <strong>Top-Level Questions</strong> section and set each answer below.</p>
 
-      <table class="data-table">
-        <thead><tr><th>Question</th><th>Answer</th><th>Why</th></tr></thead>
-        <tbody>
-          <tr><td>Multi-currency support?</td><td><strong>Yes</strong></td><td>Multi-entity reporting needs it</td></tr>
-          <tr><td>Use the Location dimension?</td><td><strong>No</strong></td><td>Not required by this scenario</td></tr>
-          <tr><td>Use the Functional Area dimension?</td><td><strong>Yes</strong></td><td>Repurposed as "HR Org"</td></tr>
-        </tbody>
-      </table>
+      <div class="lab-decisions">
+        <div class="lab-decision">
+          <p class="lab-decision-q">Multi-currency support?</p>
+          <span class="lab-decision-a lab-decision-a-yes">Yes</span>
+          <p class="lab-decision-why">Multi-entity reporting requires it.</p>
+        </div>
+        <div class="lab-decision">
+          <p class="lab-decision-q">Use the Location dimension?</p>
+          <span class="lab-decision-a lab-decision-a-no">No</span>
+          <p class="lab-decision-why">Not required by this scenario.</p>
+        </div>
+        <div class="lab-decision">
+          <p class="lab-decision-q">Use the Functional Area dimension?</p>
+          <span class="lab-decision-a lab-decision-a-yes">Yes</span>
+          <p class="lab-decision-why">Repurposed as "HR Org" — you renamed it in Step 2.</p>
+        </div>
+      </div>
 
-      <ol class="lab-steps">
-        <li>Open the <strong>Top-Level Questions</strong> section in the Configurator.</li>
-        <li>Set each answer to the values above.</li>
-        <li>Click <strong>Apply Changes</strong>.</li>
+      <ol class="lab-steps" start="12">
+        <li>Click <strong>Apply Changes</strong> once all three answers are set.</li>
       </ol>
 
       <h2>Step 4 — Answer the Financial Planning questions</h2>
-      <p>The Financial Planning model is the OpEx engine for this scenario. The answers below intentionally skip revenue and balance-sheet planning since the client only needs expense.</p>
+      <p>The Financial Planning model is the OpEx engine for this scenario. Open the <strong>Financial Planning</strong> section and set each answer below. Pay attention to <strong>Margin Planning → Expense Only</strong> — that's what scopes the model to OpEx and skips revenue.</p>
 
-      <table class="data-table">
-        <thead><tr><th>Question</th><th>Answer</th></tr></thead>
-        <tbody>
-          <tr><td>Multi-currency support?</td><td><strong>Yes</strong></td></tr>
-          <tr><td>Top-down targets?</td><td><strong>No</strong></td></tr>
-          <tr><td>Margin Planning?</td><td><strong>Expense Only</strong></td></tr>
-          <tr><td>Expense planning?</td><td><strong>Yes</strong></td></tr>
-          <tr><td>Dimensionality for expense planning</td><td><strong>Department, Vendor</strong></td></tr>
-          <tr><td>Dimensionality for itemized expense planning</td><td><strong>Department</strong></td></tr>
-          <tr><td>Expense allocations?</td><td><strong>No</strong></td></tr>
-        </tbody>
-      </table>
+      <div class="lab-decisions">
+        <div class="lab-decision">
+          <p class="lab-decision-q">Multi-currency support?</p>
+          <span class="lab-decision-a lab-decision-a-yes">Yes</span>
+        </div>
+        <div class="lab-decision">
+          <p class="lab-decision-q">Top-down targets?</p>
+          <span class="lab-decision-a lab-decision-a-no">No</span>
+        </div>
+        <div class="lab-decision">
+          <p class="lab-decision-q">Margin Planning?</p>
+          <span class="lab-decision-a">Expense Only</span>
+          <p class="lab-decision-why">Scopes the model to OpEx — skips revenue, COGS, and balance-sheet planning.</p>
+        </div>
+        <div class="lab-decision">
+          <p class="lab-decision-q">Expense planning?</p>
+          <span class="lab-decision-a lab-decision-a-yes">Yes</span>
+        </div>
+        <div class="lab-decision">
+          <p class="lab-decision-q">Dimensionality for expense planning</p>
+          <span class="lab-decision-a">Department, Vendor</span>
+        </div>
+        <div class="lab-decision">
+          <p class="lab-decision-q">Dimensionality for itemized expense planning</p>
+          <span class="lab-decision-a">Department</span>
+        </div>
+        <div class="lab-decision">
+          <p class="lab-decision-q">Expense allocations?</p>
+          <span class="lab-decision-a lab-decision-a-no">No</span>
+        </div>
+      </div>
 
-      <ol class="lab-steps">
-        <li>Open the <strong>Financial Planning</strong> section.</li>
-        <li>Set each answer above. Pay attention to <strong>Margin Planning → Expense Only</strong> — this is what scopes the model to OpEx and skips revenue.</li>
-        <li>Click <strong>Apply Changes</strong>.</li>
+      <ol class="lab-steps" start="13">
+        <li>Click <strong>Apply Changes</strong> once all seven answers are set.</li>
       </ol>
 
       <h2>Step 5 — Answer the Headcount questions</h2>
-      <p>The Headcount model handles workforce planning. Only two questions are relevant for this scenario:</p>
+      <p>The Headcount model handles workforce planning. Open the <strong>Headcount</strong> section and set each answer below.</p>
 
-      <table class="data-table">
-        <thead><tr><th>Question</th><th>Answer</th></tr></thead>
-        <tbody>
-          <tr><td>Multi-currency support?</td><td><strong>Yes</strong></td></tr>
-          <tr><td>Term for Job?</td><td><strong>Roles</strong></td></tr>
-        </tbody>
-      </table>
+      <div class="lab-decisions">
+        <div class="lab-decision">
+          <p class="lab-decision-q">Multi-currency support?</p>
+          <span class="lab-decision-a lab-decision-a-yes">Yes</span>
+        </div>
+        <div class="lab-decision">
+          <p class="lab-decision-q">Term for Job?</p>
+          <span class="lab-decision-a">Roles</span>
+          <p class="lab-decision-why">Must match the rename you applied to the Job dimension in Step 2.</p>
+        </div>
+      </div>
 
-      <ol class="lab-steps">
-        <li>Open the <strong>Headcount</strong> section.</li>
-        <li>Set both answers above. The term for Job here must match the rename you applied to the Job dimension in Step 2.</li>
-        <li>Click <strong>Apply Changes</strong>.</li>
+      <ol class="lab-steps" start="14">
+        <li>Click <strong>Apply Changes</strong> once both answers are set.</li>
       </ol>
 
       <div class="lab-quiz" data-correct="A">
