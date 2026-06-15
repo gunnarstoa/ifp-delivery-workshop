@@ -132,6 +132,22 @@
         <li>Click <strong>Close</strong> to exit the Model Management dialog.</li>
       </ol>
 
+      <div class="lab-check">
+        <p class="lab-check-prompt">Once all five renames are saved in your tenant, run the check below. It calls the Anaplan API to confirm each model now follows the standardized naming pattern.</p>
+        <button type="button" class="lab-check-button">Check my work</button>
+        <div class="lab-check-results" hidden>
+          <p class="lab-check-summary">All five renames look good.</p>
+          <ul class="lab-check-list">
+            <li><strong>Admin model</strong> &rarr; <code>admin_Exercise 1_YYYYMMDD</code></li>
+            <li><strong>CapEx model</strong> &rarr; <code>capex_Exercise 1_YYYYMMDD</code></li>
+            <li><strong>Headcount model</strong> &rarr; <code>headcount_Exercise 1_YYYYMMDD</code></li>
+            <li><strong>Financial Planning model</strong> &rarr; <code>fp_Exercise 1_YYYYMMDD</code></li>
+            <li><strong>Application Training</strong> &rarr; <code>ifp-app_Exercise 1_YYYYMMDD</code></li>
+          </ul>
+          <p class="lab-check-next">Each name matches the <code>[ModelType]_Exercise 1_YYYYMMDD</code> pattern. You're cleared to move on to Step 2.</p>
+        </div>
+      </div>
+
       <div class="lab-quiz" data-correct="B">
         <span class="lab-quiz-label">Quick check</span>
         <h3>Why must every generated model and app have a unique name within the tenant?</h3>
