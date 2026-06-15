@@ -70,224 +70,193 @@
   <main class="main-content">
     <div class="content-header">
       <h1>Extension Exercise 2: Channel Revenue Planning</h1>
-      <p class="subtitle">Add a new flat list (Channel) and revenue planning module integrated into Gross Profit Planning</p>
-      <div class="badge-row"><span class="content-badge">Extensions</span><span class="content-badge">60 min</span><span class="content-badge">Guided Lab</span></div>
+      <p class="subtitle">Add a Channel dimension, a channel-level revenue module, and conditionally integrate it into Gross Profit Planning</p>
+      <div class="badge-row"><span class="content-badge">Extensions</span><span class="content-badge">⏱ 60 min</span><span class="content-badge">Guided practice</span></div>
     </div>
     <div class="content-body">
 
-<h2>Business Requirement</h2>
-      <p>Need 1 type of revenue planning, for example by Channel.</p>
-
-      <h2>Solution</h2>
-      <ul>
-        <li>Add new flat list of Channel with top level – All Channels</li>
-        <li>Create a new module with the existing revenue planning dimensions plus additional dimension of Channel</li>
-        <li>Add new line-items to the affected module</li>
-        <li>Modify the aggregation formula to include the new line-items</li>
-      </ul>
-
-      <h2>Steps</h2>
-
-      <h3>Step 1: Create the Channel List</h3>
-      <ol>
-        <li>In the Data Model editor, create a new <strong>List: EXT Channel</strong>
-          <ul>
-            <li>Naming convention: "EXT" prefix indicates this is an extension (not auto-generated)</li>
-            <li>Flat list (no hierarchy) — just discrete channel names</li>
-          </ul>
-        </li>
-        <li>Add the <strong>Top Level</strong> item: <strong>"All Channels"</strong>
-          <ul>
-            <li>This aggregates all individual channel values</li>
-          </ul>
-        </li>
-        <li>Add 3 sample channel items:
-          <ul>
-            <li><strong>Channel 1</strong></li>
-            <li><strong>Channel 2</strong></li>
-            <li><strong>Channel 3</strong></li>
-          </ul>
-        </li>
-        <li>Save the list</li>
-      </ol>
-
-      <div class="callout-note">
-        <span class="callout-label">ℹ Naming Convention: EXT Prefix</span>
-        <p>Lists and modules created as extensions are prefixed with "EXT" to distinguish them from auto-generated content. This makes it easy to track what was added post-generation during upgrades.</p>
+      <div class="lab-objectives">
+        <h3>What you'll do</h3>
+        <ul>
+          <li>Create the <code>EXT Channel</code> flat list and a new channel-level revenue planning module</li>
+          <li>Register <strong>Channel Planning</strong> as a new planning method and turn it on for a target product</li>
+          <li>Add three line items to <code>INP Gross Profit Planning</code> and write a conditional aggregation that only fires when the planning method is selected</li>
+          <li>Update the LISS so the new line items appear in the UX, and update existing aggregation formulas so channel revenue rolls into Final Amount and SUM: Revenue</li>
+          <li>Verify the full flow end-to-end for the target product in the UX</li>
+        </ul>
       </div>
 
-      <h3>Step 2: Create the Channel Revenue Planning Module</h3>
-      <ol>
-        <li>Create a new module: <strong>EXT INP Channel Revenue Planning</strong></li>
-        <li>Define the module dimensions:
-          <ul>
-            <li><strong>Time</strong> (standard dimension)</li>
-            <li><strong>All dimensions from INP Gross Profit Planning</strong> (Product, Job, Entity, etc.)</li>
-            <li><strong>Channel</strong> (your new dimension — EXT Channel list)</li>
-          </ul>
-        </li>
-        <li>Add line-items to the module:
+      <h2>The scenario</h2>
+      <p>The client wants channel-level revenue planning — a new dimension on top of the existing revenue model so they can plan Price × Volume per channel and roll the result back into Gross Profit Planning. The catch: not every product should be planned this way. Channel Planning needs to be an opt-in choice per product, and the aggregation back into Gross Profit Planning has to respect that opt-in.</p>
+
+      <h2>Before you start: how extensions stay safe</h2>
+      <div class="callout-warning">
+        <span class="callout-label">⚠ Rules to follow throughout the exercise</span>
+        <ul>
+          <li><strong>EXT prefix on everything you create.</strong> Lists and modules added as extensions get the <code>EXT</code> prefix so they're easy to tell apart from generated content during upgrades.</li>
+          <li><strong>Register new planning methods.</strong> Every new way of planning has to land in the Planning Methods list — otherwise the UX won't recognize it as a valid option.</li>
+          <li><strong>Conditional formulas.</strong> When the new method isn't selected, the conditional should return 0 or blank — never a stale aggregation. <code>IF(Use Channel Planning Method?, …, 0)</code> is the safe pattern.</li>
+          <li><strong>Update the LISS, or the UX won't see it.</strong> A line item that isn't checked in <code>LISS: Margin Filter</code> stays invisible on the relevant UX page.</li>
+          <li><strong>Documentation is the upgrade plan.</strong> Every line-item and formula change goes in the module Notes <em>and</em> the offline change log. When Anaplan ships a new IFP base, those notes are how you re-apply the extension.</li>
+        </ul>
+      </div>
+
+      <h2>Step 1 — Create the EXT Channel list</h2>
+      <p>The new dimension is a flat list — just discrete channel names with one top-level aggregator.</p>
+
+      <ol class="lab-steps">
+        <li>In the Data Model editor, create a new list named <code>EXT Channel</code>. Use <strong>Flat</strong> structure (no parent levels).</li>
+        <li>Add the top-level item <strong>All Channels</strong> — this aggregates every individual channel.</li>
+        <li>Add three sample channel items: <strong>Channel 1</strong>, <strong>Channel 2</strong>, <strong>Channel 3</strong>.</li>
+        <li>Save the list.</li>
+      </ol>
+
+      <h2>Step 2 — Create the channel revenue planning module</h2>
+      <p>The new module carries Price, Volume, and a calculated Total. It's dimensioned across the existing Gross Profit Planning dimensions plus the new EXT Channel.</p>
+
+      <ol class="lab-steps">
+        <li>Create a new module named <code>EXT INP Channel Revenue Planning</code>.</li>
+        <li>Set the module's dimensions: <strong>Time</strong>, every dimension from <code>INP Gross Profit Planning</code> (Product, Job, Entity, etc.), plus the new <strong>EXT Channel</strong> list.</li>
+        <li>Add three line items:
           <ul>
             <li><strong>Price</strong> — unit price per channel</li>
             <li><strong>Volume</strong> — units sold per channel</li>
-            <li><strong>Total</strong> — calculated revenue (Price × Volume)</li>
+            <li><strong>Total</strong> — calculated revenue</li>
           </ul>
         </li>
-        <li>Configure the "Total" line-item with formula: <strong>Price × Volume</strong></li>
-        <li>Save the module</li>
+        <li>On the <strong>Total</strong> line item, set the formula <code>Price * Volume</code>.</li>
+        <li>Save the module.</li>
       </ol>
 
-      <h3>Step 3: Add a New Planning Method</h3>
-      <ol>
-        <li>Open the <strong>"SYS by Planning Methods"</strong> module</li>
-        <li>In the <strong>"List Planning Methods"</strong>, add a new item: <strong>"Channel Planning"</strong></li>
-        <li>Save the change</li>
-      </ol>
-
-      <div class="callout-warning">
-        <span class="callout-label">⚠ Planning Methods Must Be Registered</span>
-        <p>Every new planning approach (Channel Planning, Direct Input, etc.) must be registered in the Planning Methods list. Without this registration, the UX won't recognize it as a valid option for users.</p>
+      <div class="lab-quiz" data-correct="B">
+        <span class="lab-quiz-label">Quick check</span>
+        <h3>Why does the new list use the prefix <code>EXT</code> (EXT Channel) instead of just <code>Channel</code>?</h3>
+        <div class="lab-quiz-options">
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ext2-prefix" value="A"><span class="lab-quiz-letter">A</span><span>Anaplan requires the EXT prefix on any list with more than one item</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ext2-prefix" value="B"><span class="lab-quiz-letter">B</span><span>The prefix marks the list as extension content, not generated content — that's how you tell them apart during an IFP upgrade so you know what to re-apply</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ext2-prefix" value="C"><span class="lab-quiz-letter">C</span><span>EXT-prefixed lists are excluded from data orchestrator loads</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ext2-prefix" value="D"><span class="lab-quiz-letter">D</span><span>EXT-prefixed lists are flat by default; non-prefixed lists are composite</span></label>
+        </div>
+        <button type="button" class="lab-quiz-check">Check answer</button>
+        <div class="lab-quiz-feedback lab-quiz-feedback-correct"><strong>Correct.</strong> Convention, not technical requirement. When a new IFP version regenerates the model, the generated content reappears at its original names and your extensions don't. The <code>EXT</code> prefix is the visible marker that says "this came from an extension — re-apply it from your change log."</div>
+        <div class="lab-quiz-feedback lab-quiz-feedback-wrong"><strong>Not quite.</strong> The right answer is <strong>B</strong>. The prefix has no technical effect — it's the naming convention that makes generated vs. extension content distinguishable, especially when upgrades regenerate the model and you need to know what to re-apply.</div>
       </div>
 
-      <h3>Step 4: Configure Planning Method Availability</h3>
-      <ol>
-        <li>Open module <strong>"ADMIN Define Product to Planning Method"</strong></li>
-        <li>For <strong>"Service Offering 1"</strong> (or your target product), add <strong>"Channel Planning"</strong> to the list of available planning methods</li>
-        <li>This tells the system: "Service Offering 1 can be planned using Channel Planning"</li>
-        <li>Save the changes</li>
+      <h2>Step 3 — Register Channel Planning as a planning method</h2>
+      <p>Every new way of planning has to be registered in the Planning Methods list, and then made available to the specific products that should be planned that way.</p>
+
+      <ol class="lab-steps">
+        <li>Open the module <code>SYS by Planning Methods</code>.</li>
+        <li>In the <strong>List Planning Methods</strong>, add a new item: <strong>Channel Planning</strong>.</li>
+        <li>Save.</li>
+        <li>Open the module <code>ADMIN Define Product to Planning Method</code>.</li>
+        <li>For your target product — for example, <strong>Service Offering 1</strong> — add <strong>Channel Planning</strong> to its list of available planning methods.</li>
+        <li>Save.</li>
       </ol>
 
-      <h3>Step 5: Update the Gross Profit Planning Module</h3>
-      <p>Now integrate Channel Planning into the main planning flow by adding reference line-items to INP Gross Profit Planning:</p>
+      <h2>Step 4 — Add channel planning line items to Gross Profit Planning</h2>
+      <p>The new line items live in <code>INP Gross Profit Planning</code> and turn the channel-level total into a number Gross Profit Planning can use.</p>
 
-      <ol>
-        <li>Open module <strong>"INP Gross Profit Planning"</strong></li>
-        <li>Add 3 new line-items <strong>before the "Final Amount" line-item</strong>:
+      <ol class="lab-steps">
+        <li>Open the module <code>INP Gross Profit Planning</code> in blueprint view.</li>
+        <li>Add three new line items <strong>before</strong> the existing <strong>Final Amount</strong> line item:
           <ul>
-            <li><strong>Channel Planning</strong> — heading/section indicator
-              <ul>
-                <li>Set as <strong>Heading 1</strong> (styling/organization only, no data)</li>
-              </ul>
-            </li>
-            <li><strong>Use Channel Planning Method?</strong> — Boolean flag
-              <ul>
-                <li>Format: Boolean</li>
-                <li>Purpose: User selects "Yes" to enable channel-level planning</li>
-                <li>Copy settings from similar line-item (e.g., "Use COGS Pct of Revenue Method?")</li>
-              </ul>
-            </li>
-            <li><strong>Channel Planning Revenue</strong> — the aggregated result
-              <ul>
-                <li>Format: Same as "Final Amount"</li>
-                <li>This pulls data from EXT INP Channel Revenue Planning and sums by channel</li>
-              </ul>
-            </li>
+            <li><strong>Channel Planning</strong> — Heading 1, no data (organizational marker only)</li>
+            <li><strong>Use Channel Planning Method?</strong> — Boolean (planner checks Yes to opt in for this product). Copy settings from a similar Boolean such as <code>Use COGS Pct of Revenue Method?</code>.</li>
+            <li><strong>Channel Planning Revenue</strong> — same format as <strong>Final Amount</strong>; this is the aggregated channel revenue that rolls back into the parent module.</li>
           </ul>
         </li>
-      </ol>
-
-      <h3>Step 6: Create the Channel Planning Revenue Formula</h3>
-      <ol>
-        <li>For the <strong>"Channel Planning Revenue"</strong> line-item, create a formula that:
-          <ul>
-            <li>Links to <strong>EXT INP Channel Revenue Planning, line-item "Total"</strong></li>
-            <li>Sums across the Channel dimension (aggregates all channels)</li>
-            <li>Only calculates when <strong>"Use Channel Planning Method?" = True</strong></li>
-            <li>Returns 0 or blank when the method is not selected</li>
-          </ul>
-        </li>
-        <li><strong>Formula pattern (example):</strong>
+        <li>On the <strong>Channel Planning Revenue</strong> line item, write a conditional formula along these lines (adjust for your model's exact naming):
           <ul>
             <li><code>IF(Use Channel Planning Method?, SUM(EXT INP Channel Revenue Planning.Total), 0)</code></li>
           </ul>
         </li>
-        <li>Adjust the exact formula based on your model's naming and structure</li>
-        <li><strong>Document the formula</strong> in the module blueprint Notes field</li>
+        <li>Document the formula in the module's <strong>Notes</strong> field and in your offline change log.</li>
       </ol>
 
-      <h3>Step 7: Update Line-Item Subsets (LISS)</h3>
-      <p>Register your new line-items in the appropriate subsets so they appear in the right UX pages:</p>
+      <h2>Step 5 — Update the LISS and the existing aggregation formulas</h2>
+      <p>The new line items need to be registered in the LISS so the UX shows them, and the existing aggregation formulas need to pick up the channel-revenue contribution.</p>
 
-      <ol>
-        <li>Open <strong>"LISS: Margin Filter"</strong></li>
-        <li>Check the Boolean for your 3 new line-items:
-          <ul>
-            <li>Channel Planning (heading)</li>
-            <li>Use Channel Planning Method?</li>
-            <li>Channel Planning Revenue</li>
-          </ul>
-        </li>
-        <li>Save the changes</li>
+      <ol class="lab-steps">
+        <li>Open <strong>LISS: Margin Filter</strong>.</li>
+        <li>Check the Boolean for each of the three new line items: <strong>Channel Planning</strong> (heading), <strong>Use Channel Planning Method?</strong>, and <strong>Channel Planning Revenue</strong>.</li>
+        <li>Save.</li>
+        <li>In <code>INP Gross Profit Planning</code>, open the formula for <strong>Final Amount</strong>. Add <code>+ Channel Planning Revenue</code> to its existing components. (Because Channel Planning Revenue is already conditional, you don't need to wrap it again here.)</li>
+        <li>If a <strong>SUM: Revenue</strong> line item exists, add <code>+ Channel Planning Revenue</code> to its formula too so channel-based revenue shows up in revenue summaries.</li>
+        <li>Document both updated formulas — old vs. new — in the module Notes and your offline change log.</li>
       </ol>
 
-      <h3>Step 8: Update Aggregation Formulas</h3>
-      <p>Update the formulas in existing line-items to include Channel Planning Revenue:</p>
-
-      <ol>
-        <li>In module <strong>"INP Gross Profit Planning"</strong>, open the formula for <strong>"Final Amount"</strong></li>
-        <li>Update the formula to include:
-          <ul>
-            <li><code>+ Channel Planning Revenue</code> (in addition to existing components)</li>
-          </ul>
-        </li>
-        <li>Update the formula for <strong>"SUM: Revenue"</strong> if it exists:
-          <ul>
-            <li>Add <code>+ Channel Planning Revenue</code> to ensure channel-based revenue is included in summaries</li>
-          </ul>
-        </li>
-        <li><strong>Document both formula changes</strong> in your offline change log</li>
-      </ol>
-
-      <div class="callout-note">
-        <span class="callout-label">ℹ Formula Update Strategy</span>
-        <p>When updating existing formulas to reference new extensions, use conditional logic:</p>
-        <ul>
-          <li><code>IF(Use Channel Planning Method?, Channel Planning Revenue, 0)</code></li>
-        </ul>
-        <p>This prevents errors when the method isn't selected and makes the logic clear to future maintainers.</p>
+      <div class="lab-quiz" data-correct="C">
+        <span class="lab-quiz-label">Quick check</span>
+        <h3>Why is <strong>Channel Planning Revenue</strong> wrapped in <code>IF(Use Channel Planning Method?, …, 0)</code> instead of just summing the EXT module directly?</h3>
+        <div class="lab-quiz-options">
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ext2-conditional" value="A"><span class="lab-quiz-letter">A</span><span>Boolean line items always need a wrapping IF for performance reasons</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ext2-conditional" value="B"><span class="lab-quiz-letter">B</span><span>The Anaplan formula engine throws an error if you reference an EXT module without an IF</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ext2-conditional" value="C"><span class="lab-quiz-letter">C</span><span>Channel Planning is opt-in per product — without the IF, products that aren't planned this way would still pull a channel total into Final Amount and double-count revenue</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ext2-conditional" value="D"><span class="lab-quiz-letter">D</span><span>The conditional protects against blank values in the EXT module</span></label>
+        </div>
+        <button type="button" class="lab-quiz-check">Check answer</button>
+        <div class="lab-quiz-feedback lab-quiz-feedback-correct"><strong>Correct.</strong> The IF is what makes the extension safe to roll into Final Amount. Products that aren't planned by channel return 0; products that opt in return the SUM across channels. Without the IF, every product would silently pick up a channel-revenue contribution — exactly the kind of silent double-count that's hard to find later.</div>
+        <div class="lab-quiz-feedback lab-quiz-feedback-wrong"><strong>Not quite.</strong> The right answer is <strong>C</strong>. The conditional respects the opt-in flag on each product. Anaplan doesn't require the IF technically — but the business logic does, otherwise non-channel products would double-count revenue.</div>
       </div>
 
-      <h3>Step 9: Validate in the UX</h3>
-      <ol>
-        <li>Open the UX App</li>
-        <li>Navigate to the Gross Profit Planning page for a sample product (Service Offering 1)</li>
-        <li>Verify:
-          <ul>
-            <li>The "Use Channel Planning Method?" Boolean appears and is editable</li>
-            <li>When you set it to "Yes", the planning interface adjusts</li>
-            <li>You can navigate to the Channel Revenue Planning page and enter Price and Volume</li>
-            <li>The totals flow back to Gross Profit Planning correctly</li>
-            <li>All summary calculations are accurate</li>
-          </ul>
-        </li>
-        <li><strong>If something is missing or broken:</strong>
-          <ul>
-            <li>Check that all line-items are added to the LISS</li>
-            <li>Verify the formula syntax matches your model's naming conventions</li>
-            <li>Compare against a working reference module</li>
-          </ul>
-        </li>
+      <h2>Step 6 — Verify the full flow in the UX</h2>
+      <p>The extension isn't finished until a planner can walk through it end-to-end for a real product. Don't skip this — it's the only check that proves the formula, the LISS, and the planning-method registration all line up.</p>
+
+      <ol class="lab-steps">
+        <li>Open the UX app and navigate to the <strong>Gross Profit Planning</strong> page for <strong>Service Offering 1</strong>.</li>
+        <li>Confirm the new <strong>Use Channel Planning Method?</strong> Boolean appears and is editable.</li>
+        <li>Set <strong>Use Channel Planning Method?</strong> to <strong>Yes</strong>. The interface should adjust to reveal channel planning.</li>
+        <li>Navigate to the <strong>Channel Revenue Planning</strong> page. Enter sample <strong>Price</strong> and <strong>Volume</strong> for each of the three channels.</li>
+        <li>Return to Gross Profit Planning. Confirm <strong>Channel Planning Revenue</strong> shows the SUM across channels and that <strong>Final Amount</strong> picks it up.</li>
+        <li>Spot-check a second product where <strong>Use Channel Planning Method?</strong> is still <strong>No</strong>. Confirm its Channel Planning Revenue is 0 and Final Amount does not include any channel contribution.</li>
+        <li>If something's missing: verify the line items are in <code>LISS: Margin Filter</code>, that the formula syntax matches your model's exact line-item names, and that the EXT Channel list is referenced correctly in the EXT module's dimensions.</li>
       </ol>
 
-      <h2>Key Takeaways</h2>
-      <ul>
-        <li><strong>Extensions preserve generated structure</strong> — you're adding, not replacing</li>
-        <li><strong>Planning Methods organize user choices</strong> — always register new planning approaches</li>
-        <li><strong>Line-Item Subsets control visibility</strong> — new content only appears if added to LISS</li>
-        <li><strong>Formulas must be conditional</strong> — only calculate what the user selected</li>
-        <li><strong>Documentation is critical</strong> — every change must be logged for future upgrades</li>
-        <li><strong>Test end-to-end</strong> — from data entry through final summary calculations</li>
-      </ul>
+      <div class="lab-expected-todo">
+        <strong>End-of-step screenshot to capture</strong>
+        Gross Profit Planning UX page for Service Offering 1 with Use Channel Planning Method? = Yes, Channel Planning Revenue populated, and Final Amount visibly including the channel contribution. Alongside, a second product with the method set to No showing Channel Planning Revenue at 0.
+      </div>
+
+      <div class="lab-check" data-check-id="ext2-channel-revenue" data-workshop-slug="ifp">
+        <p class="lab-check-prompt">Once the opt-in product shows channel revenue rolling into Final Amount and the non-opt-in product shows 0, run the check below.</p>
+        <button type="button" class="lab-check-button">Check my work</button>
+        <div class="lab-check-results" hidden>
+          <p class="lab-check-summary">Channel Revenue Planning extension wired up end-to-end.</p>
+          <ul class="lab-check-list">
+            <li><strong>EXT Channel list</strong> &rarr; flat list with All Channels + 3 channel items</li>
+            <li><strong>EXT INP Channel Revenue Planning</strong> &rarr; module with Price, Volume, Total = Price × Volume</li>
+            <li><strong>Channel Planning</strong> &rarr; registered as a planning method and enabled on the target product</li>
+            <li><strong>INP Gross Profit Planning</strong> &rarr; 3 new line items; Channel Planning Revenue uses the conditional IF formula</li>
+            <li><strong>LISS: Margin Filter</strong> &rarr; all 3 new line items checked in</li>
+            <li><strong>Aggregations</strong> &rarr; Final Amount (and SUM: Revenue if present) include Channel Planning Revenue</li>
+            <li><strong>UX verification</strong> &rarr; opt-in product rolls channel revenue into Final Amount; non-opt-in product returns 0</li>
+            <li><strong>Documentation</strong> &rarr; module Notes + offline change log updated</li>
+          </ul>
+          <p class="lab-check-next">Extension is complete and verified for both opt-in and non-opt-in products. You've finished the extension exercises.</p>
+        </div>
+      </div>
 
       <div class="callout-warning">
-        <span class="callout-label">⚠ Upgrade Consideration</span>
-        <p>When Anaplan releases a new IFP version, all extensions you've built must be re-applied to the newly generated model. Keeping detailed documentation (what you changed, why, original vs. new formulas) makes this process much faster and less error-prone.</p>
+        <span class="callout-label">⚠ Upgrade consideration</span>
+        <p>When Anaplan ships a new IFP version, every extension you've built has to be re-applied to the newly generated model. Your offline change log — original and updated formula syntax, line-item names, LISS registrations, planning-method registrations — is the script for that re-application. Without it, every upgrade becomes detective work.</p>
       </div>
+
+      <h2>Key takeaways</h2>
+      <ul>
+        <li><strong>Extensions add, they don't replace</strong> — generated structure stays as it was; you append new line items and adjust formulas around them.</li>
+        <li><strong>Planning Methods organize user choices</strong> — every new planning approach has to be registered, otherwise the UX has no way to expose it.</li>
+        <li><strong>Line-Item Subsets control visibility</strong> — new content only appears on the UX page when it's checked into the LISS.</li>
+        <li><strong>Formulas tied to opt-in flags must be conditional</strong> — otherwise non-opted-in records silently pick up extension data.</li>
+        <li><strong>Documentation is the upgrade plan</strong> — every change goes in module Notes and an offline change log.</li>
+        <li><strong>Test end-to-end</strong> — data entry, conditional formula, aggregation, summary all in the UX, with both opt-in and non-opt-in products spot-checked.</li>
+      </ul>
 
       <div class="prevnext-nav"><a class="prevnext-btn" href="./11-extension-exercise-1.html">← Previous</a><a class="prevnext-btn" href="./13-whats-coming.html">Next →</a></div>
     </div>
   </main>
 
   <script src="../../js/nav.js"></script>
+  <script src="../../js/lab-quiz.js"></script>
 </body>
 </html>

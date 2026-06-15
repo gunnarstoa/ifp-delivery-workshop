@@ -70,35 +70,142 @@
   <main class="main-content">
     <div class="content-header">
       <h1>Extension Exercise 1: Manual Adjustments</h1>
-      <p class="subtitle">Add 2 new manual adjustment line-items to the OpEx module and modify the aggregation formula</p>
-      <div class="badge-row"><span class="content-badge">Extensions</span><span class="content-badge">30 min</span><span class="content-badge">Guided Practice</span></div>
+      <p class="subtitle">Add two manual-adjustment line items to the OpEx module, wire them into the aggregation, and verify in the UX</p>
+      <div class="badge-row"><span class="content-badge">Extensions</span><span class="content-badge">⏱ 30 min</span><span class="content-badge">Guided practice</span></div>
     </div>
     <div class="content-body">
 
-<h2>Business Requirement</h2>
-      <p>Need 2 additional types of manual adjustments for expense inputs.</p>
+      <div class="lab-objectives">
+        <h3>What you'll do</h3>
+        <ul>
+          <li>Add two new manual-adjustment line items to the <code>INP OPX Expense Planning</code> module</li>
+          <li>Modify the <strong>Direct Input Fcst</strong> aggregation formula to include the new line items</li>
+          <li>Register the new line items in the OpEx Line-Item Subset (LISS) and the ADMIN LISS module so they appear in the UX</li>
+          <li>Verify the end-to-end flow in the UX with a real account (<code>6005 Office Equipment</code>)</li>
+        </ul>
+      </div>
 
-      <h2>Solution</h2>
-      <ul>
-        <li>Add new line-items to the affected module</li>
-        <li>Modify the aggregation formula to include the new line-items</li>
-      </ul>
+      <h2>The scenario</h2>
+      <p>The client needs two additional types of manual adjustments for expense inputs — values the planner enters directly that flow into the Direct Input forecast alongside the existing inputs. You'll add the line items, wire them into the aggregation, and make sure they show up in the right UX page.</p>
 
-      <h2>Steps</h2>
+      <h2>Before you start: how extensions stay safe</h2>
+      <div class="callout-warning">
+        <span class="callout-label">⚠ Rules to follow throughout the exercise</span>
+        <ul>
+          <li><strong>Add — don't replace.</strong> Generated modules and line items stay as they are. Extensions append new line items and adjust formulas; they don't rewrite the generated structure.</li>
+          <li><strong>Use the module Notes field.</strong> Document why each new line item exists and what the aggregation formula now sums. Future-you (and the next Anaplan upgrade) will thank you.</li>
+          <li><strong>Keep an offline change log.</strong> When an Anaplan IFP release lands, every extension has to be re-applied to the freshly generated model. A master list of overrides — original and updated formula syntax — makes that re-application straightforward instead of detective work.</li>
+          <li><strong>Update the LISS, or the UX won't see it.</strong> A line item that isn't registered in its Line-Item Subset doesn't appear on the relevant UX page, even if the formula works perfectly.</li>
+        </ul>
+      </div>
 
-      <div class="step"><div class="step-badge">1</div><div class="step-content"><h3>Open the Expense Planning Module</h3><p>Open module <strong>INP OPX Expense Planning</strong> in the "Financial Planning" model.</p></div></div>
+      <h2>Step 1 — Open the Expense Planning module</h2>
 
-      <div class="step"><div class="step-badge">2</div><div class="step-content"><h3>Add 2 New Line-Items</h3><p>Add 2 new line-items in the "Direct Input Method" section of the blueprint:</p><ul><li><strong>Manual Adjustment #1</strong></li><li><strong>Manual Adjustment #2</strong></li><li>Set the Format of the new line-items (same as "Amount")</li><li>Set the Write Access Driver for each new line-item</li><li>Document what the line-items are for in the "Notes" field</li></ul></div></div>
+      <ol class="lab-steps">
+        <li>Open the <strong>Financial Planning</strong> model from your workspace.</li>
+        <li>Navigate to <strong>Modules</strong> and open <code>INP OPX Expense Planning</code>.</li>
+        <li>Switch to <strong>Blueprint</strong> view so you can see line items, formats, formulas, and the Notes field.</li>
+      </ol>
 
-      <div class="step"><div class="step-badge">3</div><div class="step-content"><h3>Modify the Aggregation Formula</h3><p>We need to modify the formula for line-item <strong>Direct Input Fcst</strong> to include the 2 new line-items:</p><ul><li>Modify the formula</li><li>Document what you've done:<ul><li>Use the "Notes" field of the module blueprint</li><li>Keep a master list of overrides in an offline document, including the original and updated formula syntax</li></ul></li></ul></div></div>
+      <h2>Step 2 — Add the two new line items</h2>
+      <p>You're adding both line items in the <strong>Direct Input Method</strong> section so they live alongside the inputs the planner already enters directly.</p>
 
-      <div class="step"><div class="step-badge">4</div><div class="step-content"><h3>Update Line-Item Subset and Admin Settings</h3><p>Add the 2 new line-items to the LISS (Line-Item Subset for Show/Hide):</p><ul><li>Open line-item subset <strong>"LISS: OpEx Filter"</strong></li><li>Check the Boolean for the 2 new adjustments</li><li>Open module <strong>"ADMIN LISS OpEx Filter"</strong> and set the "Forecast Method" to "Direct Input" for each of the 2 new line-items</li></ul></div></div>
+      <ol class="lab-steps">
+        <li>In the <strong>Direct Input Method</strong> section of the blueprint, create a new line item named <strong>Manual Adjustment #1</strong>.</li>
+        <li>Set its <strong>Format</strong> to match the existing <code>Amount</code> line item (so it aggregates the same way).</li>
+        <li>Set the <strong>Write Access Driver</strong> the same as <code>Amount</code> so the same users who can enter Amount can enter the adjustment.</li>
+        <li>Use the <strong>Notes</strong> field to document what this adjustment is for.</li>
+        <li>Create a second line item named <strong>Manual Adjustment #2</strong> and repeat the format, write-access, and notes steps.</li>
+      </ol>
 
-      <div class="step"><div class="step-badge">5</div><div class="step-content"><h3>Verify in the UX App</h3><p>Open page <strong>"OpEx – planning"</strong> in the UX App:</p><ul><li>Select account <strong>"6005 Office Equipment"</strong></li><li>Check that the logic is working properly</li></ul></div></div>
+      <h2>Step 3 — Wire the new line items into the aggregation formula</h2>
+      <p>The line item <strong>Direct Input Fcst</strong> rolls up the Direct Input section. You'll add the two new adjustments to its formula and document the change.</p>
+
+      <ol class="lab-steps">
+        <li>Open the formula for <strong>Direct Input Fcst</strong>.</li>
+        <li>Add references to <strong>Manual Adjustment #1</strong> and <strong>Manual Adjustment #2</strong> so they aggregate into the Direct Input forecast alongside <code>Amount</code>.</li>
+        <li>Document the change in the module's <strong>Notes</strong> field: which line items were added, and the before/after of the Direct Input Fcst formula.</li>
+        <li>Add the same entry to your offline change log so the next upgrade can re-apply this extension without you having to re-derive it.</li>
+      </ol>
+
+      <h2>Step 4 — Register the new line items in the LISS</h2>
+      <p>A Line-Item Subset (LISS) controls which line items the UX shows on a page. If you skip this step, the line items exist in the module and aggregate correctly — but the UX won't display them.</p>
+
+      <ol class="lab-steps">
+        <li>Open the line-item subset <strong>LISS: OpEx Filter</strong>.</li>
+        <li>Check the Boolean for <strong>Manual Adjustment #1</strong> and <strong>Manual Adjustment #2</strong>.</li>
+        <li>Open the module <strong>ADMIN LISS OpEx Filter</strong>.</li>
+        <li>For each new adjustment, set the <strong>Forecast Method</strong> to <code>Direct Input</code> — that tells the UX which method group these line items belong to.</li>
+      </ol>
+
+      <h2>Step 5 — Verify the end-to-end flow in the UX</h2>
+      <p>The whole point of this extension is that a planner can enter a manual adjustment and see it flow into the forecast. Don't sign it off until you've watched that happen with a real account.</p>
+
+      <ol class="lab-steps">
+        <li>Open the UX app and navigate to the <strong>OpEx – planning</strong> page.</li>
+        <li>Select account <strong>6005 Office Equipment</strong>.</li>
+        <li>Confirm the two new manual-adjustment line items appear in the Direct Input section.</li>
+        <li>Enter a small value in <strong>Manual Adjustment #1</strong>. Confirm the value flows into <strong>Direct Input Fcst</strong>.</li>
+        <li>Repeat with <strong>Manual Adjustment #2</strong> and confirm it lands in the same forecast.</li>
+        <li>If either adjustment doesn't show up: check the LISS Boolean and the ADMIN LISS Forecast Method. If the value shows up but doesn't roll into Direct Input Fcst: re-read the formula and compare line-item names exactly.</li>
+      </ol>
+
+      <div class="lab-expected-todo">
+        <strong>End-of-step screenshot to capture</strong>
+        OpEx – planning UX page for account 6005 Office Equipment showing both Manual Adjustment #1 and #2 in the Direct Input section, with sample values entered and visibly rolling into Direct Input Fcst.
+      </div>
+
+      <div class="lab-check" data-check-id="ext1-manual-adjustments" data-workshop-slug="ifp">
+        <p class="lab-check-prompt">Once both manual adjustments enter values that flow into Direct Input Fcst in the UX, run the check below.</p>
+        <button type="button" class="lab-check-button">Check my work</button>
+        <div class="lab-check-results" hidden>
+          <p class="lab-check-summary">Manual adjustments extension wired up.</p>
+          <ul class="lab-check-list">
+            <li><strong>Line items added</strong> &rarr; Manual Adjustment #1 and #2 in <code>INP OPX Expense Planning</code></li>
+            <li><strong>Aggregation</strong> &rarr; both feed into Direct Input Fcst</li>
+            <li><strong>LISS</strong> &rarr; both registered in LISS: OpEx Filter and ADMIN LISS OpEx Filter (Forecast Method = Direct Input)</li>
+            <li><strong>UX verification</strong> &rarr; both visible and rolling into the forecast on the OpEx – planning page for account 6005 Office Equipment</li>
+            <li><strong>Documentation</strong> &rarr; recorded in module Notes and the offline change log</li>
+          </ul>
+          <p class="lab-check-next">Extension is complete and verified end-to-end. Move on to <a href="./12-extension-exercise-2.html">Exercise 2</a>.</p>
+        </div>
+      </div>
+
+      <div class="lab-quiz" data-correct="C">
+        <span class="lab-quiz-label">Quick check</span>
+        <h3>You added <strong>Manual Adjustment #1</strong> to the module and the formula sums it into Direct Input Fcst — but the line item doesn't appear in the UX. What's the most likely cause?</h3>
+        <div class="lab-quiz-options">
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ext1-liss" value="A"><span class="lab-quiz-letter">A</span><span>The line item's Format is wrong</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ext1-liss" value="B"><span class="lab-quiz-letter">B</span><span>The UX caches the module structure — wait a few minutes</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ext1-liss" value="C"><span class="lab-quiz-letter">C</span><span>The line item isn't registered in the LISS, or the ADMIN LISS Forecast Method isn't set to Direct Input</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ext1-liss" value="D"><span class="lab-quiz-letter">D</span><span>The user lacks write access to the line item</span></label>
+        </div>
+        <button type="button" class="lab-quiz-check">Check answer</button>
+        <div class="lab-quiz-feedback lab-quiz-feedback-correct"><strong>Correct.</strong> The LISS controls which line items the UX exposes on a page. A line item that exists in the module and aggregates correctly is still invisible to the UX until it's checked in <code>LISS: OpEx Filter</code> and assigned a Forecast Method in <code>ADMIN LISS OpEx Filter</code>.</div>
+        <div class="lab-quiz-feedback lab-quiz-feedback-wrong"><strong>Not quite.</strong> The right answer is <strong>C</strong>. Two LISS registrations decide whether a line item shows up on the UX page — the Boolean in the line-item subset itself and the Forecast Method in the ADMIN LISS module.</div>
+      </div>
+
+      <div class="lab-quiz" data-correct="B">
+        <span class="lab-quiz-label">Quick check</span>
+        <h3>Why document the formula change in both the module Notes field and an offline change log?</h3>
+        <div class="lab-quiz-options">
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ext1-docs" value="A"><span class="lab-quiz-letter">A</span><span>Two copies meet the Anaplan compliance requirement</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ext1-docs" value="B"><span class="lab-quiz-letter">B</span><span>The Notes field is in-model context for the next reader; the offline log is what you re-apply against when Anaplan releases a new IFP version and you have to rebuild the extension from the freshly generated model</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ext1-docs" value="C"><span class="lab-quiz-letter">C</span><span>Notes fields are wiped during generation, so the offline log is the only durable record</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-ext1-docs" value="D"><span class="lab-quiz-letter">D</span><span>Anaplan support requires the offline log to investigate issues</span></label>
+        </div>
+        <button type="button" class="lab-quiz-check">Check answer</button>
+        <div class="lab-quiz-feedback lab-quiz-feedback-correct"><strong>Correct.</strong> Notes give the next person reading the module the "why" inline. The offline log is your re-application script — when Anaplan ships a new IFP base, the freshly generated model has the original Direct Input Fcst formula again, and your log is what tells you exactly which adjustments to add back.</div>
+        <div class="lab-quiz-feedback lab-quiz-feedback-wrong"><strong>Not quite.</strong> The right answer is <strong>B</strong>. The two documents serve different audiences and time horizons — Notes for in-context reading, the offline log for re-applying the extension against a future regenerated model.</div>
+      </div>
+
+      <h2>You're done with Manual Adjustments</h2>
+      <p>The extension is wired up end-to-end. Next is <a href="./12-extension-exercise-2.html">Extension Exercise 2</a> — Channel Revenue Planning — which is the longer, multi-module extension that adds a new dimension, a planning module, and a conditional aggregation back into Gross Profit Planning.</p>
 
       <div class="prevnext-nav"><a class="prevnext-btn" href="./10-extensions-overview.html">← Previous</a><a class="prevnext-btn" href="./12-extension-exercise-2.html">Next →</a></div>
     </div>
   </main>
   <script src="../../js/nav.js"></script>
+  <script src="../../js/lab-quiz.js"></script>
 </body>
 </html>

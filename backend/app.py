@@ -2098,6 +2098,10 @@ WORKSHOP_LAB_CHECKS = {
         {"id": "ex3-step3-customlists", "page_path": "/w/ifp/06-exercise-3.html", "label": "Ex3: Custom Lists"},
         {"id": "ex3-step4-attributes",  "page_path": "/w/ifp/06-exercise-3.html", "label": "Ex3: CC Attributes"},
         {"id": "ex3-step5-fp",          "page_path": "/w/ifp/06-exercise-3.html", "label": "Ex3: FP"},
+        {"id": "gen-complete",            "page_path": "/w/ifp/07-generation.html",          "label": "Gen: Models"},
+        {"id": "postgen-verified",        "page_path": "/w/ifp/08-post-gen.html",            "label": "Post-gen: Verified"},
+        {"id": "ext1-manual-adjustments", "page_path": "/w/ifp/11-extension-exercise-1.html", "label": "Ext1: Manual Adj"},
+        {"id": "ext2-channel-revenue",    "page_path": "/w/ifp/12-extension-exercise-2.html", "label": "Ext2: Channel Rev"},
     ],
 }
 
