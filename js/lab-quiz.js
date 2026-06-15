@@ -49,18 +49,27 @@
   document.querySelectorAll('.lab-quiz').forEach(bindQuiz);
 })();
 
-// Check my work — simulated API validation. Click the button, see a short
-// "checking" delay, then the success panel reveals. When we wire up the real
-// Anaplan API later, the setTimeout becomes a fetch() to the workshop backend
-// proxy that returns the live list of models from the participant's tenant.
+// Check my work — fires a POST so the leaderboard captures the attempt, then
+// reveals the success panel after the same 1200ms feel-good delay the previous
+// stub used. The POST goes to /w/<workshop>/lab-check and records the result.
+// When the real Anaplan validation lands, the backend route is where pass/fail
+// gets computed; this client doesn't need to change.
 (function () {
   function bindCheck(check) {
     var btn = check.querySelector('.lab-check-button');
     var results = check.querySelector('.lab-check-results');
     if (!btn || !results) return;
+    var checkId = check.getAttribute('data-check-id') || '';
+    var workshopSlug = check.getAttribute('data-workshop-slug') || '';
     btn.addEventListener('click', function () {
       btn.disabled = true;
       btn.innerHTML = '<span class="lab-check-spinner" aria-hidden="true"></span>Checking with Anaplan…';
+      if (checkId && workshopSlug) {
+        var body = new FormData();
+        body.append('check_id', checkId);
+        body.append('page_path', window.location.pathname);
+        fetch('/w/' + workshopSlug + '/lab-check', { method: 'POST', body: body, credentials: 'same-origin' }).catch(function () { /* recorder is best-effort */ });
+      }
       setTimeout(function () {
         results.hidden = false;
         btn.style.display = 'none';

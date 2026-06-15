@@ -24,6 +24,9 @@
         <span style="display:inline-flex;align-items:center;gap:0.4rem;margin-left:0.5rem;">
           <span class="lb-dot lb-dot-todo"></span>Not started
         </span>
+        <span style="display:inline-flex;align-items:center;gap:0.4rem;margin-left:0.5rem;">
+          <span class="lb-dot lb-dot-failed"></span>Failed
+        </span>
       </div>
       <a class="secondary-btn" href="?reload" style="text-decoration:none;font-size:0.8rem;">↻ Refresh now</a>
     </div>
@@ -133,6 +136,7 @@
   }
   .lb-dot-done    { background: #1A7A47; box-shadow: 0 0 0 1px rgba(26,122,71,0.2); }
   .lb-dot-partial { background: #C06010; box-shadow: 0 0 0 1px rgba(192,96,16,0.2); }
+  .lb-dot-failed  { background: #B91C1C; box-shadow: 0 0 0 1px rgba(185,28,28,0.2); }
   .lb-dot-todo    { background: #cbd5e1; }
 </style>
 {% endblock %}

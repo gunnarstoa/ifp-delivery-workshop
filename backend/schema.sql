@@ -249,3 +249,19 @@ CREATE TABLE IF NOT EXISTS uploads (
 
 CREATE INDEX IF NOT EXISTS idx_uploads_thread ON uploads(thread_id);
 CREATE INDEX IF NOT EXISTS idx_uploads_reply ON uploads(reply_id);
+
+CREATE TABLE IF NOT EXISTS lab_check_attempts (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  session_id INTEGER NOT NULL,
+  workshop_slug TEXT NOT NULL,
+  page_path TEXT NOT NULL,
+  check_id TEXT NOT NULL,
+  passed INTEGER NOT NULL DEFAULT 0,
+  attempted_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (session_id) REFERENCES sessions(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_lca_session_user ON lab_check_attempts(session_id, user_id);
+CREATE INDEX IF NOT EXISTS idx_lca_check ON lab_check_attempts(workshop_slug, check_id);
