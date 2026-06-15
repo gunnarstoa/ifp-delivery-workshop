@@ -49,7 +49,7 @@
       <div class="progress-bar-fill" style="width: {{ section.percent }}%;"></div>
     </div>
     <ul class="progress-items">
-      {% for item in section.items %}
+      {% for item in section['items'] %}
       <li class="progress-item progress-item-{{ item.status }}">
         <a class="progress-item-link" href="{{ item.page_path }}">
           <span class="progress-dot progress-dot-{{ item.status }}" aria-hidden="true"></span>
