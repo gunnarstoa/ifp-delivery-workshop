@@ -1485,3 +1485,194 @@ pre code {
     justify-content: center;
   }
 }
+
+/* ============================================================
+   Lab pattern — Trailhead-style guided exercises
+   (Pilot on 06-exercise-1; reusable on the other lab pages)
+   ============================================================ */
+
+.lab-objectives {
+  background: var(--color-primary-light);
+  border-left: 4px solid var(--color-primary);
+  border-radius: 0 6px 6px 0;
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0 2rem 0;
+}
+.lab-objectives h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.78rem;
+  color: var(--color-primary-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+.lab-objectives ul { margin: 0; padding-left: 1.25rem; }
+.lab-objectives li { margin: 0.35rem 0; color: var(--color-text); }
+
+ol.lab-steps {
+  margin: 1rem 0 1.5rem 1.5rem;
+  padding: 0;
+}
+ol.lab-steps li {
+  margin: 0.65rem 0;
+  line-height: 1.6;
+  padding-left: 0.4rem;
+}
+ol.lab-steps code {
+  background: #f3f4f6;
+  color: #1f2937;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 0.88em;
+}
+
+.lab-expected {
+  margin: 1.5rem 0 2rem 0;
+  padding: 0;
+}
+.lab-expected img {
+  display: block;
+  max-width: 100%;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+}
+.lab-expected figcaption {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+  text-align: center;
+  font-style: italic;
+}
+
+.lab-expected-todo {
+  margin: 1.5rem 0 2rem 0;
+  padding: 1.75rem 1.5rem;
+  border: 2px dashed #cbd5e1;
+  background: #f8fafc;
+  border-radius: 6px;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+.lab-expected-todo strong {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #b45309;
+  margin-bottom: 0.35rem;
+  font-weight: 600;
+}
+
+.lab-quiz {
+  margin: 2rem 0;
+  padding: 1.25rem 1.5rem;
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+.lab-quiz-label {
+  display: inline-block;
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-bottom: 0.65rem;
+}
+.lab-quiz h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.05rem;
+  color: var(--color-text);
+  line-height: 1.4;
+  font-weight: 600;
+}
+.lab-quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin: 0 0 1rem 0;
+}
+.lab-quiz-option {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.7rem 1rem;
+  border: 1.5px solid var(--color-border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.1s, border-color 0.1s;
+  background: var(--color-white);
+}
+.lab-quiz-option:hover { background: #f8fafc; border-color: #cbd5e1; }
+.lab-quiz-option input[type=radio] { position: absolute; left: -9999px; }
+.lab-quiz-letter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1.5px solid #cbd5e1;
+  color: var(--color-text);
+  font-weight: 600;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  background: var(--color-white);
+  transition: background 0.1s, border-color 0.1s, color 0.1s;
+}
+.lab-quiz-option input:checked ~ .lab-quiz-letter {
+  background: var(--color-primary);
+  color: var(--color-white);
+  border-color: var(--color-primary);
+}
+.lab-quiz-option.lab-quiz-correct { border-color: #15803d; background: #dcfce7; }
+.lab-quiz-option.lab-quiz-correct .lab-quiz-letter { background: #15803d; color: var(--color-white); border-color: #15803d; }
+.lab-quiz-option.lab-quiz-wrong { border-color: #b91c1c; background: #fef2f2; }
+.lab-quiz-option.lab-quiz-wrong .lab-quiz-letter { background: #b91c1c; color: var(--color-white); border-color: #b91c1c; }
+.lab-quiz-option.lab-locked { cursor: default; }
+.lab-quiz-check {
+  background: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.55rem 1.4rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.lab-quiz-check:hover { background: var(--color-primary-dark); }
+.lab-quiz-check:disabled { background: #cbd5e1; color: var(--color-white); cursor: not-allowed; }
+.lab-quiz-feedback {
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  display: none;
+}
+.lab-quiz-feedback.show { display: block; }
+.lab-quiz-feedback.lab-quiz-feedback-correct {
+  background: #dcfce7;
+  color: #14532d;
+  border-left: 4px solid #15803d;
+}
+.lab-quiz-feedback.lab-quiz-feedback-wrong {
+  background: #fef2f2;
+  color: #7f1d1d;
+  border-left: 4px solid #b91c1c;
+}
+.lab-quiz-feedback strong { display: inline-block; margin-right: 0.3rem; }
+.lab-quiz-feedback code {
+  background: rgba(255,255,255,0.6);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 0.88em;
+}

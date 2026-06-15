@@ -69,229 +69,205 @@
 
   <main class="main-content">
     <div class="content-header">
-      <h1>Configuration Exercise 1: OpEx and Headcount Planning</h1>
-      <p class="subtitle">Hands-on exercise to configure IFP for a manufacturing company</p>
-      <div class="badge-row"><span class="content-badge">Configuration</span><span class="content-badge">30 min</span><span class="content-badge">Guided Practice</span></div>
+      <h1>Exercise 1: OpEx and Headcount Planning</h1>
+      <p class="subtitle">Configure your first IFP application for a manufacturing company</p>
+      <div class="badge-row"><span class="content-badge">Configuration</span><span class="content-badge">⏱ About 30 mins</span><span class="content-badge">Guided practice</span></div>
     </div>
     <div class="content-body">
 
-<div class="callout-note">
-        <span class="callout-label">💡 Key Rules for Configuration</span>
+      <div class="lab-objectives">
+        <h3>What you'll do</h3>
         <ul>
-          <li><strong>Use a standardized naming convention for all generated models and apps</strong> — every model and app name must be unique within the tenant. Duplicate names will cause generation to fail. See the example pattern below.</li>
-          <li><strong>Renames should be NO LONGER than the original dimension name</strong>, particularly the 'Department' dimension</li>
-          <li>All standard dimensions are <strong>composite hierarchies</strong> — custom/flat lists are handled via extension</li>
-          <li>Minimum levels per dimension: <strong>2</strong> | Maximum: <strong>15</strong></li>
-          <li>When modifying hierarchy levels: <strong>add/remove from the middle</strong>, never remove the leaf level</li>
-          <li>Always click <strong>"Apply Changes"</strong> after each modification</li>
-          <li>Use <strong>"Restore default"</strong> to reset if needed</li>
+          <li>Apply the standardized naming convention so every generated model has a unique name in your tenant</li>
+          <li>Configure the eight standard dimensions for an OpEx + headcount scope</li>
+          <li>Answer the top-level, Financial Planning, and Headcount configuration questions</li>
+          <li>Internalize the six rules that keep your configuration generation-ready</li>
         </ul>
       </div>
 
-      <h2>Standardized Naming Convention</h2>
-      <p>Replace the default model and app names with a standardized format before generating. The recommended pattern is <code>[ModelType]_Exercise ##_YYYYMMDD</code> — this ensures every generation produces uniquely-named artifacts and avoids name-collision generation errors when the same exercise is run more than once in the tenant.</p>
-      <figure class="screenshot">
-        <img src="../../img/configurator/naming-convention.png" alt="Standardized naming convention table showing Admin Model, Financial Planning Model, CapEx Model, Headcount Model, and IFP App with original, standardized, and example new names following the [ModelType]_Exercise ##_YYYYMMDD pattern" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;">
-        <figcaption style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem;text-align:center;">Standardized naming convention — apply to all four models and the IFP App before generation</figcaption>
+      <h2>The scenario</h2>
+      <p>A manufacturing company needs to plan operating expenses and headcount across multiple departments and cost centers. No revenue, COGS, balance sheet, or capital expenditure are required in this configuration. You'll set up just enough to support OpEx and headcount planning — the rest of the surface area (CapEx, Revenue, Balance Sheet) comes in later exercises.</p>
+
+      <h2>Before you start: the six rules</h2>
+      <p>These rules make the difference between a configuration that generates cleanly and one that fails halfway through. Read them once now, then refer back as you work.</p>
+
+      <div class="callout-warning">
+        <span class="callout-label">⚠ Rules to follow throughout the exercise</span>
+        <ul>
+          <li><strong>Use a standardized naming convention</strong> for every model and app — duplicate names in the tenant cause generation to fail</li>
+          <li><strong>Renames must be no longer than the original dimension name</strong>, especially "Department"</li>
+          <li>All standard dimensions are <strong>composite hierarchies</strong>. Flat custom lists are handled in the extension layer</li>
+          <li>Minimum <strong>2</strong> levels per dimension, maximum <strong>15</strong></li>
+          <li>When modifying hierarchy levels, <strong>add or remove from the middle</strong> — never from the leaf</li>
+          <li>Click <strong>Apply Changes</strong> after every modification. If you need to start over, use <strong>Restore default</strong></li>
+        </ul>
+      </div>
+
+      <h2>Step 1 — Apply the standardized naming convention</h2>
+      <p>Before you touch any dimension, give every generated artifact a unique name following the pattern <code>[ModelType]_Exercise ##_YYYYMMDD</code>. This is what keeps each run unique when the same exercise is run repeatedly in the shared training tenant.</p>
+
+      <ol class="lab-steps">
+        <li>From the Configurator landing screen, scroll to the <strong>Model & App Names</strong> section.</li>
+        <li>For each of the four generated models (Admin, Financial Planning, CapEx, Headcount) and the IFP App, replace the default name with <code>[ModelType]_Exercise 1_YYYYMMDD</code> — substitute today's date.</li>
+        <li>Click <strong>Apply Changes</strong>.</li>
+      </ol>
+
+      <figure class="lab-expected">
+        <img src="../../img/configurator/naming-convention.png" alt="Naming convention table showing Admin Model, Financial Planning Model, CapEx Model, Headcount Model, and IFP App renamed using the [ModelType]_Exercise ##_YYYYMMDD pattern">
+        <figcaption>What you should see — all four models and the IFP App renamed before you proceed.</figcaption>
       </figure>
 
-      <h2>Scenario</h2>
-      <p><strong>A manufacturing company needs to plan operating expenses and headcount across multiple departments and cost centers.</strong> No revenue, COGS, balance sheet, or capital expenditure are required.</p>
+      <div class="lab-quiz" data-correct="B">
+        <span class="lab-quiz-label">Quick check</span>
+        <h3>Why must every generated model and app have a unique name within the tenant?</h3>
+        <div class="lab-quiz-options">
+          <label class="lab-quiz-option"><input type="radio" name="quiz-naming" value="A"><span class="lab-quiz-letter">A</span><span>So facilitators can find your work later</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-naming" value="B"><span class="lab-quiz-letter">B</span><span>Generation fails when two artifacts in the tenant share a name</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-naming" value="C"><span class="lab-quiz-letter">C</span><span>Anaplan reports render better with unique names</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-naming" value="D"><span class="lab-quiz-letter">D</span><span>It's required for SSO to work in the tenant</span></label>
+        </div>
+        <button type="button" class="lab-quiz-check">Check answer</button>
+        <div class="lab-quiz-feedback lab-quiz-feedback-correct"><strong>Correct.</strong> Names must be unique within the tenant — generation halts halfway through if it tries to create an artifact whose name already exists. The pattern <code>[ModelType]_Exercise ##_YYYYMMDD</code> keeps every run unique even when the same exercise is repeated.</div>
+        <div class="lab-quiz-feedback lab-quiz-feedback-wrong"><strong>Not quite.</strong> The right answer is <strong>B</strong> — names must be unique within the tenant or generation fails partway through. The standardized pattern <code>[ModelType]_Exercise ##_YYYYMMDD</code> guarantees a unique name even when the same exercise is run repeatedly.</div>
+      </div>
 
-      <h3>Model Setup</h3>
-      <ul>
-        <li>Operating Expenses (Financial Planning Model)</li>
-        <li>Headcount Planning</li>
-        <li>No Revenue/COGS, Balance Sheet, or CapEx</li>
-        <li><strong>Estimated generation time: 20 minutes</strong></li>
-      </ul>
+      <h2>Step 2 — Configure the eight standard dimensions</h2>
+      <p>IFP ships with eight standard dimensions. Your job is to mark the ones this scenario needs, rename a few of them, and set the right number of hierarchy levels for each.</p>
 
-      <h3>Dimension Configuration</h3>
+      <ol class="lab-steps">
+        <li>In the Configurator, open the <strong>Dimensions</strong> section.</li>
+        <li>For each row in the table below, toggle the dimension to <strong>required</strong> or <strong>not required</strong>. For the dimensions marked Yes, also set the <strong>rename</strong> and <strong># of levels</strong> values shown.</li>
+        <li>After each dimension change, click <strong>Apply Changes</strong> before moving to the next.</li>
+      </ol>
+
       <table class="data-table">
         <thead>
           <tr>
-            <th>Standard Dimension</th>
+            <th>Standard dimension</th>
             <th>Required?</th>
-            <th>Rename To</th>
-            <th># of Levels</th>
+            <th>Rename to</th>
+            <th># of levels</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td><strong>Entity</strong></td>
-            <td>Yes</td>
-            <td>—</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td><strong>Department</strong></td>
-            <td>Yes</td>
-            <td>CostCenter</td>
-            <td>3</td>
-          </tr>
-          <tr>
-            <td><strong>Product</strong></td>
-            <td>No</td>
-            <td>—</td>
-            <td>—</td>
-          </tr>
-          <tr>
-            <td><strong>Job</strong></td>
-            <td>Yes</td>
-            <td>Roles</td>
-            <td>3</td>
-          </tr>
-          <tr>
-            <td><strong>Vendor</strong></td>
-            <td>Yes</td>
-            <td>Suppliers</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td><strong>Functional Area</strong></td>
-            <td>Yes</td>
-            <td>HR Org</td>
-            <td>3</td>
-          </tr>
-          <tr>
-            <td><strong>Customer</strong></td>
-            <td>No</td>
-            <td>—</td>
-            <td>—</td>
-          </tr>
-          <tr>
-            <td><strong>Location</strong></td>
-            <td>No</td>
-            <td>—</td>
-            <td>—</td>
-          </tr>
+          <tr><td><strong>Entity</strong></td><td>Yes</td><td>—</td><td>2</td></tr>
+          <tr><td><strong>Department</strong></td><td>Yes</td><td><code>CostCenter</code></td><td>3</td></tr>
+          <tr><td><strong>Product</strong></td><td>No</td><td>—</td><td>—</td></tr>
+          <tr><td><strong>Job</strong></td><td>Yes</td><td><code>Roles</code></td><td>3</td></tr>
+          <tr><td><strong>Vendor</strong></td><td>Yes</td><td><code>Suppliers</code></td><td>2</td></tr>
+          <tr><td><strong>Functional Area</strong></td><td>Yes</td><td><code>HR Org</code></td><td>3</td></tr>
+          <tr><td><strong>Customer</strong></td><td>No</td><td>—</td><td>—</td></tr>
+          <tr><td><strong>Location</strong></td><td>No</td><td>—</td><td>—</td></tr>
         </tbody>
       </table>
 
-      <h3>Custom Dimensions</h3>
+      <p>The scenario also needs two custom lists handled in the extension layer:</p>
       <table class="data-table">
-        <thead>
-          <tr>
-            <th>Custom List</th>
-            <th>Type</th>
-            <th>Notes</th>
-          </tr>
-        </thead>
+        <thead><tr><th>Custom list</th><th>Type</th><th>Purpose</th></tr></thead>
         <tbody>
-          <tr>
-            <td><strong>Projects</strong></td>
-            <td>Flat</td>
-            <td>For project tracking in extension</td>
-          </tr>
-          <tr>
-            <td><strong>Country</strong></td>
-            <td>Flat</td>
-            <td>Supporting attribute list</td>
-          </tr>
+          <tr><td><strong>Projects</strong></td><td>Flat</td><td>Project tracking, added in the extension exercise</td></tr>
+          <tr><td><strong>Country</strong></td><td>Flat</td><td>Supporting attribute list</td></tr>
         </tbody>
       </table>
 
-      <h3>Configuration Answers — Top-Level Questions</h3>
+      <div class="lab-expected-todo">
+        <strong>Screenshot to capture</strong>
+        Configurator Dimensions section after Step 2 is complete — Entity (2 levels), CostCenter (3), Roles (3), Suppliers (2), HR Org (3) all marked required; Product, Customer, Location all marked not required.
+      </div>
+
+      <div class="lab-quiz" data-correct="C">
+        <span class="lab-quiz-label">Quick check</span>
+        <h3>Your client needs to track spend by project code. How do you handle "Project" in this exercise?</h3>
+        <div class="lab-quiz-options">
+          <label class="lab-quiz-option"><input type="radio" name="quiz-flat" value="A"><span class="lab-quiz-letter">A</span><span>Use a standard dimension and configure it like Entity</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-flat" value="B"><span class="lab-quiz-letter">B</span><span>Set it up as a composite hierarchy with 3 levels</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-flat" value="C"><span class="lab-quiz-letter">C</span><span>Add it as a flat custom list, handled in the extension layer</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-flat" value="D"><span class="lab-quiz-letter">D</span><span>It can't be supported — recommend a workaround</span></label>
+        </div>
+        <button type="button" class="lab-quiz-check">Check answer</button>
+        <div class="lab-quiz-feedback lab-quiz-feedback-correct"><strong>Correct.</strong> All standard dimensions in the Configurator are composite hierarchies. Anything that needs to be a flat list — like Projects or Country here — is added in the extension layer instead. You'll see this in action in the Extensions exercises.</div>
+        <div class="lab-quiz-feedback lab-quiz-feedback-wrong"><strong>Not quite.</strong> The right answer is <strong>C</strong>. Standard dimensions are always composite hierarchies. Flat lists like Projects belong in the extension layer, not in the Configurator.</div>
+      </div>
+
+      <h2>Step 3 — Answer the top-level configuration questions</h2>
+      <p>The Configurator asks a handful of orientation questions before drilling into each model. For this scenario:</p>
+
       <table class="data-table">
-        <thead>
-          <tr>
-            <th>Question</th>
-            <th>Answer</th>
-            <th>Details</th>
-          </tr>
-        </thead>
+        <thead><tr><th>Question</th><th>Answer</th><th>Why</th></tr></thead>
         <tbody>
-          <tr>
-            <td>Multi-currency support?</td>
-            <td><strong>Yes</strong></td>
-            <td>Required for multi-entity reporting</td>
-          </tr>
-          <tr>
-            <td>Use the Location dimension?</td>
-            <td><strong>No</strong></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Use the Functional Area dimension?</td>
-            <td><strong>Yes</strong></td>
-            <td>Being repurposed as "HR Org"</td>
-          </tr>
+          <tr><td>Multi-currency support?</td><td><strong>Yes</strong></td><td>Multi-entity reporting needs it</td></tr>
+          <tr><td>Use the Location dimension?</td><td><strong>No</strong></td><td>Not required by this scenario</td></tr>
+          <tr><td>Use the Functional Area dimension?</td><td><strong>Yes</strong></td><td>Repurposed as "HR Org"</td></tr>
         </tbody>
       </table>
 
-      <h3>Configuration Answers — Financial Planning</h3>
+      <ol class="lab-steps">
+        <li>Open the <strong>Top-Level Questions</strong> section in the Configurator.</li>
+        <li>Set each answer to the values above.</li>
+        <li>Click <strong>Apply Changes</strong>.</li>
+      </ol>
+
+      <h2>Step 4 — Answer the Financial Planning questions</h2>
+      <p>The Financial Planning model is the OpEx engine for this scenario. The answers below intentionally skip revenue and balance-sheet planning since the client only needs expense.</p>
+
       <table class="data-table">
-        <thead>
-          <tr>
-            <th>Question</th>
-            <th>Answer</th>
-            <th>Details</th>
-          </tr>
-        </thead>
+        <thead><tr><th>Question</th><th>Answer</th></tr></thead>
         <tbody>
-          <tr>
-            <td>Multi-currency support?</td>
-            <td><strong>Yes</strong></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Top-down targets?</td>
-            <td><strong>No</strong></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Margin Planning?</td>
-            <td><strong>Expense Only</strong></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Expense planning?</td>
-            <td><strong>Yes</strong></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Dimensionality for expense planning</td>
-            <td><strong>Department, Vendor</strong></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Dimensionality for itemized expense planning</td>
-            <td><strong>Department</strong></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Expense allocations?</td>
-            <td><strong>No</strong></td>
-            <td></td>
-          </tr>
+          <tr><td>Multi-currency support?</td><td><strong>Yes</strong></td></tr>
+          <tr><td>Top-down targets?</td><td><strong>No</strong></td></tr>
+          <tr><td>Margin Planning?</td><td><strong>Expense Only</strong></td></tr>
+          <tr><td>Expense planning?</td><td><strong>Yes</strong></td></tr>
+          <tr><td>Dimensionality for expense planning</td><td><strong>Department, Vendor</strong></td></tr>
+          <tr><td>Dimensionality for itemized expense planning</td><td><strong>Department</strong></td></tr>
+          <tr><td>Expense allocations?</td><td><strong>No</strong></td></tr>
         </tbody>
       </table>
 
-      <h3>Configuration Answers — Headcount</h3>
+      <ol class="lab-steps">
+        <li>Open the <strong>Financial Planning</strong> section.</li>
+        <li>Set each answer above. Pay attention to <strong>Margin Planning → Expense Only</strong> — this is what scopes the model to OpEx and skips revenue.</li>
+        <li>Click <strong>Apply Changes</strong>.</li>
+      </ol>
+
+      <h2>Step 5 — Answer the Headcount questions</h2>
+      <p>The Headcount model handles workforce planning. Only two questions are relevant for this scenario:</p>
+
       <table class="data-table">
-        <thead>
-          <tr>
-            <th>Question</th>
-            <th>Answer</th>
-          </tr>
-        </thead>
+        <thead><tr><th>Question</th><th>Answer</th></tr></thead>
         <tbody>
-          <tr>
-            <td>Multi-currency support?</td>
-            <td><strong>Yes</strong></td>
-          </tr>
-          <tr>
-            <td>Term for Job?</td>
-            <td><strong>Roles</strong></td>
-          </tr>
+          <tr><td>Multi-currency support?</td><td><strong>Yes</strong></td></tr>
+          <tr><td>Term for Job?</td><td><strong>Roles</strong></td></tr>
         </tbody>
       </table>
+
+      <ol class="lab-steps">
+        <li>Open the <strong>Headcount</strong> section.</li>
+        <li>Set both answers above. The term for Job here must match the rename you applied to the Job dimension in Step 2.</li>
+        <li>Click <strong>Apply Changes</strong>.</li>
+      </ol>
+
+      <div class="lab-quiz" data-correct="A">
+        <span class="lab-quiz-label">Quick check</span>
+        <h3>Why did you set <strong>Margin Planning</strong> to <code>Expense Only</code> in this exercise?</h3>
+        <div class="lab-quiz-options">
+          <label class="lab-quiz-option"><input type="radio" name="quiz-margin" value="A"><span class="lab-quiz-letter">A</span><span>The scenario only needs OpEx planning — revenue, COGS, and balance-sheet planning aren't in scope</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-margin" value="B"><span class="lab-quiz-letter">B</span><span>Expense Only is the recommended default for any IFP configuration</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-margin" value="C"><span class="lab-quiz-letter">C</span><span>It speeds up generation by skipping the Headcount model</span></label>
+          <label class="lab-quiz-option"><input type="radio" name="quiz-margin" value="D"><span class="lab-quiz-letter">D</span><span>It's required when multi-currency is turned on</span></label>
+        </div>
+        <button type="button" class="lab-quiz-check">Check answer</button>
+        <div class="lab-quiz-feedback lab-quiz-feedback-correct"><strong>Correct.</strong> Margin Planning controls the scope of the Financial Planning model. <code>Expense Only</code> is right when the client only needs OpEx — it strips out the revenue and balance-sheet pieces so generation only builds what you'll actually use. Exercise 2 will widen the scope.</div>
+        <div class="lab-quiz-feedback lab-quiz-feedback-wrong"><strong>Not quite.</strong> The right answer is <strong>A</strong>. Margin Planning controls the model's scope — <code>Expense Only</code> matches a client who needs OpEx but not revenue, COGS, or balance-sheet planning. There's no universal default; the scenario dictates the answer.</div>
+      </div>
+
+      <h2>You're done with the configuration</h2>
+      <p>You've now set up a complete OpEx + headcount configuration. You haven't generated the model yet — that comes in <a href="./07-generation.html">Model Generation</a>. For now, leave the Configurator alone and head to <a href="./06-exercise-2.html">Exercise 2</a>, which widens the scenario to include revenue and CapEx.</p>
 
       <div class="callout-note">
-        <span class="callout-label">ℹ Important Notes</span>
+        <span class="callout-label">ℹ Coming enhancements</span>
         <ul>
-          <li>An enhancement to Application Framework is coming that will make configuration question terminology adapt to any dimension renames you make</li>
-          <li>An additional enhancement will allow 1-click "restore defaults" of all settings</li>
+          <li>A future Application Framework update will make configuration question terminology adapt to any dimension renames you've made.</li>
+          <li>An additional update will allow a 1-click "Restore defaults" for all settings.</li>
         </ul>
       </div>
 
@@ -299,5 +275,6 @@
     </div>
   </main>
   <script src="../../js/nav.js"></script>
+  <script src="../../js/lab-quiz.js"></script>
 </body>
 </html>
