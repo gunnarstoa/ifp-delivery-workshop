@@ -2083,11 +2083,21 @@ WORKSHOP_LEADERBOARD = {
 # to record the attempt. Add a new entry when a new lab page introduces a check.
 WORKSHOP_LAB_CHECKS = {
     "ifp": [
-        {"id": "ex1-step1-renames",    "page_path": "/w/ifp/06-exercise-1.html", "label": "Ex1: Renames"},
-        {"id": "ex1-step2-dimensions", "page_path": "/w/ifp/06-exercise-1.html", "label": "Ex1: Dimensions"},
-        {"id": "ex1-step3-toplevel",   "page_path": "/w/ifp/06-exercise-1.html", "label": "Ex1: Top-level"},
-        {"id": "ex1-step4-fp",         "page_path": "/w/ifp/06-exercise-1.html", "label": "Ex1: FP"},
-        {"id": "ex1-step5-headcount",  "page_path": "/w/ifp/06-exercise-1.html", "label": "Ex1: Headcount"},
+        {"id": "ex1-step1-renames",     "page_path": "/w/ifp/06-exercise-1.html", "label": "Ex1: Renames"},
+        {"id": "ex1-step2-dimensions",  "page_path": "/w/ifp/06-exercise-1.html", "label": "Ex1: Dimensions"},
+        {"id": "ex1-step3-toplevel",    "page_path": "/w/ifp/06-exercise-1.html", "label": "Ex1: Top-level"},
+        {"id": "ex1-step4-fp",          "page_path": "/w/ifp/06-exercise-1.html", "label": "Ex1: FP"},
+        {"id": "ex1-step5-headcount",   "page_path": "/w/ifp/06-exercise-1.html", "label": "Ex1: Headcount"},
+        {"id": "ex2-step1-renames",     "page_path": "/w/ifp/06-exercise-2.html", "label": "Ex2: Renames"},
+        {"id": "ex2-step2-dimensions",  "page_path": "/w/ifp/06-exercise-2.html", "label": "Ex2: Dimensions"},
+        {"id": "ex2-step3-customlists", "page_path": "/w/ifp/06-exercise-2.html", "label": "Ex2: CapEx List"},
+        {"id": "ex2-step4-toplevel",    "page_path": "/w/ifp/06-exercise-2.html", "label": "Ex2: Top-level"},
+        {"id": "ex2-step5-fp",          "page_path": "/w/ifp/06-exercise-2.html", "label": "Ex2: FP"},
+        {"id": "ex3-step1-renames",     "page_path": "/w/ifp/06-exercise-3.html", "label": "Ex3: Renames"},
+        {"id": "ex3-step2-dimensions",  "page_path": "/w/ifp/06-exercise-3.html", "label": "Ex3: Dimensions"},
+        {"id": "ex3-step3-customlists", "page_path": "/w/ifp/06-exercise-3.html", "label": "Ex3: Custom Lists"},
+        {"id": "ex3-step4-attributes",  "page_path": "/w/ifp/06-exercise-3.html", "label": "Ex3: CC Attributes"},
+        {"id": "ex3-step5-fp",          "page_path": "/w/ifp/06-exercise-3.html", "label": "Ex3: FP"},
     ],
 }
 
