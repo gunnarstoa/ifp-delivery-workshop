@@ -2083,11 +2083,11 @@ WORKSHOP_LEADERBOARD = {
 # to record the attempt. Add a new entry when a new lab page introduces a check.
 WORKSHOP_LAB_CHECKS = {
     "ifp": [
-        {
-            "id": "ex1-step1-renames",
-            "page_path": "/w/ifp/06-exercise-1.html",
-            "label": "Ex1: Renames",
-        },
+        {"id": "ex1-step1-renames",    "page_path": "/w/ifp/06-exercise-1.html", "label": "Ex1: Renames"},
+        {"id": "ex1-step2-dimensions", "page_path": "/w/ifp/06-exercise-1.html", "label": "Ex1: Dimensions"},
+        {"id": "ex1-step3-toplevel",   "page_path": "/w/ifp/06-exercise-1.html", "label": "Ex1: Top-level"},
+        {"id": "ex1-step4-fp",         "page_path": "/w/ifp/06-exercise-1.html", "label": "Ex1: FP"},
+        {"id": "ex1-step5-headcount",  "page_path": "/w/ifp/06-exercise-1.html", "label": "Ex1: Headcount"},
     ],
 }
 
