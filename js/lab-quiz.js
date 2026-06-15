@@ -35,3 +35,25 @@
   }
   document.querySelectorAll('.lab-quiz').forEach(bindQuiz);
 })();
+
+// Check my work — simulated API validation. Click the button, see a short
+// "checking" delay, then the success panel reveals. When we wire up the real
+// Anaplan API later, the setTimeout becomes a fetch() to the workshop backend
+// proxy that returns the live list of models from the participant's tenant.
+(function () {
+  function bindCheck(check) {
+    var btn = check.querySelector('.lab-check-button');
+    var results = check.querySelector('.lab-check-results');
+    if (!btn || !results) return;
+    btn.addEventListener('click', function () {
+      btn.disabled = true;
+      btn.innerHTML = '<span class="lab-check-spinner" aria-hidden="true"></span>Checking with Anaplan…';
+      setTimeout(function () {
+        results.hidden = false;
+        btn.style.display = 'none';
+      }, 1200);
+    });
+  }
+  document.querySelectorAll('.lab-check').forEach(bindCheck);
+})();
+
