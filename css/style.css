@@ -1610,13 +1610,14 @@ ol.lab-steps code {
 }
 
 .lab-quiz {
-  margin: 2.25rem 0;
-  padding: 1.25rem 1.5rem;
-  background: var(--color-white);
-  border: 1px solid var(--color-border);
+  margin: 2.5rem auto;
+  padding: 1.4rem 1.6rem;
+  background: #faf8ff;
+  border: 1px solid #e9d5ff;
   border-top: 4px solid #6d28d9;
-  border-radius: 4px 4px 8px 8px;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  border-radius: 4px 4px 10px 10px;
+  box-shadow: 0 4px 14px rgba(109, 40, 217, 0.10);
+  max-width: 640px;
 }
 .lab-quiz-label {
   display: inline-block;
