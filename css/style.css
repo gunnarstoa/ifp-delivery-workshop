@@ -1,6 +1,14 @@
 /* ============================================================
-   T&Q Lab Guide — Main Stylesheet
-   Anaplan RPM Apps Workshop
+   Anaplan Workshop — Canonical Stylesheet
+
+   Shared design system for Anaplan partner enablement workshops
+   (RPM Apps Workshop, IFP Delivery Partner Workshop, and future
+   workshops). The authoritative source lives in rpm-apps-workshop.
+   To mirror into other workshop repos:
+
+     scripts/sync-design-system.sh
+
+   Edit here, sync from here. Do not edit downstream copies.
    ============================================================ */
 
 :root {
@@ -1942,4 +1950,23 @@ table.lab-reference code {
   font-size: 0.9rem;
   color: #115e59;
   font-style: italic;
+}
+
+/* ============================================================
+   Workshop utility classes
+   (RPM image / methodology-flow helpers — preserved across the
+   canonical sync so they remain available to all workshops.)
+   ============================================================ */
+
+.full-width-img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+.methodology-flow {
+  margin: 1.5rem 0;
 }
