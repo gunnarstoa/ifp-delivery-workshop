@@ -62,7 +62,7 @@
 
   <div class="card">
     <h2 style="margin-top:0;">Assign moderators</h2>
-    <p class="help-note">Paste one email per line. Each moderator signs in with their email as username. New users get an account auto-created — copy the initial password shown after assignment and send it to them. Moderators can reply on any workshop page in this session, and their replies show with an IFP facilitator badge.</p>
+    <p class="help-note">Paste one email per line. Each moderator signs in with their email as username. New users get an account auto-created — copy the initial password shown after assignment and send it to them. Moderators can reply on any workshop page in this session, and their replies show with an Facilitator badge.</p>
     <form method="post" action="{{ url_for('admin_session_monitors', slug=session.workshop_slug, session_slug=session.slug) }}">
       <textarea name="emails" placeholder="moderator1@anaplan.com&#10;moderator2@anaplan.com&#10;..." required style="width:100%;min-height:140px;padding:0.6rem 0.75rem;border:1px solid #d1d5db;border-radius:4px;font-family:ui-monospace,Menlo,monospace;font-size:0.85rem;"></textarea>
       <div style="margin-top:0.75rem;">
