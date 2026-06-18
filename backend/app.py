@@ -2076,6 +2076,18 @@ WORKSHOP_LEADERBOARD = {
         {"key": "post_survey",     "label": "Post-Workshop Survey",  "type": "survey", "kind": "post"},
         {"key": "knowledge_check", "label": "Knowledge Check",       "type": "kc"},
     ],
+    "rpm": [
+        {"key": "pre_survey",      "label": "Pre-Workshop Survey",   "type": "survey", "kind": "pre"},
+        {"key": "kickoff",         "label": "View Kickoff",          "type": "page",   "path": "/w/rpm/00-overview.html"},
+        {"key": "tq_lab",          "label": "T&Q Lab",               "type": "page",   "path": "/w/rpm/04-configurator-exercise.html"},
+        {"key": "tq_review",       "label": "T&Q Model Review",      "type": "page",   "path": "/w/rpm/tq-06-model-review.html"},
+        {"key": "seg_lab",         "label": "Segmentation Lab",      "type": "page",   "path": "/w/rpm/seg-04-lab.html"},
+        {"key": "cap_lab",         "label": "Capacity Lab",          "type": "page",   "path": "/w/rpm/cap-04-lab.html"},
+        {"key": "sf_lab",          "label": "AI Prediction Lab",     "type": "page",   "path": "/w/rpm/sf-05-prediction-lab.html"},
+        {"key": "wrap_up",         "label": "Workshop Wrap-up",      "type": "page",   "path": "/w/rpm/19-workshop-wrap-up.html"},
+        {"key": "post_survey",     "label": "Post-Workshop Survey",  "type": "survey", "kind": "post"},
+        {"key": "knowledge_check", "label": "Knowledge Check",       "type": "kc"},
+    ],
 }
 
 # Every "Check my work" block across the workshop gets one entry here.
@@ -2103,6 +2115,30 @@ WORKSHOP_LAB_CHECKS = {
         {"id": "ext1-manual-adjustments", "page_path": "/w/ifp/11-extension-exercise-1.html", "label": "Ext1: Manual Adj"},
         {"id": "ext2-channel-revenue",    "page_path": "/w/ifp/12-extension-exercise-2.html", "label": "Ext2: Channel Rev"},
     ],
+    "rpm": [
+        # T&Q Configurator Lab (8 checks)
+        {"id": "rpm-tq-configurator-step-1-01",   "page_path": "/w/rpm/04-configurator-exercise.html", "label": "T&Q 1.01"},
+        {"id": "rpm-tq-configurator-step-1-02",   "page_path": "/w/rpm/04-configurator-exercise.html", "label": "T&Q 1.02"},
+        {"id": "rpm-tq-configurator-step-1-03",   "page_path": "/w/rpm/04-configurator-exercise.html", "label": "T&Q 1.03"},
+        {"id": "rpm-tq-configurator-step-1-03-1", "page_path": "/w/rpm/04-configurator-exercise.html", "label": "T&Q 1.03.1"},
+        {"id": "rpm-tq-configurator-step-1-06",   "page_path": "/w/rpm/04-configurator-exercise.html", "label": "T&Q 1.06"},
+        {"id": "rpm-tq-configurator-step-1-07",   "page_path": "/w/rpm/04-configurator-exercise.html", "label": "T&Q 1.07"},
+        {"id": "rpm-tq-configurator-step-1-08",   "page_path": "/w/rpm/04-configurator-exercise.html", "label": "T&Q 1.08"},
+        {"id": "rpm-tq-configurator-step-1-09",   "page_path": "/w/rpm/04-configurator-exercise.html", "label": "T&Q 1.09"},
+        # T&Q Model Review — CoModeler (2 checks)
+        {"id": "rpm-tq-model-review-lab-a",       "page_path": "/w/rpm/tq-06-model-review.html",       "label": "CoModeler A"},
+        {"id": "rpm-tq-model-review-lab-b",       "page_path": "/w/rpm/tq-06-model-review.html",       "label": "CoModeler B"},
+        # Segmentation Lab (3 checks)
+        {"id": "rpm-seg-configurator-step-1",     "page_path": "/w/rpm/seg-04-lab.html",               "label": "Seg S1"},
+        {"id": "rpm-seg-configurator-step-2",     "page_path": "/w/rpm/seg-04-lab.html",               "label": "Seg S2"},
+        {"id": "rpm-seg-configurator-step-4",     "page_path": "/w/rpm/seg-04-lab.html",               "label": "Seg S4"},
+        # Capacity Lab (2 checks)
+        {"id": "rpm-cap-configurator-step-1-2-2", "page_path": "/w/rpm/cap-04-lab.html",               "label": "Cap 1.2.2"},
+        {"id": "rpm-cap-configurator-step-1-2-4", "page_path": "/w/rpm/cap-04-lab.html",               "label": "Cap 1.2.4"},
+        # SF AI Prediction Lab (2 checks)
+        {"id": "rpm-sf-prediction-lab-a",         "page_path": "/w/rpm/sf-05-prediction-lab.html",     "label": "SF Predict A"},
+        {"id": "rpm-sf-prediction-lab-b",         "page_path": "/w/rpm/sf-05-prediction-lab.html",     "label": "SF Predict B"},
+    ],
 }
 
 
@@ -2115,6 +2151,14 @@ WORKSHOP_PROGRESS_SECTIONS = {
         {"title": "Configuration",   "pages": ["05-configurator-walkthrough.html", "06-exercise-1.html", "06-exercise-2.html", "06-exercise-3.html", "07-generation.html", "08-post-gen.html", "09-error-logs.html"]},
         {"title": "Extensions",      "pages": ["10-extensions-overview.html", "11-extension-exercise-1.html", "12-extension-exercise-2.html"]},
         {"title": "Reference",       "pages": ["13-whats-coming.html", "14-qanda.html", "15-workshop-wrap-up.html"]},
+    ],
+    "rpm": [
+        {"title": "Getting Started",      "pages": ["00-overview.html", "00-tenant-access.html", "01-spm-overview.html", "02-anaplan-way.html"]},
+        {"title": "Territory & Quota",    "pages": ["tq-01-overview.html", "tq-02-sample-data.html", "03-configurator-walkthrough.html", "04-configurator-exercise.html", "05-post-gen-steps.html", "tq-06-model-review.html", "07-spoke-app-walkthrough.html", "06-ado-integration.html", "08-extensions.html", "tq-appendix-answer-key.html"]},
+        {"title": "Account Segmentation", "pages": ["seg-01-overview.html", "seg-02-sample-data.html", "10-segmentation-configurator.html", "seg-04-lab.html", "seg-05-post-gen.html", "seg-06-model-review.html", "13-segmentation-walkthrough.html", "seg-08-extensions.html", "seg-appendix-answer-key.html"]},
+        {"title": "Capacity Planning",    "pages": ["cap-01-overview.html", "cap-02-sample-data.html", "11-capacity-configurator.html", "cap-04-lab.html", "cap-05-post-gen.html", "cap-06-model-review.html", "14-capacity-walkthrough.html", "cap-08-extensions.html", "cap-appendix-answer-key.html"]},
+        {"title": "Sales Forecasting",    "pages": ["sf-01-overview.html", "sf-02-sample-data.html", "sf-03-deployment.html", "sf-04-app-walkthrough.html", "sf-05-prediction-lab.html", "sf-06-extensions.html"]},
+        {"title": "Reference",            "pages": ["reference-inter-app-flows.html", "15-whats-coming.html", "16-qanda.html", "17-resources.html", "19-workshop-wrap-up.html"]},
     ],
 }
 
