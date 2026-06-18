@@ -108,7 +108,7 @@
         <div style="margin:0.4rem 0;">
           <div style="display:flex;align-items:center;gap:0.45rem;flex-wrap:wrap;font-size:0.82rem;">
             <strong style="color:#1f2937;">{{ r.author_display }}</strong>
-            {% if r.is_monitor_reply %}<span style="background:#dbeafe;color:#1e40af;font-size:0.7rem;padding:2px 7px;border-radius:4px;font-weight:600;">IFP facilitator</span>{% endif %}
+            {% if r.is_monitor_reply %}<span style="background:#dbeafe;color:#1e40af;font-size:0.7rem;padding:2px 7px;border-radius:4px;font-weight:600;">Facilitator</span>{% endif %}
             <span style="color:#9ca3af;font-size:0.75rem;">{{ r.created_at }}</span>
           </div>
           <p style="margin:0.3rem 0 0 0;line-height:1.5;color:#374151;white-space:pre-wrap;font-size:0.92rem;">{{ r.body }}</p>
@@ -152,10 +152,10 @@
       {% if not is_locked %}
       <form method="post" action="{{ url_for('qa_create_reply', workshop_slug=workshop_slug, thread_id=t.id) }}" style="margin:0;" enctype="multipart/form-data">
         <input type="hidden" name="return_to" value="{{ return_to }}#qa-thread-{{ t.id }}">
-        <textarea name="body" data-reply-for="{{ t.id }}" placeholder="Reply as the IFP facilitator…" required style="width:100%;min-height:65px;padding:0.55rem 0.7rem;border:1px solid #d1d5db;border-radius:6px;font-family:inherit;font-size:0.9rem;box-sizing:border-box;"></textarea>
+        <textarea name="body" data-reply-for="{{ t.id }}" placeholder="Reply as the Facilitator…" required style="width:100%;min-height:65px;padding:0.55rem 0.7rem;border:1px solid #d1d5db;border-radius:6px;font-family:inherit;font-size:0.9rem;box-sizing:border-box;"></textarea>
         <label style="display:block;margin:0.4rem 0 0.2rem 0;font-size:0.78rem;color:#6b7280;">Attach a screenshot or file (optional, max 10MB) <input type="file" name="attachment" accept="image/*,.pdf,.csv,.txt,.alm" style="font-size:0.78rem;"></label>
         <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;margin-top:0.5rem;flex-wrap:wrap;">
-          <span style="font-size:0.78rem;color:#6b7280;">Posts with the IFP facilitator badge.</span>
+          <span style="font-size:0.78rem;color:#6b7280;">Posts with the Facilitator badge.</span>
           <div style="display:flex;gap:0.4rem;">
             <button type="submit" class="primary-btn" style="font-size:0.85rem;padding:6px 14px;">Send reply</button>
           </div>
