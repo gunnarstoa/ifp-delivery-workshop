@@ -109,7 +109,7 @@ def draw_cover_page(c, doc):
 
     # Stat boxes
     stats = [
-        ('2', 'Full Days'),
+        ('1-2', 'Hrs/Day'),
         ('4', 'Hands-On Labs'),
         ('3', 'Core Modules'),
         ('~1,200', 'Objects Generated'),
@@ -256,7 +256,7 @@ def build_doc():
     left.append(HRFlowable(width=COL_W, thickness=2, color=ORANGE, spaceAfter=6))
     left.append(Paragraph(
         'The IFP 2.0 Delivery Partner Workshop is the hands-on technical program '
-        'for Anaplan delivery practitioners. Over two intensive days, participants '
+        'for Anaplan delivery practitioners. In short, self-paced sessions, participants '
         'master the full IFP 2.0 delivery workflow — from the App Framework '
         'interview-style configurator to model generation, error log review, and '
         'building customer-specific extensions.',
@@ -325,36 +325,30 @@ def build_doc():
     # ── Right column content ──
     right = []
 
-    right.append(Paragraph('Time Commitment', h2))
+    right.append(Paragraph('Format & Pace', h2))
     right.append(HRFlowable(width=COL_W, thickness=2, color=ORANGE, spaceAfter=6))
 
-    sched_data = [
-        ['Day 1', '~8 hours', 'App Framework & Model Generation'],
-        ['Day 2', '~8 hours', 'Extensions & Advanced Topics'],
-    ]
-    sched_tbl = Table(
-        [['Day', 'Duration', 'Focus']] + sched_data,
-        colWidths=[40, 56, COL_W - 96 - 8]
-    )
-    sched_tbl.setStyle(TableStyle([
-        ('BACKGROUND',   (0,0), (-1,0),  NAVY),
-        ('TEXTCOLOR',    (0,0), (-1,0),  WHITE),
-        ('FONTNAME',     (0,0), (-1,0),  'Helvetica-Bold'),
-        ('FONTSIZE',     (0,0), (-1,0),  8),
-        ('BACKGROUND',   (0,1), (-1,-1), GREY_LIGHT),
-        ('FONTNAME',     (0,1), (-1,-1), 'Helvetica'),
-        ('FONTSIZE',     (0,1), (-1,-1), 8.5),
-        ('TEXTCOLOR',    (0,1), (-1,-1), DARK_TEXT),
-        ('FONTNAME',     (0,1), (0,-1),  'Helvetica-Bold'),
-        ('TEXTCOLOR',    (0,1), (0,-1),  ORANGE),
-        ('TOPPADDING',   (0,0), (-1,-1), 5),
-        ('BOTTOMPADDING',(0,0), (-1,-1), 5),
-        ('LEFTPADDING',  (0,0), (-1,-1), 8),
-        ('ROWBACKGROUNDS', (0,1), (-1,-1), [WHITE, GREY_LIGHT]),
-        ('BOX',          (0,0), (-1,-1), 0.5, colors.HexColor('#D0D7DE')),
-        ('GRID',         (0,0), (-1,-1), 0.3, colors.HexColor('#E0E5EA')),
+    pace_data = [[
+        Paragraph('<b>Self-paced</b>', ParagraphStyle('ph', fontName='Helvetica-Bold',
+            fontSize=9, textColor=NAVY, spaceAfter=4)),
+        Paragraph(
+            '1-2 hours per day on your own schedule. Work through the labs in any '
+            'order, pause and resume as needed, and revisit material from a real '
+            'customer engagement.',
+            ParagraphStyle('pb', fontName='Helvetica', fontSize=8.5,
+                textColor=DARK_TEXT, leading=12))
+    ]]
+    pace_tbl = Table(pace_data, colWidths=[64, COL_W - 64])
+    pace_tbl.setStyle(TableStyle([
+        ('BACKGROUND', (0,0), (-1,-1), LIGHT_BLUE),
+        ('ROUNDEDCORNERS', [6]),
+        ('TOPPADDING', (0,0), (-1,-1), 8),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 8),
+        ('LEFTPADDING', (0,0), (-1,-1), 10),
+        ('RIGHTPADDING', (0,0), (-1,-1), 10),
+        ('VALIGN', (0,0), (-1,-1), 'TOP'),
     ]))
-    right.append(sched_tbl)
+    right.append(pace_tbl)
 
     right.append(Spacer(1, 10))
     right.append(Paragraph('Labs & Exercises', h2))
@@ -362,7 +356,7 @@ def build_doc():
 
     labs = [
         {
-            'tag': 'LAB A  ·  60 MIN  ·  DAY 1',
+            'tag': 'LAB A  ·  60 MIN',
             'title': 'App Framework Configurator',
             'desc': (
                 'Configure IFP for FintechCo — 3 legal entities, multi-currency, '
@@ -372,7 +366,7 @@ def build_doc():
             'tags': ['Hands-On', 'Core'],
         },
         {
-            'tag': 'LAB B  ·  45 MIN  ·  DAY 2',
+            'tag': 'LAB B  ·  45 MIN',
             'title': 'Direct Input & Adjustments',
             'desc': (
                 'Build a Direct Input method with two adjustment layers for '
@@ -382,7 +376,7 @@ def build_doc():
             'tags': ['Hands-On', 'Extensions'],
         },
         {
-            'tag': 'LAB C  ·  45 MIN  ·  DAY 2',
+            'tag': 'LAB C  ·  45 MIN',
             'title': 'Headcount × Rate Method',
             'desc': (
                 'Extend Headcount with a rate-based planning method. Map employee '
@@ -391,7 +385,7 @@ def build_doc():
             'tags': ['Hands-On', 'Extensions'],
         },
         {
-            'tag': 'EXERCISE  ·  DAY 1',
+            'tag': 'EXERCISE',
             'title': 'Error Log Review & Resolution',
             'desc': (
                 'Read, categorize, and resolve generation error logs. Covers the '
