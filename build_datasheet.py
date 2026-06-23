@@ -194,10 +194,10 @@ class PageTwoBG(Flowable):
         # Footer text
         c.setFillColor(WHITE)
         c.setFont('Helvetica-Bold', 10)
-        c.drawString(MARGIN, 28, 'Ready to register?')
+        c.drawString(MARGIN, 28, 'Want to learn more?')
         c.setFillColor(colors.HexColor('#A8C4D8'))
         c.setFont('Helvetica', 9)
-        c.drawString(MARGIN, 14, 'Contact your Anaplan Partner Success Manager or visit anaplan.com/partners/training')
+        c.drawString(MARGIN, 14, 'Contact your Anaplan Partner Success Manager for details on upcoming sessions.')
         c.setFillColor(GREY_MID)
         c.setFont('Helvetica', 8)
         c.drawRightString(pw - MARGIN, 14, '© 2026 Anaplan, Inc.  Confidential.')
