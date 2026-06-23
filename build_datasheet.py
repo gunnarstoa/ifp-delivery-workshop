@@ -110,7 +110,7 @@ def draw_cover_page(c, doc):
     # Stat boxes
     stats = [
         ('1-2', 'Hrs/Day'),
-        ('4', 'Hands-On Labs'),
+        ('4', 'Hands-On Exercises'),
         ('44', 'Config Questions'),
         ('~8,000', 'Objects Generated'),
     ]
@@ -171,7 +171,7 @@ def draw_content_page(c, doc):
     c.drawString(MARGIN, ph - 48, 'IFP 2.1 Delivery Partner Workshop')
     c.setFillColor(colors.HexColor('#A8C4D8'))
     c.setFont('Helvetica', 10)
-    c.drawString(MARGIN, ph - 64, 'Curriculum & Labs Overview')
+    c.drawString(MARGIN, ph - 64, 'Curriculum & Exercises Overview')
     c.setFillColor(WHITE)
     c.setFont('Helvetica-Bold', 16)
     c.drawRightString(pw - MARGIN, ph - 48, 'anaplan')
@@ -264,7 +264,7 @@ def build_doc():
     left.append(Paragraph(
         'If you\'ve ever generated an IFP model, hit an error log, and '
         'weren\'t sure whether to escalate or fix it yourself — this '
-        'workshop closes that gap. Every lab uses real planning scenarios: '
+        'workshop closes that gap. Every exercise uses real planning scenarios: '
         'OpEx/Headcount, Insurance 3-Statement, and Nuclear Plant OpEx.',
         body))
 
@@ -334,12 +334,12 @@ def build_doc():
     right.append(pace_tbl)
 
     right.append(Spacer(1, 10))
-    right.append(Paragraph('Labs & Exercises', h2))
+    right.append(Paragraph('Exercises', h2))
     right.append(HRFlowable(width=COL_W, thickness=2, color=ORANGE, spaceAfter=8))
 
     labs = [
         {
-            'tag': 'LAB A  ·  APPLICATION FRAMEWORK',
+            'tag': 'EXERCISE:  APPLICATION FRAMEWORK',
             'title': 'Configurator — end-to-end',
             'desc': (
                 'All 44 Application Framework questions: entities, currency, '
@@ -349,7 +349,7 @@ def build_doc():
             'tags': ['Hands-On', 'Core'],
         },
         {
-            'tag': 'LAB B  ·  DIRECT INPUT EXTENSION',
+            'tag': 'EXERCISE:  DIRECT INPUT EXTENSION',
             'title': 'Direct Input with two adjustment layers',
             'desc': (
                 'Production-grade Direct Input for OpEx + Headcount — drivers, '
@@ -359,7 +359,7 @@ def build_doc():
             'tags': ['Hands-On', 'Extensions'],
         },
         {
-            'tag': 'LAB C  ·  HEADCOUNT × RATE METHOD',
+            'tag': 'EXERCISE:  HEADCOUNT × RATE METHOD',
             'title': 'Rate-based headcount planning extension',
             'desc': (
                 'Extend Headcount with rate cards — grade-to-rate mapping, '
@@ -369,7 +369,7 @@ def build_doc():
             'tags': ['Hands-On', 'Extensions'],
         },
         {
-            'tag': 'EXERCISE  ·  ERROR LOG TRIAGE',
+            'tag': 'EXERCISE:  ERROR LOG TRIAGE',
             'title': 'Read, categorize, resolve generation errors',
             'desc': (
                 'Realistic generation error logs from production-style mistakes. '
