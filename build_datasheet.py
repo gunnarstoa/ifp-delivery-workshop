@@ -93,7 +93,7 @@ def draw_cover_page(c, doc):
     c.drawString(MARGIN, ty + 48, 'Integrated')
     c.drawString(MARGIN, ty,      'Financial')
     c.setFillColor(ORANGE)
-    c.drawString(MARGIN, ty - 52, 'Planning 2.0')
+    c.drawString(MARGIN, ty - 52, 'Planning 2.1')
 
     # Subtitle
     c.setFillColor(WHITE)
@@ -111,8 +111,8 @@ def draw_cover_page(c, doc):
     stats = [
         ('1-2', 'Hrs/Day'),
         ('4', 'Hands-On Labs'),
-        ('3', 'Core Modules'),
-        ('~1,200', 'Objects Generated'),
+        ('44', 'Config Questions'),
+        ('~8,000', 'Objects Generated'),
     ]
     box_w = (pw - 2 * MARGIN - 3 * 16) / 4
     bx = MARGIN
@@ -168,7 +168,7 @@ def draw_content_page(c, doc):
     # Header content
     c.setFillColor(WHITE)
     c.setFont('Helvetica-Bold', 15)
-    c.drawString(MARGIN, ph - 48, 'IFP 2.0 Delivery Partner Workshop')
+    c.drawString(MARGIN, ph - 48, 'IFP 2.1 Delivery Partner Workshop')
     c.setFillColor(colors.HexColor('#A8C4D8'))
     c.setFont('Helvetica', 10)
     c.drawString(MARGIN, ph - 64, 'Curriculum & Labs Overview')
@@ -255,16 +255,17 @@ def build_doc():
     left.append(Paragraph('Workshop Overview', h2))
     left.append(HRFlowable(width=COL_W, thickness=2, color=ORANGE, spaceAfter=6))
     left.append(Paragraph(
-        'The IFP 2.0 Delivery Partner Workshop is the hands-on technical program '
-        'for Anaplan delivery practitioners. In short, self-paced sessions, participants '
-        'master the full IFP 2.0 delivery workflow — from the App Framework '
-        'interview-style configurator to model generation, error log review, and '
-        'building customer-specific extensions.',
+        '<b>A practitioner workshop, not a product overview.</b> '
+        'Hands-on, self-paced coverage of the complete IFP 2.1 delivery '
+        'workflow — Application Framework configuration, model generation, '
+        'error log resolution, and building customer-specific extensions '
+        'from scratch.',
         body))
     left.append(Paragraph(
-        'Originally delivered with Elite EPM, this program reflects '
-        'real delivery experience — including live questions, instructor commentary, '
-        'and the judgment calls that define production readiness.',
+        'If you\'ve ever generated an IFP model, hit an error log, and '
+        'weren\'t sure whether to escalate or fix it yourself — this '
+        'workshop closes that gap. Every lab uses real planning scenarios: '
+        'OpEx/Headcount, Insurance 3-Statement, and Nuclear Plant OpEx.',
         body))
 
     left.append(Spacer(1, 4))
@@ -272,31 +273,13 @@ def build_doc():
     left.append(HRFlowable(width=COL_W, thickness=2, color=ORANGE, spaceAfter=6))
 
     outcomes = [
-        'Configure the IFP App Framework for a real customer scenario',
-        'Trigger model generation and monitor the 8,000+ object build process',
-        'Review and resolve generation error logs with confidence',
-        'Build customer extensions without breaking upgrade paths',
-        'Apply the Anaplan Way methodology to IFP delivery engagements',
-        'Load and validate data through the ADO pipeline',
+        'Configure the Application Framework end-to-end and generate a functional IFP model',
+        'Triage generation error logs without escalating basics',
+        'Build production-grade extensions: direct input + headcount × rate',
+        'Apply Configure-vs-Extend-vs-Modify discipline (Anaplan Way for Applications)',
     ]
     for o in outcomes:
         left.append(Paragraph(f'<font color="#FF6100">▶</font>  {o}', bullet))
-
-    left.append(Spacer(1, 6))
-    left.append(Paragraph('Intended Audience', h2))
-    left.append(HRFlowable(width=COL_W, thickness=2, color=ORANGE, spaceAfter=6))
-
-    roles = [
-        ('Solutions Consultants', 'Pre-sales and solutioning for IFP opportunities'),
-        ('Solution Architects',   'Technical leads for IFP design and delivery'),
-        ('Technical Consultants', 'Practitioners configuring and extending IFP'),
-        ('Delivery Practitioners','Anyone on a team deploying IFP v2.0'),
-    ]
-    for role, desc in roles:
-        left.append(Paragraph(f'<b>{role}</b>', ParagraphStyle('rh', fontName='Helvetica-Bold',
-            fontSize=9.5, textColor=NAVY, leading=13, spaceAfter=0)))
-        left.append(Paragraph(desc, ParagraphStyle('rd', fontName='Helvetica', fontSize=8.5,
-            textColor=GREY_MID, leading=12, spaceAfter=5, leftIndent=8)))
 
     left.append(Spacer(1, 4))
     # Prerequisites callout
@@ -304,9 +287,8 @@ def build_doc():
         Paragraph('<b>Prerequisites</b>', ParagraphStyle('ph', fontName='Helvetica-Bold',
             fontSize=9, textColor=NAVY, spaceAfter=4)),
         Paragraph(
-            'Anaplan platform experience (module building, formulas, lists) · '
-            'Basic financial planning knowledge (P&L, balance sheet) · '
-            'IFP v2.0 workspace access required for exercises.',
+            'MB, SA, or Master Anaplanner certification · Prior Anaplan model-building '
+            'experience · Financial planning literacy (P&L, balance sheet, headcount).',
             ParagraphStyle('pb', fontName='Helvetica', fontSize=8.5,
                 textColor=DARK_TEXT, leading=12))
     ]]
@@ -332,9 +314,10 @@ def build_doc():
         Paragraph('<b>Self-paced</b>', ParagraphStyle('ph', fontName='Helvetica-Bold',
             fontSize=9, textColor=NAVY, spaceAfter=4)),
         Paragraph(
-            '1-2 hours per day on your own schedule. Work through the labs in any '
-            'order, pause and resume as needed, and revisit material from a real '
-            'customer engagement.',
+            '1-2 hours per day on your own schedule, in any order. <b>Dedicated '
+            'training tenant for the week of your registered session</b> — '
+            'pre-staged with IFP models, refreshed over the weekend, no extensions. '
+            'Plan to start on day 1 of your week.',
             ParagraphStyle('pb', fontName='Helvetica', fontSize=8.5,
                 textColor=DARK_TEXT, leading=12))
     ]]
@@ -356,40 +339,42 @@ def build_doc():
 
     labs = [
         {
-            'tag': 'LAB A  ·  60 MIN',
-            'title': 'App Framework Configurator',
+            'tag': 'LAB A  ·  APPLICATION FRAMEWORK',
+            'title': 'Configurator — end-to-end',
             'desc': (
-                'Configure IFP for FintechCo — 3 legal entities, multi-currency, '
-                '4 functional areas. Answer all 43 questions, set hierarchy levels, '
-                'and trigger model generation. A real judgment exercise — no answer guide.'
+                'All 44 Application Framework questions: entities, currency, '
+                'dimensionality, max-level rules, generation. No answer key; '
+                'verifies against the post-generation checklist.'
             ),
             'tags': ['Hands-On', 'Core'],
         },
         {
-            'tag': 'LAB B  ·  45 MIN',
-            'title': 'Direct Input & Adjustments',
+            'tag': 'LAB B  ·  DIRECT INPUT EXTENSION',
+            'title': 'Direct Input with two adjustment layers',
             'desc': (
-                'Build a Direct Input method with two adjustment layers for '
-                'FintechCo\'s OpEx module. Configure drivers, lock periods, '
-                'and validate data flow through the ADO pipeline to the P&L.'
+                'Production-grade Direct Input for OpEx + Headcount — drivers, '
+                'period locks, audit trails, end-to-end flow through ADO into '
+                'the P&L. Data-tagged for version upgrades.'
             ),
             'tags': ['Hands-On', 'Extensions'],
         },
         {
-            'tag': 'LAB C  ·  45 MIN',
-            'title': 'Headcount × Rate Method',
+            'tag': 'LAB C  ·  HEADCOUNT × RATE METHOD',
+            'title': 'Rate-based headcount planning extension',
             'desc': (
-                'Extend Headcount with a rate-based planning method. Map employee '
-                'grades to rate cards and validate outputs — without touching the base app.'
+                'Extend Headcount with rate cards — grade-to-rate mapping, '
+                'period-by-period comp, validation without touching core. '
+                'Practice Extend-vs-Modify + data tagging.'
             ),
             'tags': ['Hands-On', 'Extensions'],
         },
         {
-            'tag': 'EXERCISE',
-            'title': 'Error Log Review & Resolution',
+            'tag': 'EXERCISE  ·  ERROR LOG TRIAGE',
+            'title': 'Read, categorize, resolve generation errors',
             'desc': (
-                'Read, categorize, and resolve generation error logs. Covers the '
-                '5 most common error types and the fix-regenerate-verify loop.'
+                'Realistic generation error logs from production-style mistakes. '
+                'Common formula + dependency errors, the fix-regenerate-verify '
+                'loop. Resolve independently instead of escalating basics.'
             ),
             'tags': ['Practical Skills'],
         },
@@ -444,13 +429,15 @@ def build_doc():
         right.append(outer)
         right.append(Spacer(1, 6))
 
-    # Why IFP 2.0 Now — full width banner at bottom
+    # Why IFP 2.1 — full width banner at bottom
     why_text = (
-        '<b><font color="#FF6100">Why IFP 2.0?</font></b>  '
-        'The App Framework replaces the legacy numbered configurator pages with an '
-        'interview-driven wizard that generates ~8,000 Anaplan objects automatically. '
-        'Partners who complete this workshop reduce delivery risk, increase first-run '
-        'generation success, and build extensions that survive version upgrades.'
+        '<b><font color="#FF6100">Why IFP 2.1?</font></b>  '
+        'IFP is delivered through the Application Framework — not built from '
+        'scratch. Configuration, generation, and error log triage ARE the '
+        'delivery method, not custom modeling. Partners who complete this '
+        'workshop generate ~8,000 IFP objects with confidence, resolve '
+        'generation errors without escalating, and data-tag every extension '
+        'so it survives IFP version upgrades.'
     )
 
     # ── Assemble two-column layout ─────────────────────────────────────────────
