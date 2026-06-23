@@ -311,7 +311,7 @@ def build_doc():
     right.append(HRFlowable(width=COL_W, thickness=2, color=ORANGE, spaceAfter=6))
 
     pace_data = [[
-        Paragraph('<b>Self-paced</b>', ParagraphStyle('ph', fontName='Helvetica-Bold',
+        Paragraph('<b>Self&#8209;paced</b>', ParagraphStyle('ph', fontName='Helvetica-Bold',
             fontSize=9, textColor=NAVY, spaceAfter=4)),
         Paragraph(
             '1-2 hours per day on your own schedule, in any order. <b>Dedicated '
@@ -321,7 +321,7 @@ def build_doc():
             ParagraphStyle('pb', fontName='Helvetica', fontSize=8.5,
                 textColor=DARK_TEXT, leading=12))
     ]]
-    pace_tbl = Table(pace_data, colWidths=[64, COL_W - 64])
+    pace_tbl = Table(pace_data, colWidths=[80, COL_W - 80])
     pace_tbl.setStyle(TableStyle([
         ('BACKGROUND', (0,0), (-1,-1), LIGHT_BLUE),
         ('ROUNDEDCORNERS', [6]),
