@@ -908,14 +908,44 @@ def _load_partners():
     return out
 
 
+_CONSUMER_EMAIL_DOMAINS = frozenset({
+    "gmail.com", "googlemail.com", "yahoo.com", "yahoo.co.uk", "outlook.com",
+    "hotmail.com", "hotmail.co.uk", "live.com", "aol.com", "icloud.com",
+    "me.com", "mac.com", "proton.me", "protonmail.com", "gmx.com", "gmx.de",
+    "web.de", "mail.com", "yandex.com", "yandex.ru", "qq.com", "163.com",
+})
+
+
+def _derive_partner_name(domain):
+    """Best-effort partner name from an email domain when the registry has no
+    entry for it. Returns None for consumer providers or malformed domains so
+    those still land in 'Unknown' rather than 'Gmail'."""
+    if not domain or "." not in domain:
+        return None
+    if domain in _CONSUMER_EMAIL_DOMAINS:
+        return None
+    stem = domain.split(".", 1)[0]
+    return stem.replace("-", " ").replace("_", " ").title() or None
+
+
 def _lookup_partner(email):
-    """Return (partner_name|None, excluded_bool) for an email address."""
+    """Return (partner_name|None, excluded_bool) for an email address.
+
+    Order of precedence:
+      1. Registered domain in data/cohorts/_partners.json → canonical name +
+         registered exclude flag.
+      2. Unregistered domain → titlecased first-segment of the domain
+         (deloitte.co.uk → 'Deloitte', my-consulting.com → 'My Consulting').
+         Never excluded — sysadmin can promote to a proper registry entry
+         later without any classification drift.
+      3. Consumer providers / malformed → (None, False), which the caller
+         renders as 'Unknown'."""
     p = _load_partners()
     domain = email.rsplit("@", 1)[-1].lower() if "@" in email else ""
     name = p["domains"].get(domain)
-    if name is None:
-        return None, False
-    return name, name in p["exclude"]
+    if name is not None:
+        return name, name in p["exclude"]
+    return _derive_partner_name(domain), False
 
 
 def _parse_email_list(text):
