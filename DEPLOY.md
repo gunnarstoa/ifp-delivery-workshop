@@ -233,6 +233,29 @@ ssh -t -i .aws-workshop-key.pem ubuntu@<IP> \
 
 Verify at `/admin/workshops/<slug>/tenants` — the summary shows total / available / assigned / maintenance counts.
 
+### Nightly release cron
+
+After sessions end, tenant assignments have to be released back into the pool so future sessions can claim them. Wire this once per instance:
+
+```bash
+ssh -i .aws-workshop-key.pem ubuntu@<IP>
+sudo -u workshop crontab -e
+# add this line (runs 06:15 UTC daily — after most session end_dates roll over):
+15 6 * * * cd /srv/workshop/app && /srv/workshop/app/.venv/bin/flask --app backend.app release-expired-tenants >> /var/log/workshop/tenant-release.log 2>&1
+sudo mkdir -p /var/log/workshop && sudo chown workshop:workshop /var/log/workshop
+```
+
+Idempotent — safe to run multiple times a day. Only releases assignments whose `hold_until < today`.
+
+### Refresh queue for the Playwright reset script
+
+After a session ends and tenants are released, they're marked "dirty" and won't be re-assigned until the reset script wipes them and calls back. Two endpoints:
+
+- `GET /admin/api/tenants/refresh-queue` — JSON list of tenants needing refresh (workshop_slug, email, username, password, last_released_at)
+- `POST /admin/api/tenants/<id>/refreshed` — mark a tenant clean; returns JSON `{tenant_id, refreshed_at}`
+
+Both require a facilitator session cookie. The reset script logs in via `POST /login` with an ops facilitator account first, keeps the cookie, and polls the queue.
+
 ---
 
 ## Adding a new partner domain

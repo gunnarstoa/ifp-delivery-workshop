@@ -15,6 +15,35 @@
     </div>
   </div>
 
+  {% if tenant %}
+  <div class="card" style="background:#0f2b46;color:#f5f1e6;border:1px solid #14395a;padding:1.1rem 1.3rem;">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:0.75rem;gap:1rem;flex-wrap:wrap;">
+      <div>
+        <div style="font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;font-weight:700;color:#ff8a3b;margin-bottom:0.2rem;">Your training tenant</div>
+        <div style="font-family:'Iowan Old Style',Charter,Georgia,serif;font-size:1.1rem;font-weight:500;letter-spacing:-0.005em;">Log in with these credentials for the labs.</div>
+      </div>
+      {% if tenant.hold_until %}
+      <div style="text-align:right;font-size:0.78rem;color:rgba(245,241,230,0.7);">
+        <div>Access ends</div>
+        <div style="color:#f5f1e6;font-weight:600;font-variant-numeric:tabular-nums;">{{ tenant.hold_until }}</div>
+      </div>
+      {% endif %}
+    </div>
+    <div style="display:grid;grid-template-columns:110px 1fr;gap:0.4rem 0.9rem;font-size:0.9rem;align-items:center;">
+      <div style="color:rgba(245,241,230,0.6);font-size:0.72rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;">Email</div>
+      <code style="font-family:ui-monospace,Menlo,monospace;background:rgba(255,255,255,0.06);padding:0.28rem 0.55rem;border-radius:3px;display:inline-block;">{{ tenant.email }}</code>
+      <div style="color:rgba(245,241,230,0.6);font-size:0.72rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;">Username</div>
+      <code style="font-family:ui-monospace,Menlo,monospace;background:rgba(255,255,255,0.06);padding:0.28rem 0.55rem;border-radius:3px;display:inline-block;">{{ tenant.username }}</code>
+      <div style="color:rgba(245,241,230,0.6);font-size:0.72rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;">Password</div>
+      <div>
+        <code id="tenant-pw-masked" style="font-family:ui-monospace,Menlo,monospace;background:rgba(255,255,255,0.06);padding:0.28rem 0.55rem;border-radius:3px;letter-spacing:0.15em;display:inline-block;">••••••••••</code>
+        <code id="tenant-pw-plain" style="display:none;font-family:ui-monospace,Menlo,monospace;background:rgba(255,97,0,0.15);color:#ffb480;padding:0.28rem 0.55rem;border-radius:3px;">{{ tenant.password or '(unavailable)' }}</code>
+        <button type="button" id="tenant-pw-toggle" onclick="var m=document.getElementById('tenant-pw-masked'),p=document.getElementById('tenant-pw-plain');var open=p.style.display!=='none';m.style.display=open?'inline-block':'none';p.style.display=open?'none':'inline-block';this.textContent=open?'Show':'Hide';" style="margin-left:0.5rem;background:transparent;color:#ff8a3b;border:1px solid rgba(255,138,59,0.5);border-radius:3px;padding:0.2rem 0.55rem;font-size:0.75rem;font-weight:600;cursor:pointer;letter-spacing:0.04em;">Show</button>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
   <div class="progress-overall card">
     <div class="progress-overall-row">
       <div class="progress-overall-label">

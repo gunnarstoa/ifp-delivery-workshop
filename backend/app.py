@@ -975,6 +975,64 @@ def admin_workshop_tenant_mark_refreshed(slug, tenant_id):
     return redirect(url_for("admin_workshop_tenants", slug=slug))
 
 
+# ---------------------------- Refresh-queue API (for Playwright reset script) --
+
+@app.route("/admin/api/tenants/refresh-queue")
+def api_tenant_refresh_queue():
+    """JSON list of tenants that have been released but not yet refreshed —
+    i.e., the queue the Playwright reset script should process. Each row
+    includes decrypted credentials so the script can log in and wipe.
+
+    Auth: facilitator session cookie. The script logs in as an ops-user
+    account, then polls this endpoint."""
+    _, redir = _require_facilitator()
+    if redir:
+        # For API calls, return 401 JSON instead of redirect
+        return jsonify({"error": "authentication required"}), 401
+    rows = get_db().execute("""
+        SELECT t.id, t.workshop_id, t.email, t.username, t.password_enc,
+               t.last_refreshed_at,
+               w.slug AS workshop_slug,
+               (SELECT MAX(released_at) FROM tenant_assignments
+                 WHERE tenant_id = t.id AND released_at IS NOT NULL) AS last_released_at
+        FROM tenants t
+        JOIN workshops w ON w.id = t.workshop_id
+        WHERE t.status = 'available'
+          AND EXISTS (
+            SELECT 1 FROM tenant_assignments ta
+             WHERE ta.tenant_id = t.id AND ta.released_at IS NOT NULL
+          )
+          AND (t.last_refreshed_at IS NULL
+               OR t.last_refreshed_at < (SELECT MAX(released_at) FROM tenant_assignments
+                                          WHERE tenant_id = t.id AND released_at IS NOT NULL))
+        ORDER BY last_released_at ASC
+    """).fetchall()
+    out = []
+    for r in rows:
+        d = dict(r)
+        d["password"] = _decrypt_tenant_password(r["password_enc"])
+        d.pop("password_enc", None)
+        out.append(d)
+    return jsonify({"tenants": out, "count": len(out)})
+
+
+@app.route("/admin/api/tenants/<int:tenant_id>/refreshed", methods=["POST"])
+def api_tenant_mark_refreshed(tenant_id):
+    """Called by the Playwright reset script after successfully wiping a
+    tenant. Marks last_refreshed_at = now() so the tenant becomes eligible
+    for reassignment."""
+    _, redir = _require_facilitator()
+    if redir:
+        return jsonify({"error": "authentication required"}), 401
+    db = get_db()
+    row = db.execute("SELECT id FROM tenants WHERE id = ?", (tenant_id,)).fetchone()
+    if row is None:
+        return jsonify({"error": "tenant not found"}), 404
+    db.execute("UPDATE tenants SET last_refreshed_at = CURRENT_TIMESTAMP WHERE id = ?", (tenant_id,))
+    db.commit()
+    return jsonify({"tenant_id": tenant_id, "refreshed_at": datetime.now(timezone.utc).isoformat()})
+
+
 @app.route("/admin/workshops/<slug>/sessions/new", methods=["GET", "POST"])
 def admin_session_new(slug):
     user, redir = _require_facilitator()
@@ -1102,6 +1160,125 @@ def _decrypt_tenant_password(ciphertext):
     except (InvalidToken, ValueError, ImportError):
         return None
 
+
+class TenantPoolInsufficient(Exception):
+    """Raised by _add_participants_to_session when the tenant pool for a
+    workshop can't fit the new enrollments' time window. Caller shows a
+    session-owner-friendly error."""
+    def __init__(self, free, needed):
+        self.free = free
+        self.needed = needed
+        super().__init__(f"pool has {free} free tenants; needed {needed}")
+
+
+def _workshop_has_tenant_pool(workshop_id):
+    """True if at least one tenant row exists for this workshop (any status).
+    Used to gate whether enrollment should enforce pool capacity — workshops
+    without a pool (e.g., RPM before tenants land) enroll freely."""
+    row = get_db().execute(
+        "SELECT 1 FROM tenants WHERE workshop_id = ? LIMIT 1",
+        (workshop_id,),
+    ).fetchone()
+    return row is not None
+
+
+def _available_tenants_for_session(session_id, limit=None):
+    """Return tenants free during the session's [start_date, end_date] window,
+    respecting refresh state.
+
+    A tenant is free when:
+      1. status = 'available' (not maintenance / retired)
+      2. no active tenant_assignment (released_at IS NULL) whose session
+         overlaps this window
+      3. if the tenant has EVER been released, it must have been refreshed
+         at least once after that release
+         (last_refreshed_at >= most recent released_at)
+    """
+    db = get_db()
+    sess = db.execute(
+        "SELECT workshop_id, start_date, end_date FROM sessions WHERE id = ?",
+        (session_id,),
+    ).fetchone()
+    if sess is None:
+        return []
+    q = """
+        SELECT t.*
+        FROM tenants t
+        WHERE t.workshop_id = ?
+          AND t.status = 'available'
+          AND NOT EXISTS (
+            SELECT 1 FROM tenant_assignments ta
+            JOIN sessions s ON s.id = ta.session_id
+            WHERE ta.tenant_id = t.id
+              AND ta.released_at IS NULL
+              AND s.start_date <= ?
+              AND s.end_date >= ?
+          )
+          AND (
+            NOT EXISTS (
+              SELECT 1 FROM tenant_assignments prev
+              WHERE prev.tenant_id = t.id AND prev.released_at IS NOT NULL
+            )
+            OR
+            t.last_refreshed_at >= (
+              SELECT MAX(released_at) FROM tenant_assignments
+              WHERE tenant_id = t.id AND released_at IS NOT NULL
+            )
+          )
+        ORDER BY t.id
+    """
+    if limit:
+        q += f" LIMIT {int(limit)}"
+    return db.execute(q, (sess["workshop_id"], sess["end_date"], sess["start_date"])).fetchall()
+
+
+def _active_tenant_for_user_in_session(session_id, user_id):
+    """Return the tenant currently assigned to a participant in a session, or
+    None. Includes decrypted password — call from routes that already
+    authenticated the caller (participant themselves or facilitator)."""
+    row = get_db().execute("""
+        SELECT t.id, t.email, t.username, t.password_enc, ta.assigned_at, ta.hold_until
+        FROM tenant_assignments ta
+        JOIN tenants t ON t.id = ta.tenant_id
+        WHERE ta.session_id = ? AND ta.user_id = ? AND ta.released_at IS NULL
+        LIMIT 1
+    """, (session_id, user_id)).fetchone()
+    if row is None:
+        return None
+    d = dict(row)
+    d["password"] = _decrypt_tenant_password(row["password_enc"])
+    d.pop("password_enc", None)
+    return d
+
+
+def _assign_tenant_to_participant(tenant_id, session_id, user_id, hold_until):
+    """Insert a tenant_assignment row for a participant. Returns True on
+    success, False if the tenant already has an active assignment (race)."""
+    db = get_db()
+    existing = db.execute(
+        "SELECT 1 FROM tenant_assignments WHERE tenant_id = ? AND released_at IS NULL",
+        (tenant_id,),
+    ).fetchone()
+    if existing:
+        return False
+    db.execute(
+        "INSERT INTO tenant_assignments (tenant_id, session_id, user_id, hold_until) "
+        "VALUES (?, ?, ?, ?)",
+        (tenant_id, session_id, user_id, hold_until),
+    )
+    return True
+
+
+def _release_participant_tenant(user_id, session_id, reason):
+    """Release any active tenant assignment for a participant in a session.
+    Idempotent — safe to call when there's no active assignment."""
+    get_db().execute(
+        "UPDATE tenant_assignments "
+        "SET released_at = CURRENT_TIMESTAMP, released_reason = ? "
+        "WHERE user_id = ? AND session_id = ? AND released_at IS NULL",
+        (reason, user_id, session_id),
+    )
+
 LIKERT_MAP = {
     "very comfortable": 5,
     "comfortable": 4,
@@ -1208,9 +1385,61 @@ def _parse_email_list(text):
 
 
 def _add_participants_to_session(session_id, emails, enrolled_by_user_id):
-    """For each email: create user if missing, enroll into session.
-    Returns list of dicts with username, partner, status, initial_password (or None)."""
+    """For each email: create user if missing, enroll into session, and if the
+    workshop has a tenant pool, reserve a tenant for the session's time window.
+
+    Raises TenantPoolInsufficient BEFORE writing anything if the workshop has
+    a tenant pool and the count of new enrollments would exceed available
+    tenants for the session's [start, end] window. Reactivations of previously
+    removed participants keep their old tenant assignment if it's still active
+    and matching — otherwise a fresh one is claimed.
+
+    Returns list of dicts with username, partner, status, initial_password
+    (or None), and tenant (dict with email/username/password) when assigned."""
     db = get_db()
+    sess = db.execute(
+        "SELECT id, workshop_id, start_date, end_date FROM sessions WHERE id = ?",
+        (session_id,),
+    ).fetchone()
+    if sess is None:
+        return []
+
+    workshop_has_pool = _workshop_has_tenant_pool(sess["workshop_id"])
+
+    # Split into "will need a new tenant" vs "keeps existing / not needed"
+    # BEFORE any writes so we can capacity-check without side effects.
+    needs_new_tenant = []
+    if workshop_has_pool:
+        for email in emails:
+            u = db.execute("SELECT id FROM users WHERE username = ?", (email,)).fetchone()
+            if u:
+                sp = db.execute(
+                    "SELECT id, removed_at FROM session_participants WHERE session_id = ? AND user_id = ?",
+                    (session_id, u["id"]),
+                ).fetchone()
+                if sp and sp["removed_at"] is None:
+                    ta = db.execute(
+                        "SELECT 1 FROM tenant_assignments WHERE session_id = ? AND user_id = ? AND released_at IS NULL",
+                        (session_id, u["id"]),
+                    ).fetchone()
+                    if ta:
+                        continue  # already active + already has a tenant
+            needs_new_tenant.append(email)
+        free = _available_tenants_for_session(session_id)
+        if len(free) < len(needs_new_tenant):
+            raise TenantPoolInsufficient(free=len(free), needed=len(needs_new_tenant))
+
+    # Pull enough tenants for the batch up front, hand them out in order.
+    reserved = list(_available_tenants_for_session(session_id, limit=len(needs_new_tenant))) if workshop_has_pool else []
+    reserved_by_email = dict(zip(needs_new_tenant, reserved))
+    # hold_until defaults to session.end_date + 1
+    hold_until = None
+    if sess["end_date"]:
+        try:
+            hold_until = (date.fromisoformat(sess["end_date"]) + timedelta(days=1)).isoformat()
+        except (TypeError, ValueError):
+            hold_until = None
+
     results = []
     any_reactivated = False
     for email in emails:
@@ -1246,6 +1475,27 @@ def _add_participants_to_session(session_id, emails, enrolled_by_user_id):
             enroll_status = "reactivated" if cur.rowcount else "already-enrolled"
             if cur.rowcount:
                 any_reactivated = True
+
+        tenant_info = None
+        if email in reserved_by_email and reserved_by_email[email] is not None:
+            t = reserved_by_email[email]
+            ok = _assign_tenant_to_participant(t["id"], session_id, user_id, hold_until)
+            if ok:
+                tenant_info = {
+                    "email": t["email"],
+                    "username": t["username"],
+                    "hold_until": hold_until,
+                }
+        elif workshop_has_pool:
+            # Existing active tenant assignment — surface it in the result
+            existing_ta = _active_tenant_for_user_in_session(session_id, user_id)
+            if existing_ta:
+                tenant_info = {
+                    "email": existing_ta["email"],
+                    "username": existing_ta["username"],
+                    "hold_until": existing_ta["hold_until"],
+                }
+
         results.append({
             "email": email,
             "partner": partner_name or "Unknown",
@@ -1253,10 +1503,9 @@ def _add_participants_to_session(session_id, emails, enrolled_by_user_id):
             "user_status": user_status,
             "enroll_status": enroll_status,
             "initial_password": initial_password,
+            "tenant": tenant_info,
         })
     db.commit()
-    # If any participants were reactivated, their previously-recorded survey
-    # responses are now back in the included set — refresh cached counts.
     if any_reactivated:
         for r in db.execute("SELECT id FROM session_surveys WHERE session_id = ?", (session_id,)).fetchall():
             _recompute_survey_counters(r["id"])
@@ -1347,10 +1596,19 @@ def admin_session_participants(slug, session_slug):
         return redir
     sess = _get_session_or_404(slug, session_slug)
     added_results = []
+    tenant_pool_error = None
     if request.method == "POST":
         emails = _parse_email_list(request.form.get("emails", ""))
         if emails:
-            added_results = _add_participants_to_session(sess["id"], emails, user["id"])
+            try:
+                added_results = _add_participants_to_session(sess["id"], emails, user["id"])
+            except TenantPoolInsufficient as e:
+                tenant_pool_error = (
+                    f"The tenant pool for this workshop has {e.free} tenant"
+                    f"{'s' if e.free != 1 else ''} free for this session's window, "
+                    f"but you're trying to enroll {e.needed}. Add more tenants to "
+                    f"the pool or split the enrollment across sessions."
+                )
     participants = get_db().execute(
         "SELECT sp.id, sp.partner, sp.excluded, sp.enrolled_at, "
         "       u.id AS user_id, u.username, u.email, u.last_login_at "
@@ -1365,12 +1623,23 @@ def admin_session_participants(slug, session_slug):
         by_partner.setdefault(key, []).append(p)
     included = sum(1 for p in participants if not p["excluded"])
     reset_creds = session.pop("reset_credentials", None)
+    # Show pool status if the workshop has one
+    pool_summary = None
+    if _workshop_has_tenant_pool(sess["workshop_id"]):
+        free = len(_available_tenants_for_session(sess["id"]))
+        total = get_db().execute(
+            "SELECT COUNT(*) AS n FROM tenants WHERE workshop_id = ? AND status != 'retired'",
+            (sess["workshop_id"],),
+        ).fetchone()["n"]
+        pool_summary = {"free": free, "total": total, "workshop_slug": slug}
     return render_template(
         "admin_session_participants.html",
         user=user, session=sess, by_partner=by_partner,
         total=len(participants), included=included,
         added_results=added_results,
         reset_creds=reset_creds,
+        tenant_pool_error=tenant_pool_error,
+        pool_summary=pool_summary,
     )
 
 
@@ -3122,6 +3391,8 @@ def admin_session_participant_remove(slug, session_slug, user_id):
         "WHERE session_id = ? AND user_id = ? AND removed_at IS NULL",
         (sess["id"], user_id),
     )
+    # Removing the participant releases their tenant back into the pool.
+    _release_participant_tenant(user_id, sess["id"], reason="removed")
     db.commit()
     # Update the cached counts on each session_surveys row so the Collection
     # status card on the surveys page reflects the new totals immediately.
@@ -3373,6 +3644,31 @@ def cli_init_db():
     """Create the SQLite tables."""
     init_db()
     print(f"initialized {DB_PATH}")
+
+
+@app.cli.command("release-expired-tenants")
+def cli_release_expired_tenants():
+    """Release tenant assignments whose hold_until date has passed.
+
+    Intended to be run daily via cron on the Lightsail instance. Sets
+    released_at and released_reason='session_ended'. Idempotent — running
+    multiple times a day is safe."""
+    init_db()
+    conn = sqlite3.connect(str(DB_PATH))
+    conn.row_factory = sqlite3.Row
+    try:
+        cur = conn.execute("""
+            UPDATE tenant_assignments
+               SET released_at = CURRENT_TIMESTAMP,
+                   released_reason = 'session_ended'
+             WHERE released_at IS NULL
+               AND hold_until IS NOT NULL
+               AND hold_until < date('now')
+        """)
+        conn.commit()
+        print(f"released {cur.rowcount} expired tenant assignment(s)")
+    finally:
+        conn.close()
 
 
 @app.cli.command("add-tenants")
@@ -4550,6 +4846,11 @@ def participant_progress(workshop_slug):
         "SELECT w.name FROM workshops w WHERE w.slug = ?", (workshop_slug,)
     ).fetchone()
     workshop_name = workshop_name_row["name"] if workshop_name_row else workshop_slug
+    # Surface the participant's assigned tenant so they can log in to their
+    # workshop environment without an out-of-band email chase. Only visible
+    # to the participant themselves — the calling route already gated on
+    # user identity via _user_workshop_session.
+    tenant = _active_tenant_for_user_in_session(sess["id"], user["id"])
     return render_template(
         "participant_progress.html",
         user=user,
@@ -4558,6 +4859,7 @@ def participant_progress(workshop_slug):
         session=sess,
         role=role,
         progress=progress,
+        tenant=tenant,
     )
 
 
