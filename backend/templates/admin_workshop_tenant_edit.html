@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}{% if tenant %}{{ tenant.username }}{% else %}New tenant{% endif %} — Tenants — {{ workshop.name }}{% endblock %}
+{% block body %}
+<div class="admin-shell">
+  {% set page_title = tenant.username if tenant else 'New tenant' %}
+  {% set breadcrumbs = [
+    {'label': workshop.name, 'url': url_for('admin_workshop_detail', slug=workshop.slug)},
+    {'label': 'Tenants', 'url': url_for('admin_workshop_tenants', slug=workshop.slug)},
+    {'label': tenant.username if tenant else 'New'}
+  ] %}
+  {% include "_admin_header.html" %}
+
+  {% if not key_configured %}
+    <div class="card" style="border-left:3px solid #b45309;background:#fef3c7;">
+      <p class="help-note" style="margin:0;"><strong>TENANT_ENCRYPTION_KEY is not configured.</strong> Add it to <code>/etc/workshop/app.env</code> and restart the workshop service before adding or editing tenants.</p>
+    </div>
+  {% endif %}
+
+  <div class="card">
+    <form method="post" action="{% if tenant %}{{ url_for('admin_workshop_tenant_edit', slug=workshop.slug, tenant_id=tenant.id) }}{% else %}{{ url_for('admin_workshop_tenant_new', slug=workshop.slug) }}{% endif %}">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div>
+          <label style="display:block;font-size:0.78rem;font-weight:600;color:#374151;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem;">Email <span style="color:#dc2626;">*</span></label>
+          <input type="email" name="email" value="{{ form.email }}" required
+                 style="width:100%;padding:0.55rem 0.75rem;border:1px solid {% if errors.email %}#dc2626{% else %}#d1d5db{% endif %};border-radius:4px;font-family:inherit;font-size:0.9rem;">
+          {% if errors.email %}<p style="margin:0.25rem 0 0;color:#dc2626;font-size:0.78rem;">{{ errors.email }}</p>{% endif %}
+        </div>
+        <div>
+          <label style="display:block;font-size:0.78rem;font-weight:600;color:#374151;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem;">Username <span style="color:#dc2626;">*</span></label>
+          <input type="text" name="username" value="{{ form.username }}" required autocomplete="off"
+                 style="width:100%;padding:0.55rem 0.75rem;border:1px solid {% if errors.username %}#dc2626{% else %}#d1d5db{% endif %};border-radius:4px;font-family:ui-monospace,Menlo,monospace;font-size:0.9rem;">
+          {% if errors.username %}<p style="margin:0.25rem 0 0;color:#dc2626;font-size:0.78rem;">{{ errors.username }}</p>{% endif %}
+        </div>
+      </div>
+
+      <div style="margin-top:1rem;">
+        <label style="display:block;font-size:0.78rem;font-weight:600;color:#374151;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem;">
+          Password {% if not tenant %}<span style="color:#dc2626;">*</span>{% else %}<span style="color:#9ca3af;font-weight:400;text-transform:none;letter-spacing:0;font-size:0.75rem;">(leave blank to keep current)</span>{% endif %}
+        </label>
+        <div style="display:flex;gap:0.5rem;align-items:center;">
+          <input type="text" name="password" value="{{ form.password }}" autocomplete="off"
+                 placeholder="{% if tenant %}(unchanged){% endif %}"
+                 style="flex:1;padding:0.55rem 0.75rem;border:1px solid {% if errors.password %}#dc2626{% else %}#d1d5db{% endif %};border-radius:4px;font-family:ui-monospace,Menlo,monospace;font-size:0.9rem;">
+          {% if tenant and not revealed_password %}
+            <a href="{{ url_for('admin_workshop_tenant_edit', slug=workshop.slug, tenant_id=tenant.id) }}?reveal=1"
+               class="secondary-btn" style="text-decoration:none;padding:0.55rem 0.9rem;font-size:0.82rem;">👁 Reveal current</a>
+          {% endif %}
+        </div>
+        {% if errors.password %}<p style="margin:0.25rem 0 0;color:#dc2626;font-size:0.78rem;">{{ errors.password }}</p>{% endif %}
+        {% if revealed_password %}
+          <div style="margin-top:0.5rem;padding:0.6rem 0.75rem;background:#fef3c7;border:1px solid #fde68a;border-radius:4px;">
+            <div style="font-size:0.72rem;color:#92400e;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.15rem;">Current password (do not share in chat / screenshots)</div>
+            <code style="font-size:0.85rem;color:#111827;">{{ revealed_password }}</code>
+          </div>
+        {% endif %}
+      </div>
+
+      {% if tenant %}
+      <div style="margin-top:1rem;">
+        <label style="display:block;font-size:0.78rem;font-weight:600;color:#374151;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem;">Status</label>
+        <select name="status" style="width:100%;padding:0.55rem 0.75rem;border:1px solid #d1d5db;border-radius:4px;font-family:inherit;font-size:0.9rem;">
+          <option value="available" {% if form.status == 'available' %}selected{% endif %}>Available</option>
+          <option value="maintenance" {% if form.status == 'maintenance' %}selected{% endif %}>Maintenance (temporarily out)</option>
+          <option value="retired" {% if form.status == 'retired' %}selected{% endif %}>Retired (permanent)</option>
+        </select>
+        <p style="margin:0.35rem 0 0;font-size:0.78rem;color:#6b7280;">Retired tenants are hidden from future assignments; assignment history is preserved.</p>
+      </div>
+      {% endif %}
+
+      <div style="margin-top:1rem;">
+        <label style="display:block;font-size:0.78rem;font-weight:600;color:#374151;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem;">Notes <span style="color:#9ca3af;font-weight:400;text-transform:none;letter-spacing:0;font-size:0.75rem;">(optional)</span></label>
+        <textarea name="notes" rows="2"
+                  style="width:100%;padding:0.55rem 0.75rem;border:1px solid #d1d5db;border-radius:4px;font-family:inherit;font-size:0.9rem;resize:vertical;">{{ form.notes }}</textarea>
+      </div>
+
+      <div style="margin-top:1.4rem;display:flex;gap:0.6rem;align-items:center;">
+        <button type="submit" class="primary-btn">{% if tenant %}Save changes{% else %}Add tenant{% endif %}</button>
+        <a href="{{ url_for('admin_workshop_tenants', slug=workshop.slug) }}" class="secondary-btn" style="text-decoration:none;">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

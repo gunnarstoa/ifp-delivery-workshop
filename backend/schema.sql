@@ -265,3 +265,41 @@ CREATE TABLE IF NOT EXISTS lab_check_attempts (
 
 CREATE INDEX IF NOT EXISTS idx_lca_session_user ON lab_check_attempts(session_id, user_id);
 CREATE INDEX IF NOT EXISTS idx_lca_check ON lab_check_attempts(workshop_slug, check_id);
+
+-- Tenant pool (one row per pre-provisioned Anaplan credential set per workshop).
+-- password_enc is Fernet-encrypted with TENANT_ENCRYPTION_KEY from app.env.
+CREATE TABLE IF NOT EXISTS tenants (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  workshop_id INTEGER NOT NULL,
+  email TEXT NOT NULL,
+  username TEXT NOT NULL,
+  password_enc TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'available',    -- available | maintenance | retired
+  last_refreshed_at TIMESTAMP,
+  notes TEXT,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (workshop_id) REFERENCES workshops(id) ON DELETE CASCADE,
+  UNIQUE (workshop_id, username)
+);
+CREATE INDEX IF NOT EXISTS idx_tenants_workshop ON tenants(workshop_id);
+CREATE INDEX IF NOT EXISTS idx_tenants_workshop_status ON tenants(workshop_id, status);
+
+-- Tenant assignment ledger. released_at IS NULL = active. hold_until is the
+-- planned release date (default session.end_date + 1). Nightly job (added in
+-- PR 2) will release when today > hold_until.
+CREATE TABLE IF NOT EXISTS tenant_assignments (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  tenant_id INTEGER NOT NULL,
+  session_id INTEGER NOT NULL,
+  user_id INTEGER NOT NULL,
+  assigned_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  hold_until DATE,
+  released_at TIMESTAMP,
+  released_reason TEXT,                        -- session_ended | removed | extended | manual
+  FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE CASCADE,
+  FOREIGN KEY (session_id) REFERENCES sessions(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+CREATE INDEX IF NOT EXISTS idx_ta_tenant_active ON tenant_assignments(tenant_id) WHERE released_at IS NULL;
+CREATE INDEX IF NOT EXISTS idx_ta_session ON tenant_assignments(session_id);
+CREATE INDEX IF NOT EXISTS idx_ta_user_active ON tenant_assignments(user_id) WHERE released_at IS NULL;
