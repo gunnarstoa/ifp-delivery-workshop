@@ -10,6 +10,29 @@
   ] %}
   {% include "_admin_header.html" %}
 
+  {% if tenant_pool_error %}
+  <div class="card" style="border-left:4px solid #dc2626;background:#fef2f2;">
+    <h2 style="margin-top:0;color:#991b1b;">Tenant pool insufficient — enrollment blocked</h2>
+    <p style="margin:0.3rem 0 0;color:#7f1d1d;">{{ tenant_pool_error }}</p>
+    <p class="help-note" style="margin-top:0.5rem;">Manage the pool at <a href="{{ url_for('admin_workshop_tenants', slug=session.workshop_slug) }}">{{ session.workshop_slug }} / Tenants</a>.</p>
+  </div>
+  {% endif %}
+
+  {% if pool_summary %}
+  <div class="card" style="padding:0.7rem 1rem;border-left:4px solid {% if pool_summary.free == 0 %}#dc2626{% elif pool_summary.free < 5 %}#d97706{% else %}#059669{% endif %};background:#f9fafb;">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;">
+      <div>
+        <span style="font-size:0.72rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#6b7280;">Tenant pool</span>
+        <span style="margin-left:0.6rem;font-family:ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums;">
+          <strong style="color:#111827;font-size:1.05rem;">{{ pool_summary.free }}</strong>
+          <span style="color:#6b7280;">of {{ pool_summary.total }} free for this session's window</span>
+        </span>
+      </div>
+      <a href="{{ url_for('admin_workshop_tenants', slug=pool_summary.workshop_slug) }}" class="secondary-btn" style="text-decoration:none;padding:0.25rem 0.7rem;font-size:0.8rem;">Manage pool →</a>
+    </div>
+  </div>
+  {% endif %}
+
   {% if reset_creds %}
   <div class="card" style="border-left:4px solid #d97706;background:#fffbeb;">
     <h2 style="margin-top:0;color:#92400e;">Password reset · {{ reset_creds.username }}</h2>
@@ -37,7 +60,7 @@
       </div>
     {% endif %}
     <table class="users-table" style="margin-top:1rem;">
-      <thead><tr><th>Email</th><th>Partner</th><th>User</th><th>Enrollment</th></tr></thead>
+      <thead><tr><th>Email</th><th>Partner</th><th>User</th><th>Enrollment</th><th>Tenant</th></tr></thead>
       <tbody>
         {% for r in added_results %}
         <tr>
@@ -52,6 +75,14 @@
             {% if r.enroll_status == 'enrolled' %}<span class="badge">enrolled</span>
             {% elif r.enroll_status == 'reactivated' %}<span class="badge">re-enrolled</span>
             {% else %}<span class="badge">already enrolled</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if r.tenant %}
+              <code style="font-size:0.78rem;">{{ r.tenant.username }}</code>
+              {% if r.tenant.hold_until %}<span style="font-size:0.72rem;color:#6b7280;">· until {{ r.tenant.hold_until }}</span>{% endif %}
+            {% else %}
+              <span style="color:#9ca3af;font-size:0.78rem;">—</span>
             {% endif %}
           </td>
         </tr>
