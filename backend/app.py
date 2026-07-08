@@ -1611,8 +1611,15 @@ def admin_session_participants(slug, session_slug):
                 )
     participants = get_db().execute(
         "SELECT sp.id, sp.partner, sp.excluded, sp.enrolled_at, "
-        "       u.id AS user_id, u.username, u.email, u.last_login_at "
-        "FROM session_participants sp JOIN users u ON u.id = sp.user_id "
+        "       u.id AS user_id, u.username, u.email, u.last_login_at, "
+        "       ta.id AS assignment_id, "
+        "       t.username AS tenant_username, "
+        "       ta.hold_until AS tenant_hold_until "
+        "FROM session_participants sp "
+        "JOIN users u ON u.id = sp.user_id "
+        "LEFT JOIN tenant_assignments ta "
+        "       ON ta.session_id = sp.session_id AND ta.user_id = sp.user_id AND ta.released_at IS NULL "
+        "LEFT JOIN tenants t ON t.id = ta.tenant_id "
         "WHERE sp.session_id = ? AND sp.removed_at IS NULL "
         "ORDER BY sp.partner IS NULL, sp.partner, u.username",
         (sess["id"],),
@@ -1623,6 +1630,7 @@ def admin_session_participants(slug, session_slug):
         by_partner.setdefault(key, []).append(p)
     included = sum(1 for p in participants if not p["excluded"])
     reset_creds = session.pop("reset_credentials", None)
+    tenant_action_flash = session.pop("_participant_tenant_flash", None)
     # Show pool status if the workshop has one
     pool_summary = None
     if _workshop_has_tenant_pool(sess["workshop_id"]):
@@ -1640,6 +1648,7 @@ def admin_session_participants(slug, session_slug):
         reset_creds=reset_creds,
         tenant_pool_error=tenant_pool_error,
         pool_summary=pool_summary,
+        tenant_action_flash=tenant_action_flash,
     )
 
 
@@ -3401,6 +3410,88 @@ def admin_session_participant_remove(slug, session_slug, user_id):
     ).fetchall()
     for r in survey_rows:
         _recompute_survey_counters(r["id"])
+    return redirect(url_for("admin_session_participants", slug=slug, session_slug=session_slug))
+
+
+@app.route("/admin/workshops/<slug>/sessions/<session_slug>/participants/<int:user_id>/extend-tenant", methods=["POST"])
+def admin_session_participant_extend_tenant(slug, session_slug, user_id):
+    """Extend a participant's active tenant assignment past the current
+    hold_until. Refuses if a future session claims the tenant during the
+    extension window."""
+    _, redir = _require_facilitator()
+    if redir:
+        return redir
+    sess = _get_session_or_404(slug, session_slug)
+    new_hold_until = (request.form.get("hold_until") or "").strip()
+    back = redirect(url_for("admin_session_participants", slug=slug, session_slug=session_slug))
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", new_hold_until):
+        session["_participant_tenant_flash"] = {"error": "Invalid date. Use YYYY-MM-DD."}
+        return back
+    db = get_db()
+    ta = db.execute(
+        "SELECT ta.id, ta.tenant_id, ta.hold_until, t.username "
+        "FROM tenant_assignments ta JOIN tenants t ON t.id = ta.tenant_id "
+        "WHERE ta.user_id = ? AND ta.session_id = ? AND ta.released_at IS NULL",
+        (user_id, sess["id"]),
+    ).fetchone()
+    if ta is None:
+        session["_participant_tenant_flash"] = {"error": "No active tenant assignment for this participant."}
+        return back
+    if ta["hold_until"] and new_hold_until <= ta["hold_until"]:
+        session["_participant_tenant_flash"] = {
+            "error": f"New date must be after the current hold_until ({ta['hold_until']})."
+        }
+        return back
+    # Conflict check: any OTHER active assignment on this tenant, OR any future
+    # session whose window overlaps the extension window.
+    from_date = ta["hold_until"] or sess["end_date"]
+    conflict = db.execute(
+        "SELECT s.name AS session_name, s.slug AS session_slug, s.start_date "
+        "FROM tenant_assignments ta2 JOIN sessions s ON s.id = ta2.session_id "
+        "WHERE ta2.tenant_id = ? AND ta2.released_at IS NULL AND ta2.id != ? "
+        "  AND s.start_date <= ? AND s.end_date >= ? "
+        "LIMIT 1",
+        (ta["tenant_id"], ta["id"], new_hold_until, from_date),
+    ).fetchone()
+    if conflict:
+        session["_participant_tenant_flash"] = {
+            "error": (f"Cannot extend {ta['username']} to {new_hold_until} — "
+                      f"the tenant is claimed by '{conflict['session_name']}' starting {conflict['start_date']}.")
+        }
+        return back
+    db.execute(
+        "UPDATE tenant_assignments SET hold_until = ? WHERE id = ?",
+        (new_hold_until, ta["id"]),
+    )
+    db.commit()
+    session["_participant_tenant_flash"] = {
+        "ok": f"Extended {ta['username']} tenant until {new_hold_until}."
+    }
+    return back
+
+
+@app.route("/admin/workshops/<slug>/sessions/<session_slug>/participants/<int:user_id>/release-tenant", methods=["POST"])
+def admin_session_participant_release_tenant(slug, session_slug, user_id):
+    """Manually release a participant's tenant back to the pool without
+    removing the participant from the session. Useful when someone finishes
+    early or the tenant has a problem and needs to be reclaimed."""
+    _, redir = _require_facilitator()
+    if redir:
+        return redir
+    sess = _get_session_or_404(slug, session_slug)
+    db = get_db()
+    ta = db.execute(
+        "SELECT ta.id, t.username FROM tenant_assignments ta "
+        "JOIN tenants t ON t.id = ta.tenant_id "
+        "WHERE ta.user_id = ? AND ta.session_id = ? AND ta.released_at IS NULL",
+        (user_id, sess["id"]),
+    ).fetchone()
+    if ta is None:
+        session["_participant_tenant_flash"] = {"error": "No active tenant assignment to release."}
+        return redirect(url_for("admin_session_participants", slug=slug, session_slug=session_slug))
+    _release_participant_tenant(user_id, sess["id"], reason="manual")
+    db.commit()
+    session["_participant_tenant_flash"] = {"ok": f"Released tenant {ta['username']}."}
     return redirect(url_for("admin_session_participants", slug=slug, session_slug=session_slug))
 
 
