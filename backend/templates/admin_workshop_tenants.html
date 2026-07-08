@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Tenants — {{ workshop.name }}{% endblock %}
+{% block body %}
+<div class="admin-shell">
+  {% set page_title = 'Tenant pool' %}
+  {% set breadcrumbs = [
+    {'label': workshop.name, 'url': url_for('admin_workshop_detail', slug=workshop.slug)},
+    {'label': 'Tenants'}
+  ] %}
+  {% include "_admin_header.html" %}
+
+  {% if not key_configured %}
+    <div class="card" style="border-left:3px solid #b45309;background:#fef3c7;">
+      <p class="help-note" style="margin:0;"><strong>TENANT_ENCRYPTION_KEY is not configured.</strong> Add it to <code>/etc/workshop/app.env</code> and restart the workshop service before adding tenants. Generate a key with:
+        <code style="display:block;margin-top:0.4rem;padding:0.5rem;background:#fffbeb;font-size:0.78rem;">python -c 'from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())'</code>
+      </p>
+    </div>
+  {% endif %}
+
+  {% if flash %}
+    <div class="card" style="border-left:3px solid #059669;background:#ecfdf5;padding:0.9rem 1.1rem;">
+      <p class="help-note" style="margin:0;color:#065f46;">{{ flash }}</p>
+    </div>
+  {% endif %}
+
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.6rem;flex-wrap:wrap;">
+      <p class="help-note" style="margin:0;flex:1;min-width:20rem;">Pre-provisioned Anaplan credentials handed to participants for the duration of their session. Passwords are Fernet-encrypted at rest. Add tenants via CSV import (<code>flask add-tenants</code>) or one at a time below.</p>
+      <a class="primary-btn" href="{{ url_for('admin_workshop_tenant_new', slug=workshop.slug) }}" style="text-decoration:none;">＋ Add tenant</a>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem;margin:0.5rem 0 1rem;">
+      <div style="padding:0.6rem 0.8rem;background:#f8fafc;border:1px solid #e5e7eb;border-radius:4px;">
+        <div style="font-size:0.7rem;color:#6b7280;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Total in pool</div>
+        <div style="font-size:1.4rem;font-weight:700;color:#111827;font-variant-numeric:tabular-nums;">{{ counts.total }}</div>
+      </div>
+      <div style="padding:0.6rem 0.8rem;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:4px;">
+        <div style="font-size:0.7rem;color:#065f46;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Available now</div>
+        <div style="font-size:1.4rem;font-weight:700;color:#059669;font-variant-numeric:tabular-nums;">{{ counts.available }}</div>
+      </div>
+      <div style="padding:0.6rem 0.8rem;background:#fff7ed;border:1px solid #fed7aa;border-radius:4px;">
+        <div style="font-size:0.7rem;color:#9a3412;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Currently assigned</div>
+        <div style="font-size:1.4rem;font-weight:700;color:#ea580c;font-variant-numeric:tabular-nums;">{{ counts.assigned }}</div>
+      </div>
+      <div style="padding:0.6rem 0.8rem;background:#fef3c7;border:1px solid #fde68a;border-radius:4px;">
+        <div style="font-size:0.7rem;color:#92400e;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Maintenance / retired</div>
+        <div style="font-size:1.4rem;font-weight:700;color:#b45309;font-variant-numeric:tabular-nums;">{{ counts.maintenance + counts.retired }}</div>
+      </div>
+    </div>
+
+    {% if not tenants %}
+      <p class="help-note">No tenants in the pool yet. Add one above, or bulk-import via <code>flask add-tenants</code>.</p>
+    {% else %}
+      <div style="overflow-x:auto;">
+      <table class="users-table" style="margin-top:0.5rem;">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Currently assigned</th>
+            <th>Last refreshed</th>
+            <th style="text-align:right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in tenants %}
+          <tr>
+            <td><code style="font-weight:600;">{{ t.username }}</code></td>
+            <td style="font-size:0.85rem;color:#4b5563;">{{ t.email }}</td>
+            <td>
+              {% if t.status == 'retired' %}
+                <span style="padding:0.1rem 0.5rem;background:#f3f4f6;color:#6b7280;border-radius:3px;font-size:0.72rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;">Retired</span>
+              {% elif t.status == 'maintenance' %}
+                <span style="padding:0.1rem 0.5rem;background:#fef3c7;color:#92400e;border-radius:3px;font-size:0.72rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;">Maintenance</span>
+              {% elif t.assignment_id %}
+                <span style="padding:0.1rem 0.5rem;background:#fff7ed;color:#9a3412;border-radius:3px;font-size:0.72rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;">Assigned</span>
+              {% else %}
+                <span style="padding:0.1rem 0.5rem;background:#ecfdf5;color:#065f46;border-radius:3px;font-size:0.72rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;">Available</span>
+              {% endif %}
+            </td>
+            <td style="font-size:0.82rem;color:#4b5563;">
+              {% if t.assignment_id %}
+                <div><strong style="color:#111827;">{{ t.current_user_name or t.current_user_email }}</strong></div>
+                <div style="font-size:0.75rem;color:#6b7280;">{{ t.current_session_name }} · until {{ t.current_hold_until or '—' }}</div>
+              {% else %}
+                <span style="color:#9ca3af;">—</span>
+              {% endif %}
+            </td>
+            <td style="font-size:0.78rem;color:#6b7280;">{{ t.last_refreshed_at or '—' }}</td>
+            <td style="text-align:right;">
+              <form method="post" action="{{ url_for('admin_workshop_tenant_mark_refreshed', slug=workshop.slug, tenant_id=t.id) }}" style="display:inline;">
+                <button type="submit" class="secondary-btn" title="Mark refreshed" style="padding:0.25rem 0.55rem;font-size:0.78rem;">✓ Refreshed</button>
+              </form>
+              <a class="secondary-btn" href="{{ url_for('admin_workshop_tenant_edit', slug=workshop.slug, tenant_id=t.id) }}" style="text-decoration:none;padding:0.25rem 0.55rem;font-size:0.78rem;">Edit</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

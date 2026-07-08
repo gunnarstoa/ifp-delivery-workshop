@@ -197,6 +197,14 @@
       {% endif %}
     </div>
     <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+        <h2 style="margin:0;">Tenant pool</h2>
+        <a class="primary-btn" href="{{ url_for('admin_workshop_tenants', slug=workshop.slug) }}" style="text-decoration:none;">Manage →</a>
+      </div>
+      <p class="help-note" style="margin:0;">Pre-provisioned Anaplan credentials handed to participants for the week of their session. Import in bulk via CSV, or add one at a time.</p>
+    </div>
+
+    <div class="card">
       <h2>Reports</h2>
       <p class="help-note">Exec summary, partner sponsor reports, Slack celebration post, anonymous-survey aggregate. Run per-session once sessions land; workshop-level rollups across sessions come after.</p>
     </div>

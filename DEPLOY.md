@@ -189,7 +189,49 @@ Removes instance, static IP, key pair, A records. Leaves the Route 53 hosted zon
 2. **Content:** create the folder `docs/<slug>/` and copy IFP as a starter (`cp -r docs/ifp/ docs/<slug>/`), then edit page titles + sidebar links per workshop. Push to `main`; CI deploys.
 3. **Toolkit:** create the folder `toolkit/<slug>/` similarly (`cp -r toolkit/ifp/ toolkit/<slug>/`) and edit each asset.
 4. **Survey templates:** `/admin/workshops/<slug>/survey-templates` → **Load IFP starter** on pre and post (then edit), or build from scratch.
-5. **Promote a session:** `/admin/workshops/<slug>` → **+ New session** → paste participant emails → share `/w/<slug>/survey/pre` link in the kickoff email.
+5. **Tenant pool:** `/admin/workshops/<slug>/tenants` → add one at a time, or bulk-import via `flask add-tenants` on the instance (see below).
+6. **Promote a session:** `/admin/workshops/<slug>` → **+ New session** → paste participant emails → share `/w/<slug>/survey/pre` link in the kickoff email.
+
+---
+
+## Tenant pool setup
+
+Every workshop needs a pool of pre-provisioned Anaplan credentials (email + username + password per participant). Credentials are Fernet-encrypted at rest with a key held in `/etc/workshop/app.env`.
+
+### First-time key setup (once per instance)
+
+```bash
+# On your workstation — generate a Fernet key
+python -c 'from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())'
+
+# Then SSH in and append it to app.env
+ssh -i .aws-workshop-key.pem ubuntu@<IP> \
+  "echo 'TENANT_ENCRYPTION_KEY=<paste-the-key>' | sudo tee -a /etc/workshop/app.env && sudo systemctl restart workshop"
+```
+
+Keep the key backed up somewhere off the instance — losing it means every stored tenant password becomes unrecoverable and must be re-imported.
+
+### Bulk import from CSV
+
+CSV format — three columns exactly:
+
+```
+email,username,password
+train-ifp-01@anaplan-workshops.com,train01,Zc3xR-...
+train-ifp-02@anaplan-workshops.com,train02,pQm9L-...
+```
+
+Copy the file to the instance and run the import CLI:
+
+```bash
+scp -i .aws-workshop-key.pem ifp-tenants.csv ubuntu@<IP>:/tmp/
+ssh -t -i .aws-workshop-key.pem ubuntu@<IP> \
+  "cd /srv/workshop/app && sudo -u workshop env \$(sudo cat /etc/workshop/app.env | xargs) \
+   .venv/bin/flask --app backend.app add-tenants"
+# → prompts for workshop slug (e.g. 'ifp') and CSV path (e.g. '/tmp/ifp-tenants.csv')
+```
+
+Verify at `/admin/workshops/<slug>/tenants` — the summary shows total / available / assigned / maintenance counts.
 
 ---
 

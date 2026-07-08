@@ -33,6 +33,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 DB_PATH = Path(os.environ.get("WORKSHOP_DB", REPO_ROOT / "workshop.db"))
 UPLOADS_DIR = Path(os.environ.get("WORKSHOP_UPLOADS_DIR", DB_PATH.parent / "uploads"))
 SECRET_KEY = os.environ.get("WORKSHOP_SECRET_KEY") or secrets.token_hex(32)
+TENANT_ENCRYPTION_KEY = os.environ.get("TENANT_ENCRYPTION_KEY")
 
 MAX_UPLOAD_BYTES = 10 * 1024 * 1024  # 10 MB per file
 ALLOWED_UPLOAD_EXTS = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".pdf", ".csv", ".txt", ".alm"}
@@ -783,6 +784,197 @@ def admin_workshop_toolkit_pdf(slug, asset_slug):
     return send_from_directory(str(path.parent), path.name, as_attachment=False)
 
 
+# ---------------------------- Tenant pool admin ----------------------------
+
+def _list_workshop_tenants(workshop_id):
+    """Return tenants for a workshop with their current assignment (if any)
+    joined in. Used by the tenant admin list page."""
+    return get_db().execute("""
+        SELECT
+          t.id, t.email, t.username, t.status, t.last_refreshed_at, t.notes,
+          t.created_at,
+          ta.id                AS assignment_id,
+          ta.session_id        AS current_session_id,
+          ta.user_id           AS current_user_id,
+          ta.assigned_at       AS current_assigned_at,
+          ta.hold_until        AS current_hold_until,
+          u.username           AS current_user_email,
+          u.display_name       AS current_user_name,
+          s.slug               AS current_session_slug,
+          s.name               AS current_session_name
+        FROM tenants t
+        LEFT JOIN tenant_assignments ta
+               ON ta.tenant_id = t.id AND ta.released_at IS NULL
+        LEFT JOIN users u    ON u.id = ta.user_id
+        LEFT JOIN sessions s ON s.id = ta.session_id
+        WHERE t.workshop_id = ?
+        ORDER BY t.status, t.username
+    """, (workshop_id,)).fetchall()
+
+
+@app.route("/admin/workshops/<slug>/tenants")
+def admin_workshop_tenants(slug):
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    workshop = get_db().execute("SELECT * FROM workshops WHERE slug = ?", (slug,)).fetchone()
+    if workshop is None:
+        abort(404)
+    tenants = _list_workshop_tenants(workshop["id"])
+    # Compute utilization summary — participant-visible counts.
+    counts = {"total": 0, "available": 0, "assigned": 0, "maintenance": 0, "retired": 0}
+    for t in tenants:
+        counts["total"] += 1
+        if t["status"] == "retired":
+            counts["retired"] += 1
+        elif t["status"] == "maintenance":
+            counts["maintenance"] += 1
+        elif t["assignment_id"] is not None:
+            counts["assigned"] += 1
+        else:
+            counts["available"] += 1
+    key_configured = _tenant_cipher() is not None
+    flash = session.pop("_tenant_flash", None)
+    return render_template(
+        "admin_workshop_tenants.html",
+        user=user, workshop=workshop, tenants=tenants, counts=counts,
+        key_configured=key_configured, flash=flash,
+    )
+
+
+@app.route("/admin/workshops/<slug>/tenants/new", methods=["GET", "POST"])
+def admin_workshop_tenant_new(slug):
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    workshop = get_db().execute("SELECT * FROM workshops WHERE slug = ?", (slug,)).fetchone()
+    if workshop is None:
+        abort(404)
+    errors = {}
+    form = {"email": "", "username": "", "password": "", "notes": ""}
+    if request.method == "POST":
+        form["email"] = (request.form.get("email") or "").strip()
+        form["username"] = (request.form.get("username") or "").strip()
+        form["password"] = request.form.get("password") or ""
+        form["notes"] = (request.form.get("notes") or "").strip()
+        if not form["email"]:
+            errors["email"] = "Required."
+        if not form["username"]:
+            errors["username"] = "Required."
+        if not form["password"]:
+            errors["password"] = "Required."
+        if not errors:
+            try:
+                enc = _encrypt_tenant_password(form["password"])
+            except RuntimeError as e:
+                errors["password"] = str(e)
+            else:
+                try:
+                    get_db().execute(
+                        "INSERT INTO tenants (workshop_id, email, username, password_enc, notes) "
+                        "VALUES (?, ?, ?, ?, ?)",
+                        (workshop["id"], form["email"], form["username"], enc, form["notes"] or None),
+                    )
+                    get_db().commit()
+                    session["_tenant_flash"] = f"Added tenant {form['username']}."
+                    return redirect(url_for("admin_workshop_tenants", slug=slug))
+                except sqlite3.IntegrityError:
+                    errors["username"] = f"Username '{form['username']}' already exists in this workshop."
+    return render_template(
+        "admin_workshop_tenant_edit.html",
+        user=user, workshop=workshop, tenant=None,
+        form=form, errors=errors, revealed_password=None,
+        key_configured=_tenant_cipher() is not None,
+    )
+
+
+def _get_tenant_or_404(workshop_id, tenant_id):
+    t = get_db().execute(
+        "SELECT * FROM tenants WHERE id = ? AND workshop_id = ?",
+        (tenant_id, workshop_id),
+    ).fetchone()
+    if t is None:
+        abort(404)
+    return t
+
+
+@app.route("/admin/workshops/<slug>/tenants/<int:tenant_id>", methods=["GET", "POST"])
+def admin_workshop_tenant_edit(slug, tenant_id):
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    workshop = get_db().execute("SELECT * FROM workshops WHERE slug = ?", (slug,)).fetchone()
+    if workshop is None:
+        abort(404)
+    tenant = _get_tenant_or_404(workshop["id"], tenant_id)
+    errors = {}
+    form = {
+        "email": tenant["email"],
+        "username": tenant["username"],
+        "password": "",
+        "notes": tenant["notes"] or "",
+        "status": tenant["status"],
+    }
+    if request.method == "POST":
+        form["email"] = (request.form.get("email") or "").strip()
+        form["username"] = (request.form.get("username") or "").strip()
+        form["password"] = request.form.get("password") or ""
+        form["notes"] = (request.form.get("notes") or "").strip()
+        form["status"] = (request.form.get("status") or "available").strip()
+        if not form["email"]:
+            errors["email"] = "Required."
+        if not form["username"]:
+            errors["username"] = "Required."
+        if form["status"] not in ("available", "maintenance", "retired"):
+            errors["status"] = "Invalid status."
+        if not errors:
+            if form["password"]:
+                try:
+                    enc = _encrypt_tenant_password(form["password"])
+                except RuntimeError as e:
+                    errors["password"] = str(e)
+                    enc = None
+            else:
+                enc = tenant["password_enc"]
+            if not errors:
+                try:
+                    get_db().execute(
+                        "UPDATE tenants SET email = ?, username = ?, password_enc = ?, notes = ?, status = ? "
+                        "WHERE id = ?",
+                        (form["email"], form["username"], enc, form["notes"] or None, form["status"], tenant_id),
+                    )
+                    get_db().commit()
+                    session["_tenant_flash"] = f"Saved tenant {form['username']}."
+                    return redirect(url_for("admin_workshop_tenants", slug=slug))
+                except sqlite3.IntegrityError:
+                    errors["username"] = f"Username '{form['username']}' already exists in this workshop."
+    revealed = None
+    if request.args.get("reveal") == "1":
+        revealed = _decrypt_tenant_password(tenant["password_enc"])
+    return render_template(
+        "admin_workshop_tenant_edit.html",
+        user=user, workshop=workshop, tenant=tenant,
+        form=form, errors=errors, revealed_password=revealed,
+        key_configured=_tenant_cipher() is not None,
+    )
+
+
+@app.route("/admin/workshops/<slug>/tenants/<int:tenant_id>/mark-refreshed", methods=["POST"])
+def admin_workshop_tenant_mark_refreshed(slug, tenant_id):
+    user, redir = _require_facilitator()
+    if redir:
+        return redir
+    workshop = get_db().execute("SELECT * FROM workshops WHERE slug = ?", (slug,)).fetchone()
+    if workshop is None:
+        abort(404)
+    _get_tenant_or_404(workshop["id"], tenant_id)
+    db = get_db()
+    db.execute("UPDATE tenants SET last_refreshed_at = CURRENT_TIMESTAMP WHERE id = ?", (tenant_id,))
+    db.commit()
+    session["_tenant_flash"] = "Marked as refreshed."
+    return redirect(url_for("admin_workshop_tenants", slug=slug))
+
+
 @app.route("/admin/workshops/<slug>/sessions/new", methods=["GET", "POST"])
 def admin_session_new(slug):
     user, redir = _require_facilitator()
@@ -858,6 +1050,57 @@ def admin_session_detail(slug, session_slug):
 
 EMAIL_RE = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
 PARTNERS_FILE = REPO_ROOT / "data" / "cohorts" / "_partners.json"
+
+
+# ---------------------------- Tenant password encryption ----------------------------
+# Tenant credentials are shared secrets handed out to participants, not user
+# passwords. Store Fernet-encrypted at rest with TENANT_ENCRYPTION_KEY held in
+# /etc/workshop/app.env. Never log, never dump to reports.
+_TENANT_CIPHER = None
+
+
+def _tenant_cipher():
+    """Return the Fernet cipher for tenant passwords, lazy-loaded from
+    TENANT_ENCRYPTION_KEY. Returns None if the key isn't configured — callers
+    should check and raise a clear error before touching tenant credentials."""
+    global _TENANT_CIPHER
+    if _TENANT_CIPHER is not None:
+        return _TENANT_CIPHER
+    if not TENANT_ENCRYPTION_KEY:
+        return None
+    try:
+        from cryptography.fernet import Fernet
+        _TENANT_CIPHER = Fernet(TENANT_ENCRYPTION_KEY.encode() if isinstance(TENANT_ENCRYPTION_KEY, str) else TENANT_ENCRYPTION_KEY)
+        return _TENANT_CIPHER
+    except (ImportError, ValueError):
+        return None
+
+
+def _encrypt_tenant_password(plaintext):
+    """Encrypt a tenant password for at-rest storage. Raises RuntimeError if the
+    encryption key isn't configured — do not store plaintext."""
+    c = _tenant_cipher()
+    if c is None:
+        raise RuntimeError(
+            "TENANT_ENCRYPTION_KEY not configured. Add it to /etc/workshop/app.env "
+            "and restart the workshop service. Generate a key with: "
+            "python -c 'from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())'"
+        )
+    return c.encrypt(plaintext.encode("utf-8")).decode("utf-8")
+
+
+def _decrypt_tenant_password(ciphertext):
+    """Decrypt a tenant password for display. Returns None if the key isn't
+    configured or the ciphertext is unreadable — callers can display a
+    'password unavailable' state without crashing."""
+    c = _tenant_cipher()
+    if c is None or not ciphertext:
+        return None
+    try:
+        from cryptography.fernet import InvalidToken
+        return c.decrypt(ciphertext.encode("utf-8")).decode("utf-8")
+    except (InvalidToken, ValueError, ImportError):
+        return None
 
 LIKERT_MAP = {
     "very comfortable": 5,
@@ -3130,6 +3373,60 @@ def cli_init_db():
     """Create the SQLite tables."""
     init_db()
     print(f"initialized {DB_PATH}")
+
+
+@app.cli.command("add-tenants")
+def cli_add_tenants():
+    """Bulk-import tenants from CSV into a workshop's pool.
+
+    Usage: flask --app backend.app add-tenants
+      then paste when prompted:
+        workshop slug (e.g. 'ifp')
+        path to CSV file with columns: email,username,password
+    """
+    import csv
+    workshop_slug = input("Workshop slug: ").strip().lower()
+    if not re.fullmatch(r"[a-z0-9-]{1,40}", workshop_slug):
+        raise SystemExit("invalid workshop slug")
+    csv_path = input("CSV file path: ").strip()
+    if not Path(csv_path).is_file():
+        raise SystemExit(f"file not found: {csv_path}")
+    init_db()
+    conn = sqlite3.connect(str(DB_PATH))
+    conn.row_factory = sqlite3.Row
+    try:
+        w = conn.execute("SELECT id, name FROM workshops WHERE slug = ?", (workshop_slug,)).fetchone()
+        if w is None:
+            raise SystemExit(f"unknown workshop: {workshop_slug}")
+        added, skipped = 0, 0
+        with open(csv_path, newline="") as fh:
+            reader = csv.DictReader(fh)
+            for i, row in enumerate(reader, start=2):
+                email = (row.get("email") or "").strip()
+                username = (row.get("username") or "").strip()
+                password = (row.get("password") or "").strip()
+                if not email or not username or not password:
+                    print(f"  row {i}: missing field, skipped")
+                    skipped += 1
+                    continue
+                try:
+                    enc = _encrypt_tenant_password(password)
+                except RuntimeError as e:
+                    raise SystemExit(str(e))
+                try:
+                    conn.execute(
+                        "INSERT INTO tenants (workshop_id, email, username, password_enc, status) "
+                        "VALUES (?, ?, ?, ?, 'available')",
+                        (w["id"], email, username, enc),
+                    )
+                    added += 1
+                except sqlite3.IntegrityError:
+                    print(f"  row {i}: duplicate username '{username}', skipped")
+                    skipped += 1
+        conn.commit()
+        print(f"added {added} tenants to workshop '{w['name']}' ({skipped} skipped)")
+    finally:
+        conn.close()
 
 
 @app.cli.command("add-admin")
