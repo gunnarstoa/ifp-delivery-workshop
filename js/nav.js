@@ -220,12 +220,26 @@ const LANG_OPTIONS = [
 document.addEventListener('DOMContentLoaded', function () {
 
   // ── Language detection ──
-  // English IFP content lives under /docs/ifp/ (a 3-letter slug).
-  // Translations live under /docs/<2-letter-lang>/.
+  // Two URL schemes to handle:
+  //   1. Platform (Flask) — /w/<segment>/... where <segment> is a workshop
+  //      slug (ifp/rpm/fcr/owp) for English, or a 2-char language code
+  //      (ja/de/es/fr/pt) for translations.
+  //   2. Static site (GitHub Pages) — /docs/<segment>/... same convention.
+  const WORKSHOP_SLUGS = /^(?:ifp|rpm|fcr|owp)$/;
   function detectLang(path) {
-    if (/\/docs\/ifp\//.test(path)) return 'en';
-    const m = path.match(/\/docs\/([a-z]{2})\//);
-    return (m && SIDEBAR_TRANSLATIONS[m[1]]) ? m[1] : 'en';
+    const wMatch = path.match(/^\/w\/([a-z0-9-]{1,40})\//);
+    if (wMatch) {
+      const seg = wMatch[1];
+      if (SIDEBAR_TRANSLATIONS[seg]) return seg;   // e.g. /w/ja/... → 'ja'
+      return 'en';                                 // e.g. /w/ifp/... → 'en'
+    }
+    const dMatch = path.match(/\/docs\/([a-z0-9-]{2,10})\//);
+    if (dMatch) {
+      const seg = dMatch[1];
+      if (SIDEBAR_TRANSLATIONS[seg]) return seg;
+      if (WORKSHOP_SLUGS.test(seg)) return 'en';
+    }
+    return 'en';
   }
 
   const currentLang = detectLang(window.location.pathname);
@@ -308,9 +322,22 @@ document.addEventListener('DOMContentLoaded', function () {
     langSelect.addEventListener('change', function () {
       const selectedLang = this.value;
       const currentPath = window.location.pathname;
-      // Normalize: replace whatever /docs/<segment>/ is present with the target.
-      const targetSegment = selectedLang === 'en' ? 'ifp' : selectedLang;
-      const newPath = currentPath.replace(/\/docs\/[a-z]{2,3}\//, `/docs/${targetSegment}/`);
+      // Target segment: English lives under the workshop slug (ifp/rpm/fcr/owp),
+      // translations live under the 2-char lang code.
+      // When switching to English, preserve the current workshop slug if we can
+      // detect it; otherwise default to 'ifp' (only workshop with translations today).
+      let targetSegment = selectedLang;
+      if (selectedLang === 'en') {
+        const wSeg = (currentPath.match(/^\/w\/([a-z0-9-]{1,40})\//) || [])[1];
+        const dSeg = (currentPath.match(/\/docs\/([a-z0-9-]{2,10})\//) || [])[1];
+        const currentSeg = wSeg || dSeg;
+        targetSegment = (currentSeg && WORKSHOP_SLUGS.test(currentSeg)) ? currentSeg : 'ifp';
+      }
+      // Rewrite whichever URL scheme is in play — /w/<seg>/ or /docs/<seg>/.
+      let newPath = currentPath.replace(/^\/w\/[a-z0-9-]{1,40}\//, `/w/${targetSegment}/`);
+      if (newPath === currentPath) {
+        newPath = currentPath.replace(/\/docs\/[a-z0-9-]{2,10}\//, `/docs/${targetSegment}/`);
+      }
       window.location.href = newPath;
     });
   }
