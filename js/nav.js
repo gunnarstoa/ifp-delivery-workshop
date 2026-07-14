@@ -49,9 +49,16 @@ document.addEventListener('DOMContentLoaded', function () {
   // GitHub Pages subpath prefixes (e.g. /ifp-delivery-workshop/) are preserved.
   const langSelect = document.getElementById('lang-select');
   if (langSelect) {
+    // English content on this branch lives under /docs/ifp/ (nested workshop
+    // slug), while translations live under /docs/<2-char-lang>/. A separate
+    // legacy top-level /docs/page.html location also exists — treated as
+    // English default for backwards compatibility.
+    const WORKSHOP_SLUGS_RE = /^(?:ifp|rpm|fcr|owp)$/;
+
     function detectLang(path) {
       const docsMatch = path.match(/\/docs\/([a-z]{2})\//);
       if (docsMatch) return docsMatch[1];
+      if (/\/docs\/(?:ifp|rpm|fcr|owp)\//.test(path)) return 'en';
       // Root /{lang}/ — only when NOT under /docs/
       if (!path.includes('/docs/')) {
         const rootMatch = path.match(/\/([a-z]{2})\/(?:index\.html)?$/);
@@ -62,18 +69,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function switchLanguage(currentPath, selectedLang) {
       const isDocsPage = /\/docs\//.test(currentPath);
-      const docsLangMatch = currentPath.match(/\/docs\/([a-z]{2})\//);
-      const currentDocsLang = docsLangMatch ? docsLangMatch[1] : null;
 
       if (isDocsPage) {
-        if (selectedLang === 'en') {
-          return currentDocsLang
-            ? currentPath.replace(`/docs/${currentDocsLang}/`, '/docs/')
-            : currentPath;
+        // Match /docs/<seg>/ where <seg> is either a workshop slug
+        // (ifp/rpm/fcr/owp) or a 2-char language code (ja/de/es/fr/pt).
+        const segMatch = currentPath.match(/\/docs\/([a-z0-9-]{2,10})\//);
+        const currentSeg = segMatch ? segMatch[1] : null;
+        // For English, target is the workshop slug — preserve current slug if
+        // we're already on one, otherwise default to 'ifp'.
+        const targetSeg = selectedLang === 'en'
+          ? (currentSeg && WORKSHOP_SLUGS_RE.test(currentSeg) ? currentSeg : 'ifp')
+          : selectedLang;
+        if (currentSeg) {
+          return currentPath.replace(`/docs/${currentSeg}/`, `/docs/${targetSeg}/`);
         }
-        return currentDocsLang
-          ? currentPath.replace(`/docs/${currentDocsLang}/`, `/docs/${selectedLang}/`)
-          : currentPath.replace('/docs/', `/docs/${selectedLang}/`);
+        // Legacy top-level /docs/page.html — inject the target segment.
+        return currentPath.replace('/docs/', `/docs/${targetSeg}/`);
       }
 
       // Root-level navigation
